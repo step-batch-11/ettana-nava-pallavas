@@ -1,4 +1,3 @@
-#! /bin/sh
+#! /bin/bash
 
-cp ./hooks/* ./.git/hooks/
-chmod +x .git/hooks/pre-commit
+ln -s ../../hooks/pre-commit ./.git/hooks/pre-commit

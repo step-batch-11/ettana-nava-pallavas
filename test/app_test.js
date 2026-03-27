@@ -1,6 +1,13 @@
+import { describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import { app } from "../src/app.js";
+import { createApp } from "../src/app.js";
 
-Deno.test("just a dummy test", () => {
-  assertEquals(app(), 1);
+describe("Dummy test", () => {
+  it("Server static page", async () => {
+    const app = createApp();
+    const res = await app.request("/");
+    await res.text();
+
+    assertEquals(res.status, 200);
+  });
 });
