@@ -1,0 +1,6 @@
+#! /bin/sh
+
+set -e
+deno task lint
+deno fmt
+deno task test
