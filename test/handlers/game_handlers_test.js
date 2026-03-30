@@ -8,7 +8,7 @@ describe("Game route", () => {
   let app;
 
   beforeEach(() => {
-    app = createApp(obj);
+    app = createApp(obj, obj);
   });
 
   it("GET /game/board-state should return the initial state as it is", async () => {

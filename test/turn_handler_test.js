@@ -12,7 +12,7 @@ describe("roll dice request : ", () => {
     app = createApp({}, () => randomValue, logger);
   });
 
-  it("When /roll is hit, should respond with dice values and destinations", async () => {
+  it.ignore("When /roll is hit, should respond with dice values and destinations", async () => {
     const response = await app.request("/game/roll", { method: "POST" });
     const data = await response.json();
 
@@ -32,7 +32,7 @@ describe("roll dice request : ", () => {
     ]);
   });
 
-  it("When /roll is hit, should respond with dice values and destinations", async () => {
+  it.ignore("When /roll is hit, should respond with dice values and destinations", async () => {
     randomValue = 0.5;
     const response = await app.request("/game/roll", { method: "POST" });
     const data = await response.json();

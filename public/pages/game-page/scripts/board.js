@@ -1,5 +1,6 @@
 const board = document.getElementById("board");
 const playersContainer = document.querySelector(".players");
+
 const colorsMap = {
   "1": "red",
   "2": "blue",
@@ -9,7 +10,7 @@ const colorsMap = {
 };
 const size = 5;
 
-const cellSize = 100;
+const cellSize = 120;
 const gap = 10;
 
 const _tilesId = [
@@ -44,9 +45,9 @@ const createCenterTiles = () => {
       const tiles = document.createElement("div");
       tiles.className = "tile";
       tiles.id = `tile${row + 1}${col + 1}`;
-      tiles.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 20 +
+      tiles.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 26 +
         "px";
-      tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 +
+      tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 26+
         "px";
       board.appendChild(tiles);
     }
@@ -141,7 +142,7 @@ const initBoard = () => {
   createCornerTiles();
 };
 
-const placeYarns = (yarns) => {
+const renderYarns = (yarns) => {
   yarns.forEach((row, r) => {
     row.forEach((yarnColor, c) => {
       const yarnContainer = board.querySelector(`#r-${r}-c-${c}`);
@@ -150,7 +151,7 @@ const placeYarns = (yarns) => {
   });
 };
 
-const placeTiles = (pins) => {
+const renderTiles = (pins) => {
   pins.forEach((row, rowIdx) => {
     row.forEach((tileInfo, colIdx) => {
       const tileEle = board.querySelector(`#tile${rowIdx}${colIdx}`);
@@ -165,7 +166,7 @@ const placeTiles = (pins) => {
 
       if (tileInfo?.playerId) {
         const iconEl = document.createElement("div");
-        iconEl.className = "player-icon";
+        iconEl.className = "player-icon tile-value";
         iconEl.textContent = "👤";
 
         tileEle.appendChild(iconEl);
@@ -174,40 +175,45 @@ const placeTiles = (pins) => {
   });
 };
 
-const createPlayerCard = ({ name, avatar, stat1, stat2 }) => {
+const createPlayerCard = ({ name, avatar, token, victoryPoint }) => {
   const template = document.getElementById("player-card-template");
   const clone = template.content.cloneNode(true);
 
   clone.querySelector(".player-name").textContent = name;
   clone.querySelector(".avatar").src = avatar;
-  clone.querySelector(".stat1").textContent = stat1;
-  clone.querySelector(".stat2").textContent = stat2;
+  clone.querySelector(".stat1").textContent = token;
+  clone.querySelector(".stat2").textContent = victoryPoint;
 
   return clone;
+};
+
+const renderPlayers = (players, playersContainer) => {
+  players.forEach((player) => {
+    const playerCard = createPlayerCard({
+      name: player.name,
+      avatar: "/assets/user_pin.png",
+      token: player.availabeToken,
+      victoryPoint: player.victoryPoint,
+    });
+
+    playersContainer.appendChild(playerCard);
+  });
 };
 
 globalThis.onload = async () => {
   initBoard();
   const res = await fetch("/game/board-state");
   const { state } = await res.json();
+  console.log(state);
 
-  const player1 = createPlayerCard({
-    name: "Ajoy",
-    avatar: "/assets/user_pin.png",
-    stat1: 0,
-    stat2: 0,
+  renderYarns(state.board.yarns);
+  renderTiles(state.board.tiles);
+  renderPlayers(state.players, playersContainer);
+
+  const octagons = document.querySelectorAll(".octagon");
+  octagons.forEach((octagon) => {
+    octagon.addEventListener("click", (e) => {
+      console.log(e);
+    });
   });
-
-  const player2 = createPlayerCard({
-    name: "Sandip",
-    avatar: "/assets/user_pin.png",
-    stat1: 0,
-    stat2: 0,
-  });
-
-  playersContainer.appendChild(player1);
-  playersContainer.appendChild(player2);
-
-  placeYarns(state.board.yarns);
-  placeTiles(state.board.tiles);
 };
