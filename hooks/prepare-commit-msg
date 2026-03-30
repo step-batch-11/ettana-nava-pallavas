@@ -1,5 +1,0 @@
-#!/bin/sh
-
-COMMIT_MSG_FILE=$1
-
-echo "[#story-number] | your message | [author]" > "$COMMIT_MSG_FILE"
