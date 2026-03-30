@@ -16,14 +16,16 @@
   height: var(--cell-size);
   background: rgb(134, 134, 133);
 
-  clip-path: polygon(var(--cut) 0%,
-      calc(100% - var(--cut)) 0%,
-      100% var(--cut),
-      100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%,
-      var(--cut) 100%,
-      0% calc(100% - var(--cut)),
-      0% var(--cut));
+  clip-path: polygon(
+    var(--cut) 0%,
+    calc(100% - var(--cut)) 0%,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0% calc(100% - var(--cut)),
+    0% var(--cut)
+  );
 
   display: flex;
   justify-content: center;

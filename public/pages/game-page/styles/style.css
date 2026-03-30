@@ -13,13 +13,14 @@ body {
 }
 
 .app {
+  padding: 20px;
   display: flex;
   justify-content: space-between;
 }
 
 .players {
   width: 300px;
-  background-color: aqua;
+  /* background-color: aqua; */
 }
 
 .board-deck {
