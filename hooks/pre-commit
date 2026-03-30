@@ -2,5 +2,13 @@
 
 set -e
 deno task lint
+echo "----Liist Chacked----"
+
 deno fmt
+echo "----Format Done----"
+
 deno task test
+echo "----Testcases passed----"
+
+deno run -A jsr:@ashishkujoy/deno-coverage-checker
+echo "----Coverage Checked----"
