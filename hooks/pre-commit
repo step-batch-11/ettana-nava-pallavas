@@ -4,9 +4,6 @@ set -e
 deno task lint
 echo "----Liist Chacked----"
 
-deno fmt
-echo "----Format Done----"
-
 deno task test
 echo "----Testcases passed----"
 
