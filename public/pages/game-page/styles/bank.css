@@ -1,0 +1,163 @@
+.action-area {
+  width: 30%;
+  height: 85vh;
+  background-color: #c1c1c1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px;
+  gap: 10px;
+}
+
+.action-area section {
+  width: 100%;
+  border: 1px solid #222;
+  display: flex;
+  justify-content: center;
+}
+
+.action-area .played-card {
+  padding: 10px;
+}
+
+.action-area .card-container {
+  width: 200px;
+  border: 1px solid #222;
+  position: relative;
+  overflow-y: scroll;
+}
+
+.action-area .card {
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  height: 200px;
+  border-bottom: 1px solid #222;
+}
+
+.action-area .card-desc {
+  padding: 10px;
+  text-align: center;
+}
+
+.action-area .reserved {
+  width: 100%;
+}
+
+.action-area .tiles {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  border-right: 1px solid #222;
+  padding: 10px 20px;
+}
+
+.action-area .tile {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #222;
+  transform: rotate(45deg);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.action-area .tile span {
+  transform: rotate(-45deg);
+}
+
+.action-area .yarns {
+  width: 60%;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px 40px;
+}
+
+.action-area .yarns .yarn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid #222;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.action-area .bank {
+  padding: 10px;
+  flex-direction: column;
+}
+
+.action-area .token-placeholder {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.action-area #token-count {
+  border: 1px solid #222;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 20px;
+}
+
+.action-area .btn {
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #222;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.action-area .cards {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  padding: 10px 20px 0px;
+  cursor: pointer;
+}
+
+.action-area .cards div {
+  width: 50%;
+  height: 180px;
+  border: 1px solid #222;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.action-area .cards div img {
+  width: 100%;
+}
+
+.action-area .play-turn {
+  padding: 10px 30px;
+  justify-content: space-between !important;
+  gap: 20px;
+}
+
+.action-area .dices {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.action-area .dice {
+  width: 60px;
+  height: 60px;
+  border: 1px solid #222;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.action-area .pass-turn {
+  width: 100%;
+  background-color: rgba(245, 245, 245, 0.8);
+  cursor: not-allowed;
+}

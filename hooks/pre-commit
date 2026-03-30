@@ -2,7 +2,7 @@
 
 set -e
 deno task lint
-echo "----Liist Chacked----"
+echo "----List Checked----"
 
 deno task test
 echo "----Testcases passed----"
