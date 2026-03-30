@@ -137,7 +137,7 @@ main {
   align-items: center;
 }
 
-.token-count {
+#token-count {
   border: 1px solid #222;
   padding: 10px;
   border-radius: 10px;
@@ -165,6 +165,12 @@ main {
   width: 50%;
   height: 180px;
   border: 1px solid #222;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.cards div img {
+  width: 100%;
 }
 
 .play-turn {
