@@ -1,0 +1,58 @@
+body {
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  background: ghostwhite;
+}
+
+.app {
+  border: 5px solid black;
+  padding: 20px;
+}
+
+:root {
+  --cell-size: 100px;
+  --gap: 10px;
+}
+
+#board {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, var(--cell-size));
+  gap: var(--gap);
+}
+
+.octagon {
+  --cut: 30%;
+  width: var(--cell-size);
+  height: var(--cell-size);
+  background: rgb(134, 134, 133);
+
+  clip-path: polygon(var(--cut) 0%, calc(100% - var(--cut)) 0%,
+      100% var(--cut), 100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%, var(--cut) 100%,
+      0% calc(100% - var(--cut)), 0% var(--cut));
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.2s;
+}
+
+.octagon:hover {
+  transform: scale(1.05);
+}
+
+.dot {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.connector {
+  width: 40px;
+  height: 40px;
+  background: #d6b48a;
+  transform: rotate(45deg);
+  position: absolute;
+}

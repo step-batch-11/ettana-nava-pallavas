@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #484848;
+}
+
+.deck {
+  display: flex;
+  width: 700px;
+  height: 170px;
+  gap: 10px;
+}
+
+.panel {
+  flex: 1;
+  background: #222;
+  border-radius: 16px;
+  padding: 10px;
+  overflow: hidden;
+  transition: flex 0.5s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.panel.expanded {
+  flex: 3;
+}
+
+.cards {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  transition: all 0.4s ease;
+}
+
+.cards::-webkit-scrollbar {
+  display: none;
+}
+
+.panel.expanded .cards {
+  overflow-x: auto;
+  gap: 10px;
+}
+
+.panel.expanded .card-item {
+  min-width: calc((100% / 3.3));
+  height: 100%;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.panel:not(.expanded) .cards {
+  justify-content: center;
+  cursor: pointer;
+}
+
+.panel:not(.expanded) .card-item {
+  position: absolute;
+  width: 70%;
+  height: 90%;
+  border-radius: 12px;
+  transition: transform 0.4s ease;
+}
+
+.panel:not(.expanded) .card-item:nth-child(1) {
+  transform: scale(1);
+  z-index: 3;
+}
+
+.panel:not(.expanded) .card-item:nth-child(2) {
+  transform: translateX(20px) scale(0.9);
+  z-index: 2;
+}
+
+.panel:not(.expanded) .card-item:nth-child(3) {
+  transform: translateX(40px) scale(0.8);
+  z-index: 1;
+}
+
+.panel:not(.expanded) .card-item:nth-child(n+4) {
+  display: none;
+}
+
+.design-cards .card-item {
+  background: linear-gradient(135deg, #ff7a18, #ffb347);
+}
+
+.action-cards .card-item {
+  background: linear-gradient(135deg, #43cea2, #185a9d);
+}
+
+
+/* drag */
+
+.placeholder {
+  min-width: calc((100% / 3.3));
+  height: 100%;
+  border: 2px dashed #aaa;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.abs {
+  position: absolute;
+  z-index: 4;
+}
