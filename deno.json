@@ -7,15 +7,14 @@
     "detailed": "deno coverage --detailed",
     "lint": "deno lint",
     "all": "deno task lint && deno task test && deno task coverage",
-    "push":"git pull && git push"
+    "push": "git pull && git push"
   },
   "imports": {
     "@ashishkujoy/deno-coverage-checker": "jsr:@ashishkujoy/deno-coverage-checker@^0.0.9",
     "@std/assert": "jsr:@std/assert@1",
     "@std/testing": "jsr:@std/testing@^1.0.17",
     "hono": "npm:hono@^4.12.9",
-    "/styles/": "./public/styles/",
-    "/scripts/": "./public/scripts/"
+    "/pages/":"./public/pages/"
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext", "deno.ns"]
