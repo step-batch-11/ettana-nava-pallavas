@@ -1,6 +1,7 @@
 export class TurnManager {
   #game;
   #randomFn;
+  destinations;
 
   constructor(game, randomFn = Math.random) {
     this.#game = game;
@@ -52,8 +53,8 @@ export class TurnManager {
     return newPoint;
   }
 
-  #getTile(newPoint) {
-    return this.#game.board.tiles[newPoint.x][newPoint.y];
+  #getTile(point) {
+    return this.#game.board.tiles[point.x][point.y];
   }
 
   #getBoundary() {
@@ -140,7 +141,7 @@ export class TurnManager {
     return payee.id;
   }
 
-  traversePathTile(currentPlayer, path) {
+  #traversePathTile(currentPlayer, path) {
     const payees = [];
 
     for (const step of path) {
@@ -153,5 +154,33 @@ export class TurnManager {
       }
     }
     return { payerTokens: currentPlayer.tokens, payees };
+  }
+
+  #isValidDestination({ x, y }) {
+    return this.destinations.some((destination) =>
+      destination.x === x && destination.y === y
+    );
+  }
+
+  #displacePin(currentPlayer, destination, currentPosition) {
+    const destinationTile = this.#getTile(destination);
+    const prePositionTile = this.#getTile(currentPosition);
+
+    destinationTile.playerId = currentPlayer.id;
+    prePositionTile.playerId = null;
+  }
+
+  move(path, destination) {
+    const currentPlayer = this.#game.currentPlayer;
+    const currentPosition = currentPlayer.pin.position;
+
+    if (this.#isValidDestination(destination)) {
+      this.#traversePathTile(currentPlayer, path);
+      this.#displacePin(currentPlayer, destination, currentPosition);
+
+      return destination;
+    }
+
+    return currentPosition;
   }
 }
