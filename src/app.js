@@ -1,23 +1,28 @@
 import { Hono } from "hono";
-import { logger } from "hono/logger";
 import { serveStatic } from "hono/deno";
 import { initGame } from "./initGame.js";
 import { TurnManager } from "./models/turn_manager.js";
-import { handleDiceRoll } from "./handlers/turn_handler.js";
+import gameRoute from "./routes/game_route.js";
+import { logger } from "hono/logger";
 
-export const createApp = (randomFn = Math.random) => {
+export const createApp = (
+  boardState,
+  randomFn = Math.random,
+  loggerFn = logger,
+) => {
   const app = new Hono();
 
-  app.use(logger());
+  app.use(loggerFn());
 
-  app.use(async (ctx, next) => {
+  app.use("/game/*", async (ctx, next) => {
+    ctx.set("boardState", boardState);
     const game = initGame();
     const turnManager = new TurnManager(game, randomFn);
     ctx.set("turnManager", turnManager);
     await next();
   });
 
-  app.post("/roll", handleDiceRoll);
+  app.route("/game", gameRoute);
   app.get("*", serveStatic({ root: "public" }));
 
   return app;

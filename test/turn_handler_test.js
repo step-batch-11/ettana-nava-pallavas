@@ -1,6 +1,7 @@
 import { describe, it, beforeEach } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
 import { createApp } from "../src/app.js";
+import { logger } from "hono/logger";
 
 describe("roll dice request : ", () => {
   let app;
@@ -8,11 +9,11 @@ describe("roll dice request : ", () => {
   let randomValue = 0.05;
 
   beforeEach(() => {
-    app = createApp(() => randomValue);
+    app = createApp({}, () => randomValue, logger);
   });
 
   it("When /roll is hit, should respond with dice values and destinations", async () => {
-    const response = await app.request("/roll", { method: "POST" });
+    const response = await app.request("/game/roll", { method: "POST" });
     const data = await response.json();
 
     assertEquals(response.status, 200);
@@ -33,7 +34,7 @@ describe("roll dice request : ", () => {
 
   it("When /roll is hit, should respond with dice values and destinations", async () => {
     randomValue = 0.5;
-    const response = await app.request("/roll", { method: "POST" });
+    const response = await app.request("/game/roll", { method: "POST" });
     const data = await response.json();
 
     assertEquals(response.status, 200);
