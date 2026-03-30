@@ -6,7 +6,8 @@
     "coverage": "deno test --coverage -A",
     "detailed": "deno coverage --detailed",
     "lint": "deno lint",
-    "all": "deno task lint && deno task test && deno task coverage"
+    "all": "deno task lint && deno task test && deno task coverage",
+    "push":"git pull && git push"
   },
   "imports": {
     "@ashishkujoy/deno-coverage-checker": "jsr:@ashishkujoy/deno-coverage-checker@^0.0.9",
@@ -17,6 +18,6 @@
     "/scripts/": "./public/scripts/"
   },
   "compilerOptions": {
-     "lib": ["dom", "dom.iterable", "esnext", "deno.ns"]
+    "lib": ["dom", "dom.iterable", "esnext", "deno.ns"]
   }
 }

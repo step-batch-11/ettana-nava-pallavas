@@ -44,11 +44,11 @@
   "5": {
     "victoryPoints": 1,
     "design": [
-      { "coord": { "x": 2, "y": 0 }, "color": 5},
-      { "coord": { "x": 2, "y": 1 }, "color": 5},
-      { "coord": { "x": 2, "y": 2 }, "color": 5},
-      { "coord": { "x": 2, "y": 3 }, "color": 5},
-      { "coord": { "x": 2, "y": 4}, "color": 5}
+      { "coord": { "x": 2, "y": 0 }, "color": 5 },
+      { "coord": { "x": 2, "y": 1 }, "color": 5 },
+      { "coord": { "x": 2, "y": 2 }, "color": 5 },
+      { "coord": { "x": 2, "y": 3 }, "color": 5 },
+      { "coord": { "x": 2, "y": 4 }, "color": 5 }
     ]
   },
   "6": {

@@ -48,7 +48,7 @@ body {
 }
 
 .panel.expanded .card-item {
-  min-width: calc((100% / 3.3));
+  min-width: calc(100% / 3.3);
   height: 100%;
   border-radius: 12px;
   flex-shrink: 0;
@@ -94,11 +94,10 @@ body {
   background: linear-gradient(135deg, #43cea2, #185a9d);
 }
 
-
 /* drag */
 
 .placeholder {
-  min-width: calc((100% / 3.3));
+  min-width: calc(100% / 3.3);
   height: 100%;
   border: 2px dashed #aaa;
   border-radius: 12px;

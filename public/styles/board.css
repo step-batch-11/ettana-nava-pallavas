@@ -28,15 +28,56 @@ body {
   height: var(--cell-size);
   background: rgb(134, 134, 133);
 
-  clip-path: polygon(var(--cut) 0%, calc(100% - var(--cut)) 0%,
-      100% var(--cut), 100% calc(100% - var(--cut)),
-      calc(100% - var(--cut)) 100%, var(--cut) 100%,
-      0% calc(100% - var(--cut)), 0% var(--cut));
+  clip-path: polygon(var(--cut) 0%,
+      calc(100% - var(--cut)) 0%,
+      100% var(--cut),
+      100% calc(100% - var(--cut)),
+      calc(100% - var(--cut)) 100%,
+      var(--cut) 100%,
+      0% calc(100% - var(--cut)),
+      0% var(--cut));
 
   display: flex;
   justify-content: center;
   align-items: center;
   transition: 0.2s;
+}
+
+
+.halfTile {
+  width: 40px;
+  height: 40px;
+  background: #d6b48a;
+  position: absolute;
+  clip-path: polygon(20px 20px, 40px 40px, 0 40px);
+}
+
+.rotate180 {
+  transform: rotate(180deg);
+}
+
+.rotate90 {
+  transform: rotate(90deg);
+}
+
+.rotate270 {
+  transform: rotate(270deg);
+}
+
+.rotate315 {
+  transform: rotate(315deg);
+}
+
+.rotate45 {
+  transform: rotate(45deg);
+}
+
+.rotate225 {
+  transform: rotate(225deg);
+}
+
+.rotate135 {
+  transform: rotate(135deg);
 }
 
 .octagon:hover {
@@ -49,10 +90,21 @@ body {
   border-radius: 50%;
 }
 
-.connector {
+.tile {
   width: 40px;
   height: 40px;
   background: #d6b48a;
   transform: rotate(45deg);
   position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.player-icon {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  font-size: 35px;
+  z-index: 999;
 }
