@@ -83,7 +83,7 @@ export class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      })
+      }),
     );
     return coords;
   }
@@ -127,12 +127,13 @@ export class TurnManager {
       const key = `${coord.x},${coord.y}`;
       locations[key] = coord;
     });
-    return Object.values(locations);
+    this.destinations = Object.values(locations);
+    return this.destinations;
   }
 
   #processTilePenalty(tile, payer) {
-    const payee = this.#game.players.find((player) =>
-      player.id === tile.playerId
+    const payee = this.#game.players.find(
+      (player) => player.id === tile.playerId,
     );
 
     payer.tokens -= 1;

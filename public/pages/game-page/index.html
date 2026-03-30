@@ -1,123 +1,104 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="/pages/game-page/styles/style.css">
-    <link rel="stylesheet" href="/pages/game-page/styles/bank.css">
-    <link rel="stylesheet" href="/pages/game-page/styles/board.css">
-    <link rel="stylesheet" href="/pages/game-page/styles/deck.css">
-    <link rel="stylesheet" href="/pages/game-page/styles/color.css">
-    <link rel="stylesheet" href="/pages/game-page/styles/players.css">
 
-    <script type="module" src="/pages/game-page/scripts/board.js"></script>
-    <script type="module" src="/pages/game-page/scripts/deck.js"></script>
-    <script type="module" src="/pages/game-page/scripts/bank.js"></script>
-  </head>
-  <body>
-    <div class="app">
-      <section class="players">
-      </section>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/pages/game-page/styles/style.css">
+  <link rel="stylesheet" href="/pages/game-page/styles/bank.css">
+  <link rel="stylesheet" href="/pages/game-page/styles/board.css">
+  <link rel="stylesheet" href="/pages/game-page/styles/deck.css">
+  <link rel="stylesheet" href="/pages/game-page/styles/color.css">
+  <link rel="stylesheet" href="/pages/game-page/styles/players.css">
+  <link rel="stylesheet" href="/pages/game-page/styles/game.css">
 
-      <section class="board-deck">
-        <div id="board"></div>
+  <script type="module" src="/pages/game-page/scripts/board.js"></script>
+  <script type="module" src="/pages/game-page/scripts/deck.js"></script>
+  <script type="module" src="/pages/game-page/scripts/bank.js"></script>
+  <script type="module" src="/pages/game-page/scripts/game.js"></script>
+</head>
 
-        <div class="deck">
-          <div class="panel design-cards expanded">
-            <div class="cards">
-              <!-- <div class="card-item" draggable="true" id="d-1">1</div>
+<body>
+  <div class="app">
+    <section class="players">
+    </section>
+
+    <section class="board-deck">
+      <div id="board"></div>
+
+      <div class="deck">
+        <div class="panel design-cards expanded">
+          <div class="cards">
+            <!-- <div class="card-item" draggable="true" id="d-1">1</div>
               <div class="card-item" draggable="true" id="d-2">2</div>
               <div class="card-item" draggable="true" id="d-3">3</div>
               <div class="card-item" draggable="true" id="d-4">4</div>
               <div class="card-item" draggable="true" id="d-5">5</div> -->
-            </div>
           </div>
+        </div>
 
-          <div class="panel action-cards">
-            <div class="cards">
-              <!-- <div class="card-item" draggable="true" id="a-1"></div>
+        <div class="panel action-cards">
+          <div class="cards">
+            <!-- <div class="card-item" draggable="true" id="a-1"></div>
               <div class="card-item" draggable="true" id="a-2"></div>
               <div class="card-item" draggable="true" id="a-3"></div>
               <div class="card-item" draggable="true" id="a-4"></div> -->
-            </div>
           </div>
         </div>
+      </div>
+    </section>
+    <section class="action-area">
+      <section class="played-card">
+        <div class="card-container">
+          <div class="card"></div>
+          <p class="card-desc">Played card description</p>
+        </div>
       </section>
-      <section class="action-area">
-        <section class="played-card">
-          <div class="card-container">
-            <div class="card"></div>
-            <p class="card-desc">Played card description</p>
+
+      <div>
+        <section class="reserved">
+          <div class="tiles">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
+          </div>
+          <div class="yarns">
+            <div class="yarn" data-yarn-id="1"></div>
+            <div class="yarn" data-yarn-id="2"></div>
+            <div class="yarn" data-yarn-id="3"></div>
+            <div class="yarn" data-yarn-id="4"></div>
+            <div class="yarn" data-yarn-id="5"></div>
           </div>
         </section>
 
-        <div>
-          <section class="reserved">
-            <div class="tiles">
-              <div class="tile"><span></span></div>
-              <div class="tile"><span></span></div>
+        <section class="bank">
+          <div class="token-placeholder">
+            <div id="token-count"></div>
+            <div class="buy-swap">
+              <button class="swap-btn btn">Swap</button>
             </div>
-            <div class="yarns">
-              <div class="yarn" data-yarn-id="1"></div>
-              <div class="yarn" data-yarn-id="2"></div>
-              <div class="yarn" data-yarn-id="3"></div>
-              <div class="yarn" data-yarn-id="4"></div>
-              <div class="yarn" data-yarn-id="5"></div>
-            </div>
-          </section>
-
-          <section class="bank">
-            <div class="token-placeholder">
-              <div id="token-count"></div>
-              <div class="buy-swap">
-                <button class="swap-btn btn">Swap</button>
-              </div>
-            </div>
-
-            <div class="cards">
-              <div class="design-card">
-                <img src="/assets/design-card.png" alt>
-              </div>
-              <div class="action-card">
-                <img src="/assets/action-card.png" alt>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <section class="play-turn">
-          <div class="dices">
-            <div class="dice"></div>
-            <div class="dice"></div>
           </div>
-          <button class="pass-turn btn">Pass Turn</button>
+
+          <div class="cards">
+            <div class="design-card">
+              <img src="/assets/design-card.png" alt>
+            </div>
+            <div class="action-card">
+              <img src="/assets/action-card.png" alt>
+            </div>
+          </div>
         </section>
-      </section>
+      </div>
 
-      <template id="player-card-template">
-        <div class="player-card">
-          <div class="player-avatar-section">
-            <img src alt="Player Avatar" class="stat-icon avatar" />
-          </div>
-          <div class="player-info">
-            <h3 class="player-name">""</h3>
-            <div class="player-stats">
-              <div class="stat-box">
-                <img src="/assets/victory_point.png" alt="victory point icon"
-                  class="stat-icon" />
-                <span class="stat-value stat1"></span>
-              </div>
-
-              <div class="stat-box">
-                <img src="/assets/token.png" alt="Token icon"
-                  class="stat-icon" />
-                <span class="stat-value stat2"></span>
-              </div>
-            </div>
-          </div>
+      <section class="play-turn">
+        <div class="dices" id="dice">
+          <div class="dice" id="number-dice"></div>
+          <div class="dice" id="color-dice"></div>
         </div>
-      </template>
-    </div>
-  </body>
+        <button class="pass-turn btn">Pass Turn</button>
+      </section>
+    </section>
+  </div>
+</body>
+
 </html>

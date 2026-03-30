@@ -5,29 +5,34 @@ export class Bank {
   #tiles = [1, 2];
   #yarns = [1, 2, 3, 4, 5];
 
-  constructor(designCards, actionCards, shuffleFn = this.#shuffle) {
-    this.#designCards = shuffleFn(designCards);
-    this.#actionCards = shuffleFn(actionCards);
+  constructor(dc = [], ac = [], shuffleFn = this.shuffle.bind(this)) {
+    this.#designCards = shuffleFn(dc, this.randomFn);
+    this.#actionCards = shuffleFn(ac, this.randomFn);
     this.#yarns = shuffleFn(this.#yarns);
   }
 
-  #shuffle(patterns) {
+  randomFn(patterns) {
+    return Math.floor(Math.random() * patterns.length);
+  }
+
+  shuffle(patterns, randomFn = this.randomFn.bind(this)) {
     const shuffled = [...patterns];
 
     for (let pointer = 0; pointer < shuffled.length; pointer++) {
-      const randomIndex = Math.floor(Math.random() * patterns.length);
+      const randomIndex = randomFn(patterns);
       const temp = shuffled[randomIndex];
       shuffled[randomIndex] = shuffled[pointer];
       shuffled[pointer] = temp;
     }
-    return { ...shuffled };
+
+    return shuffled;
   }
 
   getBank() {
     return {
       tokens: this.#tokens,
-      availableDesignCards: this.#designCards,
-      availableActionCards: this.#actionCards,
+      availableDesignCards: this.#designCards.length,
+      availableActionCards: this.#actionCards.length,
       yarns: this.#yarns,
       tiles: this.#tiles,
     };

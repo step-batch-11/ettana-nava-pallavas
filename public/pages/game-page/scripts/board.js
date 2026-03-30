@@ -1,11 +1,12 @@
 const board = document.getElementById("board");
 const playersContainer = document.querySelector(".players");
 const colorsMap = {
-  "1": "red",
-  "2": "blue",
-  "3": "green",
-  "4": "purple",
-  "5": "yellow",
+  1: "red",
+  2: "blue",
+  3: "green",
+  4: "purple",
+  5: "yellow",
+  6: "black",
 };
 const size = 5;
 
@@ -44,10 +45,9 @@ const createCenterTiles = () => {
       const tiles = document.createElement("div");
       tiles.className = "tile";
       tiles.id = `tile${row + 1}${col + 1}`;
-      tiles.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 20 +
-        "px";
-      tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 +
-        "px";
+      tiles.style.left =
+        col * (cellSize + gap) + cellSize + gap / 2 - 20 + "px";
+      tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 + "px";
       board.appendChild(tiles);
     }
   }
@@ -58,8 +58,7 @@ const createHorizontalTiles = () => {
     const tiles = document.createElement("div");
     tiles.className = "halfTile rotate180";
     tiles.id = `tile0${col + 1}`;
-    tiles.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 20 +
-      "px";
+    tiles.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 20 + "px";
 
     tiles.style.top = 0 + "px";
     board.appendChild(tiles);
@@ -67,8 +66,7 @@ const createHorizontalTiles = () => {
     const tiles1 = document.createElement("div");
     tiles1.className = "halfTile";
     tiles1.id = `tile5${col + 1}`;
-    tiles1.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 20 +
-      "px";
+    tiles1.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 20 + "px";
 
     tiles1.style.top = 4.55 * (cellSize + gap) + "px";
 
@@ -83,15 +81,13 @@ const createVerticalTiles = () => {
     tiles.id = `tile${row + 1}0`;
     tiles.style.left = 0 + "px";
 
-    tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 +
-      "px";
+    tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 + "px";
     board.appendChild(tiles);
 
     const tiles1 = document.createElement("div");
     tiles1.className = "halfTile rotate270";
     tiles1.id = `tile${row + 1}5`;
-    tiles1.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 +
-      "px";
+    tiles1.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 20 + "px";
 
     tiles1.style.left = 4.55 * (cellSize + gap) + "px";
 
@@ -150,8 +146,8 @@ const placeYarns = (yarns) => {
   });
 };
 
-const placeTiles = (pins) => {
-  pins.forEach((row, rowIdx) => {
+const placeTiles = (tiles) => {
+  tiles.forEach((row, rowIdx) => {
     row.forEach((tileInfo, colIdx) => {
       const tileEle = board.querySelector(`#tile${rowIdx}${colIdx}`);
 
