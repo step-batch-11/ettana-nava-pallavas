@@ -6,5 +6,3 @@ export const serveBoardState = (ctx) => {
     return ctx.json({ success: false, error: e.message });
   }
 };
-
-

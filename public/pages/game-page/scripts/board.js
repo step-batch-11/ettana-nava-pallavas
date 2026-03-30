@@ -47,7 +47,7 @@ const createCenterTiles = () => {
       tiles.id = `tile${row + 1}${col + 1}`;
       tiles.style.left = col * (cellSize + gap) + cellSize + gap / 2 - 26 +
         "px";
-      tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 26+
+      tiles.style.top = row * (cellSize + gap) + cellSize + gap / 2 - 26 +
         "px";
       board.appendChild(tiles);
     }

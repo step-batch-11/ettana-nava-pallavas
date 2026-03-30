@@ -1,4 +1,4 @@
-import { describe, it, beforeEach } from "@std/testing/bdd";
+import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
 import { createApp } from "../src/app.js";
 import { logger } from "hono/logger";
