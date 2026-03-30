@@ -67,7 +67,10 @@ describe("current user turn :", () => {
       ],
     };
 
-    turnManager = new TurnManager({ board }, randomFn);
+    turnManager = new TurnManager(
+      { currentPlayer: { pin: { position: { x: 1, y: 1 } } }, board },
+      randomFn,
+    );
   });
 
   describe("roll dice :", () => {
@@ -80,7 +83,7 @@ describe("current user turn :", () => {
 
   describe("find possible path : ", () => {
     it("when position, steps given, should return all possible locations", () => {
-      const actual = turnManager.findPossibleDestinations({ x: 1, y: 1 }, 1);
+      const actual = turnManager.findPossibleDestinations(1);
       const expected = [
         { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] },
         { x: 2, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
@@ -154,8 +157,11 @@ describe("current user turn :", () => {
           ],
         ],
       };
-      turnManager = new TurnManager({ board }, () => 0.1);
-      const actual = turnManager.findPossibleDestinations({ x: 1, y: 1 }, 1);
+      turnManager = new TurnManager(
+        { currentPlayer: { pin: { position: { x: 1, y: 1 } } }, board },
+        () => 0.1,
+      );
+      const actual = turnManager.findPossibleDestinations(1);
       const expected = [
         { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] },
         { x: 2, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
@@ -175,7 +181,7 @@ describe("current user turn :", () => {
         return coords.length === set.size;
       };
 
-      const actual = turnManager.findPossibleDestinations({ x: 1, y: 2 }, 4);
+      const actual = turnManager.findPossibleDestinations(4);
       const status = actual.every(
         ({ type, path }) => type === "jump" || areDistinct(path),
       );
@@ -183,8 +189,14 @@ describe("current user turn :", () => {
     });
 
     it("When board is not given, there should be no possible destinations", () => {
-      turnManager = new TurnManager({ board: { tiles: [[]] } }, () => 0.1);
-      const actual = turnManager.findPossibleDestinations({ x: 1, y: 1 }, 1);
+      turnManager = new TurnManager(
+        {
+          currentPlayer: { pin: { position: { x: 1, y: 1 } } },
+          board: { tiles: [[]] },
+        },
+        () => 0.1,
+      );
+      const actual = turnManager.findPossibleDestinations(1);
       assertEquals(actual.length, 0);
     });
   });
