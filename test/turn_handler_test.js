@@ -2,6 +2,7 @@ import { describe, it, beforeEach } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
 import { createApp } from "../src/app.js";
 import { logger } from "hono/logger";
+import { gameState } from "../main.js";
 
 describe("roll dice request : ", () => {
   let app;
@@ -9,7 +10,7 @@ describe("roll dice request : ", () => {
   let randomValue = 0.05;
 
   beforeEach(() => {
-    app = createApp({}, () => randomValue, logger);
+    app = createApp(gameState, () => randomValue, logger);
   });
 
   it("When /roll is hit, should respond with dice values and destinations", async () => {
@@ -25,10 +26,8 @@ describe("roll dice request : ", () => {
       { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] },
       { x: 2, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
       { x: 1, y: 0, type: "normal", path: [{ x: 1, y: 1 }] },
-      { x: 0, y: 1, type: "jump" },
-      { x: 1, y: 3, type: "jump" },
-      { x: 3, y: 1, type: "jump" },
-      { x: 4, y: 3, type: "jump" },
+      { x: 0, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
+      { x: 2, y: 3, type: "jump" },
     ]);
   });
 
@@ -57,16 +56,26 @@ describe("roll dice request : ", () => {
       {
         x: 2,
         y: 4,
-        type: "normal",
+        type: "premium",
         path: [
           { x: 1, y: 1 },
           { x: 2, y: 1 },
           { x: 2, y: 2 },
           { x: 2, y: 3 },
         ],
+        recipients: [2],
       },
-      { x: 0, y: 4, type: "jump" },
-      { x: 2, y: 2, type: "jump" },
+      {
+        x: 0,
+        y: 4,
+        type: "normal",
+        path: [
+          { x: 1, y: 1 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 0, y: 3 },
+        ],
+      },
       {
         x: 0,
         y: 2,
@@ -155,8 +164,9 @@ describe("roll dice request : ", () => {
           { x: 3, y: 0 },
         ],
       },
-      { x: 3, y: 4, type: "jump" },
-      { x: 5, y: 2, type: "jump" },
+      { x: 1, y: 4, type: "jump" },
+      { x: 3, y: 2, type: "jump" },
+      { x: 4, y: 3, type: "jump" },
     ]);
   });
 });

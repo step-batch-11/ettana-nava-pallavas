@@ -1,6 +1,7 @@
 export class TurnManager {
   #game;
   #randomFn;
+  #destinations;
   constructor(game, randomFn = Math.random) {
     this.#game = game;
     this.#randomFn = randomFn;
@@ -125,6 +126,7 @@ export class TurnManager {
       const key = `${coord.x},${coord.y}`;
       locations[key] = coord;
     });
-    return Object.values(locations);
+    this.#destinations = Object.values(locations);
+    return this.#destinations;
   }
 }
