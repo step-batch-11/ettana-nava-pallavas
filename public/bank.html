@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bank</title>
   <link rel="stylesheet" href="/styles/bank.css">
+  <link rel="stylesheet" href="/styles/color.css">
   <script type="module" src="/scripts/bank.js"></script>
 </head>
 
@@ -30,8 +31,8 @@
       <div>
         <section class="reserved">
           <div class="tiles">
-            <div class="tile"><span>3</span></div>
-            <div class="tile"><span>1</span></div>
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
           </div>
           <div class="yarns">
             <div class="yarn" data-yarn-id="1"></div>
@@ -44,15 +45,19 @@
 
         <section class="bank">
           <div class="token-placeholder">
-            <div class="token-count">55</div>
+            <div id="token-count"></div>
             <div class="buy-swap">
               <button class="swap-btn btn">Swap</button>
             </div>
           </div>
 
           <div class="cards">
-            <div class="design-card"></div>
-            <div class="action-card"></div>
+            <div class="design-card">
+              <img src="assets/images/design-card.png" alt="">
+            </div>
+            <div class="action-card">
+              <img src="assets/images/action-card.png" alt="">
+            </div>
           </div>
         </section>
       </div>
