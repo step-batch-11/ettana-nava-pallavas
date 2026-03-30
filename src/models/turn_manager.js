@@ -37,6 +37,11 @@ export class TurnManager {
     newPoint.x += dx;
     newPoint.y += dy;
     newPoint.steps += 1;
+    newPoint.isValid = true;
+    if (!this.#inBoundary(newPoint)) {
+      newPoint.isValid = false;
+      return newPoint;
+    }
     newPoint.path.push(this.#getCoordinate(point));
     const tile = this.#getTile(newPoint);
     if (tile.playerId !== null) {
@@ -49,15 +54,12 @@ export class TurnManager {
   }
 
   #getTile(newPoint) {
-    if (!this.#inBoundary(newPoint)) {
-      throw new Error("out of boundary");
-    }
     return this.#game.board.tiles[newPoint.x][newPoint.y];
   }
 
   #getBoundary() {
-    const rows = this.#game.board.tiles.length || 0;
-    const columns = this.#game.board.tiles[0].length || 0;
+    const rows = this.#game.board.tiles.length;
+    const columns = this.#game.board.tiles[0].length;
     return { rows, columns };
   }
 
@@ -111,13 +113,10 @@ export class TurnManager {
       }
 
       for (const { dx, dy } of offsets) {
-        try {
-          const newPoint = this.#movePoint(current, dx, dy);
-          if (!this.#hasVisited(newPoint.path, newPoint)) {
-            queue.push(newPoint);
-          }
-        } catch (error) {
-          console.log(error.message);
+        const newPoint = this.#movePoint(current, dx, dy);
+        if (newPoint.isValid && !this.#hasVisited(newPoint.path, newPoint)) {
+          delete newPoint.isValid;
+          queue.push(newPoint);
         }
       }
     }

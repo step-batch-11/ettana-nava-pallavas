@@ -1,6 +1,6 @@
-import { describe, it, beforeEach } from "@std/testing/bdd";
+import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
-import { TurnManager } from "../src/models/Turn_manager.js";
+import { TurnManager } from "../src/models/turn_manager.js";
 
 describe("current user turn :", () => {
   let turnManager;
@@ -180,6 +180,12 @@ describe("current user turn :", () => {
         ({ type, path }) => type === "jump" || areDistinct(path),
       );
       assert(status);
+    });
+
+    it("When board is not given, there should be no possible destinations", () => {
+      turnManager = new TurnManager({ board: { tiles: [[]] } }, () => 0.1);
+      const actual = turnManager.findPossibleDestinations({ x: 1, y: 1 }, 1);
+      assertEquals(actual.length, 0);
     });
   });
 });
