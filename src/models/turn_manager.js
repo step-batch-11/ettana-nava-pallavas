@@ -1,8 +1,6 @@
 export class TurnManager {
   #game;
   #randomFn;
-  #rows;
-  #columns;
   constructor(game, randomFn = Math.random) {
     this.#game = game;
     this.#randomFn = randomFn;
@@ -88,14 +86,14 @@ export class TurnManager {
     return coords;
   }
 
-  findPossibleDestinations(start, totalSteps) {
+  findPossibleDestinations(totalSteps) {
     const offsets = [
       { dx: 0, dy: 1 }, // top
       { dx: 1, dy: 0 }, // right
       { dx: 0, dy: -1 }, // down
       { dx: -1, dy: 0 }, // left
     ];
-
+    const start = this.#game.currentPlayer.pin.position;
     const queue = [{ ...start, steps: 0, type: "normal", path: [] }];
 
     const locations = {};
