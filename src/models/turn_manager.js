@@ -1,7 +1,8 @@
 export class TurnManager {
   #game;
   #randomFn;
-  #destinations;
+  destinations;
+
   constructor(game, randomFn = Math.random) {
     this.#game = game;
     this.#randomFn = randomFn;
@@ -126,7 +127,33 @@ export class TurnManager {
       const key = `${coord.x},${coord.y}`;
       locations[key] = coord;
     });
-    this.#destinations = Object.values(locations);
-    return this.#destinations;
+    this.destinations = Object.values(locations);
+    return this.destinations;
+  }
+
+  #processTilePenalty(tile, payer) {
+    const payee = this.#game.players.find(
+      (player) => player.id === tile.playerId,
+    );
+
+    payer.tokens -= 1;
+    payee.tokens += 1;
+
+    return payee.id;
+  }
+
+  traversePathTile(currentPlayer, path) {
+    const payees = [];
+
+    for (const step of path) {
+      const tile = this.#game.board.tiles[step.x][step.y];
+
+      if (tile.playerId !== null && tile.playerId !== currentPlayer.id) {
+        const payee = this.#processTilePenalty(tile, currentPlayer);
+
+        payees.push(payee);
+      }
+    }
+    return { payerTokens: currentPlayer.tokens, payees };
   }
 }

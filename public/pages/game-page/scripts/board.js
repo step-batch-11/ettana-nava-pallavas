@@ -1,6 +1,6 @@
 const board = document.getElementById("board");
-
-export const colorsMap = {
+const playersContainer = document.querySelector(".players");
+const colorsMap = {
   1: "red",
   2: "blue",
   3: "green",
@@ -170,10 +170,39 @@ const placeTiles = (tiles) => {
   });
 };
 
+const createPlayerCard = ({ name, avatar, stat1, stat2 }) => {
+  const template = document.getElementById("player-card-template");
+  const clone = template.content.cloneNode(true);
+
+  clone.querySelector(".player-name").textContent = name;
+  clone.querySelector(".avatar").src = avatar;
+  clone.querySelector(".stat1").textContent = stat1;
+  clone.querySelector(".stat2").textContent = stat2;
+
+  return clone;
+};
+
 globalThis.onload = async () => {
   initBoard();
   const res = await fetch("/game/board-state");
   const { state } = await res.json();
+
+  const player1 = createPlayerCard({
+    name: "Ajoy",
+    avatar: "/assets/user_pin.png",
+    stat1: 0,
+    stat2: 0,
+  });
+
+  const player2 = createPlayerCard({
+    name: "Sandip",
+    avatar: "/assets/user_pin.png",
+    stat1: 0,
+    stat2: 0,
+  });
+
+  playersContainer.appendChild(player1);
+  playersContainer.appendChild(player2);
 
   placeYarns(state.board.yarns);
   placeTiles(state.board.tiles);
