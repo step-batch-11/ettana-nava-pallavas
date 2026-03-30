@@ -1,0 +1,62 @@
+export const initGame = () => ({
+  currentPlayer: { pin: { position: { x: 1, y: 1 } } },
+  board: {
+    yarns: [
+      [1, 1, 1, 1, 1],
+      [2, 2, 2, 2, 2],
+      [3, 3, 3, 3, 3],
+      [4, 4, 4, 4, 4],
+      [5, 5, 5, 5, 5],
+    ],
+    tiles: [
+      [
+        { value: 0, playerId: null },
+        { value: 1, playerId: null },
+        { value: 2, playerId: null },
+        { value: 3, playerId: null },
+        { value: 4, playerId: null },
+        { value: 0, playerId: null },
+      ],
+      [
+        { value: 0, playerId: null },
+        { value: 5, playerId: null },
+        { value: 6, playerId: null },
+        { value: 1, playerId: null },
+        { value: 2, playerId: null },
+        { value: 0, playerId: null },
+      ],
+      [
+        { value: 0, playerId: null },
+        { value: 3, playerId: null },
+        { value: 4, playerId: null },
+        { value: 5, playerId: null },
+        { value: 6, playerId: null },
+        { value: 0, playerId: null },
+      ],
+      [
+        { value: 0, playerId: null },
+        { value: 1, playerId: null },
+        { value: 2, playerId: null },
+        { value: 3, playerId: 123 },
+        { value: 4, playerId: null },
+        { value: 0, playerId: null },
+      ],
+      [
+        { value: 0, playerId: null },
+        { value: 5, playerId: null },
+        { value: 6, playerId: null },
+        { value: 1, playerId: null },
+        { value: 2, playerId: null },
+        { value: 0, playerId: null },
+      ],
+      [
+        { value: 0, playerId: null },
+        { value: 3, playerId: null },
+        { value: 4, playerId: null },
+        { value: 5, playerId: null },
+        { value: 6, playerId: null },
+        { value: 0, playerId: null },
+      ],
+    ],
+  },
+});

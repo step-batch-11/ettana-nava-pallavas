@@ -1,8 +1,7 @@
 export class TurnManager {
   #game;
   #randomFn;
-  #rows;
-  #columns;
+
   constructor(game, randomFn = Math.random) {
     this.#game = game;
     this.#randomFn = randomFn;
@@ -83,19 +82,19 @@ export class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      }),
+      })
     );
     return coords;
   }
 
-  findPossibleDestinations(start, totalSteps) {
+  findPossibleDestinations(totalSteps) {
     const offsets = [
       { dx: 0, dy: 1 }, // top
       { dx: 1, dy: 0 }, // right
       { dx: 0, dy: -1 }, // down
       { dx: -1, dy: 0 }, // left
     ];
-
+    const start = this.#game.currentPlayer.pin.position;
     const queue = [{ ...start, steps: 0, type: "normal", path: [] }];
 
     const locations = {};
@@ -128,5 +127,31 @@ export class TurnManager {
       locations[key] = coord;
     });
     return Object.values(locations);
+  }
+
+  #processTilePenalty(tile, payer) {
+    const payee = this.#game.players.find((player) =>
+      player.id === tile.playerId
+    );
+
+    payer.tokens -= 1;
+    payee.tokens += 1;
+
+    return payee.id;
+  }
+
+  traversePathTile(currentPlayer, path) {
+    const payees = [];
+
+    for (const step of path) {
+      const tile = this.#game.board.tiles[step.x][step.y];
+
+      if (tile.playerId !== null && tile.playerId !== currentPlayer.id) {
+        const payee = this.#processTilePenalty(tile, currentPlayer);
+
+        payees.push(payee);
+      }
+    }
+    return { payerTokens: currentPlayer.tokens, payees };
   }
 }

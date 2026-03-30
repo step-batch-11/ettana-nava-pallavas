@@ -10,14 +10,6 @@ const gameState = {
       playerId: 2,
       color: 2,
     },
-    {
-      playerId: 3,
-      color: 3,
-    },
-    {
-      playerId: 4,
-      color: 4,
-    },
   ],
 
   board: {
