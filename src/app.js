@@ -23,6 +23,7 @@ export const createApp = (
   });
 
   app.route("/game", gameRoute);
+  app.get("/", serveStatic({ root: "public/pages/game-page" }));
   app.get("*", serveStatic({ root: "public" }));
 
   return app;
