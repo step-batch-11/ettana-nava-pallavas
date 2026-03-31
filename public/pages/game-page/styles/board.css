@@ -1,19 +1,14 @@
-@import "../../../styles.css";
+@import "./theme.css";
 
 :root {
   --cell-size: 120px;
   --gap: 10px;
 }
 
-.board-deck {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .board-container {
   background-color: var(--bg-surface);
-  padding: 20px;
+  padding: 50px;
+  border: 2px solid var(--green);
 }
 
 #board {
