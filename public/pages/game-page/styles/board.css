@@ -1,19 +1,14 @@
-@import "../../../styles.css";
+@import "./theme.css";
 
 :root {
   --cell-size: 120px;
   --gap: 10px;
 }
 
-.board-deck {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .board-container {
   background-color: var(--bg-surface);
-  padding: 20px;
+  padding: 50px;
+  border: 2px solid var(--green);
 }
 
 #board {
@@ -105,4 +100,20 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+@keyframes current-player-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.current-player {
+  rotate: 45deg;
+  animation: current-player-animation 2s ease-in-out infinite;
 }

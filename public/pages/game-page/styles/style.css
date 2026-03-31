@@ -1,4 +1,4 @@
-@import "../../../styles.css";
+@import "./theme.css";
 
 * {
   margin: 0;
@@ -20,11 +20,11 @@ body {
 }
 
 .players {
-  width: 300px;
+  width: 250px;
 }
 
 .board-deck {
   display: flex;
   flex-direction: column;
-  gap: 30px;
+  gap: 20px;
 }

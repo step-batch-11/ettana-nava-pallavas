@@ -18,6 +18,14 @@ const updateDice = ({ number, colorId }) => {
   colorDice.replaceChildren(diceColor);
 };
 
+const removeTileEventListeners = () => {
+  const tiles = document.querySelectorAll(".tile");
+  const halfTiles = document.querySelectorAll(".halfTile");
+  [...tiles, ...halfTiles].forEach((tile) => {
+    tile.replaceWith(tile.cloneNode(true));
+  });
+};
+
 const removeMoveClass = () => {
   const tiles = document.querySelectorAll(".tile");
   const halfTiles = document.querySelectorAll(".halfTile");
@@ -26,15 +34,15 @@ const removeMoveClass = () => {
   });
 };
 
-const highlightSwappableYarns = (yarns) => {
+const highlightAdjacentYarns = (yarns) => {
   yarns.forEach((yarnPosition) => {
     const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
     const yarn = document.querySelector(id);
-    yarn.style.boxShadow = "0px 0px 10px #666";
+    yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
   });
 };
 
-const getNextPosition = async (destination) => {
+const fetchMoveResult = async (destination) => {
   const response = await fetch("/game/move", {
     method: "POST",
     body: JSON.stringify(destination),
@@ -44,7 +52,7 @@ const getNextPosition = async (destination) => {
   return await response.json();
 };
 
-const addTooltip = (tile, penalty) => {
+const attachPenaltyTooltip = (tile, penalty) => {
   const tooltip = document.createElement("div");
   tooltip.className = "tooltip";
   tile.appendChild(tooltip);
@@ -73,22 +81,29 @@ const displacePin = ({ source, destination }) => {
   removeMoveClass();
 };
 
-const highlightDestinations = (destinations) => {
+const handlePlayerMove = async (destination) => {
+  const { adjYarns, positions } = await fetchMoveResult(destination);
+  highlightAdjacentYarns(adjYarns);
+  displacePin(positions);
+  removeTileEventListeners();
+};
+
+const highlightTile = (tile) => {
+  tile.classList.add(`${destination.type}-move`);
+};
+
+const renderMoveOptions = (destinations) => {
   destinations.forEach((destination) => {
     const id = `#tile${destination.x}${destination.y}`;
     const tile = document.querySelector(id);
-    tile.classList.add(`${destination.type}-move`);
+    highlightTile(tile);
 
     if (destination.type === "premium") {
       const penalty = destination.recipients.length;
-      addTooltip(tile, penalty);
+      attachPenaltyTooltip(tile, penalty);
     }
 
-    tile.addEventListener("click", async () => {
-      const { adjYarns, positions } = await getNextPosition(destination);
-      highlightSwappableYarns(adjYarns);
-      displacePin(positions);
-    });
+    tile.addEventListener("click", () => handlePlayerMove(destination));
   });
 };
 
@@ -98,6 +113,6 @@ globalThis.addEventListener("load", () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     removeMoveClass();
-    highlightDestinations(destinations);
+    renderMoveOptions(destinations);
   });
 });

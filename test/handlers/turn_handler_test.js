@@ -17,7 +17,7 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 1, pos: { x: 3, y: 4 } },
+    pin: { color: 1, position: { x: 3, y: 4 } },
   },
   {
     name: "Ajoy",
@@ -26,19 +26,13 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 2, pos: { x: 2, y: 1 } },
+    pin: { color: 2, position: { x: 2, y: 1 } },
   },
 ];
 
 const gameState = {
   players,
-  currentPlayer: {
-    playerId: 1,
-    pin: {
-      position: { x: 1, y: 1 },
-      color: 1,
-    },
-  },
+  currentPlayer: 1,
   board: {
     yarns: [
       [1, 2, 3, 4, 5],
@@ -105,7 +99,10 @@ const bank = {
   availableDesignCards: designCards,
   availableActionCards: actionCards,
   yarns: [1, 2, 3, 4, 5],
-  tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+  tiles: [
+    { value: 1, playerId: null },
+    { value: 6, playerId: null },
+  ],
 };
 
 describe("move request: ", () => {
@@ -119,9 +116,9 @@ describe("move request: ", () => {
     app = createApp(mockGameState, mockBank, () => randomValue, logger);
   });
 
-  it("When /move is hit, should response with adjYarns, source and destination positons of pin", async () => {
+  it("When player moves, should response with adjYarns, source and destination positons of pin", async () => {
     await app.request("/game/roll", { method: "POST" });
-    const destination = { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] };
+    const destination = { destination: { x: 2, y: 3 }, type: "jump" };
 
     const response = await app.request("/game/move", {
       method: "POST",
@@ -130,17 +127,18 @@ describe("move request: ", () => {
     });
 
     const data = await response.json();
+
     assertEquals(response.status, 200);
     assertEquals(data.adjYarns, [
-      { x: 0, y: 1 },
-      { x: 0, y: 2 },
-      { x: 1, y: 1 },
       { x: 1, y: 2 },
+      { x: 1, y: 3 },
+      { x: 2, y: 2 },
+      { x: 2, y: 3 },
     ]);
 
     assertEquals(data.positions, {
       source: { x: 3, y: 4 },
-      destination: { x: 1, y: 2 },
+      destination: { x: 2, y: 3 },
     });
   });
 });
@@ -151,9 +149,7 @@ describe("roll dice request : ", () => {
   let randomValue = 0.05;
 
   beforeEach(() => {
-    const mockBank = structuredClone(bank);
-    const mockGameState = structuredClone(gameState);
-    app = createApp(mockGameState, mockBank, () => randomValue, logger);
+    app = createApp(gameState, bank, () => randomValue, logger);
   });
 
   it("When /roll is hit, should respond with dice values of(1, 1) and destinations", async () => {
@@ -166,11 +162,17 @@ describe("roll dice request : ", () => {
     assertEquals(data.diceValues.number, 1);
     assertEquals(data.diceValues.colorId, 1);
     assertEquals(data.destinations, [
-      { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] },
-      { x: 2, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
-      { x: 1, y: 0, type: "normal", path: [{ x: 1, y: 1 }] },
-      { x: 0, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
-      { x: 2, y: 3, type: "jump" },
+      {
+        destination: { x: 3, y: 5 },
+        type: "normal",
+        path: [{ x: 3, y: 4 }],
+      },
+      {
+        destination: { x: 2, y: 4 },
+        type: "normal",
+        path: [{ x: 3, y: 4 }],
+      },
+      { destination: { x: 2, y: 3 }, type: "jump" },
     ]);
   });
 
@@ -186,130 +188,122 @@ describe("roll dice request : ", () => {
     assertEquals(data.diceValues.colorId, 4);
     assertEquals(data.destinations, [
       {
-        x: 1,
-        y: 5,
+        destination: { x: 5, y: 4 },
         type: "normal",
         path: [
-          { x: 1, y: 1 },
-          { x: 1, y: 2 },
-          { x: 1, y: 3 },
-          { x: 1, y: 4 },
+          { x: 3, y: 4 },
+          { x: 3, y: 5 },
+          { x: 4, y: 5 },
+          { x: 5, y: 5 },
+        ],
+      },
+      { destination: { x: 4, y: 3 }, type: "jump" },
+      {
+        destination: { x: 2, y: 3 },
+        type: "normal",
+        path: [
+          { x: 3, y: 4 },
+          { x: 3, y: 5 },
+          { x: 2, y: 5 },
+          { x: 2, y: 4 },
+        ],
+      },
+      { destination: { x: 1, y: 4 }, type: "jump" },
+      {
+        destination: { x: 0, y: 5 },
+        type: "normal",
+        path: [
+          { x: 3, y: 4 },
+          { x: 3, y: 5 },
+          { x: 2, y: 5 },
+          { x: 1, y: 5 },
         ],
       },
       {
-        x: 2,
-        y: 4,
+        destination: { x: 2, y: 5 },
+        type: "normal",
+        path: [
+          { x: 3, y: 4 },
+          { x: 2, y: 4 },
+          { x: 1, y: 4 },
+          { x: 1, y: 5 },
+        ],
+      },
+      {
+        destination: { x: 4, y: 5 },
+        type: "normal",
+        path: [
+          { x: 3, y: 4 },
+          { x: 2, y: 4 },
+          { x: 2, y: 5 },
+          { x: 3, y: 5 },
+        ],
+      },
+      {
+        destination: { x: 5, y: 2 },
         type: "premium",
         path: [
-          { x: 1, y: 1 },
-          { x: 2, y: 1 },
-          { x: 2, y: 2 },
+          { x: 3, y: 4 },
+          { x: 3, y: 3 },
+          { x: 3, y: 2 },
+          { x: 4, y: 2 },
+        ],
+        recipients: [3],
+      },
+      {
+        destination: { x: 4, y: 1 },
+        type: "premium",
+        path: [
+          { x: 3, y: 4 },
+          { x: 3, y: 3 },
+          { x: 3, y: 2 },
+          { x: 3, y: 1 },
+        ],
+        recipients: [3],
+      },
+      { destination: { x: 3, y: 2 }, type: "jump" },
+      {
+        destination: { x: 3, y: 0 },
+        type: "premium",
+        path: [
+          { x: 3, y: 4 },
+          { x: 3, y: 3 },
+          { x: 3, y: 2 },
+          { x: 3, y: 1 },
+        ],
+        recipients: [3],
+      },
+      {
+        destination: { x: 2, y: 1 },
+        type: "premium",
+        path: [
+          { x: 3, y: 4 },
+          { x: 2, y: 4 },
           { x: 2, y: 3 },
+          { x: 2, y: 2 },
         ],
         recipients: [2],
       },
       {
-        x: 0,
-        y: 4,
+        destination: { x: 1, y: 2 },
         type: "normal",
         path: [
-          { x: 1, y: 1 },
-          { x: 0, y: 1 },
-          { x: 0, y: 2 },
-          { x: 0, y: 3 },
+          { x: 3, y: 4 },
+          { x: 2, y: 4 },
+          { x: 2, y: 3 },
+          { x: 1, y: 3 },
         ],
       },
       {
-        x: 0,
-        y: 2,
+        destination: { x: 0, y: 3 },
         type: "normal",
         path: [
-          { x: 1, y: 1 },
-          { x: 1, y: 0 },
-          { x: 0, y: 0 },
-          { x: 0, y: 1 },
+          { x: 3, y: 4 },
+          { x: 2, y: 4 },
+          { x: 2, y: 3 },
+          { x: 1, y: 3 },
         ],
       },
-      {
-        x: 1,
-        y: 3,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 0, y: 1 },
-          { x: 0, y: 2 },
-          { x: 1, y: 2 },
-        ],
-      },
-      {
-        x: 4,
-        y: 2,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 2, y: 1 },
-          { x: 3, y: 1 },
-          { x: 4, y: 1 },
-        ],
-      },
-      {
-        x: 3,
-        y: 1,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 1, y: 0 },
-          { x: 2, y: 0 },
-          { x: 3, y: 0 },
-        ],
-      },
-      {
-        x: 2,
-        y: 0,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 0, y: 1 },
-          { x: 0, y: 0 },
-          { x: 1, y: 0 },
-        ],
-      },
-      {
-        x: 0,
-        y: 0,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 2, y: 1 },
-          { x: 2, y: 0 },
-          { x: 1, y: 0 },
-        ],
-      },
-      {
-        x: 5,
-        y: 1,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 2, y: 1 },
-          { x: 3, y: 1 },
-          { x: 4, y: 1 },
-        ],
-      },
-      {
-        x: 4,
-        y: 0,
-        type: "normal",
-        path: [
-          { x: 1, y: 1 },
-          { x: 1, y: 0 },
-          { x: 2, y: 0 },
-          { x: 3, y: 0 },
-        ],
-      },
-      { x: 1, y: 4, type: "jump" },
-      { x: 3, y: 2, type: "jump" },
-      { x: 4, y: 3, type: "jump" },
     ]);
   });
 });
