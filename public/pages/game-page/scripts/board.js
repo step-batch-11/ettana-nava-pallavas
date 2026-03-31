@@ -149,7 +149,7 @@ const renderTiles = (tiles, currentPlayer) => {
 };
 
 const createPlayerCard = (
-  { name, avatar, token, victoryPoint, id },
+  { name, avatar, token, victoryPoint },
 ) => {
   const template = document.getElementById("player-card-template");
 
@@ -173,7 +173,9 @@ const renderPlayers = (players, currentPlayer) => {
       victoryPoint: player.victoryPoint,
     });
 
-    if (player.id === currentPlayer.id) element.classList.add("current-player-card");
+    if (player.id === currentPlayer.id) {
+      element.classList.add("current-player-card");
+    }
 
     playersContainer.appendChild(clone);
   });

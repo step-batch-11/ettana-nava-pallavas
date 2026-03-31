@@ -100,16 +100,17 @@ li {
 
   background: var(--gold-primary);
 
-  clip-path: polygon(0% 0%,
-      60% 0%,
-      80% 30%,
-      100% 50%,
-      80% 70%,
-      60% 100%,
-      0% 100%,
-      15% 50%);
+  clip-path: polygon(
+    0% 0%,
+    60% 0%,
+    80% 30%,
+    100% 50%,
+    80% 70%,
+    60% 100%,
+    0% 100%,
+    15% 50%
+  );
 }
-
 
 .player-card.current-player-card {
   border: 5px solid var(--success);
