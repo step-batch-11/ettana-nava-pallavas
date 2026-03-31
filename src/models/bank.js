@@ -1,4 +1,4 @@
-import { shuffle as defaultShuffle } from "@std/random";
+import { shuffle } from "@std/random";
 
 export default class Bank {
   #designCards;
@@ -7,7 +7,7 @@ export default class Bank {
   #tiles = [{ value: 1, playerId: null }, { value: 6, playerId: null }]; //random
   #yarns = [1, 2, 3, 4, 5];
 
-  constructor(designCards = [], actionCards = [], shuffle = defaultShuffle) {
+  constructor(designCards = [], actionCards = []) {
     this.#designCards = shuffle(designCards);
     this.#actionCards = shuffle(actionCards);
   }
@@ -29,7 +29,7 @@ export default class Bank {
 
   distributeInitialAssets(players) {
     players.forEach((player) => {
-      player.token += this.#deductToken(2);
+      player.tokens += this.#deductToken(2);
       player.designCards.push(this.#designCards.pop());
       player.actionCards.push(this.#actionCards.pop());
     });

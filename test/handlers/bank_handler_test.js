@@ -1,7 +1,7 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../../src/app.js";
 import { assertEquals } from "@std/assert/equals";
-import { Bank } from "../../src/models/bank.js";
+import Bank from "../../src/models/bank.js";
 
 describe("Game route", () => {
   const game = {};
