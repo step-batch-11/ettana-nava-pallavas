@@ -84,12 +84,10 @@
 }
 
 .design-cards .card-item {
-  /* background: #ff7a18; */
   background: var(--gold-light);
 }
 
 .action-cards .card-item {
-  /* background: #185a9d; */
   background: var(--gold-light);
 }
 

@@ -6,17 +6,9 @@ const actionCardContainer = document.getElementById("action-card-panel");
 
 let sourceContainer = null;
 let dragged = null;
+
 const placeholder = document.createElement("div");
 placeholder.classList.add("placeholder");
-
-const toggleDeckView = (panels) => {
-  panels.forEach((panel) => {
-    panel.addEventListener("click", () => {
-      panels.forEach((p) => p.classList.remove("expanded"));
-      panel.classList.add("expanded");
-    });
-  });
-};
 
 const findClosest = (closest, child, x) => {
   const box = child.getBoundingClientRect();
@@ -89,21 +81,13 @@ const handleDragDrop = (e) => {
   placeholder.remove();
 };
 
-const handleDragCards = (containers) => {
-  containers.forEach((container) => {
-    container.addEventListener("dragstart", handleDragStart);
-    container.addEventListener("dragend", (_e) => placeholder.remove());
-    container.addEventListener("dragover", (e) => handleDragOver(e, container));
-    container.addEventListener("drop", handleDragDrop);
-  });
-};
-
-const createSkeleton = (id, vp) => {
+const createSkeleton = (cardInfo, id) => {
   const card = document.createElement("div");
   card.classList.add("card-item");
+  card.dataset.id = cardInfo.id;
 
   const cardPointer = document.createElement("div");
-  cardPointer.textContent = vp;
+  cardPointer.textContent = cardInfo.victoryPoint;
   card.append(cardPointer);
 
   const design = document.createElement("div");
@@ -135,21 +119,20 @@ const applyPattern = (card, cardInfo) => {
   return card;
 };
 
-const createDesignCard = (pattern, id, vp) => {
-  const card = createSkeleton(id, vp);
-
-  return applyPattern(card, pattern);
+const createDesignCard = (cardInfo, id) => {
+  const card = createSkeleton(cardInfo, id);
+  return applyPattern(card, cardInfo.design);
 };
 
-export const renderDesignCards = (cards) => {
+const renderDesignCards = (cards) => {
   designCardContainer.innerHTML = "";
   cards.forEach((card, i) => {
-    const ele = createDesignCard(card.design, i, card.victoryPoints);
+    const ele = createDesignCard(card, i);
     designCardContainer.appendChild(ele);
   });
 };
 
-export const renderActionCards = (cards) => {
+const renderActionCards = (cards) => {
   actionCardContainer.innerHTML = "";
 
   cards.forEach((card) => {
@@ -164,5 +147,25 @@ export const renderActionCards = (cards) => {
   });
 };
 
-toggleDeckView(panels);
-handleDragCards(containers);
+export const addToggleEventListenerOnDeck = () => {
+  panels.forEach((panel) => {
+    panel.addEventListener("click", () => {
+      panels.forEach((p) => p.classList.remove("expanded"));
+      panel.classList.add("expanded");
+    });
+  });
+};
+
+export const addDragEventListenerOnDeck = () => {
+  containers.forEach((container) => {
+    container.addEventListener("dragstart", handleDragStart);
+    container.addEventListener("dragend", (_e) => placeholder.remove());
+    container.addEventListener("dragover", (e) => handleDragOver(e, container));
+    container.addEventListener("drop", handleDragDrop);
+  });
+};
+
+export const renderDeck = (actionCards, designCards) => {
+  renderDesignCards(designCards);
+  renderActionCards(actionCards);
+};

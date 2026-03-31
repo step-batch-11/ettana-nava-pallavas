@@ -1,6 +1,5 @@
-import { renderBankState } from "./bank.js";
 import { colorsMap } from "/assets/colors.js";
-import { renderActionCards, renderDesignCards } from "./deck.js";
+
 const board = document.getElementById("board");
 const playersContainer = document.querySelector(".players");
 
@@ -117,14 +116,6 @@ const createCornerTiles = () => {
   });
 };
 
-const initBoard = () => {
-  createCells();
-  createCenterTiles();
-  createHorizontalTiles();
-  createVerticalTiles();
-  createCornerTiles();
-};
-
 const renderYarns = (yarns) => {
   yarns.forEach((row, r) => {
     row.forEach((color, c) => {
@@ -157,63 +148,47 @@ const renderTiles = (tiles, currentPlayer) => {
   });
 };
 
-const createPlayerCard = ({ name, avatar, token, victoryPoint }) => {
+const createPlayerCard = (
+  { name, avatar, token, victoryPoint, id },
+) => {
   const template = document.getElementById("player-card-template");
-  const clone = template.content.cloneNode(true);
 
+  const clone = template.content.cloneNode(true);
+  const element = clone.querySelector(".player-card");
   clone.querySelector(".player-name").textContent = name;
   clone.querySelector(".avatar").src = avatar;
   clone.querySelector(".stat1").textContent = victoryPoint;
   clone.querySelector(".stat2").textContent = token;
 
-  return clone;
+  return { clone, element };
 };
 
-const renderPlayers = (players) => {
+const renderPlayers = (players, currentPlayer) => {
   playersContainer.innerHTML = "";
   players.forEach((player) => {
-    const card = createPlayerCard({
+    const { clone, element } = createPlayerCard({
       name: player.name,
       avatar: "/assets/user_pin.png",
       token: player.tokens,
       victoryPoint: player.victoryPoint,
     });
 
-    playersContainer.appendChild(card);
+    if (player.id === currentPlayer.id) element.classList.add("current-player-card");
+
+    playersContainer.appendChild(clone);
   });
 };
 
-const renderPlayersCards = (playerId, players) => {
-  const currentPlayer = players.find(({ id }) => id === playerId);
-  renderDesignCards(currentPlayer.designCards);
-  renderActionCards(currentPlayer.actionCards);
+export const initBoard = () => {
+  createCells();
+  createCenterTiles();
+  createHorizontalTiles();
+  createVerticalTiles();
+  createCornerTiles();
 };
 
-const renderGame = async () => {
-  const res = await fetch("/game/board-state");
-  const { state } = await res.json();
+export const renderGame = (state) => {
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayer);
-  renderPlayers(state.players);
-  renderBankState();
-
-  renderPlayersCards(state.currentPlayer, state.players);
-};
-
-const distributeInitialAssets = async () => {
-  await new Promise((res) => {
-    setTimeout(() => {
-      res(1);
-    }, 500);
-  });
-
-  const res = await fetch("/game/distribute-initial-assets");
-  await res.json();
-  renderGame();
-};
-
-globalThis.onload = async () => {
-  initBoard();
-  await renderGame();
-  await distributeInitialAssets();
+  renderPlayers(state.players, state.currentPlayer);
 };

@@ -26,7 +26,7 @@ const players = [
 
 const gameState = {
   players,
-  currentPlayer: 2,
+  currentPlayer: players[0],
   board: {
     yarns: [
       [1, 2, 3, 4, 5],

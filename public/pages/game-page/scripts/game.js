@@ -34,7 +34,7 @@ const highlightDestinations = (destinations) => {
   });
 };
 
-globalThis.addEventListener("load", () => {
+export const applyEventListenerOnDice = () => {
   const dice = document.querySelector("#dice");
   dice.addEventListener("click", async () => {
     const { diceValues, destinations } = await rollDice();
@@ -42,4 +42,4 @@ globalThis.addEventListener("load", () => {
     removeMoveClass();
     highlightDestinations(destinations);
   });
-});
+};

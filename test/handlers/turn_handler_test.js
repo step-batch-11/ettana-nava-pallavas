@@ -2,8 +2,12 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
 import { createApp } from "../../src/app.js";
 import { logger } from "hono/logger";
-import designCards from "../../src/config/design_card.json" with { type: "json" };
-import actionCards from "../../src/config/action_card.json" with { type: "json" };
+import designCards from "../../src/config/design_card.json" with {
+  type: "json",
+};
+import actionCards from "../../src/config/action_card.json" with {
+  type: "json",
+};
 
 const players = [
   {
