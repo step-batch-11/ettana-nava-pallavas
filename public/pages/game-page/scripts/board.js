@@ -186,11 +186,12 @@ const createPlayerCard = ({ name, avatar, token, victoryPoint }) => {
 };
 
 const renderPlayers = (players) => {
+  playersContainer.innerHTML = "";
   players.forEach((player) => {
     const card = createPlayerCard({
       name: player.name,
       avatar: "/assets/user_pin.png",
-      token: player.availabeToken,
+      token: player.tokens,
       victoryPoint: player.victoryPoint,
     });
 

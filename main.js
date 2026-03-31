@@ -4,18 +4,9 @@ import actionCards from "./src/config/action_card.json" with { type: "json" };
 
 const players = [
   {
-    name: "Sandip",
-    id: 1,
-    availabeToken: 0,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 1, pos: { x: 3, y: 4 } },
-  },
-  {
     name: "Ajoy",
     id: 2,
-    availabeToken: 0,
+    tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -24,7 +15,7 @@ const players = [
   {
     name: "Dinesh",
     id: 3,
-    availabeToken: 0,
+    tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -60,7 +51,7 @@ const gameState = {
       ],
       [
         { value: null, playerId: null },
-        { value: 1, playerId: 1 },
+        { value: 1, playerId: null },
         { value: 2, playerId: null },
         { value: 3, playerId: null },
         { value: 4, playerId: null },
