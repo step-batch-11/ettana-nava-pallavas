@@ -1,4 +1,4 @@
-export class TurnManager {
+export default class TurnManager {
   #game;
   #randomFn;
   destinations;

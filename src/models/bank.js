@@ -1,6 +1,6 @@
 import { shuffle } from "../utils.js";
 
-export class Bank {
+export default class Bank {
   #designCards;
   #actionCards;
   #tokens = 55;

@@ -13,7 +13,7 @@ const players = [
   {
     name: "Sandip",
     id: 1,
-    availabeToken: 0,
+    token: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -22,7 +22,7 @@ const players = [
   {
     name: "Ajoy",
     id: 2,
-    availabeToken: 0,
+    token: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],

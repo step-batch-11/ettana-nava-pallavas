@@ -1,6 +1,6 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals, assertNotEquals } from "@std/assert";
-import { TurnManager } from "../../src/models/turn_manager.js";
+import TurnManager from "../../src/models/turn_manager.js";
 
 describe("tests for moving pin", () => {
   let turnManager;

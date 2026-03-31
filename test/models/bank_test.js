@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { Bank } from "../../src/models/bank.js";
+import Bank from "../../src/models/bank.js";
 
 describe("bank", () => {
   let designCards;
