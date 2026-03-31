@@ -32,7 +32,7 @@ export class Bank {
     players.forEach((player) => {
       player.token += this.#deductToken(2);
       player.designCards.push(this.#designCards.pop());
-      player.actionCards.push(this.#designCards.pop());
+      player.actionCards.push(this.#actionCards.pop());
     });
   }
 }
