@@ -6,7 +6,7 @@ import { Bank } from "./src/models/bank.js";
 const players = [
   {
     name: "Ajoy",
-    id: 2,
+    id: 1,
     tokens: 0,
     victoryPoint: 0,
     actionCards: [],
@@ -15,7 +15,7 @@ const players = [
   },
   {
     name: "Dinesh",
-    id: 3,
+    id: 2,
     tokens: 0,
     victoryPoint: 0,
     actionCards: [],

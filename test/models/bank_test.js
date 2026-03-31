@@ -1,4 +1,4 @@
-import { assertEquals } from "@std/assert";
+import { assertEquals, assertThrows } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { Bank } from "../../src/models/bank.js";
 
@@ -46,5 +46,23 @@ describe("bank", () => {
         assertEquals(bank.getBank(), result);
       },
     );
+  });
+
+  describe("Buy Design Card", () => {
+    it("shuld return new design card", () => {
+      const shuffleFn = (patterns) => patterns;
+      const bank = new Bank(designCards, actionCards, shuffleFn);
+      const result = { "id": 1, "victoryPoints": 1 };
+
+      assertEquals(bank.buyDesignCard(), result);
+    });
+
+    it("shuld throw error as design card are empty", () => {
+      const shuffleFn = (patterns) => patterns;
+      const bank = new Bank(designCards, actionCards, shuffleFn);
+      bank.buyDesignCard();
+
+      assertThrows(() => bank.buyDesignCard());
+    });
   });
 });

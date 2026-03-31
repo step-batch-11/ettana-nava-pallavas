@@ -21,4 +21,13 @@ export class Bank {
       tiles: this.#tiles,
     };
   }
+
+  buyDesignCard() {
+    if (this.#designCards.length === 0) {
+      throw new Error("No more design cards are remaining");
+    }
+
+    this.#tokens += 3;
+    return this.#designCards.splice(0, 1)[0];
+  }
 }
