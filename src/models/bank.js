@@ -1,16 +1,15 @@
-import { shuffle } from "../utils.js";
+import { shuffle as defaultShuffle } from "@std/random";
 
 export default class Bank {
   #designCards;
   #actionCards;
   #tokens = 55;
-  #tiles = [1, 2];
+  #tiles = [{ value: 1, playerId: null }, { value: 6, playerId: null }]; //random
   #yarns = [1, 2, 3, 4, 5];
 
-  constructor(dc = [], ac = [], shuffleFn = shuffle) {
-    this.#designCards = shuffleFn(dc, this.randomFn);
-    this.#actionCards = shuffleFn(ac, this.randomFn);
-    this.#yarns = shuffleFn(this.#yarns);
+  constructor(designCards = [], actionCards = [], shuffle = defaultShuffle) {
+    this.#designCards = shuffle(designCards);
+    this.#actionCards = shuffle(actionCards);
   }
 
   getBank() {

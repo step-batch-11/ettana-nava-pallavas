@@ -1,6 +1,7 @@
 import { createApp } from "./src/app.js";
 import designCards from "./src/config/design_card.json" with { type: "json" };
 import actionCards from "./src/config/action_card.json" with { type: "json" };
+import { Bank } from "./src/models/bank.js";
 
 const players = [
   {
@@ -93,13 +94,7 @@ const gameState = {
   },
 };
 
-const bank = {
-  tokens: 55,
-  availableDesignCards: designCards,
-  availableActionCards: actionCards,
-  yarns: [1, 2, 3, 4, 5],
-  tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
-};
+const bank = new Bank(designCards, actionCards);
 
 const main = () => {
   const PORT = Deno.env.get("PORT") || 8000;
