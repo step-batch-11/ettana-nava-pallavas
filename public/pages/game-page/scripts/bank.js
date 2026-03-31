@@ -1,3 +1,5 @@
+import { colorsMap } from "/assets/colors.js";
+
 const fetchData = () => {
   const bank = {
     tokens: 55,
@@ -7,18 +9,10 @@ const fetchData = () => {
     yarns: [1, 2, 3, 4, 5],
   };
 
-  const colorMap = {
-    1: "red",
-    2: "yellow",
-    3: "blue",
-    4: "purple",
-    5: "green",
-  };
-
-  return { bank, colorMap };
+  return { bank };
 };
 
-const { bank, colorMap } = fetchData();
+const { bank } = fetchData();
 
 const tokenPlaceholder = document.querySelector("#token-count");
 tokenPlaceholder.textContent = bank.tokens;
@@ -30,5 +24,5 @@ tiles.forEach((tile, index) => {
 
 const yarns = document.querySelectorAll(".yarn");
 yarns.forEach((yarn, index) => {
-  yarn.classList.add(colorMap[bank.yarns[index]]);
+  yarn.style.backgroundColor = colorsMap[bank.yarns[index]];
 });

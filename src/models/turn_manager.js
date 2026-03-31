@@ -83,7 +83,7 @@ export class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      }),
+      })
     );
     return coords;
   }

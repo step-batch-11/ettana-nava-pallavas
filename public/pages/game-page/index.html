@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,29 +20,30 @@
 
   <body>
     <div class="app">
-      <section class="players">
-      </section>
+      <section class="players"></section>
 
       <section class="board-deck">
-        <div id="board"></div>
+        <div class="board-container">
+          <div id="board"></div>
+        </div>
 
         <div class="deck">
           <div class="panel design-cards expanded">
             <div class="cards">
-              <!-- <div class="card-item" draggable="true" id="d-1">1</div>
+              <div class="card-item" draggable="true" id="d-1">1</div>
               <div class="card-item" draggable="true" id="d-2">2</div>
               <div class="card-item" draggable="true" id="d-3">3</div>
               <div class="card-item" draggable="true" id="d-4">4</div>
-              <div class="card-item" draggable="true" id="d-5">5</div> -->
+              <div class="card-item" draggable="true" id="d-5">5</div>
             </div>
           </div>
 
           <div class="panel action-cards">
             <div class="cards">
-              <!-- <div class="card-item" draggable="true" id="a-1"></div>
+              <div class="card-item" draggable="true" id="a-1"></div>
               <div class="card-item" draggable="true" id="a-2"></div>
               <div class="card-item" draggable="true" id="a-3"></div>
-              <div class="card-item" draggable="true" id="a-4"></div> -->
+              <div class="card-item" draggable="true" id="a-4"></div>
             </div>
           </div>
         </div>
@@ -110,7 +110,8 @@
                 <img
                   src="/assets/victory_point.png"
                   alt="victory point icon"
-                  class="stat-icon" />
+                  class="stat-icon"
+                />
                 <span class="stat-value stat1"></span>
               </div>
 
@@ -118,7 +119,8 @@
                 <img
                   src="/assets/token.png"
                   alt="Token icon"
-                  class="stat-icon" />
+                  class="stat-icon"
+                />
                 <span class="stat-value stat2"></span>
               </div>
             </div>
@@ -127,5 +129,4 @@
       </template>
     </div>
   </body>
-
 </html>

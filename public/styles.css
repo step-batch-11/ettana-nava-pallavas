@@ -1,1 +1,25 @@
-:root {}
+:root {
+  --bg-main: #faf7f2;
+  --bg-surface: #ffffff;
+  --bg-soft: #f4efe6;
+
+  --gold-primary: #c8a951;
+  --gold-light: #e9d7a5;
+  --gold-dark: #9e7c2f;
+
+  --red: #d64545;
+  --yellow: #f2c94c;
+  --green: #27ae60;
+  --blue: #2d9cdb;
+  --purple: #9b51e0;
+
+  --text-primary: #2f2f2f;
+  --text-secondary: #6b6b6b;
+  --border: #e0d8c8;
+
+  --success: #27ae60;
+  --warning: #f2994a;
+  --error: #eb5757;
+  --font-primary: "Inter", sans-serif;
+  --font-heading: "Cinzel", serif;
+}

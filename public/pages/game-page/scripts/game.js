@@ -1,4 +1,4 @@
-import { colorsMap } from "./board.js";
+import { colorsMap } from "/assets/colors.js";
 
 const rollDice = async () => {
   const response = await fetch("/game/roll", {
@@ -11,9 +11,10 @@ const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
   const colorDice = document.querySelector("#color-dice");
   numberDice.textContent = number;
-  const color = colorsMap[colorId];
   const diceColor = document.createElement("span");
-  diceColor.classList.add(color, "dice-color");
+  diceColor.classList.add("dice-color");
+
+  diceColor.style.backgroundColor = colorsMap[colorId];
   colorDice.replaceChildren(diceColor);
 };
 

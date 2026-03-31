@@ -21,9 +21,18 @@ const players = [
     designCards: [],
     pin: { color: 2, pos: { x: 2, y: 1 } },
   },
+  {
+    name: "Dinesh",
+    id: 3,
+    availabeToken: 0,
+    victoryPoint: 0,
+    actionCards: [],
+    designCards: [],
+    pin: { color: 3, pos: { x: 4, y: 1 } },
+  },
 ];
 
-export const gameState = {
+const gameState = {
   players,
   currentPlayer: {
     playerId: 1,
@@ -78,7 +87,7 @@ export const gameState = {
         { value: 2, playerId: null },
         { value: 3, playerId: null },
         { value: 4, playerId: null },
-        { value: 5, playerId: 4 },
+        { value: 5, playerId: null },
         { value: null, playerId: null },
       ],
       [
