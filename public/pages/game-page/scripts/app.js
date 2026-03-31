@@ -37,7 +37,8 @@ globalThis.onload = async () => {
   const { state } = await res.json();
   renderGame(state);
   await renderBankState();
-  renderDeck(state.currentPlayer.actionCards, state.currentPlayer.designCards);
+
+  renderDeck(state.players, state.currentPlayer);
 
   addEventListener();
 };

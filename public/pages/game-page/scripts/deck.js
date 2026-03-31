@@ -165,7 +165,9 @@ export const addDragEventListenerOnDeck = () => {
   });
 };
 
-export const renderDeck = (actionCards, designCards) => {
-  renderDesignCards(designCards);
-  renderActionCards(actionCards);
+export const renderDeck = (players, currentPlayerId) => {
+  const currentPlayer = players.find((player) => player.id === currentPlayerId);
+
+  renderDesignCards(currentPlayer.designCards);
+  renderActionCards(currentPlayer.actionCards);
 };

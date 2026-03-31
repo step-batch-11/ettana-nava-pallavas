@@ -24,7 +24,7 @@ body {
 }
 
 .board-deck {
-  width: 45%;
+  width: 40%;
   display: flex;
   flex-direction: column;
   gap: 20px;
