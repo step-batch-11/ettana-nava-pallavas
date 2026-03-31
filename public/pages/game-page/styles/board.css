@@ -1,4 +1,4 @@
-@import "../../../styles.css";
+@import "./theme.css";
 
 :root {
   --cell-size: 120px;
