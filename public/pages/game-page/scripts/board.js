@@ -1,3 +1,4 @@
+import { renderBankState } from "./bank.js";
 import { colorsMap } from "/assets/colors.js";
 
 const board = document.getElementById("board");
@@ -187,6 +188,7 @@ globalThis.onload = async () => {
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles);
   renderPlayers(state.players);
+  renderBankState();
 
   document.querySelectorAll(".octagon").forEach((el) => {
     el.addEventListener("click", console.log);
