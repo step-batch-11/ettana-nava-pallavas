@@ -24,7 +24,7 @@ describe("bank", () => {
         availableDesignCards: 1,
         availableActionCards: 1,
         yarns: [1, 2, 3, 4, 5],
-        tiles: [1, 2],
+        tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
       };
 
       assertEquals(bank.getBank(), result);
@@ -40,7 +40,7 @@ describe("bank", () => {
           availableDesignCards: 0,
           availableActionCards: 0,
           yarns: [1, 2, 3, 4, 5],
-          tiles: [1, 2],
+          tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
         };
         const bank = new Bank(undefined, undefined, shuffleFn);
         assertEquals(bank.getBank(), result);
