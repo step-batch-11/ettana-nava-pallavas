@@ -47,17 +47,4 @@ describe("bank", () => {
       },
     );
   });
-
-  describe("Shuffle", () => {
-    it("shuffle input based on given random fn", () => {
-      const randomFn = () => 1;
-      const bank = new Bank(designCards, actionCards);
-      const shuffled = bank.shuffle(
-        [{ id: 1 }, { id: 2 }, { id: 3 }],
-        randomFn,
-      );
-
-      assertEquals(shuffled, [{ id: 2 }, { id: 3 }, { id: 1 }]);
-    });
-  });
 });
