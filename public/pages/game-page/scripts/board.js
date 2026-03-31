@@ -1,6 +1,6 @@
 import { renderBankState } from "./bank.js";
 import { colorsMap } from "/assets/colors.js";
-
+import { renderActionCards, renderDesignCards } from "./deck.js";
 const board = document.getElementById("board");
 const playersContainer = document.querySelector(".players");
 
@@ -163,8 +163,8 @@ const createPlayerCard = ({ name, avatar, token, victoryPoint }) => {
 
   clone.querySelector(".player-name").textContent = name;
   clone.querySelector(".avatar").src = avatar;
-  clone.querySelector(".stat1").textContent = token;
-  clone.querySelector(".stat2").textContent = victoryPoint;
+  clone.querySelector(".stat1").textContent = victoryPoint;
+  clone.querySelector(".stat2").textContent = token;
 
   return clone;
 };
@@ -183,18 +183,37 @@ const renderPlayers = (players) => {
   });
 };
 
-globalThis.onload = async () => {
-  initBoard();
+const renderPlayersCards = (playerId, players) => {
+  const currentPlayer = players.find(({ id }) => id === playerId);
+  renderDesignCards(currentPlayer.designCards);
+  renderActionCards(currentPlayer.actionCards);
+};
 
+const renderGame = async () => {
   const res = await fetch("/game/board-state");
   const { state } = await res.json();
-
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayer);
   renderPlayers(state.players);
   renderBankState();
 
-  document.querySelectorAll(".octagon").forEach((el) => {
-    el.addEventListener("click", console.log);
+  renderPlayersCards(state.currentPlayer, state.players);
+};
+
+const distributeInitialAssets = async () => {
+  await new Promise((res) => {
+    setTimeout(() => {
+      res(1);
+    }, 500);
   });
+
+  const res = await fetch("/game/distribute-initial-assets");
+  await res.json();
+  renderGame();
+};
+
+globalThis.onload = async () => {
+  initBoard();
+  await renderGame();
+  await distributeInitialAssets();
 };

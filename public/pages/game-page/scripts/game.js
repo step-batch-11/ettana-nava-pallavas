@@ -28,8 +28,7 @@ const removeTileEventListeners = () => {
 
 const removeMoveClass = () => {
   const tiles = document.querySelectorAll(".tile");
-  const halfTiles = document.querySelectorAll(".halfTile");
-  [...tiles, ...halfTiles].forEach((tile) => {
+  [...tiles].forEach((tile) => {
     tile.classList.remove("premium-move", "normal-move", "jump-move");
   });
 };
@@ -88,22 +87,23 @@ const handlePlayerMove = async (destination) => {
   removeTileEventListeners();
 };
 
-const highlightTile = (tile) => {
+const highlightTile = (tile, destination) => {
   tile.classList.add(`${destination.type}-move`);
 };
 
 const renderMoveOptions = (destinations) => {
-  destinations.forEach((destination) => {
+  destinations.forEach((route) => {
+    const destination = route.destination;
     const id = `#tile${destination.x}${destination.y}`;
     const tile = document.querySelector(id);
-    highlightTile(tile);
+    highlightTile(tile, route);
 
-    if (destination.type === "premium") {
-      const penalty = destination.recipients.length;
+    if (route.type === "premium") {
+      const penalty = route.recipients.length;
       attachPenaltyTooltip(tile, penalty);
     }
 
-    tile.addEventListener("click", () => handlePlayerMove(destination));
+    tile.addEventListener("click", () => handlePlayerMove(route));
   });
 };
 

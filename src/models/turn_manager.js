@@ -1,5 +1,5 @@
 import { findRoutes } from "../utils/find_routes.js";
-export class TurnManager {
+export default class TurnManager {
   #game;
   #randomFn;
   destinations;
