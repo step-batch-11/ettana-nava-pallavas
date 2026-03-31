@@ -75,7 +75,7 @@ export default class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      }),
+      })
     );
     return coords;
   }
@@ -139,7 +139,7 @@ export default class TurnManager {
           return b;
         }
         return a.recipients.length < b.recipients.length ? a : b;
-      }),
+      })
     );
   }
 
