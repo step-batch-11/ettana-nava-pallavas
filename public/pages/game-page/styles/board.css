@@ -1,6 +1,19 @@
+@import "../../../styles.css";
+
 :root {
-  --cell-size: 100px;
+  --cell-size: 120px;
   --gap: 10px;
+}
+
+.board-deck {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.board-container {
+  background-color: var(--bg-surface);
+  padding: 20px;
 }
 
 #board {
@@ -10,33 +23,10 @@
   gap: var(--gap);
 }
 
-.octagon {
-  --cut: 30%;
-  width: var(--cell-size);
-  height: var(--cell-size);
-  background: rgb(134, 134, 133);
-
-  clip-path: polygon(
-    var(--cut) 0%,
-    calc(100% - var(--cut)) 0%,
-    100% var(--cut),
-    100% calc(100% - var(--cut)),
-    calc(100% - var(--cut)) 100%,
-    var(--cut) 100%,
-    0% calc(100% - var(--cut)),
-    0% var(--cut)
-  );
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transition: 0.2s;
-}
-
 .halfTile {
   width: 40px;
   height: 40px;
-  background: #d6b48a;
+  background: var(--gold-light);
   position: absolute;
   clip-path: polygon(20px 20px, 40px 40px, 0 40px);
 }
@@ -73,16 +63,10 @@
   transform: scale(1.05);
 }
 
-.dot {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-}
-
 .board-deck .tile {
-  width: 40px;
-  height: 40px;
-  background: #d6b48a;
+  width: 52px;
+  height: 52px;
+  background: var(--gold-light);
   transform: rotate(45deg);
   position: absolute;
   display: flex;
@@ -92,8 +76,33 @@
 
 .player-icon {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  font-size: 35px;
+  top: 0px;
+  right: 8px;
+  font-size: 38px;
   z-index: 999;
+}
+
+.tile-value {
+  transform: rotate(-45deg);
+}
+
+.cell {
+  position: relative;
+  width: var(--cell-size);
+  height: var(--cell-size);
+}
+
+.octagon {
+  width: 100%;
+  height: 100%;
+}
+
+.dot {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

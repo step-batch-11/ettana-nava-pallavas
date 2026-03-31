@@ -1,16 +1,19 @@
 li {
   list-style: none;
 }
+
 .players {
   display: flex;
   gap: 20px;
-  justify-content: center;
+  flex-direction: column;
+  align-items: end;
 }
+
 .player-card {
   position: relative;
   width: 150px;
   min-height: 185px;
-  max-height: 240px;
+  max-height: 210px;
   background: linear-gradient(180deg, #f6ecd8 0%, #e7d5b5 100%);
   border: 3px solid #8b5a2b;
   border-radius: 16px;
@@ -26,7 +29,6 @@ li {
   justify-content: center;
   align-items: center;
   padding: 18px 12px 10px;
-  border-bottom: 2px solid rgba(139, 90, 43, 0.25);
 }
 
 .player-avatar {
@@ -83,4 +85,31 @@ li {
   font-weight: 700;
   color: #3b2413;
   line-height: 1;
+}
+
+.player-card::after {
+  content: "";
+  position: absolute;
+
+  top: 50%;
+  right: -32px;
+  /* space outside card */
+  transform: translateY(-50%);
+
+  width: 32px;
+  height: 24px;
+
+  background: var(--gold-primary);
+
+  /* Custom arrow shape */
+  clip-path: polygon(
+    0% 0%,
+    60% 0%,
+    80% 30%,
+    100% 50%,
+    80% 70%,
+    60% 100%,
+    0% 100%,
+    15% 50%
+  );
 }

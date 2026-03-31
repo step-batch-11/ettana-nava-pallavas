@@ -1,0 +1,182 @@
+[
+  {
+    "id": 1,
+    "type": "move",
+    "description": "Move the pin to any unoccupied square."
+  },
+  {
+    "id": 2,
+    "type": "move",
+    "description": "Move the pin to any unoccupied square."
+  },
+  {
+    "id": 3,
+    "type": "move",
+    "description": "Move the pin to any unoccupied square."
+  },
+  {
+    "id": 4,
+    "type": "get tokens",
+    "description": "Get 3 tokens from the reserve."
+  },
+  {
+    "id": 5,
+    "type": "get tokens",
+    "description": "Get 3 tokens from the reserve."
+  },
+  {
+    "id": 6,
+    "type": "get tokens",
+    "description": "Get 3 tokens from the reserve."
+  },
+  {
+    "id": 7,
+    "type": "get design card",
+    "description": "Get a design card from the stack."
+  },
+  {
+    "id": 8,
+    "type": "get design card",
+    "description": "Get a design card from the stack."
+  },
+  {
+    "id": 9,
+    "type": "get design card",
+    "description": "Get a design card from the stack."
+  },
+  {
+    "id": 10,
+    "type": "steal token",
+    "description": "Choose a player and steal a maximum of 2 tokens."
+  },
+  {
+    "id": 11,
+    "type": "steal token",
+    "description": "Choose a player and steal a maximum of 2 tokens."
+  },
+  {
+    "id": 12,
+    "type": "steal token",
+    "description": "Choose a player and steal a maximum of 2 tokens."
+  },
+  {
+    "id": 13,
+    "type": "preset",
+    "description": "Preset color of the die and roll only the number die."
+  },
+  {
+    "id": 14,
+    "type": "preset",
+    "description": "Preset color of the die and roll only the number die."
+  },
+  {
+    "id": 15,
+    "type": "preset",
+    "description": "Preset color of the die and roll only the number die."
+  },
+  {
+    "id": 16,
+    "type": "victory point",
+    "description": "1 Victory point. Reveal the card immediately and keep face-up. Cannot be stolen."
+  },
+  {
+    "id": 17,
+    "type": "victory point",
+    "description": "1 Victory point. Reveal the card immediately and keep face-up. Cannot be stolen."
+  },
+  {
+    "id": 18,
+    "type": "victory point",
+    "description": "1 Victory point. Reveal the card immediately and keep face-up. Cannot be stolen."
+  },
+  {
+    "id": 19,
+    "type": "tax",
+    "description": "All other players pay 1 token to the reserve."
+  },
+  {
+    "id": 20,
+    "type": "tax",
+    "description": "All other players pay 1 token to the reserve."
+  },
+  {
+    "id": 21,
+    "type": "tax",
+    "description": "All other players pay 1 token to the reserve."
+  },
+  {
+    "id": 22,
+    "type": "steal action card",
+    "description": "Choose a player and steal an action card."
+  },
+  {
+    "id": 23,
+    "type": "steal action card",
+    "description": "Choose a player and steal an action card."
+  },
+  {
+    "id": 24,
+    "type": "steal action card",
+    "description": "Choose a player and steal an action card."
+  },
+  {
+    "id": 25,
+    "type": "swap yarns",
+    "description": "Swap positions of any two yarns on the board."
+  },
+  {
+    "id": 26,
+    "type": "swap yarns",
+    "description": "Swap positions of any two yarns on the board."
+  },
+  {
+    "id": 27,
+    "type": "swap yarns",
+    "description": "Swap positions of any two yarns on the board."
+  },
+  {
+    "id": 28,
+    "type": "roll again",
+    "description": "Roll the dice again (cannot be played with Preset action card)."
+  },
+  {
+    "id": 29,
+    "type": "roll again",
+    "description": "Roll the dice again (cannot be played with Preset action card)."
+  },
+  {
+    "id": 30,
+    "type": "roll again",
+    "description": "Roll the dice again (cannot be played with Preset action card)."
+  },
+  {
+    "id": 31,
+    "type": "gain token",
+    "description": "Call out a number and roll the dice. Gain called out number of tokens if number rolled is greater than or equal to the number called."
+  },
+  {
+    "id": 32,
+    "type": "gain token",
+    "description": "Call out a number and roll the dice. Gain called out number of tokens if number rolled is greater than or equal to the number called."
+  },
+  {
+    "id": 33,
+    "type": "gain token",
+    "description": "Call out a number and roll the dice. Gain called out number of tokens if number rolled is greater than or equal to the number called."
+  },
+  {
+    "id": 34,
+    "type": "replace",
+    "description": "Replace a yarn or a number tile with the reserve which has 5 yarns and 2 number tiles."
+  },
+  {
+    "id": 35,
+    "type": "replace",
+    "description": "Replace a yarn or a number tile with the reserve which has 5 yarns and 2 number tiles."
+  },
+  {
+    "id": 36,
+    "type": "replace",
+    "description": "Replace a yarn or a number tile with the reserve which has 5 yarns and 2 number tiles."
+  }
+]

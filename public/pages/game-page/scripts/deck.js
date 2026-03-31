@@ -1,6 +1,6 @@
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
-let souceContainer = null;
+let sourceContainer = null;
 let dragged = null;
 const placeholder = document.createElement("div");
 placeholder.classList.add("placeholder");
@@ -38,7 +38,7 @@ const handleDragStart = (e) => {
   if (!e.target.classList.contains("card-item")) return;
 
   dragged = e.target;
-  souceContainer = e.target.closest(".cards");
+  sourceContainer = e.target.closest(".cards");
 };
 
 const autoScrollWithDrag = (e, container) => {
@@ -59,7 +59,7 @@ const autoScrollWithDrag = (e, container) => {
 const handleDragOver = (e, container) => {
   e.preventDefault();
 
-  if (container !== souceContainer) return;
+  if (container !== sourceContainer) return;
   autoScrollWithDrag(e, container);
 
   const afterElement = getDragAfterElement(container, e.clientX);
@@ -76,7 +76,7 @@ const handleDragDrop = (e) => {
   if (!dragged) return;
 
   const targetContainer = placeholder.closest(".cards");
-  if (souceContainer !== targetContainer) {
+  if (sourceContainer !== targetContainer) {
     placeholder.remove();
     return;
   }

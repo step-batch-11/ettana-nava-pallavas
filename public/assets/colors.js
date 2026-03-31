@@ -1,0 +1,31 @@
+export const color = {
+  Red: "#D64545",
+  Yellow: "#F2C94C",
+  Green: "#27AE60",
+  Blue: "#2D9CDB",
+  Purple: "#9B51E0",
+  Background_Main: "#FAF7F2",
+  Cards: "#FFFFFF",
+  Secondary_Cards: "#F4EFE6",
+  Borders: "#E0D8C8",
+  Primary_Gold: "#C8A951",
+  Deep_Gold: "#9E7C2F",
+  Light_Gold: "#E6D3A3",
+  Primary_Text: "#2F2F2F",
+  Secondary_Text: "#6B6B6B",
+  Disabled_Text: "#A8A8A8",
+  Divider: "#DDD6C8",
+  Success: "#27AE60",
+  Error: " #EB5757",
+  Info: "#56CCF2",
+  Warning: "#F2994A",
+};
+
+export const colorsMap = {
+  1: color["Red"],
+  2: color["Blue"],
+  3: color["Green"],
+  4: color["Purple"],
+  5: color["Yellow"],
+  6: "black",
+};

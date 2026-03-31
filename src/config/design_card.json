@@ -1,5 +1,6 @@
-{
-  "1": {
+[
+  {
+    "id": 1,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 5 },
@@ -9,7 +10,8 @@
       { "coord": { "x": 4, "y": 4 }, "color": 5 }
     ]
   },
-  "2": {
+  {
+    "id": 2,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 1, "y": 0 }, "color": 5 },
@@ -20,7 +22,8 @@
       { "coord": { "x": 4, "y": 0 }, "color": 1 }
     ]
   },
-  "3": {
+  {
+    "id": 3,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 2, "y": 0 }, "color": 1 },
@@ -30,7 +33,8 @@
       { "coord": { "x": 4, "y": 2 }, "color": 1 }
     ]
   },
-  "4": {
+  {
+    "id": 4,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 2, "y": 1 }, "color": 3 },
@@ -41,7 +45,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 1 }
     ]
   },
-  "5": {
+  {
+    "id": 5,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 2, "y": 0 }, "color": 5 },
@@ -51,7 +56,8 @@
       { "coord": { "x": 2, "y": 4 }, "color": 5 }
     ]
   },
-  "6": {
+  {
+    "id": 6,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 1, "y": 2 }, "color": 3 },
@@ -62,7 +68,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 1 }
     ]
   },
-  "7": {
+  {
+    "id": 7,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 2 },
@@ -73,7 +80,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 3 }
     ]
   },
-  "8": {
+  {
+    "id": 8,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 1, "y": 3 }, "color": 5 },
@@ -84,7 +92,8 @@
       { "coord": { "x": 4, "y": 1 }, "color": 4 }
     ]
   },
-  "9": {
+  {
+    "id": 9,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 1, "y": 1 }, "color": 2 },
@@ -94,7 +103,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 2 }
     ]
   },
-  "10": {
+  {
+    "id": 10,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 1, "y": 2 }, "color": 4 },
@@ -104,7 +114,8 @@
       { "coord": { "x": 3, "y": 2 }, "color": 4 }
     ]
   },
-  "11": {
+  {
+    "id": 11,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 2 },
@@ -114,7 +125,8 @@
       { "coord": { "x": 4, "y": 4 }, "color": 2 }
     ]
   },
-  "12": {
+  {
+    "id": 12,
     "victoryPoints": 1,
     "design": [
       { "coord": { "x": 1, "y": 1 }, "color": 2 },
@@ -126,7 +138,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 2 }
     ]
   },
-  "13": {
+  {
+    "id": 13,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 2 },
@@ -139,7 +152,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 5 }
     ]
   },
-  "14": {
+  {
+    "id": 14,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 1, "y": 1 }, "color": 4 },
@@ -152,7 +166,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 2 }
     ]
   },
-  "15": {
+  {
+    "id": 15,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 1 },
@@ -165,7 +180,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 2 }
     ]
   },
-  "16": {
+  {
+    "id": 16,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 3 }, "color": 2 },
@@ -177,7 +193,8 @@
       { "coord": { "x": 3, "y": 3 }, "color": 1 }
     ]
   },
-  "17": {
+  {
+    "id": 17,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 3 }, "color": 5 },
@@ -190,7 +207,8 @@
       { "coord": { "x": 4, "y": 1 }, "color": 3 }
     ]
   },
-  "18": {
+  {
+    "id": 18,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 1, "y": 2 }, "color": 4 },
@@ -203,7 +221,8 @@
       { "coord": { "x": 2, "y": 3 }, "color": 5 }
     ]
   },
-  "19": {
+  {
+    "id": 19,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 4 }, "color": 3 },
@@ -213,7 +232,8 @@
       { "coord": { "x": 4, "y": 0 }, "color": 3 }
     ]
   },
-  "20": {
+  {
+    "id": 20,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 1, "y": 2 }, "color": 5 },
@@ -226,7 +246,8 @@
       { "coord": { "x": 4, "y": 1 }, "color": 3 }
     ]
   },
-  "21": {
+  {
+    "id": 21,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 1 },
@@ -239,7 +260,8 @@
       { "coord": { "x": 3, "y": 1 }, "color": 5 }
     ]
   },
-  "22": {
+  {
+    "id": 22,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 3 }, "color": 3 },
@@ -252,7 +274,8 @@
       { "coord": { "x": 4, "y": 1 }, "color": 5 }
     ]
   },
-  "23": {
+  {
+    "id": 23,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 1, "y": 0 }, "color": 3 },
@@ -265,7 +288,8 @@
       { "coord": { "x": 2, "y": 3 }, "color": 5 }
     ]
   },
-  "24": {
+  {
+    "id": 24,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 2 },
@@ -277,7 +301,8 @@
       { "coord": { "x": 4, "y": 0 }, "color": 1 }
     ]
   },
-  "25": {
+  {
+    "id": 25,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 5 },
@@ -293,7 +318,8 @@
       { "coord": { "x": 2, "y": 4 }, "color": 3 }
     ]
   },
-  "26": {
+  {
+    "id": 26,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 1, "y": 1 }, "color": 1 },
@@ -308,7 +334,8 @@
       { "coord": { "x": 4, "y": 4 }, "color": 4 }
     ]
   },
-  "27": {
+  {
+    "id": 27,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 4 },
@@ -322,7 +349,8 @@
       { "coord": { "x": 4, "y": 2 }, "color": 1 }
     ]
   },
-  "28": {
+  {
+    "id": 28,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 1, "y": 2 }, "color": 4 },
@@ -337,7 +365,8 @@
       { "coord": { "x": 4, "y": 4 }, "color": 3 }
     ]
   },
-  "29": {
+  {
+    "id": 29,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 1 }, "color": 1 },
@@ -351,7 +380,8 @@
       { "coord": { "x": 4, "y": 3 }, "color": 5 }
     ]
   },
-  "30": {
+  {
+    "id": 30,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 3 },
@@ -365,7 +395,8 @@
       { "coord": { "x": 4, "y": 2 }, "color": 1 }
     ]
   },
-  "31": {
+  {
+    "id": 31,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 1 }, "color": 4 },
@@ -380,7 +411,8 @@
       { "coord": { "x": 4, "y": 2 }, "color": 2 }
     ]
   },
-  "32": {
+  {
+    "id": 32,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 5 },
@@ -394,7 +426,8 @@
       { "coord": { "x": 4, "y": 2 }, "color": 3 }
     ]
   },
-  "33": {
+  {
+    "id": 33,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 3 },
@@ -408,7 +441,8 @@
       { "coord": { "x": 4, "y": 2 }, "color": 3 }
     ]
   },
-  "34": {
+  {
+    "id": 34,
     "victoryPoints": 4,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 5 },
@@ -422,7 +456,8 @@
       { "coord": { "x": 4, "y": 4 }, "color": 2 }
     ]
   },
-  "35": {
+  {
+    "id": 35,
     "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 2 }, "color": 5 },
@@ -437,7 +472,8 @@
       { "coord": { "x": 4, "y": 3 }, "color": 3 }
     ]
   },
-  "36": {
+  {
+    "id": 36,
     "victoryPoints": 2,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 4 },
@@ -452,4 +488,4 @@
       { "coord": { "x": 4, "y": 4 }, "color": 5 }
     ]
   }
-}
+]

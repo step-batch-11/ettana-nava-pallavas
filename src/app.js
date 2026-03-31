@@ -6,21 +6,24 @@ import { logger } from "hono/logger";
 
 export const createApp = (
   gameState,
+  bank,
   randomFn = Math.random,
   loggerFn = logger,
 ) => {
   const app = new Hono();
+  const turnManager = new TurnManager(gameState, randomFn);
 
   app.use(loggerFn());
 
   app.use("/game/*", async (ctx, next) => {
     ctx.set("boardState", gameState);
-    const turnManager = new TurnManager(gameState, randomFn);
     ctx.set("turnManager", turnManager);
+    ctx.set("bank", bank);
     await next();
   });
 
   app.route("/game", gameRoute);
+  app.get("/", serveStatic({ root: "public/pages/game-page" }));
   app.get("*", serveStatic({ root: "public" }));
 
   return app;
