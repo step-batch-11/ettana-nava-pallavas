@@ -1,5 +1,9 @@
+import { colorsMap } from "../../../assets/colors.js";
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
+const designCardContainer = document.getElementById("design-card-panel");
+const actionCardContainer = document.getElementById("action-card-panel");
+
 let sourceContainer = null;
 let dragged = null;
 const placeholder = document.createElement("div");
@@ -91,6 +95,72 @@ const handleDragCards = (containers) => {
     container.addEventListener("dragend", (_e) => placeholder.remove());
     container.addEventListener("dragover", (e) => handleDragOver(e, container));
     container.addEventListener("drop", handleDragDrop);
+  });
+};
+
+const createSkeleton = (id, vp) => {
+  const card = document.createElement("div");
+  card.classList.add("card-item");
+
+  const cardPointer = document.createElement("div");
+  cardPointer.textContent = vp;
+  card.append(cardPointer);
+
+  const design = document.createElement("div");
+  design.classList.add("design");
+
+  card.id = id + 1;
+  card.setAttribute("draggable", "true");
+
+  for (let r = 0; r < 5; r++) {
+    for (let c = 0; c < 5; c++) {
+      const colorContainer = document.createElement("div");
+      colorContainer.classList.add("color-item");
+      colorContainer.id = `r-${r}-c-${c}`;
+      colorContainer.style.backgroundColor = "white";
+      design.appendChild(colorContainer);
+    }
+  }
+
+  card.append(design);
+  return card;
+};
+
+const applyPattern = (card, cardInfo) => {
+  cardInfo.forEach(({ coord, color }) => {
+    const ele = card.querySelector(`#r-${coord.x}-c-${coord.y}`);
+    ele.style.backgroundColor = colorsMap[color];
+  });
+
+  return card;
+};
+
+const createDesignCard = (pattern, id, vp) => {
+  const card = createSkeleton(id, vp);
+
+  return applyPattern(card, pattern);
+};
+
+export const renderDesignCards = (cards) => {
+  designCardContainer.innerHTML = "";
+  cards.forEach((card, i) => {
+    const ele = createDesignCard(card.design, i, card.victoryPoints);
+    designCardContainer.appendChild(ele);
+  });
+};
+
+export const renderActionCards = (cards) => {
+  actionCardContainer.innerHTML = "";
+
+  cards.forEach((card) => {
+    const actionCard = document.createElement("div");
+    actionCard.classList.add("card-item");
+    actionCard.setAttribute("draggable", "true");
+    actionCard.dataset.id = card.id;
+    actionCard.id = `a-${card.id}`;
+
+    actionCard.textContent = card.description;
+    actionCardContainer.appendChild(actionCard);
   });
 };
 

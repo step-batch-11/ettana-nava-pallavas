@@ -1,17 +1,18 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../../src/app.js";
 import { assertEquals } from "@std/assert/equals";
-import { Bank } from "../../src/models/bank.js";
 import { buyDesignCard } from "../../src/handlers/bank_handler.js";
+import Bank from "../../src/models/bank.js";
 
 describe("Game route", () => {
-  const game = {};
+  const game = { currentPlayer: 1, players: [{ id: 1, designCards: [] }] };
   const designCards = [{ "id": 1, "victoryPoints": 1 }];
   const actionCards = [{
     "id": 1,
     "type": "move",
     "description": "Move the pin to any unoccupied square.",
   }];
+
   const bank = new Bank(designCards, actionCards);
   let app;
 

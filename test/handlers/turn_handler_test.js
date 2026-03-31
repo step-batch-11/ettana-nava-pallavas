@@ -2,18 +2,14 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
 import { createApp } from "../../src/app.js";
 import { logger } from "hono/logger";
-import designCards from "../../src/config/design_card.json" with {
-  type: "json",
-};
-import actionCards from "../../src/config/action_card.json" with {
-  type: "json",
-};
+import designCards from "../../src/config/design_card.json" with { type: "json" };
+import actionCards from "../../src/config/action_card.json" with { type: "json" };
 
 const players = [
   {
     name: "Sandip",
     id: 1,
-    availabeToken: 0,
+    token: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -22,7 +18,7 @@ const players = [
   {
     name: "Ajoy",
     id: 2,
-    availabeToken: 0,
+    token: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -105,7 +101,10 @@ const bank = {
   availableDesignCards: designCards,
   availableActionCards: actionCards,
   yarns: [1, 2, 3, 4, 5],
-  tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+  tiles: [
+    { value: 1, playerId: null },
+    { value: 6, playerId: null },
+  ],
 };
 
 describe("roll dice request : ", () => {
@@ -160,14 +159,13 @@ describe("roll dice request : ", () => {
       {
         x: 2,
         y: 4,
-        type: "premium",
+        type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 2, y: 1 },
-          { x: 2, y: 2 },
-          { x: 2, y: 3 },
+          { x: 1, y: 2 },
+          { x: 1, y: 3 },
+          { x: 1, y: 4 },
         ],
-        recipients: [2],
       },
       {
         x: 0,
@@ -175,9 +173,9 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 0, y: 1 },
-          { x: 0, y: 2 },
-          { x: 0, y: 3 },
+          { x: 1, y: 2 },
+          { x: 1, y: 3 },
+          { x: 1, y: 4 },
         ],
       },
       {
@@ -186,9 +184,9 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 1, y: 0 },
-          { x: 0, y: 0 },
-          { x: 0, y: 1 },
+          { x: 1, y: 2 },
+          { x: 1, y: 3 },
+          { x: 0, y: 3 },
         ],
       },
       {
@@ -197,9 +195,9 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 0, y: 1 },
-          { x: 0, y: 2 },
           { x: 1, y: 2 },
+          { x: 0, y: 2 },
+          { x: 0, y: 3 },
         ],
       },
       {
@@ -210,7 +208,7 @@ describe("roll dice request : ", () => {
           { x: 1, y: 1 },
           { x: 2, y: 1 },
           { x: 3, y: 1 },
-          { x: 4, y: 1 },
+          { x: 3, y: 2 },
         ],
       },
       {
@@ -219,7 +217,7 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 1, y: 0 },
+          { x: 2, y: 1 },
           { x: 2, y: 0 },
           { x: 3, y: 0 },
         ],
@@ -230,9 +228,9 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 0, y: 1 },
-          { x: 0, y: 0 },
-          { x: 1, y: 0 },
+          { x: 2, y: 1 },
+          { x: 3, y: 1 },
+          { x: 3, y: 0 },
         ],
       },
       {
@@ -241,9 +239,9 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 2, y: 1 },
-          { x: 2, y: 0 },
-          { x: 1, y: 0 },
+          { x: 1, y: 2 },
+          { x: 0, y: 2 },
+          { x: 0, y: 1 },
         ],
       },
       {
@@ -263,9 +261,9 @@ describe("roll dice request : ", () => {
         type: "normal",
         path: [
           { x: 1, y: 1 },
-          { x: 1, y: 0 },
-          { x: 2, y: 0 },
-          { x: 3, y: 0 },
+          { x: 2, y: 1 },
+          { x: 3, y: 1 },
+          { x: 4, y: 1 },
         ],
       },
       { x: 1, y: 4, type: "jump" },

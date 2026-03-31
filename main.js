@@ -1,7 +1,7 @@
 import { createApp } from "./src/app.js";
 import designCards from "./src/config/design_card.json" with { type: "json" };
 import actionCards from "./src/config/action_card.json" with { type: "json" };
-import { Bank } from "./src/models/bank.js";
+import Bank from "./src/models/bank.js";
 
 const players = [
   {
@@ -11,7 +11,7 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 2, pos: { x: 2, y: 1 } },
+    pin: { color: 2, position: { x: 2, y: 2 } },
   },
   {
     name: "Dinesh",
@@ -20,19 +20,13 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 3, pos: { x: 4, y: 1 } },
+    pin: { color: 3, position: { x: 3, y: 3 } },
   },
 ];
 
 const gameState = {
   players,
-  currentPlayer: {
-    playerId: 1,
-    pin: {
-      position: { x: 1, y: 1 },
-      color: 1,
-    },
-  },
+  currentPlayer: 2,
   board: {
     yarns: [
       [1, 2, 3, 4, 5],

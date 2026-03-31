@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { TurnManager } from "./models/turn_manager.js";
+import TurnManager from "./models/turn_manager.js";
 import gameRoute from "./routes/game_route.js";
 import { logger } from "hono/logger";
 

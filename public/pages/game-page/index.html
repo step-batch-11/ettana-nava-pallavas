@@ -30,19 +30,18 @@
 
       <div class="deck">
         <div class="panel design-cards expanded">
-          <div class="cards">
-            <div class="card-item" draggable="true" id="d-1">1</div>
+          <div class="cards" id="design-card-panel">
+
           </div>
         </div>
 
         <div class="panel action-cards">
-          <div class="cards">
-            <div class="card-item" draggable="true" id="a-1"></div>
+          <div class="cards" id="action-card-panel">
+
           </div>
         </div>
       </div>
     </section>
-
     <section class="action-area">
       <section class="played-card">
         <div class="card-container">
@@ -93,16 +92,13 @@
         <button class="pass-turn btn">Pass Turn</button>
       </section>
     </section>
-    
     <template id="player-card-template">
       <div class="player-card">
         <div class="player-avatar-section">
           <img src alt="Player Avatar" class="stat-icon avatar" />
         </div>
-
         <div class="player-info">
           <h3 class="player-name">""</h3>
-          
           <div class="player-stats">
             <div class="stat-box">
               <img src="/assets/victory_point.png" alt="victory point icon" class="stat-icon" />
@@ -117,7 +113,7 @@
         </div>
       </div>
     </template>
-    
+
   </div>
 </body>
 
