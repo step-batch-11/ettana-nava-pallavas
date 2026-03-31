@@ -6,21 +6,21 @@ import Bank from "./src/models/bank.js";
 const players = [
   {
     name: "Ajoy",
+    id: 1,
+    tokens: 0,
+    victoryPoint: 0,
+    actionCards: [],
+    designCards: [],
+    pin: { color: 2, position: { x: 2, y: 2 } },
+  },
+  {
+    name: "Dinesh",
     id: 2,
     tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 2, pos: { x: 2, y: 1 } },
-  },
-  {
-    name: "Dinesh",
-    id: 3,
-    tokens: 0,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 3, pos: { x: 4, y: 1 } },
+    pin: { color: 3, position: { x: 3, y: 3 } },
   },
 ];
 
