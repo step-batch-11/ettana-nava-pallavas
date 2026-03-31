@@ -71,49 +71,31 @@ const createCenterTiles = () => {
   }
 };
 
-const createEdgeTile = ({ id, className, left, top }) => {
-  const tile = createDiv(className, id);
-  setPosition(tile, left, top);
-  board.appendChild(tile);
-};
-
 const createHorizontalTiles = () => {
   for (let col = 0; col < size - 1; col++) {
-    const left = centerOffset(col, 20);
+    const left = centerOffset(col, 26);
 
-    createEdgeTile({
-      id: `tile0${col + 1}`,
-      className: "halfTile rotate180",
-      left,
-      top: 0,
-    });
+    const tile = createDiv(`tile rotate180`, `tile0${col + 1}`);
+    setPosition(tile, left, -35);
+    board.appendChild(tile);
 
-    createEdgeTile({
-      id: `tile5${col + 1}`,
-      className: "halfTile",
-      left,
-      top: 4.55 * (cellSize + gap),
-    });
+    const tile2 = createDiv(`tile`, `tile5${col + 1}`);
+    setPosition(tile2, left, 4.8 * (cellSize + gap));
+    board.appendChild(tile2);
   }
 };
 
 const createVerticalTiles = () => {
   for (let row = 0; row < size - 1; row++) {
-    const top = centerOffset(row, 20);
+    const top = centerOffset(row, 26);
 
-    createEdgeTile({
-      id: `tile${row + 1}0`,
-      className: "halfTile rotate90",
-      left: 0,
-      top,
-    });
+    const tile = createDiv(`tile rotate90`, `tile${row + 1}0`);
+    setPosition(tile, -35, top);
+    board.appendChild(tile);
 
-    createEdgeTile({
-      id: `tile${row + 1}5`,
-      className: "halfTile rotate270",
-      left: 4.55 * (cellSize + gap),
-      top,
-    });
+    const tile2 = createDiv(`tile rotate270`, `tile${row + 1}5`);
+    setPosition(tile2, 4.8 * (cellSize + gap), top);
+    board.appendChild(tile2);
   }
 };
 
@@ -121,19 +103,16 @@ const createCornerTiles = () => {
   const offset = 4.55 * (cellSize + gap);
 
   const corners = [
-    { id: "tile00", cls: "rotate315", x: -20, y: -20 },
-    { id: "tile05", cls: "rotate45", x: offset + 20, y: -20 },
-    { id: "tile50", cls: "rotate225", x: -20, y: offset + 20 },
-    { id: "tile55", cls: "rotate135", x: offset + 20, y: offset + 20 },
+    { id: "tile00", cls: "rotate315", x: -35, y: -35 },
+    { id: "tile05", cls: "rotate45", x: offset + 35, y: -35 },
+    { id: "tile50", cls: "rotate225", x: -35, y: offset + 35 },
+    { id: "tile55", cls: "rotate135", x: offset + 35, y: offset + 35 },
   ];
 
   corners.forEach(({ id, cls, x, y }) => {
-    createEdgeTile({
-      id,
-      className: `halfTile ${cls}`,
-      left: x,
-      top: y,
-    });
+    const tile = createDiv(`tile ${cls}`, id);
+    setPosition(tile, x, y);
+    board.appendChild(tile);
   });
 };
 
@@ -186,11 +165,12 @@ const createPlayerCard = ({ name, avatar, token, victoryPoint }) => {
 };
 
 const renderPlayers = (players) => {
+  playersContainer.innerHTML = "";
   players.forEach((player) => {
     const card = createPlayerCard({
       name: player.name,
       avatar: "/assets/user_pin.png",
-      token: player.availabeToken,
+      token: player.tokens,
       victoryPoint: player.victoryPoint,
     });
 

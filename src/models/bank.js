@@ -21,4 +21,17 @@ export class Bank {
       tiles: this.#tiles,
     };
   }
+
+  #deductToken(n) {
+    this.#tokens -= n;
+    return n;
+  }
+
+  distributeInitialAssets(players) {
+    players.forEach((player) => {
+      player.token += this.#deductToken(2);
+      player.designCards.push(this.#designCards.pop());
+      player.actionCards.push(this.#designCards.pop());
+    });
+  }
 }
