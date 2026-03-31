@@ -14,7 +14,8 @@ const createCard = (id, content) => {
   if (content) card.textContent = content;
 
   card.setAttribute("draggable", true);
-  card.setAttribute("id", id);
+  card.setAttribute("data-id", id);
+  card.id = id;
 
   return card;
 };
@@ -36,8 +37,27 @@ const buyDesignCard = () => {
   });
 };
 
+const buyActionCard = () => {
+  const actionCard = document.querySelector(".action-card");
+  const cardsPlaceholder = document.querySelector(".action-cards .cards");
+
+  actionCard.addEventListener("click", async () => {
+    const response = await sendRequest("/game/buy-action-card");
+
+    if (response.hasError) {
+      alert("Error came");
+      return;
+    }
+
+    const card = createCard(`a-${response.id}`, response.description);
+    cardsPlaceholder.append(card);
+    renderBankState();
+  });
+};
+
 const attachListeners = () => {
   buyDesignCard();
+  buyActionCard();
 };
 
 attachListeners();

@@ -1,11 +1,17 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../../src/app.js";
 import { assertEquals } from "@std/assert/equals";
-import { buyDesignCard } from "../../src/handlers/bank_handler.js";
+import {
+  buyActionCard,
+  buyDesignCard,
+} from "../../src/handlers/bank_handler.js";
 import Bank from "../../src/models/bank.js";
 
 describe("Game route", () => {
-  const game = { currentPlayer: 1, players: [{ id: 1, designCards: [] }] };
+  const game = {
+    currentPlayer: 1,
+    players: [{ id: 1, designCards: [], actionCards: [] }],
+  };
   const designCards = [{ "id": 1, "victoryPoints": 1 }];
   const actionCards = [{
     "id": 1,
@@ -48,6 +54,23 @@ describe("Game route", () => {
     it("should fail when context is invalid", () => {
       const context = { get: () => [], json: (x) => x };
       const res = buyDesignCard(context);
+
+      assertEquals(res.hasError, true);
+    });
+  });
+
+  describe("Buy Action Card", () => {
+    it("should give a new action card", async () => {
+      const response = await app.request("/game/buy-action-card");
+      const card = await response.json();
+
+      assertEquals(response.status, 200);
+      assertEquals(card, actionCards[0]);
+    });
+
+    it("should fail when context is invalid", () => {
+      const context = { get: () => [], json: (x) => x };
+      const res = buyActionCard(context);
 
       assertEquals(res.hasError, true);
     });

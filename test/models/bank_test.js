@@ -108,4 +108,23 @@ describe("bank", () => {
       assertThrows(() => bank.buyDesignCard());
     });
   });
+
+  describe("Buy Action Card", () => {
+    it("shuld return new action card", () => {
+      const bank = new Bank(designCards, actionCards, (x) => x);
+      const result = {
+        "id": 1,
+        "type": "move",
+        "description": "Move the pin to any unoccupied square.",
+      };
+
+      assertEquals(bank.buyActionCard(), result);
+    });
+
+    it("shuld throw error as design card are empty", () => {
+      const bank = new Bank(designCards, []);
+
+      assertThrows(() => bank.buyActionCard());
+    });
+  });
 });

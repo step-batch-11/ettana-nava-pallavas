@@ -31,6 +31,15 @@ export default class Bank {
     return this.#designCards.shift();
   }
 
+  buyActionCard() {
+    if (this.#actionCards.length === 0) {
+      throw new Error("No more action cards are remaining");
+    }
+
+    this.#tokens += 2;
+    return this.#actionCards.shift();
+  }
+
   #deductToken(n) {
     this.#tokens -= n;
     return n;
