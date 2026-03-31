@@ -1,6 +1,168 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { assert, assertEquals } from "@std/assert";
-import { TurnManager } from "../src/models/turn_manager.js";
+import { assert, assertEquals, assertNotEquals } from "@std/assert";
+import { TurnManager } from "../../src/models/turn_manager.js";
+
+describe("tests for moving pin", () => {
+  let turnManager;
+  let currentPlayer;
+  beforeEach(() => {
+    currentPlayer = {
+      id: 1,
+      tokens: 2,
+      pin: { color: 3, position: { x: 1, y: 0 } },
+    };
+
+    const mockGame = {
+      currentPlayer,
+      players: [currentPlayer, { id: 2, tokens: 3 }, { id: 3, tokens: 2 }],
+
+      board: {
+        tiles: [
+          [
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+          ],
+          [
+            { value: null, playerId: 1 },
+            { value: 1, playerId: null },
+            { value: 2, playerId: 2 },
+            { value: 3, playerId: null },
+            { value: 4, playerId: 3 },
+            { value: null, playerId: null },
+          ],
+          [
+            { value: null, playerId: null },
+            { value: 5, playerId: null },
+            { value: 6, playerId: null },
+            { value: 1, playerId: null },
+            { value: 2, playerId: null },
+            { value: null, playerId: null },
+          ],
+          [
+            { value: null, playerId: null },
+            { value: 3, playerId: null },
+            { value: 4, playerId: null },
+            { value: 5, playerId: null },
+            { value: 6, playerId: null },
+            { value: null, playerId: null },
+          ],
+          [
+            { value: null, playerId: null },
+            { value: 2, playerId: null },
+            { value: 3, playerId: null },
+            { value: 4, playerId: null },
+            { value: 5, playerId: null },
+            { value: null, playerId: null },
+          ],
+          [
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+            { value: null, playerId: null },
+          ],
+        ],
+      },
+    };
+
+    turnManager = new TurnManager(mockGame);
+  });
+
+  describe("test for Destination: ", () => {
+    beforeEach(() => {
+      turnManager.destinations = [{ x: 1, y: 3 }, { x: 2, y: 4 }];
+    });
+
+    it("Invalid destination, so position won't be changed", () => {
+      const path = [
+        { x: 1, y: 0 },
+        { x: 1, y: 1 },
+      ];
+
+      const destination = { x: 2, y: 0 };
+
+      const newPosition = turnManager.move(path, destination);
+      assertNotEquals(newPosition, destination);
+    });
+
+    it("Valid destination, so position should be changed to destination", () => {
+      const path = [
+        { x: 1, y: 0 },
+        { x: 1, y: 1 },
+        { x: 2, y: 1 },
+        { x: 2, y: 2 },
+        { x: 2, y: 3 },
+      ];
+
+      const destination = { x: 2, y: 4 };
+
+      const newPosition = turnManager.move(path, destination);
+      assertEquals(newPosition, destination);
+    });
+  });
+
+  describe("When current player is taking a path through occupied tile, they have to pay: ", () => {
+    it("should pay to one player", () => {
+      turnManager["destinations"] = [{ x: 1, y: 3 }];
+
+      const path = [
+        { x: 1, y: 0 },
+        { x: 1, y: 1 },
+        { x: 1, y: 2 },
+      ];
+
+      const destination = { x: 1, y: 3 };
+
+      const newPosition = turnManager.move(path, destination);
+      assertEquals(destination.x, newPosition.x);
+      assertEquals(destination.y, newPosition.y);
+      assertEquals(currentPlayer.tokens, 1);
+    });
+
+    it("should pay to tow players", () => {
+      turnManager.destinations = [{ x: 1, y: 5 }];
+
+      const path = [
+        { x: 1, y: 0 },
+        { x: 1, y: 1 },
+        { x: 1, y: 2 },
+        { x: 1, y: 3 },
+        { x: 1, y: 4 },
+      ];
+
+      const destination = { x: 1, y: 5 };
+
+      const newPosition = turnManager.move(path, destination);
+      assertEquals(destination.x, newPosition.x);
+      assertEquals(destination.y, newPosition.y);
+      assertEquals(currentPlayer.tokens, 0);
+    });
+
+    it("should not pay to another player", () => {
+      turnManager.destinations = [{ x: 1, y: 3 }];
+
+      const path = [
+        { x: 1, y: 0 },
+        { x: 0, y: 0 },
+        { x: 0, y: 1 },
+        { x: 0, y: 2 },
+        { x: 0, y: 3 },
+      ];
+
+      const destination = { x: 1, y: 3 };
+
+      const newPosition = turnManager.move(path, destination);
+      assertEquals(destination.x, newPosition.x);
+      assertEquals(destination.y, newPosition.y);
+      assertEquals(currentPlayer.tokens, 2);
+    });
+  });
+});
 
 describe("current user turn :", () => {
   let turnManager;

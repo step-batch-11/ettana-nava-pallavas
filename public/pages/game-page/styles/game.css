@@ -1,0 +1,28 @@
+.dice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  background-color: whitesmoke;
+}
+
+.dice-color {
+  width: 50%;
+  height: 50%;
+  border-radius: 999px;
+}
+
+#dice {
+  cursor: pointer;
+  width: 40%;
+}
+
+.premium-move {
+  box-shadow: 0em 0em 1em 0.4em purple !important;
+}
+.jump-move {
+  box-shadow: 0em 0em 1em 0.4em green !important;
+}
+.normal-move {
+  box-shadow: 0em 0em 1em 0.4em gold !important;
+}

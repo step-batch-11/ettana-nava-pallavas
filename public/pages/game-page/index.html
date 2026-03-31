@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,19 +11,21 @@
     <link rel="stylesheet" href="/pages/game-page/styles/deck.css">
     <link rel="stylesheet" href="/pages/game-page/styles/color.css">
     <link rel="stylesheet" href="/pages/game-page/styles/players.css">
+    <link rel="stylesheet" href="/pages/game-page/styles/game.css">
 
     <script type="module" src="/pages/game-page/scripts/board.js"></script>
     <script type="module" src="/pages/game-page/scripts/deck.js"></script>
     <script type="module" src="/pages/game-page/scripts/bank.js"></script>
+    <script type="module" src="/pages/game-page/scripts/game.js"></script>
   </head>
+
   <body>
     <div class="app">
-      <section class="players"></section>
+      <section class="players">
+      </section>
 
       <section class="board-deck">
-        <div class="board-container">
-          <div id="board"></div>
-        </div>
+        <div id="board"></div>
 
         <div class="deck">
           <div class="panel design-cards expanded">
@@ -78,32 +81,23 @@
 
             <div class="cards">
               <div class="design-card">
-                <img
-                  src="/assets/design-card.png"
-                  alt="Design Card Imgage"
-                  draggable="false"
-                >
+                <img src="/assets/design-card.png" alt>
               </div>
               <div class="action-card">
-                <img
-                  src="/assets/action-card.png"
-                  alt="Action Card Imgage"
-                  draggable="false"
-                >
+                <img src="/assets/action-card.png" alt>
               </div>
             </div>
           </section>
         </div>
 
         <section class="play-turn">
-          <div class="dices">
-            <div class="dice"></div>
-            <div class="dice"></div>
+          <div class="dices" id="dice">
+            <div class="dice" id="number-dice"></div>
+            <div class="dice" id="color-dice"></div>
           </div>
           <button class="pass-turn btn">Pass Turn</button>
         </section>
       </section>
-
       <template id="player-card-template">
         <div class="player-card">
           <div class="player-avatar-section">
@@ -116,8 +110,7 @@
                 <img
                   src="/assets/victory_point.png"
                   alt="victory point icon"
-                  class="stat-icon"
-                />
+                  class="stat-icon" />
                 <span class="stat-value stat1"></span>
               </div>
 
@@ -125,8 +118,7 @@
                 <img
                   src="/assets/token.png"
                   alt="Token icon"
-                  class="stat-icon"
-                />
+                  class="stat-icon" />
                 <span class="stat-value stat2"></span>
               </div>
             </div>
@@ -135,4 +127,5 @@
       </template>
     </div>
   </body>
+
 </html>

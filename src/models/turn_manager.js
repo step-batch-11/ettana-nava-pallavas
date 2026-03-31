@@ -1,6 +1,8 @@
 export class TurnManager {
   #game;
   #randomFn;
+  destinations;
+
   constructor(game, randomFn = Math.random) {
     this.#game = game;
     this.#randomFn = randomFn;
@@ -51,8 +53,8 @@ export class TurnManager {
     return newPoint;
   }
 
-  #getTile(newPoint) {
-    return this.#game.board.tiles[newPoint.x][newPoint.y];
+  #getTile(point) {
+    return this.#game.board.tiles[point.x][point.y];
   }
 
   #getBoundary() {
@@ -81,7 +83,7 @@ export class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      })
+      }),
     );
     return coords;
   }
@@ -125,6 +127,61 @@ export class TurnManager {
       const key = `${coord.x},${coord.y}`;
       locations[key] = coord;
     });
-    return Object.values(locations);
+    this.destinations = Object.values(locations);
+    return this.destinations;
+  }
+
+  #processTilePenalty(tile, payer) {
+    const payee = this.#game.players.find(
+      (player) => player.id === tile.playerId,
+    );
+
+    payer.tokens -= 1;
+    payee.tokens += 1;
+
+    return payee.id;
+  }
+
+  #traversePathTile(currentPlayer, path) {
+    const payees = [];
+
+    for (const step of path) {
+      const tile = this.#game.board.tiles[step.x][step.y];
+
+      if (tile.playerId !== null && tile.playerId !== currentPlayer.id) {
+        const payee = this.#processTilePenalty(tile, currentPlayer);
+
+        payees.push(payee);
+      }
+    }
+    return { payerTokens: currentPlayer.tokens, payees };
+  }
+
+  #isValidDestination({ x, y }) {
+    return this.destinations.some((destination) =>
+      destination.x === x && destination.y === y
+    );
+  }
+
+  #displacePin(currentPlayer, destination, currentPosition) {
+    const destinationTile = this.#getTile(destination);
+    const prePositionTile = this.#getTile(currentPosition);
+
+    destinationTile.playerId = currentPlayer.id;
+    prePositionTile.playerId = null;
+  }
+
+  move(path, destination) {
+    const currentPlayer = this.#game.currentPlayer;
+    const currentPosition = currentPlayer.pin.position;
+
+    if (this.#isValidDestination(destination)) {
+      this.#traversePathTile(currentPlayer, path);
+      this.#displacePin(currentPlayer, destination, currentPosition);
+
+      return destination;
+    }
+
+    return currentPosition;
   }
 }
