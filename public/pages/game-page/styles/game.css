@@ -26,3 +26,20 @@
 .normal-move {
   box-shadow: 0em 0em 1em 0.4em gold !important;
 }
+
+.tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: rotate(-45deg) translateX(-70%) translateY(-225%);
+  background-color: #ccc;
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}

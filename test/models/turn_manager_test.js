@@ -2,19 +2,23 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals, assertNotEquals } from "@std/assert";
 import TurnManager from "../../src/models/turn_manager.js";
 
+const getCoords = ({ x, y }) => ({ x, y });
+
 describe("tests for moving pin", () => {
   let turnManager;
-  let currentPlayer;
+  const currentPlayer = {
+    id: 1,
+    tokens: 5,
+    pin: { color: 3, position: { x: 1, y: 0 } },
+  };
   beforeEach(() => {
-    currentPlayer = {
-      id: 1,
-      tokens: 2,
-      pin: { color: 3, position: { x: 1, y: 0 } },
-    };
-
     const mockGame = {
-      currentPlayer,
-      players: [currentPlayer, { id: 2, tokens: 3 }, { id: 3, tokens: 2 }],
+      currentPlayer: 1,
+      players: [
+        currentPlayer,
+        { id: 2, tokens: 3, pin: { color: 2, position: { x: 1, y: 2 } } },
+        { id: 3, tokens: 2, pin: { color: 1, position: { x: 1, y: 4 } } },
+      ],
 
       board: {
         tiles: [
@@ -76,8 +80,8 @@ describe("tests for moving pin", () => {
   describe("test for Destination: ", () => {
     beforeEach(() => {
       turnManager.destinations = [
-        { x: 1, y: 3 },
-        { x: 2, y: 4 },
+        { destination: { x: 2, y: 4 }, path: [], type: "normal" },
+        { destination: { x: 1, y: 0 }, path: [], type: "normal" },
       ];
     });
 
@@ -87,10 +91,10 @@ describe("tests for moving pin", () => {
         { x: 1, y: 1 },
       ];
 
-      const destination = { x: 2, y: 0 };
+      const route = { destination: { x: 2, y: 0 }, path, type: "normal" };
 
-      const newPosition = turnManager.move(path, destination);
-      assertNotEquals(newPosition, destination);
+      const positions = turnManager.move(route);
+      assertNotEquals(positions.destination, getCoords(route.destination));
     });
 
     it("Valid destination, so position should be changed to destination", () => {
@@ -102,34 +106,41 @@ describe("tests for moving pin", () => {
         { x: 2, y: 3 },
       ];
 
-      const destination = { x: 2, y: 4 };
+      const route = { destination: { x: 2, y: 4 }, path, type: "normal" };
 
-      const newPosition = turnManager.move(path, destination);
-      assertEquals(newPosition, destination);
+      const positions = turnManager.move(route);
+      assertEquals(positions.destination, getCoords(route.destination));
     });
   });
 
   describe("When current player is taking a path through occupied tile, they have to pay: ", () => {
     it("should pay to one player", () => {
-      turnManager["destinations"] = [{ x: 1, y: 3 }];
-
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
         { x: 1, y: 2 },
       ];
 
-      const destination = { x: 1, y: 3 };
+      turnManager.destinations = [{
+        destination: { x: 1, y: 3 },
+        path,
+        type: "premium",
+        recipients: [2],
+      }];
 
-      const newPosition = turnManager.move(path, destination);
-      assertEquals(destination.x, newPosition.x);
-      assertEquals(destination.y, newPosition.y);
-      assertEquals(currentPlayer.tokens, 1);
+      const route = {
+        destination: { x: 1, y: 3 },
+        path,
+        type: "premium",
+        recipients: [2],
+      };
+
+      const positions = turnManager.move(route);
+      assertEquals(positions.destination, getCoords(route.destination));
+      assertEquals(currentPlayer.tokens, 4);
     });
 
-    it("should pay to tow players", () => {
-      turnManager.destinations = [{ x: 1, y: 5 }];
-
+    it("should pay to two players", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -138,16 +149,31 @@ describe("tests for moving pin", () => {
         { x: 1, y: 4 },
       ];
 
-      const destination = { x: 1, y: 5 };
+      turnManager.destinations = [{
+        destination: { x: 1, y: 5 },
+        path,
+        type: "premium",
+        recipients: [2, 3],
+      }];
 
-      const newPosition = turnManager.move(path, destination);
-      assertEquals(destination.x, newPosition.x);
-      assertEquals(destination.y, newPosition.y);
-      assertEquals(currentPlayer.tokens, 0);
+      const route = {
+        destination: { x: 1, y: 5 },
+        path,
+        type: "premium",
+        recipients: [2, 3],
+      };
+
+      const positions = turnManager.move(route);
+      assertEquals(positions.destination, getCoords(route.destination));
+      assertEquals(currentPlayer.tokens, 2);
     });
 
     it("should not pay to another player", () => {
-      turnManager.destinations = [{ x: 1, y: 3 }];
+      turnManager.destinations = [{
+        destination: { x: 2, y: 3 },
+        path: [],
+        type: "normal",
+      }];
 
       const path = [
         { x: 1, y: 0 },
@@ -157,11 +183,10 @@ describe("tests for moving pin", () => {
         { x: 0, y: 3 },
       ];
 
-      const destination = { x: 1, y: 3 };
+      const route = { destination: { x: 2, y: 3 }, path, type: "normal" };
 
-      const newPosition = turnManager.move(path, destination);
-      assertEquals(destination.x, newPosition.x);
-      assertEquals(destination.y, newPosition.y);
+      const positions = turnManager.move(route);
+      assertEquals(positions.destination, getCoords(route.destination));
       assertEquals(currentPlayer.tokens, 2);
     });
   });
@@ -233,7 +258,11 @@ describe("current user turn :", () => {
     };
 
     turnManager = new TurnManager(
-      { currentPlayer: { pin: { position: { x: 1, y: 1 } } }, board },
+      {
+        currentPlayer: 2,
+        players: [{ id: 2, pin: { position: { x: 1, y: 1 } } }],
+        board,
+      },
       randomFn,
     );
   });
@@ -250,13 +279,13 @@ describe("current user turn :", () => {
     it("when position, steps given, should return all possible locations", () => {
       const actual = turnManager.findPossibleDestinations(1);
       const expected = [
-        { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] },
-        { x: 2, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
-        { x: 1, y: 0, type: "normal", path: [{ x: 1, y: 1 }] },
-        { x: 0, y: 1, type: "jump" },
-        { x: 1, y: 3, type: "jump" },
-        { x: 3, y: 1, type: "jump" },
-        { x: 4, y: 3, type: "jump" },
+        { destination: { x: 1, y: 2 }, type: "normal", path: [{ x: 1, y: 1 }] },
+        { destination: { x: 2, y: 1 }, type: "normal", path: [{ x: 1, y: 1 }] },
+        { destination: { x: 1, y: 0 }, type: "normal", path: [{ x: 1, y: 1 }] },
+        { destination: { x: 0, y: 1 }, type: "jump" },
+        { destination: { x: 1, y: 3 }, type: "jump" },
+        { destination: { x: 3, y: 1 }, type: "jump" },
+        { destination: { x: 4, y: 3 }, type: "jump" },
       ];
       assertEquals(actual, expected);
     });
@@ -322,14 +351,18 @@ describe("current user turn :", () => {
         ],
       };
       turnManager = new TurnManager(
-        { currentPlayer: { pin: { position: { x: 1, y: 1 } } }, board },
+        {
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 1, y: 1 } } }],
+          board,
+        },
         () => 0.1,
       );
       const actual = turnManager.findPossibleDestinations(1);
       const expected = [
-        { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] },
-        { x: 2, y: 1, type: "normal", path: [{ x: 1, y: 1 }] },
-        { x: 1, y: 0, type: "normal", path: [{ x: 1, y: 1 }] },
+        { destination: { x: 1, y: 2 }, type: "normal", path: [{ x: 1, y: 1 }] },
+        { destination: { x: 2, y: 1 }, type: "normal", path: [{ x: 1, y: 1 }] },
+        { destination: { x: 1, y: 0 }, type: "normal", path: [{ x: 1, y: 1 }] },
       ];
       assertEquals(actual, expected);
     });
@@ -355,7 +388,8 @@ describe("current user turn :", () => {
     it("When board is not given, there should be no possible destinations", () => {
       turnManager = new TurnManager(
         {
-          currentPlayer: { pin: { position: { x: 1, y: 1 } } },
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 0, y: 0 } } }],
           board: { tiles: [[]] },
         },
         () => 0.1,
@@ -425,7 +459,11 @@ describe("current user turn :", () => {
         ],
       };
       turnManager = new TurnManager(
-        { currentPlayer: { pin: { position: { x: 0, y: 0 } } }, board },
+        {
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 0, y: 0 } } }],
+          board,
+        },
         () => 0.1,
       );
       const actual = turnManager.findPossibleDestinations(1);
@@ -492,7 +530,11 @@ describe("current user turn :", () => {
         ],
       };
       turnManager = new TurnManager(
-        { currentPlayer: { pin: { position: { x: 0, y: 0 } } }, board },
+        {
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 0, y: 0 } } }],
+          board,
+        },
         () => 0.1,
       );
       const actual = turnManager.findPossibleDestinations(2);
@@ -559,7 +601,11 @@ describe("current user turn :", () => {
         ],
       };
       turnManager = new TurnManager(
-        { currentPlayer: { pin: { position: { x: 0, y: 0 } } }, board },
+        {
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 0, y: 0 } } }],
+          board,
+        },
         () => 0.1,
       );
       const actual = turnManager.findPossibleDestinations(2);
@@ -627,17 +673,23 @@ describe("current user turn :", () => {
         ],
       };
       turnManager = new TurnManager(
-        { currentPlayer: { pin: { position: { x: 0, y: 0 } } }, board },
+        {
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 0, y: 0 } } }],
+          board,
+        },
         () => 0.1,
       );
       const actual = turnManager.findPossibleDestinations(3);
-      const point = actual.find((loc) => loc.x === 1 && loc.y === 2);
-      assertEquals(point.path, [
+      const route = actual.find(
+        (loc) => loc.destination.x === 1 && loc.destination.y === 2,
+      );
+      assertEquals(route.path, [
         { x: 0, y: 0 },
         { x: 1, y: 0 },
         { x: 1, y: 1 },
       ]);
-      assertEquals(point.recipients, [4]);
+      assertEquals(route.recipients, [4]);
       assertEquals(actual.length, 5);
     });
     it("when there are multiple premium routes exist , should choose cheapest route : ", () => {
@@ -701,11 +753,17 @@ describe("current user turn :", () => {
         ],
       };
       turnManager = new TurnManager(
-        { currentPlayer: { pin: { position: { x: 0, y: 0 } } }, board },
+        {
+          currentPlayer: 2,
+          players: [{ id: 2, pin: { position: { x: 0, y: 0 } } }],
+          board,
+        },
         () => 0.1,
       );
       const actual = turnManager.findPossibleDestinations(3);
-      const point = actual.find((loc) => loc.x === 1 && loc.y === 2);
+      const point = actual.find(
+        (loc) => loc.destination.x === 1 && loc.destination.y === 2,
+      );
       assertEquals(point.path, [
         { x: 0, y: 0 },
         { x: 0, y: 1 },

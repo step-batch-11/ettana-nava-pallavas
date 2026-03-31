@@ -18,19 +18,92 @@ const updateDice = ({ number, colorId }) => {
   colorDice.replaceChildren(diceColor);
 };
 
-const removeMoveClass = () => {
+const removeTileEventListeners = () => {
   const tiles = document.querySelectorAll(".tile");
   const halfTiles = document.querySelectorAll(".halfTile");
   [...tiles, ...halfTiles].forEach((tile) => {
+    tile.replaceWith(tile.cloneNode(true));
+  });
+};
+
+const removeMoveClass = () => {
+  const tiles = document.querySelectorAll(".tile");
+  [...tiles].forEach((tile) => {
     tile.classList.remove("premium-move", "normal-move", "jump-move");
   });
 };
 
-const highlightDestinations = (destinations) => {
-  destinations.forEach((destination) => {
+const highlightAdjacentYarns = (yarns) => {
+  yarns.forEach((yarnPosition) => {
+    const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
+    const yarn = document.querySelector(id);
+    yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
+  });
+};
+
+const fetchMoveResult = async (destination) => {
+  const response = await fetch("/game/move", {
+    method: "POST",
+    body: JSON.stringify(destination),
+    headers: { "content-type": "application/json" },
+  });
+
+  return await response.json();
+};
+
+const attachPenaltyTooltip = (tile, penalty) => {
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip";
+  tile.appendChild(tooltip);
+
+  tile.addEventListener("mouseenter", () => {
+    if (penalty > 0) {
+      tooltip.textContent = `Pay ${penalty} token`;
+      tooltip.style.opacity = 1;
+    }
+  });
+
+  tile.addEventListener("mouseleave", () => {
+    tooltip.style.opacity = 0;
+  });
+};
+
+const displacePin = ({ source, destination }) => {
+  const sourceTile = document.querySelector(`#tile${source.x}${source.y}`);
+  const destinationTile = document.querySelector(
+    `#tile${destination.x}${destination.y}`,
+  );
+
+  const playerIcon = sourceTile.querySelector(".player-icon");
+  sourceTile.removeChild(playerIcon);
+  destinationTile.appendChild(playerIcon);
+  removeMoveClass();
+};
+
+const handlePlayerMove = async (destination) => {
+  const { adjYarns, positions } = await fetchMoveResult(destination);
+  highlightAdjacentYarns(adjYarns);
+  displacePin(positions);
+  removeTileEventListeners();
+};
+
+const highlightTile = (tile, destination) => {
+  tile.classList.add(`${destination.type}-move`);
+};
+
+const renderMoveOptions = (destinations) => {
+  destinations.forEach((route) => {
+    const destination = route.destination;
     const id = `#tile${destination.x}${destination.y}`;
     const tile = document.querySelector(id);
-    tile.classList.add(`${destination.type}-move`);
+    highlightTile(tile, route);
+
+    if (route.type === "premium") {
+      const penalty = route.recipients.length;
+      attachPenaltyTooltip(tile, penalty);
+    }
+
+    tile.addEventListener("click", () => handlePlayerMove(route));
   });
 };
 
@@ -40,6 +113,6 @@ export const applyEventListenerOnDice = () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     removeMoveClass();
-    highlightDestinations(destinations);
+    renderMoveOptions(destinations);
   });
 };
