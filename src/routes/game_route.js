@@ -7,5 +7,6 @@ const gameRoute = new Hono();
 gameRoute.get("/board-state", serveBoardState);
 
 gameRoute.post("/roll", handleDiceRoll);
+gameRoute.post("/move", handleMove);
 
 export default gameRoute;

@@ -53,8 +53,20 @@ export class TurnManager {
     return newPoint;
   }
 
+  #getPlayerById(id) {
+    return this.#game.players.find((player) => player.id === id);
+  }
+
   #getTile(point) {
     return this.#game.board.tiles[point.x][point.y];
+  }
+
+  #isValidYarn({ x, y }) {
+    const board = this.#game.board;
+    const rows = board.length;
+    const columns = board[0].length;
+
+    return x >= 0 && x < rows && y >= 0 && y < columns;
   }
 
   #getBoundary() {
@@ -83,7 +95,7 @@ export class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      }),
+      })
     );
     return coords;
   }
@@ -131,30 +143,12 @@ export class TurnManager {
     return this.destinations;
   }
 
-  #processTilePenalty(tile, payer) {
-    const payee = this.#game.players.find(
-      (player) => player.id === tile.playerId,
-    );
-
-    payer.tokens -= 1;
-    payee.tokens += 1;
-
-    return payee.id;
-  }
-
-  #traversePathTile(currentPlayer, path) {
-    const payees = [];
-
-    for (const step of path) {
-      const tile = this.#game.board.tiles[step.x][step.y];
-
-      if (tile.playerId !== null && tile.playerId !== currentPlayer.id) {
-        const payee = this.#processTilePenalty(tile, currentPlayer);
-
-        payees.push(payee);
-      }
-    }
-    return { payerTokens: currentPlayer.tokens, payees };
+  #processPathPenalty(payer, payees) {
+    payees.forEach((payeeId) => {
+      const payee = this.#getPlayerById(payeeId);
+      payee.tokens++;
+      payer.tokens--;
+    });
   }
 
   #isValidDestination({ x, y }) {
@@ -171,17 +165,28 @@ export class TurnManager {
     prePositionTile.playerId = null;
   }
 
-  move(path, destination) {
+  move(destination) {
     const currentPlayer = this.#game.currentPlayer;
     const currentPosition = currentPlayer.pin.position;
 
     if (this.#isValidDestination(destination)) {
-      this.#traversePathTile(currentPlayer, path);
+      if (destination.type === "premium") {
+        this.#processPathPenalty(currentPlayer, destination.recipients);
+      }
       this.#displacePin(currentPlayer, destination, currentPosition);
 
       return destination;
     }
-
     return currentPosition;
+  }
+
+  getAdjYarnsPositions(pinPosition) {
+    const yarns = [
+      { x: pinPosition.x - 1, y: pinPosition.y - 1 },
+      { x: pinPosition.x - 1, y: pinPosition.y },
+      { x: pinPosition.x, y: pinPosition.y - 1 },
+      { x: pinPosition.x, y: pinPosition.y },
+    ];
+    return yarns.filter(this.#isValidYarn);
   }
 }
