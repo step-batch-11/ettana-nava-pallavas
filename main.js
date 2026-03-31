@@ -10,7 +10,7 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 1, pos: { x: 3, y: 4 } },
+    pin: { color: 1, position: { x: 1, y: 1 } },
   },
   {
     name: "Ajoy",
@@ -19,7 +19,7 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 2, pos: { x: 2, y: 1 } },
+    pin: { color: 2, position: { x: 2, y: 2 } },
   },
   {
     name: "Dinesh",
@@ -28,19 +28,13 @@ const players = [
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
-    pin: { color: 3, pos: { x: 4, y: 1 } },
+    pin: { color: 3, position: { x: 3, y: 3 } },
   },
 ];
 
 const gameState = {
   players,
-  currentPlayer: {
-    playerId: 1,
-    pin: {
-      position: { x: 1, y: 1 },
-      color: 1,
-    },
-  },
+  currentPlayer: players[0],
   board: {
     yarns: [
       [1, 2, 3, 4, 5],
@@ -107,7 +101,10 @@ const bank = {
   availableDesignCards: designCards,
   availableActionCards: actionCards,
   yarns: [1, 2, 3, 4, 5],
-  tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+  tiles: [
+    { value: 1, playerId: null },
+    { value: 6, playerId: null },
+  ],
 };
 
 const main = () => {

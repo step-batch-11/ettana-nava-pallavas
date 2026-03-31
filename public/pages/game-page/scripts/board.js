@@ -154,7 +154,7 @@ const renderYarns = (yarns) => {
   });
 };
 
-const renderTiles = (tiles) => {
+const renderTiles = (tiles, currentPlayer) => {
   tiles.forEach((row, r) => {
     row.forEach((tile, c) => {
       const el = board.querySelector(`#tile${r}${c}`);
@@ -168,6 +168,10 @@ const renderTiles = (tiles) => {
         const icon = createDiv("player-icon tile-value");
         icon.textContent = "👤";
         el.appendChild(icon);
+      }
+
+      if (tile?.playerId === currentPlayer?.id) {
+        el.classList.add("current-player");
       }
     });
   });
@@ -205,7 +209,7 @@ globalThis.onload = async () => {
   const { state } = await res.json();
 
   renderYarns(state.board.yarns);
-  renderTiles(state.board.tiles);
+  renderTiles(state.board.tiles, state.currentPlayer);
   renderPlayers(state.players);
 
   document.querySelectorAll(".octagon").forEach((el) => {

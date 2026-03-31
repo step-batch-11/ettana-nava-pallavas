@@ -12,17 +12,9 @@ export class TurnManager {
     return Math.floor(this.#randomFn() * max) + min;
   }
 
-  #rollColorDice() {
-    return this.#randomInRange(1, 6);
-  }
-
-  #rollNumberDice() {
-    return this.#randomInRange(1, 6);
-  }
-
   rollDice() {
-    const colorId = this.#rollColorDice();
-    const number = this.#rollNumberDice();
+    const colorId = this.#randomInRange(1, 6);
+    const number = this.#randomInRange(1, 6);
     return { number, colorId };
   }
 
@@ -83,20 +75,76 @@ export class TurnManager {
         if (tile.value === tileNumber && tile.playerId === null) {
           coords.push({ x, y, type: "jump" });
         }
-      })
+      }),
     );
     return coords;
   }
 
-  findPossibleDestinations(totalSteps) {
-    const offsets = [
+  #addCoordinate(locations, coordinate) {
+    const key = `${coordinate.x},${coordinate.y}`;
+    locations[key] = locations[key] || [];
+    locations[key].push(this.#stripSteps(coordinate));
+  }
+
+  #addToQueue(queue, point) {
+    if (point.isValid && !this.#hasVisited(point.path, point)) {
+      delete point.isValid;
+      queue.push(point);
+    }
+  }
+
+  #addLocation(locations, current) {
+    const tile = this.#getTile(current);
+    if (tile.playerId === null) {
+      this.#addCoordinate(locations, current);
+    }
+  }
+
+  #getDirectionOffsets() {
+    return [
       { dx: 0, dy: 1 }, // top
       { dx: 1, dy: 0 }, // right
       { dx: 0, dy: -1 }, // down
       { dx: -1, dy: 0 }, // left
     ];
-    const start = this.#game.currentPlayer.pin.position;
-    const queue = [{ ...start, steps: 0, type: "normal", path: [] }];
+  }
+
+  #moveFourDirections(queue, current) {
+    const offsets = this.#getDirectionOffsets();
+
+    for (const { dx, dy } of offsets) {
+      const newPoint = this.#movePoint(current, dx, dy);
+      this.#addToQueue(queue, newPoint);
+    }
+  }
+
+  #addJumpCoordinates(locations, totalSteps) {
+    const jumps = this.#findJumpableLocations(totalSteps);
+
+    jumps.forEach((coord) => {
+      this.#addCoordinate(locations, coord);
+    });
+  }
+
+  #extractDestinations(locations) {
+    return Object.values(locations).map((routes) =>
+      routes.reduce((a, b) => {
+        if (b.type === "jump") {
+          return b;
+        }
+        if (a.type === "normal" || a.type === "jump") {
+          return a;
+        }
+        if (b.type === "normal") {
+          return b;
+        }
+        return a.recipients.length < b.recipients.length ? a : b;
+      }),
+    );
+  }
+
+  findRoutes(start, totalSteps) {
+    const queue = [start];
 
     const locations = {};
 
@@ -104,30 +152,24 @@ export class TurnManager {
       const current = queue.shift();
 
       if (current.steps === totalSteps) {
-        const tile = this.#getTile(current);
-        if (tile.playerId === null) {
-          const key = `${current.x},${current.y}`;
-          locations[key] = this.#stripSteps(current);
-        }
+        this.#addLocation(locations, current);
         continue;
       }
 
-      for (const { dx, dy } of offsets) {
-        const newPoint = this.#movePoint(current, dx, dy);
-        if (newPoint.isValid && !this.#hasVisited(newPoint.path, newPoint)) {
-          delete newPoint.isValid;
-          queue.push(newPoint);
-        }
-      }
+      this.#moveFourDirections(queue, current);
     }
+    this.#addJumpCoordinates(locations, totalSteps);
 
-    const jumps = this.#findJumpableLocations(totalSteps);
+    return this.#extractDestinations(locations);
+  }
 
-    jumps.forEach((coord) => {
-      const key = `${coord.x},${coord.y}`;
-      locations[key] = coord;
-    });
-    this.destinations = Object.values(locations);
+  findPossibleDestinations(totalSteps) {
+    const start = this.#game.currentPlayer.pin.position;
+    const locations = this.findRoutes(
+      { ...start, steps: 0, type: "normal", path: [] },
+      totalSteps,
+    );
+    this.destinations = locations;
     return this.destinations;
   }
 
@@ -158,8 +200,8 @@ export class TurnManager {
   }
 
   #isValidDestination({ x, y }) {
-    return this.destinations.some((destination) =>
-      destination.x === x && destination.y === y
+    return this.destinations.some(
+      (destination) => destination.x === x && destination.y === y,
     );
   }
 
