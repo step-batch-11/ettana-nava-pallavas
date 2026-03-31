@@ -61,14 +61,6 @@ export class TurnManager {
     return this.#game.board.tiles[point.x][point.y];
   }
 
-  #isValidYarn({ x, y }) {
-    const board = this.#game.board;
-    const rows = board.length;
-    const columns = board[0].length;
-
-    return x >= 0 && x < rows && y >= 0 && y < columns;
-  }
-
   #getBoundary() {
     const rows = this.#game.board.tiles.length;
     const columns = this.#game.board.tiles[0].length;
@@ -166,18 +158,29 @@ export class TurnManager {
   }
 
   move(destination) {
-    const currentPlayer = this.#game.currentPlayer;
-    const currentPosition = currentPlayer.pin.position;
+    const currentPlayerId = this.#game.currentPlayer.playerId;
+    const currentPlayer = this.#getPlayerById(currentPlayerId);
+    const currentPosition = currentPlayer.pin.pos;
+    const destinationCoords = this.#getCoordinate(destination);
 
     if (this.#isValidDestination(destination)) {
       if (destination.type === "premium") {
         this.#processPathPenalty(currentPlayer, destination.recipients);
       }
+      currentPlayer.pin.pos = destinationCoords;
+      this.#game.currentPlayer.pin.position = destinationCoords;
       this.#displacePin(currentPlayer, destination, currentPosition);
 
-      return destination;
+      return { source: currentPosition, destination: destinationCoords };
     }
-    return currentPosition;
+    return { source: currentPosition, destination: currentPosition };
+  }
+
+  #isValidYarn({ x, y }, yarns) {
+    const rows = yarns.length;
+    const columns = yarns[0].length;
+
+    return x >= 0 && x < rows && y >= 0 && y < columns;
   }
 
   getAdjYarnsPositions(pinPosition) {
@@ -187,6 +190,9 @@ export class TurnManager {
       { x: pinPosition.x, y: pinPosition.y - 1 },
       { x: pinPosition.x, y: pinPosition.y },
     ];
-    return yarns.filter(this.#isValidYarn);
+
+    return yarns.filter((yarn) =>
+      this.#isValidYarn(yarn, this.#game.board.yarns)
+    );
   }
 }

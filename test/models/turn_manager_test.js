@@ -2,19 +2,26 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals, assertNotEquals } from "@std/assert";
 import { TurnManager } from "../../src/models/turn_manager.js";
 
+const getCoords = ({ x, y }) => ({ x, y });
+
 describe("tests for moving pin", () => {
   let turnManager;
-  let currentPlayer;
+  const currentPlayer = {
+    id: 1,
+    tokens: 5,
+    pin: { color: 3, pos: { x: 1, y: 0 } },
+  };
   beforeEach(() => {
-    currentPlayer = {
-      id: 1,
-      tokens: 2,
-      pin: { color: 3, position: { x: 1, y: 0 } },
-    };
-
     const mockGame = {
-      currentPlayer,
-      players: [currentPlayer, { id: 2, tokens: 3 }, { id: 3, tokens: 2 }],
+      currentPlayer: {
+        playerId: 1,
+        pin: { color: 3, position: { x: 1, y: 0 } },
+      },
+      players: [
+        currentPlayer,
+        { id: 2, tokens: 3, pin: { color: 2, pos: { x: 1, y: 2 } } },
+        { id: 3, tokens: 2, pin: { color: 1, pos: { x: 1, y: 4 } } },
+      ],
 
       board: {
         tiles: [
@@ -86,8 +93,8 @@ describe("tests for moving pin", () => {
 
       const destination = { x: 2, y: 0, path, type: "normal" };
 
-      const newPosition = turnManager.move(destination);
-      assertNotEquals(newPosition, destination);
+      const positions = turnManager.move(destination);
+      assertNotEquals(positions.destination, getCoords(destination));
     });
 
     it("Valid destination, so position should be changed to destination", () => {
@@ -101,8 +108,8 @@ describe("tests for moving pin", () => {
 
       const destination = { x: 2, y: 4, path, type: "normal" };
 
-      const newPosition = turnManager.move(destination);
-      assertEquals(newPosition, destination);
+      const positions = turnManager.move(destination);
+      assertEquals(positions.destination, getCoords(destination));
     });
   });
 
@@ -124,10 +131,9 @@ describe("tests for moving pin", () => {
         recipients: [2],
       };
 
-      const newPosition = turnManager.move(destination);
-      assertEquals(destination.x, newPosition.x);
-      assertEquals(destination.y, newPosition.y);
-      assertEquals(currentPlayer.tokens, 1);
+      const positions = turnManager.move(destination);
+      assertEquals(positions.destination, getCoords(destination));
+      assertEquals(currentPlayer.tokens, 4);
     });
 
     it("should pay to tow players", () => {
@@ -149,10 +155,9 @@ describe("tests for moving pin", () => {
         recipients: [2, 3],
       };
 
-      const newPosition = turnManager.move(destination);
-      assertEquals(destination.x, newPosition.x);
-      assertEquals(destination.y, newPosition.y);
-      assertEquals(currentPlayer.tokens, 0);
+      const positions = turnManager.move(destination);
+      assertEquals(positions.destination, getCoords(destination));
+      assertEquals(currentPlayer.tokens, 2);
     });
 
     it("should not pay to another player", () => {
@@ -168,9 +173,8 @@ describe("tests for moving pin", () => {
 
       const destination = { x: 1, y: 3, path, type: "normal" };
 
-      const newPosition = turnManager.move(destination);
-      assertEquals(destination.x, newPosition.x);
-      assertEquals(destination.y, newPosition.y);
+      const positions = turnManager.move(destination);
+      assertEquals(positions.destination, getCoords(destination));
       assertEquals(currentPlayer.tokens, 2);
     });
   });

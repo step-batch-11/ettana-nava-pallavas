@@ -7,8 +7,8 @@ export const handleDiceRoll = (ctx) => {
 
 export const handleMove = async (ctx) => {
   const turnManager = ctx.get("turnManager");
-  const { destination } = await ctx.req.json();
-  const newPosition = turnManager.move(destination);
-  const adjYarnsPositions = turnManager.getAdjYarnsPositions(newPosition);
-  return ctx.json({ adjYarnsPositions, newPosition });
+  const destination = await ctx.req.json();
+  const positions = turnManager.move(destination);
+  const adjYarns = turnManager.getAdjYarnsPositions(positions.destination);
+  return ctx.json({ adjYarns, positions });
 };

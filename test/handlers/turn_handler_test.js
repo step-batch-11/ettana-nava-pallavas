@@ -13,7 +13,7 @@ const players = [
   {
     name: "Sandip",
     id: 1,
-    availabeToken: 0,
+    tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -22,7 +22,7 @@ const players = [
   {
     name: "Ajoy",
     id: 2,
-    availabeToken: 0,
+    tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -108,13 +108,52 @@ const bank = {
   tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
 };
 
+describe("move request: ", () => {
+  let app;
+
+  const randomValue = 0.05;
+
+  beforeEach(() => {
+    const mockBank = structuredClone(bank);
+    const mockGameState = structuredClone(gameState);
+    app = createApp(mockGameState, mockBank, () => randomValue, logger);
+  });
+
+  it("When /move is hit, should response with adjYarns, source and destination positons of pin", async () => {
+    await app.request("/game/roll", { method: "POST" });
+    const destination = { x: 1, y: 2, type: "normal", path: [{ x: 1, y: 1 }] };
+
+    const response = await app.request("/game/move", {
+      method: "POST",
+      body: JSON.stringify(destination),
+      headers: { "content-type": "application/json" },
+    });
+
+    const data = await response.json();
+    assertEquals(response.status, 200);
+    assertEquals(data.adjYarns, [
+      { x: 0, y: 1 },
+      { x: 0, y: 2 },
+      { x: 1, y: 1 },
+      { x: 1, y: 2 },
+    ]);
+
+    assertEquals(data.positions, {
+      source: { x: 3, y: 4 },
+      destination: { x: 1, y: 2 },
+    });
+  });
+});
+
 describe("roll dice request : ", () => {
   let app;
 
   let randomValue = 0.05;
 
   beforeEach(() => {
-    app = createApp(gameState, bank, () => randomValue, logger);
+    const mockBank = structuredClone(bank);
+    const mockGameState = structuredClone(gameState);
+    app = createApp(mockGameState, mockBank, () => randomValue, logger);
   });
 
   it("When /roll is hit, should respond with dice values of(1, 1) and destinations", async () => {

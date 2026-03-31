@@ -6,7 +6,7 @@ const players = [
   {
     name: "Sandip",
     id: 1,
-    availabeToken: 0,
+    tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
@@ -15,20 +15,11 @@ const players = [
   {
     name: "Ajoy",
     id: 2,
-    availabeToken: 0,
+    tokens: 0,
     victoryPoint: 0,
     actionCards: [],
     designCards: [],
     pin: { color: 2, pos: { x: 2, y: 1 } },
-  },
-  {
-    name: "Dinesh",
-    id: 3,
-    availabeToken: 0,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 3, pos: { x: 4, y: 1 } },
   },
 ];
 
@@ -36,11 +27,9 @@ const gameState = {
   players,
   currentPlayer: {
     playerId: 1,
-    pin: {
-      position: { x: 1, y: 1 },
-      color: 1,
-    },
+    pin: { color: 1, position: { x: 3, y: 4 } },
   },
+
   board: {
     yarns: [
       [1, 2, 3, 4, 5],
@@ -60,7 +49,7 @@ const gameState = {
       ],
       [
         { value: null, playerId: null },
-        { value: 1, playerId: 1 },
+        { value: 1, playerId: null },
         { value: 2, playerId: null },
         { value: 3, playerId: null },
         { value: 4, playerId: null },
@@ -68,8 +57,8 @@ const gameState = {
       ],
       [
         { value: null, playerId: null },
-        { value: 5, playerId: null },
-        { value: 6, playerId: 2 },
+        { value: 5, playerId: 2 },
+        { value: 6, playerId: null },
         { value: 1, playerId: null },
         { value: 2, playerId: null },
         { value: null, playerId: null },
@@ -78,8 +67,8 @@ const gameState = {
         { value: null, playerId: null },
         { value: 3, playerId: null },
         { value: 4, playerId: null },
-        { value: 5, playerId: 3 },
-        { value: 6, playerId: null },
+        { value: 5, playerId: null },
+        { value: 6, playerId: 1 },
         { value: null, playerId: null },
       ],
       [
