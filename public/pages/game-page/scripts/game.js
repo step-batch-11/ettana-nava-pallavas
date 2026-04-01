@@ -1,7 +1,6 @@
 import { getGameState, rollDice } from "./api.js";
 import { renderGame } from "./app.js";
 import { colorsMap } from "/assets/colors.js";
-import { renderGame } from "./board.js";
 
 const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
