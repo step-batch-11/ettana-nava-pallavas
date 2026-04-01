@@ -1,4 +1,4 @@
-import { initBoard, renderGame } from "./board.js";
+import { initBoard, renderBoard } from "./board.js";
 import { applyEventListenerOnDice } from "./game.js";
 import { renderBankState } from "./bank.js";
 import {
@@ -6,6 +6,7 @@ import {
   addToggleEventListenerOnDeck,
   renderDeck,
 } from "./deck.js";
+import { getGameState } from "./api.js";
 
 const distributeInitialAssets = async () => {
   await new Promise((res) => {
@@ -19,7 +20,7 @@ const distributeInitialAssets = async () => {
 
   const baordRes = await fetch("/game/board-state");
   const { state } = await baordRes.json();
-  renderGame(state);
+  renderBoard(state);
   renderBankState();
 };
 
@@ -29,16 +30,18 @@ const addEventListener = () => {
   addDragEventListenerOnDeck();
 };
 
+export const renderGame = async(state) => {
+  renderBoard(state);
+  await renderBankState();
+
+  renderDeck(state.players, state.currentPlayer);
+}
+
 globalThis.onload = async () => {
   initBoard();
 
   await distributeInitialAssets();
-  const res = await fetch("/game/board-state");
-  const { state } = await res.json();
-  renderGame(state);
-  await renderBankState();
-
-  renderDeck(state.players, state.currentPlayer);
-
+  const state = await getGameState()
+  await renderGame(state);
   addEventListener();
 };

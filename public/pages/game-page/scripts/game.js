@@ -1,11 +1,6 @@
+import { getGameState, rollDice } from "./api.js";
+import { renderGame } from "./app.js";
 import { colorsMap } from "/assets/colors.js";
-
-const rollDice = async () => {
-  const response = await fetch("/game/roll", {
-    method: "POST",
-  });
-  return await response.json();
-};
 
 const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
@@ -112,6 +107,8 @@ export const applyEventListenerOnDice = () => {
   dice.addEventListener("click", async () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
+    const state = await getGameState();
+    await renderGame(state)
     removeMoveClass();
     renderMoveOptions(destinations);
   });

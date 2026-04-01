@@ -8,6 +8,7 @@ import designCards from "../../src/config/design_card.json" with {
 import actionCards from "../../src/config/action_card.json" with {
   type: "json",
 };
+import Bank from "../../src/models/bank.js";
 
 const players = [
   {
@@ -94,16 +95,6 @@ const gameState = {
   },
 };
 
-const bank = {
-  tokens: 55,
-  availableDesignCards: designCards,
-  availableActionCards: actionCards,
-  yarns: [1, 2, 3, 4, 5],
-  tiles: [
-    { value: 1, playerId: null },
-    { value: 6, playerId: null },
-  ],
-};
 
 describe("move request: ", () => {
   let app;
@@ -111,9 +102,9 @@ describe("move request: ", () => {
   const randomValue = 0.05;
 
   beforeEach(() => {
-    const mockBank = structuredClone(bank);
+    const bank = new Bank(designCards, actionCards)
     const mockGameState = structuredClone(gameState);
-    app = createApp(mockGameState, mockBank, () => randomValue, logger);
+    app = createApp(mockGameState, bank, () => randomValue, logger);
   });
 
   it("When player moves, should response with adjYarns, source and destination positons of pin", async () => {
@@ -145,10 +136,11 @@ describe("move request: ", () => {
 
 describe("roll dice request : ", () => {
   let app;
-
+  let bank;
   let randomValue = 0.05;
 
   beforeEach(() => {
+    bank = new Bank([], [])
     app = createApp(gameState, bank, () => randomValue, logger);
   });
 

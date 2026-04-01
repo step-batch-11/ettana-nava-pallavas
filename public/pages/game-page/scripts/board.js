@@ -189,7 +189,7 @@ export const initBoard = () => {
   createCornerTiles();
 };
 
-export const renderGame = (state) => {
+export const renderBoard = (state) => {
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayer);
   renderPlayers(state.players, state.currentPlayer);

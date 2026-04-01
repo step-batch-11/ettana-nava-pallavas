@@ -40,14 +40,19 @@ export default class Bank {
     return this.#actionCards.shift();
   }
 
-  #deductToken(n) {
+  deductToken(n) {
     this.#tokens -= n;
     return n;
   }
 
+
+  getActionCard() {
+    return this.#actionCards.pop();
+  }
+
   distributeInitialAssets(players) {
     players.forEach((player) => {
-      player.tokens += this.#deductToken(2);
+      player.tokens += this.deductToken(2);
       player.designCards.push(this.#designCards.pop());
       player.actionCards.push(this.#actionCards.pop());
     });
