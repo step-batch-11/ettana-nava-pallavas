@@ -85,16 +85,25 @@ const createSkeleton = (cardInfo, id) => {
   const card = document.createElement("div");
   card.classList.add("card-item");
   card.dataset.id = cardInfo.id;
-
-  const cardPointer = document.createElement("div");
-  cardPointer.textContent = cardInfo.victoryPoint;
-  card.append(cardPointer);
-
-  const design = document.createElement("div");
-  design.classList.add("design");
-
   card.id = id + 1;
   card.setAttribute("draggable", "true");
+
+  const cardTop = document.createElement("section");
+  cardTop.classList.add("card-item-top");
+
+  const pointer = document.createElement("div");
+  pointer.classList.add("card-pointer");
+  pointer.textContent = cardInfo.victoryPoints;
+  cardTop.append(pointer);
+
+  const cardMiddle = document.createElement("section");
+  cardMiddle.classList.add("design");
+
+  const cardBottom = document.createElement("section");
+  cardBottom.classList.add("card-item-bottom");
+
+  const buttonArea = document.createElement("section");
+  buttonArea.classList.add("card-item-button-area");
 
   for (let r = 0; r < 5; r++) {
     for (let c = 0; c < 5; c++) {
@@ -102,11 +111,13 @@ const createSkeleton = (cardInfo, id) => {
       colorContainer.classList.add("color-item");
       colorContainer.id = `r-${r}-c-${c}`;
       colorContainer.style.backgroundColor = "white";
-      design.appendChild(colorContainer);
+      cardMiddle.appendChild(colorContainer);
     }
   }
 
-  card.append(design);
+  card.append(cardTop, cardMiddle, cardBottom);
+  console.log(card);
+
   return card;
 };
 
@@ -142,7 +153,11 @@ const renderActionCards = (cards) => {
     actionCard.dataset.id = card.id;
     actionCard.id = `a-${card.id}`;
 
-    actionCard.textContent = card.description;
+    const actioinDetails = document.createElement("section");
+    actioinDetails.classList.add("action-details");
+    actioinDetails.textContent = card.description;
+
+    actionCard.append(actioinDetails);
     actionCardContainer.appendChild(actionCard);
   });
 };
@@ -159,9 +174,9 @@ export const addToggleEventListenerOnDeck = () => {
 export const addDragEventListenerOnDeck = () => {
   containers.forEach((container) => {
     container.addEventListener("dragstart", handleDragStart);
-    container.addEventListener("dragend", (_e) => placeholder.remove());
     container.addEventListener("dragover", (e) => handleDragOver(e, container));
     container.addEventListener("drop", handleDragDrop);
+    container.addEventListener("dragend", (_e) => placeholder.remove());
   });
 };
 

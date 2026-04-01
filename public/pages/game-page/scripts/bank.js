@@ -1,56 +1,47 @@
 import { colorsMap } from "/assets/colors.js";
-
-let cardId = 2;
+import { renderDeck } from "./deck.js";
+import { renderGame } from "./board.js";
+import { showToast } from "../../utils/utils.js";
 
 const sendRequest = async (path) => {
   const response = await fetch(path);
   return await response.json();
 };
 
-const createCard = (id, content) => {
-  const card = document.createElement("div");
-  card.classList.add("card-item");
-
-  if (content) card.textContent = content;
-
-  card.setAttribute("draggable", true);
-  card.setAttribute("data-id", id);
-  card.id = id;
-
-  return card;
-};
-
 const buyDesignCard = () => {
   const designCard = document.querySelector(".design-card");
-  const cardsPlaceholder = document.querySelector(".design-cards .cards");
 
   designCard.addEventListener("click", async () => {
     const response = await sendRequest("/game/buy-design-card");
-    if (response.hasError) {
-      alert("Error came");
+    if (!response.success) {
+      showToast(response.message, 'e');
       return;
     }
 
-    const card = createCard(`d-${cardId++}`, response.victoryPoints);
-    cardsPlaceholder.append(card);
+    const res = await fetch("/game/board-state");
+    const { state } = await res.json();
+    renderGame(state);
+    renderDeck(state.players, state.currentPlayer);
     renderBankState();
   });
 };
 
 const buyActionCard = () => {
   const actionCard = document.querySelector(".action-card");
-  const cardsPlaceholder = document.querySelector(".action-cards .cards");
 
   actionCard.addEventListener("click", async () => {
     const response = await sendRequest("/game/buy-action-card");
 
-    if (response.hasError) {
-      alert("Error came");
+    if (!response.success) {
+      showToast(response.message, 'e');
       return;
     }
 
-    const card = createCard(`a-${response.id}`, response.description);
-    cardsPlaceholder.append(card);
+    const res = await fetch("/game/board-state");
+    const { state } = await res.json();
+    renderGame(state);
+    renderDeck(state.players, state.currentPlayer);
+    renderBankState();
     renderBankState();
   });
 };
