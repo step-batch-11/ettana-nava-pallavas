@@ -1,6 +1,5 @@
-import { renderBankState } from "./bank.js";
 import { colorsMap } from "/assets/colors.js";
-import { renderActionCards, renderDesignCards } from "./deck.js";
+
 const board = document.getElementById("board");
 const playersContainer = document.querySelector(".players");
 
@@ -117,14 +116,6 @@ const createCornerTiles = () => {
   });
 };
 
-const initBoard = () => {
-  createCells();
-  createCenterTiles();
-  createHorizontalTiles();
-  createVerticalTiles();
-  createCornerTiles();
-};
-
 const renderYarns = (yarns) => {
   yarns.forEach((row, r) => {
     row.forEach((color, c) => {
@@ -132,6 +123,46 @@ const renderYarns = (yarns) => {
       el.style.backgroundColor = colorsMap[color];
     });
   });
+};
+
+const createSVGPlayerIcon = () => {
+  const ns = "http://www.w3.org/2000/svg";
+
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("width", "30");
+  svg.setAttribute("height", "50");
+  svg.setAttribute("viewBox", "0 0 120 220");
+
+  const circle = document.createElementNS(ns, "circle");
+  circle.setAttribute("cx", "60");
+  circle.setAttribute("cy", "45");
+  circle.setAttribute("r", "35");
+  circle.setAttribute("fill", "rgb(239, 108, 0)");
+  circle.setAttribute("stroke", "rgb(193, 90, 5)");
+  circle.setAttribute("stroke-width", "4");
+
+  const path = document.createElementNS(ns, "path");
+  path.setAttribute(
+    "d",
+    "M40 75 Q30 130 25 165 Q60 190 95 165 Q90 130 80 75 Z",
+  );
+  path.setAttribute("fill", "#ef6c00");
+  path.setAttribute("stroke", "rgb(193, 90, 5)");
+  path.setAttribute("stroke-width", "4");
+
+  const _rect = document.createElementNS(ns, "rect");
+
+  _rect.setAttribute("width", "100");
+  _rect.setAttribute("height", "25");
+  _rect.setAttribute("rx", "20");
+  _rect.setAttribute("ry", "20");
+  _rect.setAttribute("fill", "#ef6c00");
+  _rect.setAttribute("stroke", "rgb(193, 90, 5)");
+  _rect.setAttribute("stroke-width", "4");
+
+  svg.append(circle, path);
+
+  return svg;
 };
 
 const renderTiles = (tiles, currentPlayer) => {
@@ -146,7 +177,8 @@ const renderTiles = (tiles, currentPlayer) => {
 
       if (tile?.playerId) {
         const icon = createDiv("player-icon tile-value");
-        icon.textContent = "👤";
+        const svgIcon = createSVGPlayerIcon();
+        icon.appendChild(svgIcon);
         el.appendChild(icon);
       }
 
@@ -157,63 +189,49 @@ const renderTiles = (tiles, currentPlayer) => {
   });
 };
 
-const createPlayerCard = ({ name, avatar, token, victoryPoint }) => {
+const createPlayerCard = (
+  { name, avatar, token, victoryPoint },
+) => {
   const template = document.getElementById("player-card-template");
-  const clone = template.content.cloneNode(true);
 
+  const clone = template.content.cloneNode(true);
+  const element = clone.querySelector(".player-card");
   clone.querySelector(".player-name").textContent = name;
   clone.querySelector(".avatar").src = avatar;
   clone.querySelector(".stat1").textContent = victoryPoint;
   clone.querySelector(".stat2").textContent = token;
 
-  return clone;
+  return { clone, element };
 };
 
-const renderPlayers = (players) => {
+const renderPlayers = (players, currentPlayer) => {
   playersContainer.innerHTML = "";
   players.forEach((player) => {
-    const card = createPlayerCard({
+    const { clone, element } = createPlayerCard({
       name: player.name,
       avatar: "/assets/user_pin.png",
       token: player.tokens,
       victoryPoint: player.victoryPoint,
     });
 
-    playersContainer.appendChild(card);
+    if (player.id === currentPlayer) {
+      element.classList.add("current-player-card");
+    }
+
+    playersContainer.appendChild(clone);
   });
 };
 
-const renderPlayersCards = (playerId, players) => {
-  const currentPlayer = players.find(({ id }) => id === playerId);
-  renderDesignCards(currentPlayer.designCards);
-  renderActionCards(currentPlayer.actionCards);
+export const initBoard = () => {
+  createCells();
+  createCenterTiles();
+  createHorizontalTiles();
+  createVerticalTiles();
+  createCornerTiles();
 };
 
-const renderGame = async () => {
-  const res = await fetch("/game/board-state");
-  const { state } = await res.json();
+export const renderGame = (state) => {
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayer);
-  renderPlayers(state.players);
-  renderBankState();
-
-  renderPlayersCards(state.currentPlayer, state.players);
-};
-
-const distributeInitialAssets = async () => {
-  await new Promise((res) => {
-    setTimeout(() => {
-      res(1);
-    }, 500);
-  });
-
-  const res = await fetch("/game/distribute-initial-assets");
-  await res.json();
-  renderGame();
-};
-
-globalThis.onload = async () => {
-  initBoard();
-  await renderGame();
-  await distributeInitialAssets();
+  renderPlayers(state.players, state.currentPlayer);
 };

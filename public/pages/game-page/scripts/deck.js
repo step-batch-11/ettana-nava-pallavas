@@ -6,17 +6,9 @@ const actionCardContainer = document.getElementById("action-card-panel");
 
 let sourceContainer = null;
 let dragged = null;
+
 const placeholder = document.createElement("div");
 placeholder.classList.add("placeholder");
-
-const toggleDeckView = (panels) => {
-  panels.forEach((panel) => {
-    panel.addEventListener("click", () => {
-      panels.forEach((p) => p.classList.remove("expanded"));
-      panel.classList.add("expanded");
-    });
-  });
-};
 
 const findClosest = (closest, child, x) => {
   const box = child.getBoundingClientRect();
@@ -89,28 +81,29 @@ const handleDragDrop = (e) => {
   placeholder.remove();
 };
 
-const handleDragCards = (containers) => {
-  containers.forEach((container) => {
-    container.addEventListener("dragstart", handleDragStart);
-    container.addEventListener("dragend", (_e) => placeholder.remove());
-    container.addEventListener("dragover", (e) => handleDragOver(e, container));
-    container.addEventListener("drop", handleDragDrop);
-  });
-};
-
-const createSkeleton = (id, vp) => {
+const createSkeleton = (cardInfo, id) => {
   const card = document.createElement("div");
   card.classList.add("card-item");
-
-  const cardPointer = document.createElement("div");
-  cardPointer.textContent = vp;
-  card.append(cardPointer);
-
-  const design = document.createElement("div");
-  design.classList.add("design");
-
+  card.dataset.id = cardInfo.id;
   card.id = id + 1;
   card.setAttribute("draggable", "true");
+
+  const cardTop = document.createElement("section");
+  cardTop.classList.add("card-item-top");
+
+  const pointer = document.createElement("div");
+  pointer.classList.add("card-pointer");
+  pointer.textContent = cardInfo.victoryPoints;
+  cardTop.append(pointer);
+
+  const cardMiddle = document.createElement("section");
+  cardMiddle.classList.add("design");
+
+  const cardBottom = document.createElement("section");
+  cardBottom.classList.add("card-item-bottom");
+
+  const buttonArea = document.createElement("section");
+  buttonArea.classList.add("card-item-button-area");
 
   for (let r = 0; r < 5; r++) {
     for (let c = 0; c < 5; c++) {
@@ -118,11 +111,13 @@ const createSkeleton = (id, vp) => {
       colorContainer.classList.add("color-item");
       colorContainer.id = `r-${r}-c-${c}`;
       colorContainer.style.backgroundColor = "white";
-      design.appendChild(colorContainer);
+      cardMiddle.appendChild(colorContainer);
     }
   }
 
-  card.append(design);
+  card.append(cardTop, cardMiddle, cardBottom);
+  console.log(card);
+
   return card;
 };
 
@@ -135,21 +130,20 @@ const applyPattern = (card, cardInfo) => {
   return card;
 };
 
-const createDesignCard = (pattern, id, vp) => {
-  const card = createSkeleton(id, vp);
-
-  return applyPattern(card, pattern);
+const createDesignCard = (cardInfo, id) => {
+  const card = createSkeleton(cardInfo, id);
+  return applyPattern(card, cardInfo.design);
 };
 
-export const renderDesignCards = (cards) => {
+const renderDesignCards = (cards) => {
   designCardContainer.innerHTML = "";
   cards.forEach((card, i) => {
-    const ele = createDesignCard(card.design, i, card.victoryPoints);
+    const ele = createDesignCard(card, i);
     designCardContainer.appendChild(ele);
   });
 };
 
-export const renderActionCards = (cards) => {
+const renderActionCards = (cards) => {
   actionCardContainer.innerHTML = "";
 
   cards.forEach((card) => {
@@ -159,10 +153,36 @@ export const renderActionCards = (cards) => {
     actionCard.dataset.id = card.id;
     actionCard.id = `a-${card.id}`;
 
-    actionCard.textContent = card.description;
+    const actioinDetails = document.createElement("section");
+    actioinDetails.classList.add("action-details");
+    actioinDetails.textContent = card.description;
+
+    actionCard.append(actioinDetails);
     actionCardContainer.appendChild(actionCard);
   });
 };
 
-toggleDeckView(panels);
-handleDragCards(containers);
+export const addToggleEventListenerOnDeck = () => {
+  panels.forEach((panel) => {
+    panel.addEventListener("click", () => {
+      panels.forEach((p) => p.classList.remove("expanded"));
+      panel.classList.add("expanded");
+    });
+  });
+};
+
+export const addDragEventListenerOnDeck = () => {
+  containers.forEach((container) => {
+    container.addEventListener("dragstart", handleDragStart);
+    container.addEventListener("dragover", (e) => handleDragOver(e, container));
+    container.addEventListener("drop", handleDragDrop);
+    container.addEventListener("dragend", (_e) => placeholder.remove());
+  });
+};
+
+export const renderDeck = (players, currentPlayerId) => {
+  const currentPlayer = players.find((player) => player.id === currentPlayerId);
+
+  renderDesignCards(currentPlayer.designCards);
+  renderActionCards(currentPlayer.actionCards);
+};
