@@ -1,5 +1,5 @@
 import { initBoard, renderBoard } from "./board.js";
-import { applyEventListenerOnDice } from "./game.js";
+import { applyEventListenerOnDice, defaultDice } from "./game.js";
 import { attachBankEventListeners, renderBankState } from "./bank.js";
 import {
   addDragEventListenerOnDeck,
@@ -35,10 +35,9 @@ const addEventListener = () => {
 export const renderGame = async (state) => {
   renderBoard(state);
   await renderBankState();
-
   renderDeck(state.players, state.currentPlayer);
-}
-
+  defaultDice();
+};
 
 const main = async () => {
   initBoard();

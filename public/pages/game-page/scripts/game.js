@@ -122,9 +122,13 @@ export const applyEventListenerOnDice = () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     const state = await getGameState();
-    await renderGame(state)
+    await renderGame(state);
     removeMoveClass();
     removeTileEventListeners();
     renderMoveOptions(destinations);
   });
+};
+
+export const defaultDice = () => {
+  updateDice({ number: 6, colorId: 6 });
 };
