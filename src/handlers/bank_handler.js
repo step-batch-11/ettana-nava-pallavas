@@ -1,41 +1,63 @@
-export const serveBankState = (context) => {
-  const bank = context.get("bank");
+export const serveBankState = (ctx) => {
+  const bank = ctx.get("bank");
   const bankState = bank.getBank();
 
-  return context.json(bankState);
+  return ctx.json(bankState);
 };
 
-export const buyDesignCard = (context) => {
+export const buyDesignCard = (ctx) => {
   try {
-    const bank = context.get("bank");
-    const boardState = context.get("boardState");
-    const card = bank.buyDesignCard();
-    const currentPlayerId = boardState.players.findIndex((player) =>
+    const bank = ctx.get("bank");
+    const boardState = ctx.get("boardState");
+    const currentPlayer = boardState.players.find((player) =>
       player.id === boardState.currentPlayer
     );
 
-    boardState.players[currentPlayerId].designCards.push(card);
+    if (currentPlayer.tokens < 3) {
+      return ctx.json({
+        success: false,
+        message: "You do not have enough tokens",
+      });
+    }
 
-    return context.json(card);
+    currentPlayer.tokens -= 3;
+    const card = bank.buyDesignCard();
+    currentPlayer.designCards.push(card);
+
+    return ctx.json({
+      success: true,
+      message: "Design card bought successfully",
+    });
   } catch (err) {
-    return context.json({ hasError: true, error: err.message });
+    return ctx.json({ success: false, message: err.message });
   }
 };
 
-export const buyActionCard = (context) => {
+export const buyActionCard = (ctx) => {
   try {
-    const bank = context.get("bank");
-    const boardState = context.get("boardState");
-    const card = bank.buyActionCard();
-
-    const currentPlayerId = boardState.players.findIndex((player) =>
+    const bank = ctx.get("bank");
+    const boardState = ctx.get("boardState");
+    const currentPlayer = boardState.players.find((player) =>
       player.id === boardState.currentPlayer
     );
 
-    boardState.players[currentPlayerId].actionCards.push(card);
+    if (currentPlayer.tokens < 2) {
+      return ctx.json({
+        success: false,
+        message: "You do not have enough tokens",
+      });
+    }
+    currentPlayer.tokens -= 2;
 
-    return context.json(card);
+    const card = bank.buyActionCard();
+    currentPlayer.actionCards.push(card);
+
+    return ctx.json({
+      success: true,
+      card,
+      message: "Action card bought successfully",
+    });
   } catch (err) {
-    return context.json({ hasError: true, error: err.message });
+    return ctx.json({ success: false, message: err.message });
   }
 };

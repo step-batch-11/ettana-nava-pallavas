@@ -22,6 +22,13 @@ describe("tests for moving pin", () => {
       ],
 
       board: {
+        yarns: [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ],
         tiles: [
           [
             { value: null, playerId: null },
@@ -86,7 +93,7 @@ describe("tests for moving pin", () => {
       ];
     });
 
-    it("Invalid destination, so position won't be changed", () => {
+    it("Invalid destination, position should not be changed", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -98,7 +105,7 @@ describe("tests for moving pin", () => {
       assertNotEquals(positions.destination, getCoords(route.destination));
     });
 
-    it("Valid destination, so position should be changed to destination", () => {
+    it("Valid destination, position should be changed to destination", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -114,8 +121,8 @@ describe("tests for moving pin", () => {
     });
   });
 
-  describe("When current player is taking a path through occupied tile, they have to pay: ", () => {
-    it("should pay to one player", () => {
+  describe("Path penalty for premium path: ", () => {
+    it("One player is in path, should pay to one player", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -141,7 +148,7 @@ describe("tests for moving pin", () => {
       assertEquals(currentPlayer.tokens, 4);
     });
 
-    it("should pay to two players", () => {
+    it("Two players is in path, should pay to two players", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -169,7 +176,7 @@ describe("tests for moving pin", () => {
       assertEquals(currentPlayer.tokens, 2);
     });
 
-    it("should not pay to another player", () => {
+    it("No one in path, should not pay to any player", () => {
       turnManager.destinations = [{
         destination: { x: 2, y: 3 },
         path: [],
@@ -189,6 +196,58 @@ describe("tests for moving pin", () => {
       const positions = turnManager.move(route);
       assertEquals(positions.destination, getCoords(route.destination));
       assertEquals(currentPlayer.tokens, 2);
+    });
+  });
+
+  describe("Get adjacent yarns: ", () => {
+    it("It is a normal tile, should give four adjacent yarns position", () => {
+      const pinPosition = { x: 1, y: 2 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 0, y: 1 },
+        { x: 0, y: 2 },
+        { x: 1, y: 1 },
+        { x: 1, y: 2 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a side (top) tile, should give two adjacent yarns position", () => {
+      const pinPosition = { x: 0, y: 2 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 0, y: 1 },
+        { x: 0, y: 2 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a side (bottom) tile, should give two adjacent yarns position", () => {
+      const pinPosition = { x: 5, y: 2 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 4, y: 1 },
+        { x: 4, y: 2 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a corner (left-top) tile, should give only one adjacent yarn position", () => {
+      const pinPosition = { x: 5, y: 0 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 4, y: 0 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a corner (right-bottom) tile, should give only one adjacent yarn position", () => {
+      const pinPosition = { x: 0, y: 5 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 0, y: 4 },
+      ];
+      assertEquals(adjYarns, expected);
     });
   });
 });

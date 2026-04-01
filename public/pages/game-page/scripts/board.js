@@ -125,6 +125,46 @@ const renderYarns = (yarns) => {
   });
 };
 
+const createSVGPlayerIcon = () => {
+  const ns = "http://www.w3.org/2000/svg";
+
+  const svg = document.createElementNS(ns, "svg");
+  svg.setAttribute("width", "30");
+  svg.setAttribute("height", "50");
+  svg.setAttribute("viewBox", "0 0 120 220");
+
+  const circle = document.createElementNS(ns, "circle");
+  circle.setAttribute("cx", "60");
+  circle.setAttribute("cy", "45");
+  circle.setAttribute("r", "35");
+  circle.setAttribute("fill", "rgb(239, 108, 0)");
+  circle.setAttribute("stroke", "rgb(193, 90, 5)");
+  circle.setAttribute("stroke-width", "4");
+
+  const path = document.createElementNS(ns, "path");
+  path.setAttribute(
+    "d",
+    "M40 75 Q30 130 25 165 Q60 190 95 165 Q90 130 80 75 Z",
+  );
+  path.setAttribute("fill", "#ef6c00");
+  path.setAttribute("stroke", "rgb(193, 90, 5)");
+  path.setAttribute("stroke-width", "4");
+
+  const _rect = document.createElementNS(ns, "rect");
+
+  _rect.setAttribute("width", "100");
+  _rect.setAttribute("height", "25");
+  _rect.setAttribute("rx", "20");
+  _rect.setAttribute("ry", "20");
+  _rect.setAttribute("fill", "#ef6c00");
+  _rect.setAttribute("stroke", "rgb(193, 90, 5)");
+  _rect.setAttribute("stroke-width", "4");
+
+  svg.append(circle, path);
+
+  return svg;
+};
+
 const renderTiles = (tiles, currentPlayer) => {
   tiles.forEach((row, r) => {
     row.forEach((tile, c) => {
@@ -137,7 +177,8 @@ const renderTiles = (tiles, currentPlayer) => {
 
       if (tile?.playerId) {
         const icon = createDiv("player-icon tile-value");
-        icon.textContent = "👤";
+        const svgIcon = createSVGPlayerIcon();
+        icon.appendChild(svgIcon);
         el.appendChild(icon);
       }
 
@@ -173,7 +214,7 @@ const renderPlayers = (players, currentPlayer) => {
       victoryPoint: player.victoryPoint,
     });
 
-    if (player.id === currentPlayer.id) {
+    if (player.id === currentPlayer) {
       element.classList.add("current-player-card");
     }
 

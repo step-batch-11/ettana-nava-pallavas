@@ -48,14 +48,50 @@ describe("Game route", () => {
       const card = await response.json();
 
       assertEquals(response.status, 200);
-      assertEquals(card, { "id": 1, "victoryPoints": 1 });
+      assertEquals(card, {
+        message: "Design card bought successfully",
+        success: true,
+      });
     });
 
     it("should fail when context is invalid", () => {
       const context = { get: () => [], json: (x) => x };
       const res = buyDesignCard(context);
 
-      assertEquals(res.hasError, true);
+      assertEquals(res.success, false);
+    });
+
+    it("should inform if tokens are insufficient", () => {
+      const context = {
+        get: (key) => {
+          if (key === "bank") {
+            return {
+              buyDesignCard: () => ({ id: "card1" }),
+            };
+          }
+
+          if (key === "boardState") {
+            return {
+              currentPlayer: "p1",
+              players: [
+                {
+                  id: "p1",
+                  tokens: 1,
+                  designCards: [],
+                },
+              ],
+            };
+          }
+        },
+        json: (x) => x,
+      };
+
+      const res = buyDesignCard(context);
+
+      assertEquals(res, {
+        success: false,
+        message: "You do not have enough tokens",
+      });
     });
   });
 
@@ -65,14 +101,55 @@ describe("Game route", () => {
       const card = await response.json();
 
       assertEquals(response.status, 200);
-      assertEquals(card, actionCards[0]);
+      assertEquals(card, {
+        card: {
+          description: "Move the pin to any unoccupied square.",
+          id: 1,
+          type: "move",
+        },
+        message: "Action card bought successfully",
+        success: true,
+      });
     });
 
     it("should fail when context is invalid", () => {
       const context = { get: () => [], json: (x) => x };
       const res = buyActionCard(context);
 
-      assertEquals(res.hasError, true);
+      assertEquals(res.success, false);
+    });
+
+    it("should inform if tokens are insufficient", () => {
+      const context = {
+        get: (key) => {
+          if (key === "bank") {
+            return {
+              buyDesignCard: () => ({ id: "card1" }),
+            };
+          }
+
+          if (key === "boardState") {
+            return {
+              currentPlayer: "p1",
+              players: [
+                {
+                  id: "p1",
+                  tokens: 1,
+                  designCards: [],
+                },
+              ],
+            };
+          }
+        },
+        json: (x) => x,
+      };
+
+      const res = buyActionCard(context);
+
+      assertEquals(res, {
+        success: false,
+        message: "You do not have enough tokens",
+      });
     });
   });
 });
