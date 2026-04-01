@@ -9,14 +9,14 @@ export const handleDiceRoll = (ctx) => {
 export const handleMove = async (ctx) => {
   const turnManager = ctx.get("turnManager");
   const destination = await ctx.req.json();
-  const positions = turnManager.move(destination);
-  const adjYarns = turnManager.getAdjYarnsPositions(positions.destination);
-  if (positions.source === positions.destination) {
+  const moveResult = turnManager.move(destination);
+  const adjYarns = turnManager.getAdjYarnsPositions(moveResult.destination);
+  if (moveResult.source === moveResult.destination) {
     return ctx.json({ success: false, message: "You can't move there" }, 400);
   }
   return ctx.json({
     success: true,
-    data: { adjYarns, positions },
+    data: { adjYarns, moveResult },
     message: "Moved successfully",
   }, 200);
 };

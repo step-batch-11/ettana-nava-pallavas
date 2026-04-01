@@ -42,10 +42,11 @@ export default class TurnManager {
   }
 
   #processPathPenalty(payer, payees) {
-    payees.forEach((payeeId) => {
+    return payees.map((payeeId) => {
       const payee = this.#getPlayerById(payeeId);
       payee.tokens++;
       payer.tokens--;
+      return { payeeId, tokens: payee.tokens };
     });
   }
 
@@ -68,14 +69,15 @@ export default class TurnManager {
 
     const currentPosition = currentPlayer.pin.position;
     const destination = route.destination;
+    let payees;
     if (this.#isValidDestination(destination)) {
       if (route.type === "premium") {
-        this.#processPathPenalty(currentPlayer, route.recipients);
+        payees = this.#processPathPenalty(currentPlayer, route.recipients);
       }
       currentPlayer.pin.position = destination;
       this.#displacePin(currentPlayer, destination, currentPosition);
 
-      return { source: currentPosition, destination };
+      return { source: currentPosition, destination, payees };
     }
 
     return { source: currentPosition, destination: currentPosition };
