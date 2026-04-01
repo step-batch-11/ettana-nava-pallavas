@@ -11,5 +11,12 @@ export const handleMove = async (ctx) => {
   const destination = await ctx.req.json();
   const positions = turnManager.move(destination);
   const adjYarns = turnManager.getAdjYarnsPositions(positions.destination);
-  return ctx.json({ adjYarns, positions });
+  if (positions.source === positions.destination) {
+    return ctx.json({ success: false, message: "You can't move there" }, 400);
+  }
+  return ctx.json({
+    success: true,
+    data: { adjYarns, positions },
+    message: "Moved successfully",
+  }, 200);
 };

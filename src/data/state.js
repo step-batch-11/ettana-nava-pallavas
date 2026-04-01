@@ -17,6 +17,24 @@ const players = [
     designCards: [],
     pin: { color: 3, position: { x: 3, y: 3 } },
   },
+  {
+    name: "Sandip",
+    id: 3,
+    tokens: 0,
+    victoryPoint: 0,
+    actionCards: [],
+    designCards: [],
+    pin: { color: 2, position: { x: 2, y: 3 } },
+  },
+  {
+    name: "Jyothi",
+    id: 4,
+    tokens: 0,
+    victoryPoint: 0,
+    actionCards: [],
+    designCards: [],
+    pin: { color: 3, position: { x: 3, y: 4 } },
+  },
 ];
 
 export const gameState = {
@@ -50,8 +68,8 @@ export const gameState = {
       [
         { value: null, playerId: null },
         { value: 5, playerId: null },
-        { value: 6, playerId: 2 },
-        { value: 1, playerId: null },
+        { value: 6, playerId: 1 },
+        { value: 1, playerId: 3 },
         { value: 2, playerId: null },
         { value: null, playerId: null },
       ],
@@ -59,8 +77,8 @@ export const gameState = {
         { value: null, playerId: null },
         { value: 3, playerId: null },
         { value: 4, playerId: null },
-        { value: 5, playerId: 3 },
-        { value: 6, playerId: null },
+        { value: 5, playerId: 2 },
+        { value: 6, playerId: 4 },
         { value: null, playerId: null },
       ],
       [

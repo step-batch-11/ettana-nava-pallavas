@@ -68,12 +68,12 @@ export default class TurnManager {
 
     const currentPosition = currentPlayer.pin.position;
     const destination = route.destination;
-    if (this.#isValidDestination(route.destination)) {
+    if (this.#isValidDestination(destination)) {
       if (route.type === "premium") {
         this.#processPathPenalty(currentPlayer, route.recipients);
       }
       currentPlayer.pin.position = destination;
-      this.#displacePin(currentPlayer, route.destination, currentPosition);
+      this.#displacePin(currentPlayer, destination, currentPosition);
 
       return { source: currentPosition, destination };
     }

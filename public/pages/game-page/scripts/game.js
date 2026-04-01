@@ -81,7 +81,14 @@ const displacePin = ({ source, destination }) => {
 };
 
 const handlePlayerMove = async (destination) => {
-  const { adjYarns, positions } = await fetchMoveResult(destination);
+  const response = await fetchMoveResult(destination);
+
+  if (!response.success) {
+    alert(response.message);
+    return;
+  }
+
+  const { adjYarns, positions } = response.data;
   highlightAdjacentYarns(adjYarns);
   displacePin(positions);
   removeTileEventListeners();
