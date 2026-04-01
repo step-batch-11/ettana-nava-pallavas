@@ -35,6 +35,10 @@ const handleDragStart = (e) => {
 
   dragged = e.target;
   sourceContainer = e.target.closest(".cards");
+
+  setTimeout(() => {
+    dragged.classList.add("dragging");
+  }, 0);
 };
 
 const autoScrollWithDrag = (e, container) => {
@@ -171,12 +175,19 @@ export const addToggleEventListenerOnDeck = () => {
   });
 };
 
+const handleDragEnd = () => {
+  if (dragged) {
+    dragged.classList.remove("dragging");
+  }
+  placeholder.remove();
+};
+
 export const addDragEventListenerOnDeck = () => {
   containers.forEach((container) => {
     container.addEventListener("dragstart", handleDragStart);
     container.addEventListener("dragover", (e) => handleDragOver(e, container));
     container.addEventListener("drop", handleDragDrop);
-    container.addEventListener("dragend", (_e) => placeholder.remove());
+    container.addEventListener("dragend", handleDragEnd);
   });
 };
 

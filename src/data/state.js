@@ -12,7 +12,7 @@ const players = [
   {
     name: "Dinesh",
     id: 2,
-    tokens: 0,
+    tokens: 90,
     roomId: null,
     victoryPoint: 0,
     actionCards: [],
