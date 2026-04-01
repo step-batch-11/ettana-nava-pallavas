@@ -1,4 +1,5 @@
 import { colorsMap } from "/assets/colors.js";
+import { renderGame } from "./board.js";
 
 const rollDice = async () => {
   const response = await fetch("/game/roll", {
@@ -68,6 +69,12 @@ const attachPenaltyTooltip = (tile, penalty) => {
   });
 };
 
+const reRenderGameState = async () => {
+  const res = await fetch("/game/board-state");
+  const { state } = await res.json();
+  renderGame(state);
+};
+
 const displacePin = ({ source, destination }) => {
   const sourceTile = document.querySelector(`#tile${source.x}${source.y}`);
   const destinationTile = document.querySelector(
@@ -81,10 +88,18 @@ const displacePin = ({ source, destination }) => {
 };
 
 const handlePlayerMove = async (destination) => {
-  const { adjYarns, positions } = await fetchMoveResult(destination);
+  const response = await fetchMoveResult(destination);
+
+  if (!response.success) {
+    alert(response.message);
+    return;
+  }
+
+  const { adjYarns, moveResult } = response.data;
   highlightAdjacentYarns(adjYarns);
-  displacePin(positions);
+  displacePin(moveResult);
   removeTileEventListeners();
+  await reRenderGameState();
 };
 
 const highlightTile = (tile, destination) => {
@@ -113,6 +128,7 @@ export const applyEventListenerOnDice = () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     removeMoveClass();
+    removeTileEventListeners();
     renderMoveOptions(destinations);
   });
 };
