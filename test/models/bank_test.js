@@ -5,11 +5,9 @@ import Bank from "../../src/models/bank.js";
 describe("bank", () => {
   let designCards;
   let actionCards;
-  let shuffleFn;
+  const shuffle = (pattern) => pattern;
 
   beforeEach(() => {
-    shuffleFn = (patterns) => patterns;
-
     designCards = [
       { "id": 1, "victoryPoints": 1 },
       { "id": 2, "victoryPoints": 1 },
@@ -27,7 +25,7 @@ describe("bank", () => {
 
   describe("Get bank", () => {
     it("should return bank data in a rich object when passing shuffle function", () => {
-      const bank = new Bank(designCards, actionCards, shuffleFn);
+      const bank = new Bank(designCards, actionCards, shuffle);
       const result = {
         tokens: 55,
         availableDesignCards: 2,
@@ -49,7 +47,7 @@ describe("bank", () => {
           yarns: [1, 2, 3, 4, 5],
           tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
         };
-        const bank = new Bank(undefined, undefined, shuffleFn);
+        const bank = new Bank(undefined, undefined, shuffle);
         assertEquals(bank.getBank(), result);
       },
     );
@@ -86,7 +84,7 @@ describe("bank", () => {
           tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
         };
 
-        const bank = new Bank(designCards, actionCards, shuffleFn);
+        const bank = new Bank(designCards, actionCards, shuffle);
         bank.distributeInitialAssets(players);
 
         assertEquals(bank.getBank(), result);
@@ -111,7 +109,7 @@ describe("bank", () => {
 
   describe("Buy Action Card", () => {
     it("shuld return new action card", () => {
-      const bank = new Bank(designCards, actionCards, (x) => x);
+      const bank = new Bank(designCards, actionCards, shuffle);
       const result = {
         "id": 1,
         "type": "move",
@@ -121,10 +119,18 @@ describe("bank", () => {
       assertEquals(bank.buyActionCard(), result);
     });
 
-    it("shuld throw error as design card are empty", () => {
-      const bank = new Bank(designCards, []);
+    it("should give new action card after re-shuffle when deck is empty", () => {
+      const bank = new Bank(designCards, actionCards, shuffle);
+      bank.buyActionCard();
+      bank.buyActionCard();
 
-      assertThrows(() => bank.buyActionCard());
+      const result = {
+        "id": 1,
+        "type": "move",
+        "description": "Move the pin to any unoccupied square.",
+      };
+
+      assertEquals(bank.buyActionCard(), result);
     });
   });
 });

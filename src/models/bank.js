@@ -6,10 +6,14 @@ export default class Bank {
   #tokens = 55;
   #tiles = [{ value: 1, playerId: null }, { value: 6, playerId: null }];
   #yarns = [1, 2, 3, 4, 5];
+  #shuffleFn;
+  #actionCardsStore;
 
   constructor(designCards = [], actionCards = [], shuffleFn = shuffle) {
     this.#designCards = shuffleFn(designCards);
     this.#actionCards = shuffleFn(actionCards);
+    this.#actionCardsStore = structuredClone(actionCards);
+    this.#shuffleFn = shuffleFn;
   }
 
   getBank() {
@@ -33,7 +37,7 @@ export default class Bank {
 
   buyActionCard() {
     if (this.#actionCards.length === 0) {
-      throw new Error("No more action cards are remaining");
+      this.#actionCards.push(this.#shuffleFn(...this.#actionCardsStore));
     }
 
     this.#tokens += 2;
