@@ -941,7 +941,7 @@ describe("current user turn :", () => {
 
     it('when available tokens in the reserve less than total expense,then should not pay :', () => {
       bank = new Bank([], [])
-      bank.deductToken(55)
+      bank.deductTokens(55)
       turnManager.processColorAction(3, bank);
       const actual = gameState.players.every(player => player.tokens === 0);
       assert(actual)

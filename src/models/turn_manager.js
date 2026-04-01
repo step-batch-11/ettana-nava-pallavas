@@ -125,6 +125,6 @@ export default class TurnManager {
       return;
     }
     distributeTokens(ledger, this.#game.players);
-    bank.deductToken(totalTokens);
+    bank.deductTokens(totalTokens);
   }
 }

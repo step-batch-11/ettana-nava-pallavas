@@ -44,7 +44,7 @@ export default class Bank {
     return this.#actionCards.shift();
   }
 
-  deductToken(n) {
+  deductTokens(n) {
     this.#tokens -= n;
     return n;
   }
@@ -57,7 +57,7 @@ export default class Bank {
   distributeInitialAssets(players) {
     if (!players.some((player) => player.tokens !== 0)) {
       players.forEach((player) => {
-        player.tokens += this.#deductToken(2);
+        player.tokens += this.deductTokens(2);
         player.designCards.push(this.#designCards.pop());
         player.actionCards.push(this.#actionCards.pop());
       });
