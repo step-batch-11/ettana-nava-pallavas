@@ -1,6 +1,6 @@
 import { colorsMap } from "/assets/colors.js";
 import { renderDeck } from "./deck.js";
-import { renderGame } from "./board.js";
+import { renderBoard } from "./board.js";
 import { showToast } from "../../utils/utils.js";
 
 const sendRequest = async (path) => {
@@ -8,7 +8,7 @@ const sendRequest = async (path) => {
   return await response.json();
 };
 
-const buyDesignCard = () => {
+const designCardListeners = () => {
   const designCard = document.querySelector(".design-card");
 
   designCard.addEventListener("click", async () => {
@@ -18,15 +18,14 @@ const buyDesignCard = () => {
       return;
     }
 
-    const res = await fetch("/game/board-state");
-    const { state } = await res.json();
-    renderGame(state);
+    const { state } = await sendRequest("/game/board-state");
+    renderBoard(state);
     renderDeck(state.players, state.currentPlayer);
     renderBankState();
   });
 };
 
-const buyActionCard = () => {
+const actionCardListeners = () => {
   const actionCard = document.querySelector(".action-card");
 
   actionCard.addEventListener("click", async () => {
@@ -37,21 +36,12 @@ const buyActionCard = () => {
       return;
     }
 
-    const res = await fetch("/game/board-state");
-    const { state } = await res.json();
-    renderGame(state);
+    const { state } = await sendRequest("/game/board-state");
+    renderBoard(state);
     renderDeck(state.players, state.currentPlayer);
-    renderBankState();
     renderBankState();
   });
 };
-
-const attachListeners = () => {
-  buyDesignCard();
-  buyActionCard();
-};
-
-attachListeners();
 
 export const renderBankState = async () => {
   const bank = await sendRequest("/game/bank-state");
@@ -68,4 +58,9 @@ export const renderBankState = async () => {
   yarns.forEach((yarn, index) => {
     yarn.style.backgroundColor = colorsMap[bank.yarns[index]];
   });
+};
+
+export const attachBankEventListeners = () => {
+  designCardListeners();
+  actionCardListeners();
 };

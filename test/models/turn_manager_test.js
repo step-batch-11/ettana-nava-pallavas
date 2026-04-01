@@ -1,6 +1,7 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals, assertNotEquals } from "@std/assert";
 import TurnManager from "../../src/models/turn_manager.js";
+import Bank from "../../src/models/bank.js";
 
 const getCoords = ({ x, y }) => ({ x, y });
 
@@ -21,6 +22,13 @@ describe("tests for moving pin", () => {
       ],
 
       board: {
+        yarns: [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ],
         tiles: [
           [
             { value: null, playerId: null },
@@ -85,7 +93,7 @@ describe("tests for moving pin", () => {
       ];
     });
 
-    it("Invalid destination, so position won't be changed", () => {
+    it("Invalid destination, position should not be changed", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -97,7 +105,7 @@ describe("tests for moving pin", () => {
       assertNotEquals(positions.destination, getCoords(route.destination));
     });
 
-    it("Valid destination, so position should be changed to destination", () => {
+    it("Valid destination, position should be changed to destination", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -113,8 +121,8 @@ describe("tests for moving pin", () => {
     });
   });
 
-  describe("When current player is taking a path through occupied tile, they have to pay: ", () => {
-    it("should pay to one player", () => {
+  describe("Path penalty for premium path: ", () => {
+    it("One player is in path, should pay to one player", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -140,7 +148,7 @@ describe("tests for moving pin", () => {
       assertEquals(currentPlayer.tokens, 4);
     });
 
-    it("should pay to two players", () => {
+    it("Two players is in path, should pay to two players", () => {
       const path = [
         { x: 1, y: 0 },
         { x: 1, y: 1 },
@@ -168,7 +176,7 @@ describe("tests for moving pin", () => {
       assertEquals(currentPlayer.tokens, 2);
     });
 
-    it("should not pay to another player", () => {
+    it("No one in path, should not pay to any player", () => {
       turnManager.destinations = [{
         destination: { x: 2, y: 3 },
         path: [],
@@ -190,21 +198,74 @@ describe("tests for moving pin", () => {
       assertEquals(currentPlayer.tokens, 2);
     });
   });
+
+  describe("Get adjacent yarns: ", () => {
+    it("It is a normal tile, should give four adjacent yarns position", () => {
+      const pinPosition = { x: 1, y: 2 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 0, y: 1 },
+        { x: 0, y: 2 },
+        { x: 1, y: 1 },
+        { x: 1, y: 2 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a side (top) tile, should give two adjacent yarns position", () => {
+      const pinPosition = { x: 0, y: 2 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 0, y: 1 },
+        { x: 0, y: 2 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a side (bottom) tile, should give two adjacent yarns position", () => {
+      const pinPosition = { x: 5, y: 2 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 4, y: 1 },
+        { x: 4, y: 2 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a corner (left-top) tile, should give only one adjacent yarn position", () => {
+      const pinPosition = { x: 5, y: 0 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 4, y: 0 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+
+    it("It is a corner (right-bottom) tile, should give only one adjacent yarn position", () => {
+      const pinPosition = { x: 0, y: 5 };
+      const adjYarns = turnManager.getAdjYarnsPositions(pinPosition);
+      const expected = [
+        { x: 0, y: 4 },
+      ];
+      assertEquals(adjYarns, expected);
+    });
+  });
 });
 
 describe("current user turn :", () => {
   let turnManager;
+  const yarns = [
+    [1, 1, 1, 1, 1],
+    [2, 2, 2, 2, 2],
+    [3, 3, 3, 3, 3],
+    [4, 4, 4, 4, 4],
+    [5, 5, 5, 5, 5],
+  ];
 
   beforeEach(() => {
     const randomFn = () => 0.9;
     const board = {
-      yarns: [
-        [1, 1, 1, 1, 1],
-        [2, 2, 2, 2, 2],
-        [3, 3, 3, 3, 3],
-        [4, 4, 4, 4, 4],
-        [5, 5, 5, 5, 5],
-      ],
+      yarns,
       tiles: [
         [
           { value: 0, playerId: null },
@@ -292,13 +353,7 @@ describe("current user turn :", () => {
 
     it("when all number tiles are occupied then, should not show the type jump", () => {
       const board = {
-        yarns: [
-          [1, 1, 1, 1, 1],
-          [2, 2, 2, 2, 2],
-          [3, 3, 3, 3, 3],
-          [4, 4, 4, 4, 4],
-          [5, 5, 5, 5, 5],
-        ],
+        yarns,
         tiles: [
           [
             { value: 0, playerId: null },
@@ -400,13 +455,7 @@ describe("current user turn :", () => {
 
     it("when player is at edge of the board, it should show 2 destination locations for step 1 :", () => {
       const board = {
-        yarns: [
-          [1, 1, 1, 1, 1],
-          [2, 2, 2, 2, 2],
-          [3, 3, 3, 3, 3],
-          [4, 4, 4, 4, 4],
-          [5, 5, 5, 5, 5],
-        ],
+        yarns,
         tiles: [
           [
             { value: 0, playerId: 1 },
@@ -542,13 +591,7 @@ describe("current user turn :", () => {
     });
     it("when player is blocked ,should show at least one premium destination ", () => {
       const board = {
-        yarns: [
-          [1, 1, 1, 1, 1],
-          [2, 2, 2, 2, 2],
-          [3, 3, 3, 3, 3],
-          [4, 4, 4, 4, 4],
-          [5, 5, 5, 5, 5],
-        ],
+        yarns,
         tiles: [
           [
             { value: 0, playerId: 1 },
@@ -614,13 +657,7 @@ describe("current user turn :", () => {
     });
     it("when there are multiple premium routes exist , should choose cheapest route : ", () => {
       const board = {
-        yarns: [
-          [1, 1, 1, 1, 1],
-          [2, 2, 2, 2, 2],
-          [3, 3, 3, 3, 3],
-          [4, 4, 4, 4, 4],
-          [5, 5, 5, 5, 5],
-        ],
+        yarns,
         tiles: [
           [
             { value: 0, playerId: 1 },
@@ -694,13 +731,7 @@ describe("current user turn :", () => {
     });
     it("when there are multiple premium routes exist , should choose cheapest route : ", () => {
       const board = {
-        yarns: [
-          [1, 1, 1, 1, 1],
-          [2, 2, 2, 2, 2],
-          [3, 3, 3, 3, 3],
-          [4, 4, 4, 4, 4],
-          [5, 5, 5, 5, 5],
-        ],
+        yarns,
         tiles: [
           [
             { value: 0, playerId: 1 },
@@ -773,4 +804,147 @@ describe("current user turn :", () => {
       assertEquals(actual.length, 5);
     });
   });
+
+  describe('token or action card distribution : ', () => {
+    let gameState;
+    let bank;
+    beforeEach(() => {
+      const players = [
+        {
+          name: "Ajoy",
+          id: 1,
+          tokens: 0,
+          victoryPoint: 0,
+          actionCards: [],
+          designCards: [],
+          pin: { color: 2, position: { x: 2, y: 2 } },
+        },
+        {
+          name: "Dinesh",
+          id: 2,
+          tokens: 0,
+          victoryPoint: 0,
+          actionCards: [],
+          designCards: [],
+          pin: { color: 3, position: { x: 3, y: 3 } },
+        },
+      ];
+      gameState = {
+        players,
+        currentPlayer: 2,
+        board: {
+          yarns: [
+            [1, 2, 3, 4, 5],
+            [5, 4, 3, 2, 1],
+            [1, 2, 3, 4, 5],
+            [5, 4, 3, 2, 1],
+            [1, 2, 3, 4, 5],
+          ],
+          tiles: [
+            [
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+            ],
+            [
+              { value: null, playerId: null },
+              { value: 1, playerId: null },
+              { value: 2, playerId: null },
+              { value: 3, playerId: null },
+              { value: 4, playerId: null },
+              { value: null, playerId: null },
+            ],
+            [
+              { value: null, playerId: null },
+              { value: 5, playerId: null },
+              { value: 6, playerId: 2 },
+              { value: 1, playerId: null },
+              { value: 2, playerId: null },
+              { value: null, playerId: null },
+            ],
+            [
+              { value: null, playerId: null },
+              { value: 3, playerId: null },
+              { value: 4, playerId: null },
+              { value: 5, playerId: 3 },
+              { value: 6, playerId: null },
+              { value: null, playerId: null },
+            ],
+            [
+              { value: null, playerId: null },
+              { value: 2, playerId: null },
+              { value: 3, playerId: null },
+              { value: 4, playerId: null },
+              { value: 5, playerId: null },
+              { value: null, playerId: null },
+            ],
+            [
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+              { value: null, playerId: null },
+            ],
+          ],
+        },
+      };
+      turnManager = new TurnManager(gameState);
+      const actionCards = [{
+        "id": 1,
+        "type": "move",
+        "description": "Move the pin to any unoccupied square."
+      }];
+      bank = new Bank([], actionCards, (x) => x);
+    })
+    it('after rolling dice when color id is other than black, then should distribute the tokens to players based on the positions and yarns surrounded by the players pins', () => {
+      turnManager.processColorAction(2, bank);
+      const actual = gameState.players.every(player => player.tokens === 1);
+      const expected = true;
+      const reserveTokens = bank.getBank().tokens;
+      assertEquals(actual, expected);
+      assertEquals(reserveTokens, 53);
+    });
+
+    it('when black color dice appeared, then should deduct one action card from the bank and add to current player actionCards store :', () => {
+      turnManager.processColorAction(6, bank);
+      const actual = gameState.players[1].actionCards.length;
+      const expected = 1;
+      const actionCards = [{
+        "id": 1,
+        "type": "move",
+        "description": "Move the pin to any unoccupied square."
+      }];
+      const reserveAvailableTokens = bank.getBank().availableActionCards;
+      assertEquals(actual, expected);
+      assertEquals(gameState.players[1].actionCards, actionCards);
+      assertEquals(reserveAvailableTokens, 0);
+    });
+
+    it('when no players pins are surrounded by colorId, should not distribute tokens to any one', () => {
+      turnManager.processColorAction(1, bank);
+      const actual = gameState.players.every(player => player.tokens === 0);
+      const reserveTokens = bank.getBank().tokens;
+      assertEquals(actual, true);
+      assertEquals(reserveTokens, 55);
+    });
+
+    it('when color dice is black and reserve does not have sufficient actionCards, then should not give action card to current player : ', () => {
+      bank = new Bank([], [])
+      turnManager.processColorAction(6, bank);
+      const actual = gameState.players[1].actionCards.length;
+      assertEquals(actual, 0)
+    })
+
+    it('when available tokens in the reserve less than total expense,then should not pay :', () => {
+      bank = new Bank([], [])
+      bank.deductTokens(55)
+      turnManager.processColorAction(3, bank);
+      const actual = gameState.players.every(player => player.tokens === 0);
+      assert(actual)
+    })
+  })
 });

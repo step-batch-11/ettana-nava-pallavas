@@ -1,11 +1,6 @@
+import { getGameState, rollDice } from "./api.js";
+import { renderGame } from "./app.js";
 import { colorsMap } from "/assets/colors.js";
-
-const rollDice = async () => {
-  const response = await fetch("/game/roll", {
-    method: "POST",
-  });
-  return await response.json();
-};
 
 const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
@@ -68,6 +63,12 @@ const attachPenaltyTooltip = (tile, penalty) => {
   });
 };
 
+const reRenderGameState = async () => {
+  const res = await fetch("/game/board-state");
+  const { state } = await res.json();
+  renderGame(state);
+};
+
 const displacePin = ({ source, destination }) => {
   const sourceTile = document.querySelector(`#tile${source.x}${source.y}`);
   const destinationTile = document.querySelector(
@@ -81,10 +82,18 @@ const displacePin = ({ source, destination }) => {
 };
 
 const handlePlayerMove = async (destination) => {
-  const { adjYarns, positions } = await fetchMoveResult(destination);
+  const response = await fetchMoveResult(destination);
+
+  if (!response.success) {
+    alert(response.message);
+    return;
+  }
+
+  const { adjYarns, moveResult } = response.data;
   highlightAdjacentYarns(adjYarns);
-  displacePin(positions);
+  displacePin(moveResult);
   removeTileEventListeners();
+  await reRenderGameState();
 };
 
 const highlightTile = (tile, destination) => {
@@ -112,7 +121,10 @@ export const applyEventListenerOnDice = () => {
   dice.addEventListener("click", async () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
+    const state = await getGameState();
+    await renderGame(state)
     removeMoveClass();
+    removeTileEventListeners();
     renderMoveOptions(destinations);
   });
 };

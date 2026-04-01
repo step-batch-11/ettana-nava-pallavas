@@ -8,6 +8,7 @@ import designCards from "../../src/config/design_card.json" with {
 import actionCards from "../../src/config/action_card.json" with {
   type: "json",
 };
+import Bank from "../../src/models/bank.js";
 
 const players = [
   {
@@ -94,16 +95,6 @@ const gameState = {
   },
 };
 
-const bank = {
-  tokens: 55,
-  availableDesignCards: designCards,
-  availableActionCards: actionCards,
-  yarns: [1, 2, 3, 4, 5],
-  tiles: [
-    { value: 1, playerId: null },
-    { value: 6, playerId: null },
-  ],
-};
 
 describe("move request: ", () => {
   let app;
@@ -111,12 +102,12 @@ describe("move request: ", () => {
   const randomValue = 0.05;
 
   beforeEach(() => {
-    const mockBank = structuredClone(bank);
+    const bank = new Bank(designCards, actionCards)
     const mockGameState = structuredClone(gameState);
-    app = createApp(mockGameState, mockBank, () => randomValue, logger);
+    app = createApp(mockGameState, bank, () => randomValue, logger);
   });
 
-  it("When player moves, should response with adjYarns, source and destination positons of pin", async () => {
+  it("Requesting with valid destination, should move to other tile", async () => {
     await app.request("/game/roll", { method: "POST" });
     const destination = { destination: { x: 2, y: 3 }, type: "jump" };
 
@@ -126,29 +117,47 @@ describe("move request: ", () => {
       headers: { "content-type": "application/json" },
     });
 
-    const data = await response.json();
+    const moveResult = await response.json();
 
     assertEquals(response.status, 200);
-    assertEquals(data.adjYarns, [
+    assertEquals(moveResult.success, true);
+    assertEquals(moveResult.data.adjYarns, [
       { x: 1, y: 2 },
       { x: 1, y: 3 },
       { x: 2, y: 2 },
       { x: 2, y: 3 },
     ]);
-
-    assertEquals(data.positions, {
+    assertEquals(moveResult.data.moveResult, {
       source: { x: 3, y: 4 },
       destination: { x: 2, y: 3 },
     });
+  });
+
+  it("Requesting with invalid destination, should not move to other tile", async () => {
+    await app.request("/game/roll", { method: "POST" });
+    const destination = { destination: { x: 4, y: 3 }, type: "jump" };
+
+    const response = await app.request("/game/move", {
+      method: "POST",
+      body: JSON.stringify(destination),
+      headers: { "content-type": "application/json" },
+    });
+
+    const moveResult = await response.json();
+
+    assertEquals(response.status, 400);
+    assertEquals(moveResult.success, false);
+    assertEquals(moveResult.message, "You can't move there");
   });
 });
 
 describe("roll dice request : ", () => {
   let app;
-
+  let bank;
   let randomValue = 0.05;
 
   beforeEach(() => {
+    bank = new Bank([], [])
     app = createApp(gameState, bank, () => randomValue, logger);
   });
 

@@ -52,7 +52,7 @@ export const gameState = {
       [
         { value: null, playerId: null },
         { value: 5, playerId: null },
-        { value: 6, playerId: 2 },
+        { value: 6, playerId: 1 },
         { value: 1, playerId: null },
         { value: 2, playerId: null },
         { value: null, playerId: null },
@@ -61,7 +61,7 @@ export const gameState = {
         { value: null, playerId: null },
         { value: 3, playerId: null },
         { value: 4, playerId: null },
-        { value: 5, playerId: 3 },
+        { value: 5, playerId: 2 },
         { value: 6, playerId: null },
         { value: null, playerId: null },
       ],

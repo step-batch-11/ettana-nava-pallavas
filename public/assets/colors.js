@@ -4,6 +4,7 @@ export const color = {
   Green: "#27AE60",
   Blue: "#2D9CDB",
   Purple: "#9B51E0",
+  "Black": "#000",
   Background_Main: "#FAF7F2",
   Cards: "#FFFFFF",
   Secondary_Cards: "#F4EFE6",
@@ -27,5 +28,5 @@ export const colorsMap = {
   3: color["Green"],
   4: color["Purple"],
   5: color["Yellow"],
-  6: "black",
+  6: color["Black"],
 };

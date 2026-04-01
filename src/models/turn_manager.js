@@ -1,3 +1,4 @@
+import { createLedger, distributeTokens, extractPlayersPositions, findAdjacentYarns, computeExpense } from "../utils/color_dice_action.js";
 import { findRoutes } from "../utils/find_routes.js";
 export default class TurnManager {
   #game;
@@ -24,7 +25,7 @@ export default class TurnManager {
     const start = currentPlayer.pin.position;
 
     const routes = findRoutes(
-      { destination: start, steps: 0, type: "normal", path: [] },
+      start,
       totalSteps,
       this.#game.board.tiles,
     );
@@ -42,10 +43,11 @@ export default class TurnManager {
   }
 
   #processPathPenalty(payer, payees) {
-    payees.forEach((payeeId) => {
+    return payees.map((payeeId) => {
       const payee = this.#getPlayerById(payeeId);
       payee.tokens++;
       payer.tokens--;
+      return { payeeId, tokens: payee.tokens };
     });
   }
 
@@ -68,14 +70,15 @@ export default class TurnManager {
 
     const currentPosition = currentPlayer.pin.position;
     const destination = route.destination;
-    if (this.#isValidDestination(route.destination)) {
+    let payees;
+    if (this.#isValidDestination(destination)) {
       if (route.type === "premium") {
-        this.#processPathPenalty(currentPlayer, route.recipients);
+        payees = this.#processPathPenalty(currentPlayer, route.recipients);
       }
       currentPlayer.pin.position = destination;
-      this.#displacePin(currentPlayer, route.destination, currentPosition);
+      this.#displacePin(currentPlayer, destination, currentPosition);
 
-      return { source: currentPosition, destination };
+      return { source: currentPosition, destination, payees };
     }
 
     return { source: currentPosition, destination: currentPosition };
@@ -99,5 +102,29 @@ export default class TurnManager {
     return yarns.filter((yarn) =>
       this.#isValidYarn(yarn, this.#game.board.yarns)
     );
+
+  }
+
+  processColorAction(colorId, bank) {
+    const bankData = bank.getBank();
+    if (colorId === 6) {
+      if (bankData.availableActionCards <= 0) {
+        return;
+      }
+      const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
+      const actionCard = bank.getActionCard();
+      currentPlayer.actionCards.push(actionCard);
+      return;
+    }
+
+    const playersPositions = extractPlayersPositions(this.#game.players);
+    const adjYarns = findAdjacentYarns(playersPositions, this.#game.board.yarns);
+    const ledger = createLedger(adjYarns, colorId);
+    const totalTokens = computeExpense(ledger);
+    if (bankData.tokens < totalTokens) {
+      return;
+    }
+    distributeTokens(ledger, this.#game.players);
+    bank.deductTokens(totalTokens);
   }
 }
