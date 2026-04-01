@@ -12,7 +12,6 @@
   padding: 10px;
   overflow: hidden;
   transition: flex 0.5s ease;
-  cursor: pointer;
   display: flex;
   align-items: center;
 }
@@ -34,8 +33,6 @@
 }
 
 .panel.expanded .cards {
-  display: flex;
-  justify-content: center;
   overflow-x: auto;
   gap: 10px;
 }
@@ -52,6 +49,7 @@
   max-width: 160px;
   background-color: var(--purple);
   border: 2px solid var(--gold-light);
+  cursor: pointer;
 }
 
 .panel.expanded .card-item .card-item-top {

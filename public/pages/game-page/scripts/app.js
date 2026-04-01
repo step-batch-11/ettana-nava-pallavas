@@ -6,7 +6,6 @@ import {
   addToggleEventListenerOnDeck,
   renderDeck,
 } from "./deck.js";
-
 import { getGameState } from "./api.js";
 
 const distributeInitialAssets = async () => {

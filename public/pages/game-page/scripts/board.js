@@ -181,8 +181,9 @@ const renderTiles = (tiles, currentPlayer) => {
         el.appendChild(icon);
       }
 
-      if (tile?.playerId === currentPlayer?.id) {
-        el.classList.add("current-player");
+      if (tile?.playerId === currentPlayer) {
+        const icon = el.querySelector("svg");
+        icon.classList.add("current-player");
       }
     });
   });
