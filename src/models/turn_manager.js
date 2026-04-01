@@ -1,4 +1,10 @@
-import { createLedger, distributeTokens, extractPlayersPositions, findAdjacentYarns, computeExpense } from "../utils/color_dice_action.js";
+import {
+  createLedger,
+  distributeTokens,
+  extractPlayersPositions,
+  findAdjacentYarns,
+  computeExpense,
+} from "../utils/color_dice_action.js";
 import { findRoutes } from "../utils/find_routes.js";
 export default class TurnManager {
   #game;
@@ -24,11 +30,7 @@ export default class TurnManager {
     const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
     const start = currentPlayer.pin.position;
 
-    const routes = findRoutes(
-      start,
-      totalSteps,
-      this.#game.board.tiles,
-    );
+    const routes = findRoutes(start, totalSteps, this.#game.board.tiles);
 
     this.destinations = routes;
     return this.destinations;
@@ -100,9 +102,8 @@ export default class TurnManager {
     ];
 
     return yarns.filter((yarn) =>
-      this.#isValidYarn(yarn, this.#game.board.yarns)
+      this.#isValidYarn(yarn, this.#game.board.yarns),
     );
-
   }
 
   processColorAction(colorId, bank) {
@@ -118,7 +119,10 @@ export default class TurnManager {
     }
 
     const playersPositions = extractPlayersPositions(this.#game.players);
-    const adjYarns = findAdjacentYarns(playersPositions, this.#game.board.yarns);
+    const adjYarns = findAdjacentYarns(
+      playersPositions,
+      this.#game.board.yarns,
+    );
     const ledger = createLedger(adjYarns, colorId);
     const totalTokens = computeExpense(ledger);
     if (bankData.tokens < totalTokens) {

@@ -36,7 +36,6 @@ export const renderGame = async (state) => {
   renderBoard(state);
   await renderBankState();
   renderDeck(state.players, state.currentPlayer);
-  defaultDice();
 };
 
 const main = async () => {
@@ -46,6 +45,7 @@ const main = async () => {
   const state = await getGameState();
   await renderGame(state);
 
+  defaultDice();
   addEventListener();
 };
 

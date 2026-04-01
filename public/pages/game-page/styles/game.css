@@ -4,6 +4,7 @@
   align-items: center;
   font-size: 32px;
   background-color: whitesmoke;
+  cursor: pointer;
 }
 
 .dice-color {
@@ -13,18 +14,20 @@
 }
 
 #dice {
-  cursor: pointer;
   width: 40%;
 }
 
 .premium-move {
   box-shadow: 0em 0em 1em 0.4em purple !important;
+  cursor: pointer;
 }
 .jump-move {
   box-shadow: 0em 0em 1em 0.4em green !important;
+  cursor: pointer;
 }
 .normal-move {
   box-shadow: 0em 0em 1em 0.4em gold !important;
+  cursor: pointer;
 }
 
 .tooltip {
