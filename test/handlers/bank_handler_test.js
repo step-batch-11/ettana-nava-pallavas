@@ -115,7 +115,7 @@ describe("Game route", () => {
     it("should fail when context is invalid", () => {
       const context = { get: () => [], json: (x) => x };
       const res = buyActionCard(context);
-      
+
       assertEquals(res.success, false);
     });
 

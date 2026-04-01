@@ -14,7 +14,7 @@ const buyDesignCard = () => {
   designCard.addEventListener("click", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
-      showToast(response.message, 'e');
+      showToast(response.message, "e");
       return;
     }
 
@@ -33,7 +33,7 @@ const buyActionCard = () => {
     const response = await sendRequest("/game/buy-action-card");
 
     if (!response.success) {
-      showToast(response.message, 'e');
+      showToast(response.message, "e");
       return;
     }
 
