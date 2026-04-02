@@ -1,11 +1,12 @@
 import {
+  computeExpense,
   createLedger,
   distributeTokens,
   extractPlayersPositions,
-  findAdjacentYarns,
-  computeExpense,
+  mapAdjacentYarns,
 } from "../utils/color_dice_action.js";
 import { findRoutes } from "../utils/find_routes.js";
+
 export default class TurnManager {
   #game;
   #randomFn;
@@ -28,6 +29,7 @@ export default class TurnManager {
 
   findPossibleDestinations(totalSteps) {
     const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
+
     const start = currentPlayer.pin.position;
 
     const routes = findRoutes(start, totalSteps, this.#game.board.tiles);
@@ -86,6 +88,10 @@ export default class TurnManager {
     return { source: currentPosition, destination: currentPosition };
   }
 
+  #getYarnColor({ x, y }) {
+    return this.#game.board.yarns[x][y];
+  }
+
   #isValidYarn({ x, y }, yarns) {
     const rows = yarns.length;
     const columns = yarns[0].length;
@@ -102,8 +108,50 @@ export default class TurnManager {
     ];
 
     return yarns.filter((yarn) =>
-      this.#isValidYarn(yarn, this.#game.board.yarns),
+      this.#isValidYarn(yarn, this.#game.board.yarns)
     );
+  }
+
+  #areSamePositions({ x: x1, y: y1 }, { x: x2, y: y2 }) {
+    return x1 === x2 && y1 === y2;
+  }
+
+  #getPlayerPosition(playerId) {
+    const player = this.#game.players.find((player) => player.id === playerId);
+    return player.pin.position;
+  }
+
+  #swapYarns(source, destination) {
+    const boardYarns = this.#game.board.yarns;
+    const sourceYarnColor = this.#getYarnColor(source);
+    const destYarnColor = this.#getYarnColor(destination);
+
+    boardYarns[destination.x][destination.y] = sourceYarnColor;
+    boardYarns[source.x][source.y] = destYarnColor;
+  }
+
+  #doesConsist(target, locations) {
+    return locations.some((location) =>
+      this.#areSamePositions(target, location)
+    );
+  }
+
+  #areYarnsSwappable(source, destination, allSwappableYarns) {
+    return !this.#areSamePositions(source, destination) &&
+      this.#doesConsist(destination, allSwappableYarns) &&
+      this.#doesConsist(source, allSwappableYarns);
+  }
+
+  freeSwap(source, destination) {
+    const currentPosition = this.#getPlayerPosition(this.#game.currentPlayer);
+    const currPlayerAdjYarns = this.getAdjYarnsPositions(currentPosition);
+
+    if (this.#areYarnsSwappable(source, destination, currPlayerAdjYarns)) {
+      this.#swapYarns(source, destination);
+
+      return { success: true };
+    }
+    return { success: false };
   }
 
   processColorAction(colorId, bank) {
@@ -119,7 +167,7 @@ export default class TurnManager {
     }
 
     const playersPositions = extractPlayersPositions(this.#game.players);
-    const adjYarns = findAdjacentYarns(
+    const adjYarns = mapAdjacentYarns(
       playersPositions,
       this.#game.board.yarns,
     );

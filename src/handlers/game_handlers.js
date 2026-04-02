@@ -1,29 +1,28 @@
+import { gameStateController } from "../controllers/game_controllers.js";
+import { identity, toFrequencyMap } from "../utils/array_utils.js";
+
 export const validateTileWithBank = (boardTiles, bankTiles) => {
   const flatTiles = boardTiles.flat();
 
-  const counts = {};
-  for (const tile of flatTiles) {
-    if (tile.value === null) continue;
-    counts[tile.value] = (counts[tile.value] || 0) + 1;
-  }
+  const counts = toFrequencyMap(
+    flatTiles
+      .map((tile) => tile.value)
+      .filter(identity),
+  );
 
   return bankTiles.some(({ value }) => counts[value] !== 2);
 };
 
-export const serveBoardState = (ctx) => {
+export const serveGameState = (ctx) => {
   try {
     const board = ctx.get("boardState");
     const bank = ctx.get("bank");
 
-    const { tiles } = bank.getBank();
-
-    if (validateTileWithBank(board.board.tiles, tiles)) {
-      return ctx.json({ success: false, error: "Tiles placement is wrong" });
-    }
+    const gameState = gameStateController(board, bank);
 
     return ctx.json({
       success: true,
-      state: board,
+      state: gameState,
     });
   } catch (e) {
     return ctx.json({ success: false, error: e.message });
@@ -31,17 +30,13 @@ export const serveBoardState = (ctx) => {
 };
 
 export const distributeInitialAssets = (ctx) => {
-  try {
-    const bank = ctx.get("bank");
-    const board = ctx.get("boardState");
+  const bank = ctx.get("bank");
+  const board = ctx.get("boardState");
 
-    bank.distributeInitialAssets(board.players);
+  bank.distributeInitialAssets(board.players);
 
-    return ctx.json({
-      success: true,
-      message: "Initial assets are distributed among players",
-    });
-  } catch (e) {
-    return ctx.json({ success: false, error: e.message });
-  }
+  return ctx.json({
+    success: true,
+    message: "Initial assets are distributed among players",
+  });
 };
