@@ -131,6 +131,7 @@ const highlightAdjacentYarns = (yarns) => {
   yarns.forEach((yarnPosition) => {
     const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
     const yarn = document.querySelector(id);
+    yarn.draggable = true;
     yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
     addDragAndDrop(yarn, yarnPosition);
   });
