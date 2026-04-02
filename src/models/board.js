@@ -1,4 +1,4 @@
-export class Board {
+export default class Board {
   #tiles;
   #yarns;
 

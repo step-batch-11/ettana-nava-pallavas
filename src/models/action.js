@@ -3,7 +3,7 @@ const removeCard = (player, id) => {
   player.actionCards.splice(index, 1);
 };
 
-export const tax = (game, bank, id) => {
+export const tax = (game, id) => {
   let tokens = 0;
   game.players.forEach((player) => {
     if (player.id !== game.currentPlayer && player.tokens > 0) {
@@ -17,5 +17,5 @@ export const tax = (game, bank, id) => {
   );
 
   removeCard(currentPlayer, id);
-  bank.incrementTokens(tokens);
+  game.bank.incrementTokens(tokens);
 };

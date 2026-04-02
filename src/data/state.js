@@ -1,5 +1,4 @@
-import { Board } from "../models/board.js";
-const players = [
+export const players = [
   {
     name: "Ajoy",
     id: 1,
@@ -86,7 +85,11 @@ export const gameState = {
   },
 };
 
-const tiles = [
+export const diceValue = {
+  colorId: 1,
+  number: 2,
+};
+export const tiles = [
   [0, 0, 0, 0, 0, 0],
   [0, 1, 2, 3, 4, 0],
   [0, 5, 6, 1, 2, 0],
@@ -95,7 +98,7 @@ const tiles = [
   [0, 0, 0, 0, 0, 0],
 ];
 
-const yarns = [
+export const yarns = [
   [1, 2, 3, 4, 5],
   [5, 4, 3, 2, 1],
   [1, 2, 3, 4, 5],
@@ -103,11 +106,7 @@ const yarns = [
   [1, 2, 3, 4, 5],
 ];
 
-export const _gameState = {
-  players,
-  currentPlayer: 2,
-  board: new Board(tiles, yarns),
-};
+
 
 export const actionTypes = {
   1: "Play action card",

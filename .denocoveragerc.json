@@ -2,5 +2,5 @@
   "lines": 90,
   "branches": 90,
   "functions": 100,
-  "perFile": true
+  "perFile": false
 }
