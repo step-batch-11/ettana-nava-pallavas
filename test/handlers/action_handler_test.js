@@ -8,7 +8,10 @@ describe("Game route", () => {
 
   beforeEach(() => {
     game = {
-      players: [{ id: 1, tokens: 2 }, { id: 2, tokens: 2 }],
+      players: [{ id: 1, tokens: 2, actionCards: [{ id: 1 }] }, {
+        id: 2,
+        tokens: 2,
+      }],
       currentPlayer: 1,
     };
     bank = new Bank([], []);
@@ -30,9 +33,13 @@ describe("Game route", () => {
 
   it("when tax action card played and other player has 0 token, then no token should be deducted and bank token should not incremented: ", async () => {
     const game = {
-      players: [{ id: 1, tokens: 2 }, { id: 2, tokens: 0 }],
+      players: [{ id: 1, tokens: 2, actionCards: [{ id: 1 }] }, {
+        id: 2,
+        tokens: 0,
+      }],
       currentPlayer: 1,
     };
+    
     const app = createApp(
       game,
       bank,
@@ -50,6 +57,7 @@ describe("Game route", () => {
     assertEquals(response.status, 200);
     assertEquals(game.players[1].tokens, 0);
     assertEquals(bankTokens, 55);
+    assertEquals(game.players[0].actionCards.length, 0); 
   });
 
   it("when played action card is invalid, then should throw error and no update in state: ", async () => {
@@ -63,5 +71,6 @@ describe("Game route", () => {
     assertEquals(response.status, 400);
     assertEquals(game.players[1].tokens, 2);
     assertEquals(bankTokens, 55);
+    assertEquals(game.players[0].actionCards.length, 1); 
   });
 });

@@ -10,7 +10,7 @@ export const handleActionCard = async (context) => {
   const bank = context.get("bank");
 
   if (id in handlers) {
-    handlers[id](game, bank);
+    handlers[id](game, bank, id);
     return context.json({
       success: true,
       message: "Tax action card played successfully",
