@@ -1,9 +1,9 @@
 import {
+  computeExpense,
   createLedger,
   distributeTokens,
   extractPlayersPositions,
   findAdjacentYarns,
-  computeExpense,
 } from "../utils/color_dice_action.js";
 import { findRoutes } from "../utils/find_routes.js";
 
@@ -30,7 +30,7 @@ export default class TurnManager {
   findPossibleDestinations(totalSteps) {
     const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
     console.log(currentPlayer);
-    
+
     const start = currentPlayer.pin.position;
 
     const routes = findRoutes(start, totalSteps, this.#game.board.tiles);
@@ -105,7 +105,7 @@ export default class TurnManager {
     ];
 
     return yarns.filter((yarn) =>
-      this.#isValidYarn(yarn, this.#game.board.yarns),
+      this.#isValidYarn(yarn, this.#game.board.yarns)
     );
   }
 

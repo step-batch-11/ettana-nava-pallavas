@@ -805,7 +805,7 @@ describe("current user turn :", () => {
     });
   });
 
-  describe('token or action card distribution : ', () => {
+  describe("token or action card distribution : ", () => {
     let gameState;
     let bank;
     beforeEach(() => {
@@ -896,27 +896,27 @@ describe("current user turn :", () => {
       const actionCards = [{
         "id": 1,
         "type": "move",
-        "description": "Move the pin to any unoccupied square."
+        "description": "Move the pin to any unoccupied square.",
       }];
       bank = new Bank([], actionCards, (x) => x);
-    })
-    it('after rolling dice when color id is other than black, then should distribute the tokens to players based on the positions and yarns surrounded by the players pins', () => {
+    });
+    it("after rolling dice when color id is other than black, then should distribute the tokens to players based on the positions and yarns surrounded by the players pins", () => {
       turnManager.processColorAction(2, bank);
-      const actual = gameState.players.every(player => player.tokens === 1);
+      const actual = gameState.players.every((player) => player.tokens === 1);
       const expected = true;
       const reserveTokens = bank.getBank().tokens;
       assertEquals(actual, expected);
       assertEquals(reserveTokens, 53);
     });
 
-    it('when black color dice appeared, then should deduct one action card from the bank and add to current player actionCards store :', () => {
+    it("when black color dice appeared, then should deduct one action card from the bank and add to current player actionCards store :", () => {
       turnManager.processColorAction(6, bank);
       const actual = gameState.players[1].actionCards.length;
       const expected = 1;
       const actionCards = [{
         "id": 1,
         "type": "move",
-        "description": "Move the pin to any unoccupied square."
+        "description": "Move the pin to any unoccupied square.",
       }];
       const reserveAvailableTokens = bank.getBank().availableActionCards;
       assertEquals(actual, expected);
@@ -924,27 +924,27 @@ describe("current user turn :", () => {
       assertEquals(reserveAvailableTokens, 0);
     });
 
-    it('when no players pins are surrounded by colorId, should not distribute tokens to any one', () => {
+    it("when no players pins are surrounded by colorId, should not distribute tokens to any one", () => {
       turnManager.processColorAction(1, bank);
-      const actual = gameState.players.every(player => player.tokens === 0);
+      const actual = gameState.players.every((player) => player.tokens === 0);
       const reserveTokens = bank.getBank().tokens;
       assertEquals(actual, true);
       assertEquals(reserveTokens, 55);
     });
 
-    it('when color dice is black and reserve does not have sufficient actionCards, then should not give action card to current player : ', () => {
-      bank = new Bank([], [])
+    it("when color dice is black and reserve does not have sufficient actionCards, then should not give action card to current player : ", () => {
+      bank = new Bank([], []);
       turnManager.processColorAction(6, bank);
       const actual = gameState.players[1].actionCards.length;
-      assertEquals(actual, 0)
-    })
+      assertEquals(actual, 0);
+    });
 
-    it('when available tokens in the reserve less than total expense,then should not pay :', () => {
-      bank = new Bank([], [])
-      bank.deductTokens(55)
+    it("when available tokens in the reserve less than total expense,then should not pay :", () => {
+      bank = new Bank([], []);
+      bank.deductTokens(55);
       turnManager.processColorAction(3, bank);
-      const actual = gameState.players.every(player => player.tokens === 0);
-      assert(actual)
-    })
-  })
+      const actual = gameState.players.every((player) => player.tokens === 0);
+      assert(actual);
+    });
+  });
 });

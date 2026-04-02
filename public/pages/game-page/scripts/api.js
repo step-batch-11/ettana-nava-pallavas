@@ -5,8 +5,8 @@ export const rollDice = async () => {
   return await response.json();
 };
 
-export const getGameState = async() => {
+export const getGameState = async () => {
   const res = await fetch("/game/board-state");
   const { state } = await res.json();
   return state;
-}
+};

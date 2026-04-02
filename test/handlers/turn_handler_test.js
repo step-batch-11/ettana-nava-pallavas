@@ -95,14 +95,13 @@ const gameState = {
   },
 };
 
-
 describe("move request: ", () => {
   let app;
 
   const randomValue = 0.05;
 
   beforeEach(() => {
-    const bank = new Bank(designCards, actionCards)
+    const bank = new Bank(designCards, actionCards);
     const mockGameState = structuredClone(gameState);
     app = createApp(mockGameState, bank, () => randomValue, logger);
   });
@@ -157,7 +156,7 @@ describe("roll dice request : ", () => {
   let randomValue = 0.05;
 
   beforeEach(() => {
-    bank = new Bank([], [])
+    bank = new Bank([], []);
     app = createApp(gameState, bank, () => randomValue, logger);
   });
 

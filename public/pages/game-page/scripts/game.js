@@ -104,11 +104,11 @@ const renderMoveOptions = (destinations) => {
   destinations.forEach((route) => {
     const destination = route.destination;
     console.log(destination);
-    
+
     const id = `#tile${destination.x}${destination.y}`;
     const tile = document.querySelector(id);
     console.log(tile);
-    
+
     highlightTile(tile, route);
 
     if (route.type === "premium") {

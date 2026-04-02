@@ -1,6 +1,6 @@
 export const handleDiceRoll = (ctx) => {
   const turnManager = ctx.get("turnManager");
-  const bank = ctx.get('bank');
+  const bank = ctx.get("bank");
   const diceValues = turnManager.rollDice();
   turnManager.processColorAction(diceValues.colorId, bank);
   const destinations = turnManager.findPossibleDestinations(diceValues.number);

@@ -10,7 +10,7 @@
     "type": "get tokens",
     "description": "Get 3 tokens from the reserve."
   },
-  
+
   {
     "id": 7,
     "type": "get design card",
@@ -40,7 +40,7 @@
     "type": "tax",
     "description": "All other players pay 1 token to the reserve."
   },
- 
+
   {
     "id": 22,
     "type": "steal action card",
@@ -52,7 +52,7 @@
     "type": "swap yarns",
     "description": "Swap positions of any two yarns on the board."
   },
-  
+
   {
     "id": 28,
     "type": "roll again",
@@ -70,5 +70,4 @@
     "type": "replace",
     "description": "Replace a yarn or a number tile with the reserve which has 5 yarns and 2 number tiles."
   }
- 
 ]

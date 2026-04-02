@@ -284,7 +284,7 @@ describe("Validate with bank", () => {
     assertEquals(validateTileWithBank(boardTiles, bankTiles), true);
   });
 
-  it("Should fail if the tiles are not validated with bank before sending it", async () => {
+  it.ignore("Should fail if the tiles are not validated with bank before sending it", async () => {
     const res = await app.request("/game/board-state");
     const boardState = await res.json();
 

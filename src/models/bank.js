@@ -55,7 +55,6 @@ export default class Bank {
     return n;
   }
 
-
   getActionCard() {
     return this.#actionCards.pop();
   }
