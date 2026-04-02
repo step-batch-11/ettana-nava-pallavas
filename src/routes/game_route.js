@@ -9,6 +9,7 @@ import {
   buyDesignCard,
   serveBankState,
 } from "../handlers/bank_handler.js";
+import { handleActionCard } from "../handlers/action_handler.js";
 
 const gameRoute = new Hono();
 
@@ -19,5 +20,6 @@ gameRoute.get("/buy-action-card", buyActionCard);
 gameRoute.get("/distribute-initial-assets", distributeInitialAssets);
 gameRoute.post("/roll", handleDiceRoll);
 gameRoute.post("/move", handleMove);
+gameRoute.patch("/action-card/:id", handleActionCard);
 
 export default gameRoute;
