@@ -8,12 +8,18 @@ export default class Bank {
   #yarns = [1, 2, 3, 4, 5];
   #shuffleFn;
   #actionCardsStore;
+  #initialToken;
+  #designCardCost;
+  #actionCardCost;
 
   constructor(designCards = [], actionCards = [], shuffleFn = shuffle) {
     this.#designCards = shuffleFn(designCards);
     this.#actionCards = shuffleFn(actionCards);
     this.#actionCardsStore = structuredClone(actionCards);
     this.#shuffleFn = shuffleFn;
+    this.#initialToken = 2;
+    this.#designCardCost = 3;
+    this.#actionCardCost = 2;
   }
 
   getBank() {
@@ -31,7 +37,7 @@ export default class Bank {
       throw new Error("No more design cards are remaining");
     }
 
-    this.#tokens += 3;
+    this.#tokens += this.#designCardCost;
     return this.#designCards.shift();
   }
 
@@ -40,19 +46,24 @@ export default class Bank {
       this.#actionCards.push(this.#shuffleFn(...this.#actionCardsStore));
     }
 
-    this.#tokens += 2;
+    this.#tokens += this.#actionCardCost;
     return this.#actionCards.shift();
   }
 
-  #deductToken(n) {
+  deductTokens(n) {
     this.#tokens -= n;
     return n;
+  }
+
+
+  getActionCard() {
+    return this.#actionCards.pop();
   }
 
   distributeInitialAssets(players) {
     if (!players.some((player) => player.tokens !== 0)) {
       players.forEach((player) => {
-        player.tokens += this.#deductToken(2);
+        player.tokens += this.deductTokens(2);
         player.designCards.push(this.#designCards.pop());
         player.actionCards.push(this.#actionCards.pop());
       });

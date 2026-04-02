@@ -151,7 +151,6 @@ const createSVGPlayerIcon = () => {
   path.setAttribute("stroke-width", "4");
 
   const _rect = document.createElementNS(ns, "rect");
-
   _rect.setAttribute("width", "100");
   _rect.setAttribute("height", "25");
   _rect.setAttribute("rx", "20");
@@ -190,17 +189,15 @@ const renderTiles = (tiles, currentPlayer) => {
   });
 };
 
-const createPlayerCard = (
-  { name, avatar, token, victoryPoint },
-) => {
+const createPlayerCard = (player) => {
   const template = document.getElementById("player-card-template");
 
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".player-card");
-  clone.querySelector(".player-name").textContent = name;
-  clone.querySelector(".avatar").src = avatar;
-  clone.querySelector(".stat1").textContent = victoryPoint;
-  clone.querySelector(".stat2").textContent = token;
+  clone.querySelector(".player-name").textContent = player.name;
+  clone.querySelector(".avatar").src = "/assets/user_pin.png";
+  clone.querySelector(".stat1").textContent = player.victoryPoint;
+  clone.querySelector(".stat2").textContent = player.tokens;
 
   return { clone, element };
 };
@@ -208,12 +205,7 @@ const createPlayerCard = (
 const renderPlayers = (players, currentPlayer) => {
   playersContainer.innerHTML = "";
   players.forEach((player) => {
-    const { clone, element } = createPlayerCard({
-      name: player.name,
-      avatar: "/assets/user_pin.png",
-      token: player.tokens,
-      victoryPoint: player.victoryPoint,
-    });
+    const { clone, element } = createPlayerCard(player);
 
     if (player.id === currentPlayer) {
       element.classList.add("current-player-card");
@@ -231,7 +223,7 @@ export const initBoard = () => {
   createCornerTiles();
 };
 
-export const renderGame = (state) => {
+export const renderBoard = (state) => {
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayer);
   renderPlayers(state.players, state.currentPlayer);

@@ -1,6 +1,6 @@
 .action-area section {
   width: 100%;
-  border: 1px solid #222;
+  border: 1px solid #666;
   display: flex;
   justify-content: center;
 }
@@ -114,7 +114,7 @@
 
 .action-area .cards div {
   width: 50%;
-  height: 180px;
+  height: 200px;
   border: 1px solid #222;
   overflow: hidden;
   border-radius: 10px;
@@ -126,7 +126,7 @@
 
 .action-area .play-turn {
   padding: 10px 30px;
-  justify-content: space-between !important;
+  justify-content: center !important;
   gap: 20px;
 }
 
