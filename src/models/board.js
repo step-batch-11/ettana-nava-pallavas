@@ -10,5 +10,4 @@ export class Board {
   getState() {
     return { tiles: this.#tiles, yarns: this.#yarns };
   }
-  
 }
