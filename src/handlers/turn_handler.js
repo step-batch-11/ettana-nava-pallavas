@@ -1,6 +1,6 @@
 export const handleDiceRoll = (ctx) => {
   const turnManager = ctx.get("turnManager");
-  const bank = ctx.get('bank');
+  const bank = ctx.get("bank");
   const diceValues = turnManager.rollDice();
   turnManager.processColorAction(diceValues.colorId, bank);
   const destinations = turnManager.findPossibleDestinations(diceValues.number);
@@ -19,5 +19,21 @@ export const handleMove = async (ctx) => {
     success: true,
     data: { adjYarns, moveResult },
     message: "Moved successfully",
+  }, 200);
+};
+
+export const handleSwap = async (ctx) => {
+  const turnManager = ctx.get("turnManager");
+  const { draggablePosition, yarnPosition } = await ctx.req.json();
+  const swapResult = turnManager.freeSwap(draggablePosition, yarnPosition);
+  if (!swapResult.success) {
+    return ctx.json(
+      { success: false, message: "You can't swap these yarns" },
+      400,
+    );
+  }
+  return ctx.json({
+    success: true,
+    message: "Swapped successfully",
   }, 200);
 };
