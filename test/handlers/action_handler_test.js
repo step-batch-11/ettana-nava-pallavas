@@ -2,20 +2,23 @@ import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../../src/app.js";
 import Bank from "../../src/models/bank.js";
+import Board from "../../src/models/board.js";
+import TurnManager from "../../src/models/turn_manager.js";
 
 describe("Game route", () => {
-  let app, game, bank;
+  let app, game;
 
   beforeEach(() => {
     game = {
-      players: [{ id: 1, tokens: 2, actionCards: [{ id: 1 }] }, {
-        id: 2,
-        tokens: 2,
-      }],
+      players: [
+        { id: 1, tokens: 2, actionCards: [{ id: 1 }] },
+        { id: 2, tokens: 2 },
+      ],
       currentPlayer: 1,
+      bank: new Bank([], []),
+      board: new Board([], []),
     };
-    bank = new Bank([], []);
-    app = createApp(game, bank, () => 1, () => async (_, next) => await next());
+    app = createApp(game, new TurnManager());
   });
 
   it("when tax action card played, then one token should be deducted and bank tokens should incremented: ", async () => {
@@ -23,7 +26,7 @@ describe("Game route", () => {
       method: "PATCH",
     });
     const { success } = await response.json();
-    const bankTokens = bank.getBank().tokens;
+    const bankTokens = game.bank.getBank().tokens;
 
     assertEquals(success, true);
     assertEquals(response.status, 200);
@@ -38,20 +41,20 @@ describe("Game route", () => {
         tokens: 0,
       }],
       currentPlayer: 1,
+      bank: new Bank([], []),
+      board: new Board([], []),
     };
 
     const app = createApp(
       game,
-      bank,
-      () => 1,
-      () => async (_, next) => await next(),
+      new TurnManager(),
     );
 
     const response = await app.request("/game/action-card/19", {
       method: "PATCH",
     });
     const { success } = await response.json();
-    const bankTokens = bank.getBank().tokens;
+    const bankTokens = game.bank.getBank().tokens;
 
     assertEquals(success, true);
     assertEquals(response.status, 200);
@@ -65,7 +68,7 @@ describe("Game route", () => {
       method: "PATCH",
     });
     const { success } = await response.json();
-    const bankTokens = bank.getBank().tokens;
+    const bankTokens = game.bank.getBank().tokens;
 
     assertEquals(success, false);
     assertEquals(response.status, 400);

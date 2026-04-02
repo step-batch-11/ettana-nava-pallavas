@@ -1,16 +1,8 @@
-export const serveBankState = (ctx) => {
-  const bank = ctx.get("bank");
-  const bankState = bank.getBank();
-
-  return ctx.json(bankState);
-};
-
 export const buyDesignCard = (ctx) => {
   try {
-    const bank = ctx.get("bank");
-    const boardState = ctx.get("boardState");
-    const currentPlayer = boardState.players.find((player) =>
-      player.id === boardState.currentPlayer
+    const game = ctx.get("gameState");
+    const currentPlayer = game.players.find((player) =>
+      player.id === game.currentPlayer
     );
 
     if (currentPlayer.tokens < 3) {
@@ -21,7 +13,7 @@ export const buyDesignCard = (ctx) => {
     }
 
     currentPlayer.tokens -= 3;
-    const card = bank.buyDesignCard();
+    const card = game.bank.buyDesignCard();
     currentPlayer.designCards.push(card);
 
     return ctx.json({
@@ -35,10 +27,9 @@ export const buyDesignCard = (ctx) => {
 
 export const buyActionCard = (ctx) => {
   try {
-    const bank = ctx.get("bank");
-    const boardState = ctx.get("boardState");
-    const currentPlayer = boardState.players.find((player) =>
-      player.id === boardState.currentPlayer
+    const game = ctx.get("gameState");
+    const currentPlayer = game.players.find((player) =>
+      player.id === game.currentPlayer
     );
 
     if (currentPlayer.tokens < 2) {
@@ -49,7 +40,7 @@ export const buyActionCard = (ctx) => {
     }
     currentPlayer.tokens -= 2;
 
-    const card = bank.buyActionCard();
+    const card = game.bank.buyActionCard();
     currentPlayer.actionCards.push(card);
 
     return ctx.json({

@@ -6,40 +6,26 @@ import {
   buyDesignCard,
 } from "../../src/handlers/bank_handler.js";
 import Bank from "../../src/models/bank.js";
+import Board from "../../src/models/board.js";
+import TurnManager from "../../src/models/turn_manager.js";
 
 describe("Game route", () => {
-  const game = {
-    currentPlayer: 1,
-    players: [{ id: 1, designCards: [], actionCards: [] }],
-  };
+  let app, game;
+
   const designCards = [{ "id": 1, "victoryPoints": 1 }];
   const actionCards = [{
     "id": 1,
     "type": "move",
     "description": "Move the pin to any unoccupied square.",
   }];
-
-  const bank = new Bank(designCards, actionCards);
-  let app;
-
   beforeEach(() => {
-    app = createApp(game, bank);
-  });
-
-  it("simple bank request to get bank state", async () => {
-    const response = await app.request("/game/bank-state");
-    const actualBankState = await response.json();
-
-    const expectedBankState = {
-      tokens: 55,
-      availableActionCards: 1,
-      availableDesignCards: 1,
-      yarns: [1, 2, 3, 4, 5],
-      tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+    game = {
+      currentPlayer: 1,
+      players: [{ id: 1, designCards: [], actionCards: [] }],
+      bank: new Bank(designCards, actionCards),
+      board: new Board(),
     };
-
-    assertEquals(response.status, 200);
-    assertEquals(actualBankState, expectedBankState);
+    app = createApp(game, new TurnManager());
   });
 
   describe("Buy Design Card", () => {
@@ -64,22 +50,17 @@ describe("Game route", () => {
     it("should inform if tokens are insufficient", () => {
       const context = {
         get: (key) => {
-          if (key === "bank") {
+          if (key === "gameState") {
             return {
-              buyDesignCard: () => ({ id: "card1" }),
-            };
-          }
-
-          if (key === "boardState") {
-            return {
-              currentPlayer: "p1",
+              currentPlayer: 0,
               players: [
                 {
-                  id: "p1",
+                  id: 0,
                   tokens: 1,
                   designCards: [],
                 },
               ],
+              bank: new Bank(designCards, actionCards),
             };
           }
         },
@@ -122,22 +103,17 @@ describe("Game route", () => {
     it("should inform if tokens are insufficient", () => {
       const context = {
         get: (key) => {
-          if (key === "bank") {
+          if (key === "gameState") {
             return {
-              buyDesignCard: () => ({ id: "card1" }),
-            };
-          }
-
-          if (key === "boardState") {
-            return {
-              currentPlayer: "p1",
+              currentPlayer: 0,
               players: [
                 {
-                  id: "p1",
+                  id: 0,
                   tokens: 1,
                   designCards: [],
                 },
               ],
+              bank: new Bank(designCards, actionCards),
             };
           }
         },
