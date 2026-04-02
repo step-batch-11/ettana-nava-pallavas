@@ -60,60 +60,57 @@ const createCells = () => {
   }
 };
 
-const createCenterTiles = () => {
-  for (let row = 0; row < size - 1; row++) {
-    for (let col = 0; col < size - 1; col++) {
-      const tile = createDiv("tile", `tile${row + 1}${col + 1}`);
+const getTileRotation = (row, col) => {
+  const last = size;
 
-      setPosition(tile, centerOffset(col), centerOffset(row));
+  const isTop = row === 0;
+  const isBottom = row === last;
+  const isLeft = col === 0;
+  const isRight = col === last;
+
+  if (isTop && isLeft) return "rotate315";
+  if (isTop && isRight) return "rotate45";
+  if (isBottom && isLeft) return "rotate225";
+  if (isBottom && isRight) return "rotate135";
+
+  if (isTop) return "rotate180";
+  if (isLeft) return "rotate90";
+  if (isRight) return "rotate270";
+
+  return "";
+};
+
+const getTilePosition = (row, col) => {
+  const last = size;
+
+  if (row > 0 && row < last && col > 0 && col < last) {
+    return {
+      x: centerOffset(col - 1),
+      y: centerOffset(row - 1),
+    };
+  }
+
+  const edgeOffset = 4.8 * (cellSize + gap);
+
+  const x = col === 0 ? -35 : col === last ? edgeOffset : centerOffset(col - 1);
+  const y = row === 0 ? -35 : row === last ? edgeOffset : centerOffset(row - 1);
+  return { x, y };
+};
+
+const createAllTiles = () => {
+  for (let row = 0; row <= size; row++) {
+    for (let col = 0; col <= size; col++) {
+      const tile = createDiv(
+        `tile ${getTileRotation(row, col)}`,
+        `tile${row}${col}`,
+      );
+
+      const { x, y } = getTilePosition(row, col);
+      setPosition(tile, x, y);
+
       board.appendChild(tile);
     }
   }
-};
-
-const createHorizontalTiles = () => {
-  for (let col = 0; col < size - 1; col++) {
-    const left = centerOffset(col, 26);
-
-    const tile = createDiv(`tile rotate180`, `tile0${col + 1}`);
-    setPosition(tile, left, -35);
-    board.appendChild(tile);
-
-    const tile2 = createDiv(`tile`, `tile5${col + 1}`);
-    setPosition(tile2, left, 4.8 * (cellSize + gap));
-    board.appendChild(tile2);
-  }
-};
-
-const createVerticalTiles = () => {
-  for (let row = 0; row < size - 1; row++) {
-    const top = centerOffset(row, 26);
-
-    const tile = createDiv(`tile rotate90`, `tile${row + 1}0`);
-    setPosition(tile, -35, top);
-    board.appendChild(tile);
-
-    const tile2 = createDiv(`tile rotate270`, `tile${row + 1}5`);
-    setPosition(tile2, 4.8 * (cellSize + gap), top);
-    board.appendChild(tile2);
-  }
-};
-
-const createCornerTiles = () => {
-  const offset = 4.55 * (cellSize + gap);
-
-  const corners = [
-    { id: "tile00", cls: "rotate315", x: -35, y: -35 },
-    { id: "tile05", cls: "rotate45", x: offset + 35, y: -35 },
-    { id: "tile50", cls: "rotate225", x: -35, y: offset + 35 },
-    { id: "tile55", cls: "rotate135", x: offset + 35, y: offset + 35 },
-  ];
-
-  corners.forEach(({ id, cls, x, y }) => {
-    const tile = createDiv(`tile ${cls}`, id);
-    setPosition(tile, x, y);
-    board.appendChild(tile);
-  });
 };
 
 const renderYarns = (yarns) => {
@@ -164,28 +161,41 @@ const createSVGPlayerIcon = () => {
   return svg;
 };
 
-const renderTiles = (tiles, currentPlayer) => {
+const renderPlayerPins = (players, currentPlayer) => {
+  players.forEach((player) => {
+    const el = board.querySelector(
+      `#tile${player.pin.position.x}${player.pin.position.y}`,
+    );
+    el.innerHTML = "";
+    const icon = createDiv("player-icon tile-value");
+    icon.dataset.id = player.id;
+    const svgIcon = createSVGPlayerIcon();
+    icon.appendChild(svgIcon);
+    el.appendChild(icon);
+
+    if (player.id === currentPlayer) {
+      const icon = el.querySelector("svg");
+      icon.classList.add("current-player");
+    }
+  });
+};
+
+const renderNumberTiles = (tiles) => {
   tiles.forEach((row, r) => {
     row.forEach((tile, c) => {
       const el = board.querySelector(`#tile${r}${c}`);
       el.innerHTML = "";
 
       const innerContent = createDiv("tile-value");
-      innerContent.textContent = tile?.value ?? "";
+      innerContent.textContent = tile;
       el.appendChild(innerContent);
-
-      if (tile?.playerId) {
-        const icon = createDiv("player-icon tile-value");
-        const svgIcon = createSVGPlayerIcon();
-        icon.appendChild(svgIcon);
-        el.appendChild(icon);
-      }
-
-      if (tile?.playerId === currentPlayer?.id) {
-        el.classList.add("current-player");
-      }
     });
   });
+};
+
+const renderTilesContent = (tiles, currentPlayer, players) => {
+  renderNumberTiles(tiles);
+  renderPlayerPins(players, currentPlayer);
 };
 
 const createPlayerCard = (player) => {
@@ -201,7 +211,7 @@ const createPlayerCard = (player) => {
   return { clone, element };
 };
 
-const renderPlayers = (players, currentPlayer) => {
+const renderPlayersCards = (players, currentPlayer) => {
   playersContainer.innerHTML = "";
   players.forEach((player) => {
     const { clone, element } = createPlayerCard(player);
@@ -216,14 +226,11 @@ const renderPlayers = (players, currentPlayer) => {
 
 export const initBoard = () => {
   createCells();
-  createCenterTiles();
-  createHorizontalTiles();
-  createVerticalTiles();
-  createCornerTiles();
+  createAllTiles();
 };
 
 export const renderBoard = (state) => {
   renderYarns(state.board.yarns);
-  renderTiles(state.board.tiles, state.currentPlayer);
-  renderPlayers(state.players, state.currentPlayer);
+  renderTilesContent(state.board.tiles, state.currentPlayer, state.players);
+  renderPlayersCards(state.players, state.currentPlayer);
 };

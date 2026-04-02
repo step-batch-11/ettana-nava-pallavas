@@ -15,8 +15,8 @@ const updateDice = ({ number, colorId }) => {
 
 const removeTileEventListeners = () => {
   const tiles = document.querySelectorAll(".tile");
-  const halfTiles = document.querySelectorAll(".halfTile");
-  [...tiles, ...halfTiles].forEach((tile) => {
+  // const halfTiles = document.querySelectorAll(".halfTile");
+  [...tiles].forEach((tile) => {
     tile.replaceWith(tile.cloneNode(true));
   });
 };
@@ -103,8 +103,12 @@ const highlightTile = (tile, destination) => {
 const renderMoveOptions = (destinations) => {
   destinations.forEach((route) => {
     const destination = route.destination;
+    console.log(destination);
+    
     const id = `#tile${destination.x}${destination.y}`;
     const tile = document.querySelector(id);
+    console.log(tile);
+    
     highlightTile(tile, route);
 
     if (route.type === "premium") {
@@ -122,9 +126,13 @@ export const applyEventListenerOnDice = () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     const state = await getGameState();
-    await renderGame(state)
+    await renderGame(state);
     removeMoveClass();
     removeTileEventListeners();
     renderMoveOptions(destinations);
   });
+};
+
+export const defaultDice = () => {
+  updateDice({ number: 6, colorId: 6 });
 };

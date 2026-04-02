@@ -1,12 +1,11 @@
 import { initBoard, renderBoard } from "./board.js";
-import { applyEventListenerOnDice } from "./game.js";
+import { applyEventListenerOnDice, defaultDice } from "./game.js";
 import { attachBankEventListeners, renderBankState } from "./bank.js";
 import {
   addDragEventListenerOnDeck,
   addToggleEventListenerOnDeck,
   renderDeck,
 } from "./deck.js";
-
 import { getGameState } from "./api.js";
 
 const distributeInitialAssets = async () => {
@@ -35,10 +34,8 @@ const addEventListener = () => {
 export const renderGame = async (state) => {
   renderBoard(state);
   await renderBankState();
-
   renderDeck(state.players, state.currentPlayer);
-}
-
+};
 
 const main = async () => {
   initBoard();
@@ -47,6 +44,7 @@ const main = async () => {
   const state = await getGameState();
   await renderGame(state);
 
+  defaultDice();
   addEventListener();
 };
 

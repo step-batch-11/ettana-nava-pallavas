@@ -15,11 +15,11 @@ export const serveBoardState = (ctx) => {
     const board = ctx.get("boardState");
     const bank = ctx.get("bank");
 
-    const { tiles } = bank.getBank();
+    const _bankInfo = bank.getBank();
 
-    if (validateTileWithBank(board.board.tiles, tiles)) {
-      return ctx.json({ success: false, error: "Tiles placement is wrong" });
-    }
+    // if (validateTileWithBank(board.board.tiles, tiles)) {
+    //   return ctx.json({ success: false, error: "Tiles placement is wrong" });
+    // }
 
     return ctx.json({
       success: true,

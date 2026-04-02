@@ -85,7 +85,7 @@ export const gameState = {
   },
 };
 
-const _newState = {
+export const _gameState = {
   players,
   currentPlayer: 2,
   board: {
