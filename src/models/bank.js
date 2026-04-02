@@ -67,7 +67,7 @@ export default class Bank {
   distributeInitialAssets(players) {
     if (!players.some((player) => player.tokens !== 0)) {
       players.forEach((player) => {
-        player.tokens += this.deductTokens(2);
+        player.tokens += this.deductTokens(this.#initialToken);
         player.designCards.push(this.#designCards.pop());
         player.actionCards.push(this.#actionCards.pop());
       });

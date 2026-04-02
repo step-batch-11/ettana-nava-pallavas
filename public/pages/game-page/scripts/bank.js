@@ -18,9 +18,9 @@ const designCardListeners = () => {
       return;
     }
 
-    const { state } = await sendRequest("/game/board-state");
+    const { state } = await sendRequest("/game/game-state");
     renderBoard(state);
-    renderDeck(state.players, state.currentPlayer);
+    renderDeck(state.players, state.currentPlayerId);
     renderBankState();
   });
 };
@@ -36,16 +36,14 @@ const actionCardListeners = () => {
       return;
     }
 
-    const { state } = await sendRequest("/game/board-state");
+    const { state } = await sendRequest("/game/game-state");
     renderBoard(state);
-    renderDeck(state.players, state.currentPlayer);
+    renderDeck(state.players, state.currentPlayerId);
     renderBankState();
   });
 };
 
-export const renderBankState = async () => {
-  const bank = await sendRequest("/game/bank-state");
-
+export const renderBankState = (bank) => {
   const tokenPlaceholder = document.querySelector("#token-count");
   tokenPlaceholder.textContent = bank.tokens;
 

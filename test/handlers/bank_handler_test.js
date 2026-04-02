@@ -8,6 +8,8 @@ import {
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
 import TurnManager from "../../src/models/turn_manager.js";
+import Game from "../../src/models/game.js";
+import { diceValue, tiles, yarns } from "../../src/data/state.js";
 
 describe("Game route", () => {
   let app, game;
@@ -19,12 +21,33 @@ describe("Game route", () => {
     "description": "Move the pin to any unoccupied square.",
   }];
   beforeEach(() => {
-    game = {
-      currentPlayer: 1,
-      players: [{ id: 1, designCards: [], actionCards: [] }],
-      bank: new Bank(designCards, actionCards),
-      board: new Board(),
-    };
+    game = new Game(
+      [
+        {
+          name: "Ajoy",
+          id: 1,
+          tokens: 10,
+          roomId: null,
+          victoryPoint: 0,
+          actionCards: [],
+          designCards: [],
+          pin: { color: 2, position: { x: 2, y: 2 } },
+        },
+        {
+          name: "Dinesh",
+          id: 2,
+          tokens: 10,
+          roomId: null,
+          victoryPoint: 0,
+          actionCards: [],
+          designCards: [],
+          pin: { color: 3, position: { x: 3, y: 3 } },
+        },
+      ],
+      new Bank(designCards, actionCards),
+      new Board(tiles, yarns),
+      diceValue,
+    );
     app = createApp(game, new TurnManager());
   });
 
@@ -51,24 +74,24 @@ describe("Game route", () => {
       const context = {
         get: (key) => {
           if (key === "gameState") {
-            return {
-              currentPlayer: 0,
-              players: [
+            return new Game(
+              [
                 {
                   id: 0,
                   tokens: 1,
                   designCards: [],
                 },
               ],
-              bank: new Bank(designCards, actionCards),
-            };
+              new Bank(designCards, actionCards),
+              new Board(tiles, yarns),
+              diceValue,
+            );
           }
         },
         json: (x) => x,
       };
 
       const res = buyDesignCard(context);
-
       assertEquals(res, {
         success: false,
         message: "You do not have enough tokens",
@@ -104,17 +127,18 @@ describe("Game route", () => {
       const context = {
         get: (key) => {
           if (key === "gameState") {
-            return {
-              currentPlayer: 0,
-              players: [
+            return new Game(
+              [
                 {
                   id: 0,
                   tokens: 1,
                   designCards: [],
                 },
               ],
-              bank: new Bank(designCards, actionCards),
-            };
+              new Bank(designCards, actionCards),
+              new Board(tiles, yarns),
+              diceValue,
+            );
           }
         },
         json: (x) => x,

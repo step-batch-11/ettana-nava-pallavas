@@ -21,74 +21,11 @@ export const players = [
   },
 ];
 
-export const gameState = {
-  players,
-  currentPlayer: 2,
-  board: {
-    yarns: [
-      [1, 2, 3, 4, 5],
-      [5, 4, 3, 2, 1],
-      [1, 2, 3, 4, 5],
-      [5, 4, 3, 2, 1],
-      [1, 2, 3, 4, 5],
-    ],
-    tiles: [
-      [
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 1, playerId: null },
-        { value: 2, playerId: null },
-        { value: 3, playerId: null },
-        { value: 4, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 5, playerId: null },
-        { value: 6, playerId: 1 },
-        { value: 1, playerId: null },
-        { value: 2, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 3, playerId: null },
-        { value: 4, playerId: null },
-        { value: 5, playerId: 2 },
-        { value: 6, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 2, playerId: null },
-        { value: 3, playerId: null },
-        { value: 4, playerId: null },
-        { value: 5, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-      ],
-    ],
-  },
-};
-
 export const diceValue = {
   colorId: 1,
   number: 2,
 };
+
 export const tiles = [
   [0, 0, 0, 0, 0, 0],
   [0, 1, 2, 3, 4, 0],
@@ -105,8 +42,6 @@ export const yarns = [
   [5, 4, 3, 2, 1],
   [1, 2, 3, 4, 5],
 ];
-
-
 
 export const actionTypes = {
   1: "Play action card",

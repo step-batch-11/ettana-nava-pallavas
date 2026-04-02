@@ -8,7 +8,7 @@ import {
 } from "./deck.js";
 import { getGameState } from "./api.js";
 
-const distributeInitialAssets = async () => {
+const _distributeInitialAssets = async () => {
   await new Promise((res) => {
     setTimeout(() => {
       res(1);
@@ -31,18 +31,18 @@ const addEventListener = () => {
   attachBankEventListeners();
 };
 
-export const renderGame = async (state) => {
+export const renderGame = (state) => {
   renderBoard(state);
-  await renderBankState();
-  renderDeck(state.players, state.currentPlayer);
+  renderBankState(state.bank);
+  renderDeck(state.players, state.currentPlayerId);
 };
 
 const main = async () => {
   initBoard();
 
-  await distributeInitialAssets();
+  // await distributeInitialAssets();
   const state = await getGameState();
-  await renderGame(state);
+  renderGame(state);
 
   defaultDice();
   addEventListener();
