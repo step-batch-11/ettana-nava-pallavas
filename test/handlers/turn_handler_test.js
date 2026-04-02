@@ -105,15 +105,14 @@ const bank = {
   ],
 };
 
-describe("move request: ", () => {
+describe("Move request: ", () => {
   let app;
-
-  const randomValue = 0.05;
+  const randomFn = (_) => 0.5;
 
   beforeEach(() => {
     const mockBank = structuredClone(bank);
     const mockGameState = structuredClone(gameState);
-    app = createApp(mockGameState, mockBank, () => randomValue, logger);
+    app = createApp(mockGameState, mockBank, randomFn, logger);
   });
 
   it("Requesting with valid destination, should move to other tile", async () => {
@@ -144,7 +143,7 @@ describe("move request: ", () => {
 
   it("Requesting with invalid destination, should not move to other tile", async () => {
     await app.request("/game/roll", { method: "POST" });
-    const destination = { destination: { x: 4, y: 3 }, type: "jump" };
+    const destination = { destination: { x: 3, y: 3 }, type: "jump" };
 
     const response = await app.request("/game/move", {
       method: "POST",

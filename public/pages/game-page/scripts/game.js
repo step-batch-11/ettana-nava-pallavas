@@ -128,7 +128,6 @@ export const applyEventListenerOnDice = () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     removeMoveClass();
-    removeTileEventListeners();
     renderMoveOptions(destinations);
   });
 };

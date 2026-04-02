@@ -83,6 +83,10 @@ export default class TurnManager {
     return { source: currentPosition, destination: currentPosition };
   }
 
+  #getYarnColor({ x, y }) {
+    return this.#game.board.yarns[x][y];
+  }
+
   #isValidYarn({ x, y }, yarns) {
     const rows = yarns.length;
     const columns = yarns[0].length;
@@ -101,5 +105,31 @@ export default class TurnManager {
     return yarns.filter((yarn) =>
       this.#isValidYarn(yarn, this.#game.board.yarns)
     );
+  }
+
+  #areValidYarns(yarns, boardYarns) {
+    return yarns.every((yarn) => this.#isValidYarn(yarn, boardYarns));
+  }
+
+  #areSamePositions({ x: x1, y: y1 }, { x: x2, y: y2 }) {
+    return x1 === x2 && y1 === y2;
+  }
+
+  swapYarns(source, destination) {
+    const boardYarns = this.#game.board.yarns;
+
+    if (
+      this.#areValidYarns([source, destination], boardYarns) &&
+      !this.#areSamePositions(source, destination)
+    ) {
+      const sourceYarnColor = this.#getYarnColor(source);
+      const destYarnColor = this.#getYarnColor(destination);
+
+      boardYarns[destination.x][destination.y] = sourceYarnColor;
+      boardYarns[source.x][source.y] = destYarnColor;
+
+      return { success: true };
+    }
+    return { success: false };
   }
 }
