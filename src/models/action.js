@@ -13,7 +13,7 @@ export const movePin = (players, _currentPlayer) => {
   return positions;
 };
 
-const removeCard = (player, id) => {
+export const removeCard = (player, id) => {
   const index = player.actionCards.findIndex((card) => card.id === id);
   player.actionCards.splice(index, 1);
 };

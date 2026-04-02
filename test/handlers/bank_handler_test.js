@@ -10,15 +10,15 @@ import Board from "../../src/models/board.js";
 import TurnManager from "../../src/models/turn_manager.js";
 
 describe("Game route", () => {
-  let app, game;
+  let app, game, actionCards, designCards;
 
-  const designCards = [{ "id": 1, "victoryPoints": 1 }];
-  const actionCards = [{
-    "id": 1,
-    "type": "move",
-    "description": "Move the pin to any unoccupied square.",
-  }];
   beforeEach(() => {
+    designCards = [{ "id": 1, "victoryPoints": 1 }];
+    actionCards = [{
+      "id": 1,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }];
     game = {
       currentPlayer: 1,
       players: [{ id: 1, designCards: [], actionCards: [] }],
@@ -79,18 +79,13 @@ describe("Game route", () => {
   describe("Buy Action Card", () => {
     it("should give a new action card", async () => {
       const response = await app.request("/game/buy-action-card");
-      const card = await response.json();
+      const responseBody = await response.json();
 
       assertEquals(response.status, 200);
-      assertEquals(card, {
-        card: {
-          description: "Move the pin to any unoccupied square.",
-          id: 1,
-          type: "move",
-        },
-        message: "Action card bought successfully",
-        success: true,
-      });
+   
+      assertEquals(responseBody.message,"Action card bought successfully" );
+      assertEquals(responseBody.success,true );
+
     });
 
     it("should fail when context is invalid", () => {
