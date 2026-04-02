@@ -204,8 +204,10 @@ const highlightTile = (tile, destination) => {
 const renderMoveOptions = (destinations) => {
   destinations.forEach((route) => {
     const destination = route.destination;
+
     const id = `#tile${destination.x}${destination.y}`;
     const tile = document.querySelector(id);
+
     highlightTile(tile, route);
 
     if (route.type === "premium") {

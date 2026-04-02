@@ -67,7 +67,6 @@ export const moveFourDirections = (queue, current, grid) => {
   }
 };
 
-
 export const findJumpableRoutes = (tileNumber, grid) => {
   const routes = [];
   grid.forEach((row, x) =>
@@ -80,18 +79,21 @@ export const findJumpableRoutes = (tileNumber, grid) => {
   return routes;
 };
 
-const findCheapestRoute = (routes) => routes.reduce((previousRoute, currentRoute) => {
-  if (currentRoute.type === "jump") {
-    return currentRoute;
-  }
-  if (previousRoute.type === "normal" || previousRoute.type === "jump") {
-    return previousRoute;
-  }
-  if (currentRoute.type === "normal") {
-    return currentRoute;
-  }
-  return previousRoute.recipients.length < currentRoute.recipients.length ? previousRoute : currentRoute;
-})
+const findCheapestRoute = (routes) =>
+  routes.reduce((previousRoute, currentRoute) => {
+    if (currentRoute.type === "jump") {
+      return currentRoute;
+    }
+    if (previousRoute.type === "normal" || previousRoute.type === "jump") {
+      return previousRoute;
+    }
+    if (currentRoute.type === "normal") {
+      return currentRoute;
+    }
+    return previousRoute.recipients.length < currentRoute.recipients.length
+      ? previousRoute
+      : currentRoute;
+  });
 
 export const extractDestinations = (locations) => {
   return Object.values(locations).map(findCheapestRoute);
@@ -113,7 +115,12 @@ export const addJumpRoutes = (locations, totalSteps, grid) => {
 };
 
 export const findRoutes = (start, totalSteps, grid) => {
-  const initialRoute = { destination: start, steps: 0, type: "normal", path: [] };
+  const initialRoute = {
+    destination: start,
+    steps: 0,
+    type: "normal",
+    path: [],
+  };
   const routes = [initialRoute];
 
   const finalizedRoutes = {};

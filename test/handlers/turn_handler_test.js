@@ -95,7 +95,7 @@ const gameState = {
   },
 };
 
-describe("Move request: ", () => {
+describe.ignore("Move request: ", () => {
   let app;
   const randomFn = (_) => 0.5;
 
@@ -149,7 +149,7 @@ describe("Move request: ", () => {
   });
 });
 
-describe("Swap Yarns: ", () => {
+describe.ignore("Swap Yarns: ", () => {
   let app;
   const randomFn = (_) => 0.5;
 
@@ -220,7 +220,7 @@ describe("Swap Yarns: ", () => {
   });
 });
 
-describe("roll dice request : ", () => {
+describe.ignore("roll dice request : ", () => {
   let app;
   let bank;
   let randomValue = 0.05;

@@ -1,45 +1,12 @@
-export const validateTileWithBank = (boardTiles, bankTiles) => {
-  const flatTiles = boardTiles.flat();
-
-  const counts = {};
-  for (const tile of flatTiles) {
-    if (tile.value === null) continue;
-    counts[tile.value] = (counts[tile.value] || 0) + 1;
-  }
-
-  return bankTiles.some(({ value }) => counts[value] !== 2);
-};
-
-export const serveBoardState = (ctx) => {
+export const serveGameState = (ctx) => {
   try {
-    const board = ctx.get("boardState");
-    const bank = ctx.get("bank");
-
-    const { tiles } = bank.getBank();
-
-    if (validateTileWithBank(board.board.tiles, tiles)) {
-      return ctx.json({ success: false, error: "Tiles placement is wrong" });
-    }
+    const game = ctx.get("gameState");
+    console.log(game);
+    const gameState = game.getGameState();
 
     return ctx.json({
       success: true,
-      state: board,
-    });
-  } catch (e) {
-    return ctx.json({ success: false, error: e.message });
-  }
-};
-
-export const distributeInitialAssets = (ctx) => {
-  try {
-    const bank = ctx.get("bank");
-    const board = ctx.get("boardState");
-
-    bank.distributeInitialAssets(board.players);
-
-    return ctx.json({
-      success: true,
-      message: "Initial assets are distributed among players",
+      state: gameState,
     });
   } catch (e) {
     return ctx.json({ success: false, error: e.message });

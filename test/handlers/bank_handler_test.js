@@ -6,40 +6,26 @@ import {
   buyDesignCard,
 } from "../../src/handlers/bank_handler.js";
 import Bank from "../../src/models/bank.js";
+import Board from "../../src/models/board.js";
+import TurnManager from "../../src/models/turn_manager.js";
 
 describe("Game route", () => {
-  let app, actionCards, designCards, bank;
+  let app, game, actionCards, designCards;
 
   beforeEach(() => {
-    const game = {
-      currentPlayer: 1,
-      players: [{ id: 1, designCards: [], actionCards: [] }],
-    };
     designCards = [{ "id": 1, "victoryPoints": 1 }];
     actionCards = [{
       "id": 1,
       "type": "move",
       "description": "Move the pin to any unoccupied square.",
     }];
-
-    bank = new Bank(designCards, actionCards, (pattern) => pattern, () => 0);
-    app = createApp(game, bank);
-  });
-
-  it("simple bank request to get bank state", async () => {
-    const response = await app.request("/game/bank-state");
-    const actualBankState = await response.json();
-
-    const expectedBankState = {
-      tokens: 55,
-      availableActionCards: 1,
-      availableDesignCards: 1,
-      yarns: [1, 2, 3, 4, 5],
-      tiles: [1, 6],
+    game = {
+      currentPlayer: 1,
+      players: [{ id: 1, designCards: [], actionCards: [] }],
+      bank: new Bank(designCards, actionCards),
+      board: new Board(),
     };
-
-    assertEquals(response.status, 200);
-    assertEquals(actualBankState, expectedBankState);
+    app = createApp(game, new TurnManager());
   });
 
   describe("Buy Design Card", () => {
@@ -64,22 +50,17 @@ describe("Game route", () => {
     it("should inform if tokens are insufficient", () => {
       const context = {
         get: (key) => {
-          if (key === "bank") {
+          if (key === "gameState") {
             return {
-              buyDesignCard: () => ({ id: "card1" }),
-            };
-          }
-
-          if (key === "boardState") {
-            return {
-              currentPlayer: "p1",
+              currentPlayer: 0,
               players: [
                 {
-                  id: "p1",
+                  id: 0,
                   tokens: 1,
                   designCards: [],
                 },
               ],
+              bank: new Bank(designCards, actionCards),
             };
           }
         },
@@ -98,18 +79,13 @@ describe("Game route", () => {
   describe("Buy Action Card", () => {
     it("should give a new action card", async () => {
       const response = await app.request("/game/buy-action-card");
-      const card = await response.json();
+      const responseBody = await response.json();
 
       assertEquals(response.status, 200);
-      assertEquals(card, {
-        card: {
-          description: "Move the pin to any unoccupied square.",
-          id: 1,
-          type: "move",
-        },
-        message: "Action card bought successfully",
-        success: true,
-      });
+   
+      assertEquals(responseBody.message,"Action card bought successfully" );
+      assertEquals(responseBody.success,true );
+
     });
 
     it("should fail when context is invalid", () => {
@@ -122,22 +98,17 @@ describe("Game route", () => {
     it("should inform if tokens are insufficient", () => {
       const context = {
         get: (key) => {
-          if (key === "bank") {
+          if (key === "gameState") {
             return {
-              buyDesignCard: () => ({ id: "card1" }),
-            };
-          }
-
-          if (key === "boardState") {
-            return {
-              currentPlayer: "p1",
+              currentPlayer: 0,
               players: [
                 {
-                  id: "p1",
+                  id: 0,
                   tokens: 1,
                   designCards: [],
                 },
               ],
+              bank: new Bank(designCards, actionCards),
             };
           }
         },

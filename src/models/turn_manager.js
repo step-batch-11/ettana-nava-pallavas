@@ -6,6 +6,7 @@ import {
   mapAdjacentYarns,
 } from "../utils/color_dice_action.js";
 import { findRoutes } from "../utils/find_routes.js";
+
 export default class TurnManager {
   #game;
   #randomFn;
@@ -28,6 +29,7 @@ export default class TurnManager {
 
   findPossibleDestinations(totalSteps) {
     const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
+
     const start = currentPlayer.pin.position;
 
     const routes = findRoutes(start, totalSteps, this.#game.board.tiles);

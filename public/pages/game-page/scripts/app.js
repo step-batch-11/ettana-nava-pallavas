@@ -18,7 +18,7 @@ const distributeInitialAssets = async () => {
   const res = await fetch("/game/distribute-initial-assets");
   await res.json();
 
-  const boardRes = await fetch("/game/board-state");
+  const boardRes = await fetch("/game/game-state");
   const { state } = await boardRes.json();
   renderBoard(state);
   renderBankState();
