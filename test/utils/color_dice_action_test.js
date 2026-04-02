@@ -6,8 +6,8 @@ import {
   createLedger,
   distributeTokens,
   extractPlayersPositions,
-  findAdjacentYarns,
   isInBoundary,
+  mapAdjacentYarns,
 } from "../../src/utils/color_dice_action.js";
 
 describe("color dice actions : ", () => {
@@ -73,7 +73,7 @@ describe("color dice actions : ", () => {
         [5, 4, 3, 2, 1],
         [1, 2, 3, 4, 5],
       ];
-      const actual = findAdjacentYarns(pinPositions, yarns);
+      const actual = mapAdjacentYarns(pinPositions, yarns);
       const expected = { "1": [3, 2, 3, 4], "2": [2, 3, 4, 3] };
       assertEquals(actual, expected);
     });
@@ -87,7 +87,7 @@ describe("color dice actions : ", () => {
         [5, 4, 3, 2, 1],
         [1, 2, 3, 4, 5],
       ];
-      const actual = findAdjacentYarns(pinPositions, yarns);
+      const actual = mapAdjacentYarns(pinPositions, yarns);
       const expected = {};
       assertEquals(actual, expected);
     });

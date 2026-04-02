@@ -55,6 +55,11 @@ export default class Bank {
     return n;
   }
 
+  incrementTokens(n) {
+    this.#tokens += n;
+    return n;
+  }
+
   getActionCard() {
     return this.#actionCards.pop();
   }

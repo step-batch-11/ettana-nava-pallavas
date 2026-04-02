@@ -120,7 +120,6 @@ const createSkeleton = (cardInfo, id) => {
   }
 
   card.append(cardTop, cardMiddle, cardBottom);
-  console.log(card);
 
   return card;
 };

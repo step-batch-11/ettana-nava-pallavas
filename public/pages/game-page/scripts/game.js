@@ -13,26 +13,127 @@ const updateDice = ({ number, colorId }) => {
   colorDice.replaceChildren(diceColor);
 };
 
-const removeTileEventListeners = () => {
-  const tiles = document.querySelectorAll(".tile");
-  // const halfTiles = document.querySelectorAll(".halfTile");
-  [...tiles].forEach((tile) => {
+const removeEventListeners = (elements) => {
+  elements.forEach((tile) => {
     tile.replaceWith(tile.cloneNode(true));
   });
 };
 
-const removeMoveClass = () => {
+const removeTileEventListeners = () => {
   const tiles = document.querySelectorAll(".tile");
-  [...tiles].forEach((tile) => {
-    tile.classList.remove("premium-move", "normal-move", "jump-move");
+  removeEventListeners(tiles);
+};
+
+const removeClasses = (selector, ...classes) => {
+  const elements = document.querySelectorAll(selector);
+
+  elements.forEach((element) => {
+    element.classList.remove(...classes);
   });
+};
+
+const removeMoveClass = () => {
+  removeClasses(".tile", "premium-move", "normal-move", "jump-move");
+};
+
+const removeYarnHighlighting = () => {
+  const yarns = document.querySelectorAll(".dot");
+  yarns.forEach((yarn) => {
+    yarn.draggable = false;
+    yarn.style.boxShadow = "none";
+  });
+};
+
+const removeCellEventListeners = () => {
+  const cells = document.querySelectorAll(".cell");
+  removeEventListeners(cells);
+};
+
+const removeYarnEventListeners = () => {
+  const yarns = document.querySelectorAll(".dot");
+  removeEventListeners(yarns);
+};
+
+const handleStartDrag = (e, yarnPosition) => {
+  e.dataTransfer.setData("text/plain", e.target.id);
+  e.dataTransfer.setData("application/json", JSON.stringify(yarnPosition));
+};
+
+const handleDragOver = (e, cell) => {
+  e.preventDefault();
+  const octagon = cell.querySelector("polygon");
+  octagon.style.stroke = "orange";
+};
+
+const handleDragLeave = (_, cell) => {
+  const octagon = cell.querySelector("polygon");
+  octagon.style.stroke = "";
+};
+
+const fetchSwapResult = async (draggablePosition, yarnPosition) => {
+  const response = await fetch("/game/swap", {
+    method: "POST",
+    body: JSON.stringify({ draggablePosition, yarnPosition }),
+    headers: { "content-type": "application/json" },
+  });
+  return await response.json();
+};
+
+const swapYarns = async (draggablePosition, yarnPosition) => {
+  const response = await fetchSwapResult(draggablePosition, yarnPosition);
+  await reRenderGameState();
+  if (response.success) {
+    removeYarnHighlighting();
+    removeYarnEventListeners();
+    removeCellEventListeners();
+  }
+};
+
+const handleDrop = async (e, cell, yarnPosition) => {
+  const draggableId = e.dataTransfer.getData("text/plain");
+  const draggablePosition = JSON.parse(
+    e.dataTransfer.getData("application/json"),
+  );
+  const yarn = cell.querySelector(".dot");
+
+  const octagon = cell.querySelector("polygon");
+  octagon.style.stroke = "";
+
+  if (yarn.id !== draggableId) {
+    await swapYarns(draggablePosition, yarnPosition);
+    document.removeEventListener("click", documentClickHandler);
+  }
+};
+
+const documentClickHandler = (e) => {
+  if (!e.target.closest(".cell")?.classList.contains("active")) {
+    removeYarnHighlighting();
+    removeYarnEventListeners();
+    removeCellEventListeners();
+    removeClasses(".cell", "active");
+    document.removeEventListener("click", documentClickHandler);
+  }
+};
+
+const addDragAndDrop = (yarn, yarnPosition) => {
+  yarn.addEventListener("dragstart", (e) => handleStartDrag(e, yarnPosition));
+  const cell = yarn.parentElement;
+  cell.classList.add("active");
+
+  cell.addEventListener("dragover", (e) => handleDragOver(e, cell));
+  cell.addEventListener("dragleave", (e) => handleDragLeave(e, cell));
+  cell.addEventListener("drop", (e) => handleDrop(e, cell, yarnPosition));
+
+  document.addEventListener("click", documentClickHandler);
 };
 
 const highlightAdjacentYarns = (yarns) => {
   yarns.forEach((yarnPosition) => {
     const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
     const yarn = document.querySelector(id);
+    yarn.draggable = true;
     yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
+    addDragAndDrop(yarn, yarnPosition);
   });
 };
 

@@ -21,3 +21,19 @@ export const handleMove = async (ctx) => {
     message: "Moved successfully",
   }, 200);
 };
+
+export const handleSwap = async (ctx) => {
+  const turnManager = ctx.get("turnManager");
+  const { draggablePosition, yarnPosition } = await ctx.req.json();
+  const swapResult = turnManager.freeSwap(draggablePosition, yarnPosition);
+  if (!swapResult.success) {
+    return ctx.json(
+      { success: false, message: "You can't swap these yarns" },
+      400,
+    );
+  }
+  return ctx.json({
+    success: true,
+    message: "Swapped successfully",
+  }, 200);
+};

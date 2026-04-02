@@ -5,15 +5,16 @@ import Bank from "../../src/models/bank.js";
 
 const getCoords = ({ x, y }) => ({ x, y });
 
-describe("tests for moving pin", () => {
+describe("Tests for moving pin", () => {
   let turnManager;
   const currentPlayer = {
     id: 1,
     tokens: 5,
     pin: { color: 3, position: { x: 1, y: 0 } },
   };
+  let mockGame;
   beforeEach(() => {
-    const mockGame = {
+    mockGame = {
       currentPlayer: 1,
       players: [
         currentPlayer,
@@ -85,117 +86,119 @@ describe("tests for moving pin", () => {
     turnManager = new TurnManager(mockGame);
   });
 
-  describe("test for Destination: ", () => {
-    beforeEach(() => {
-      turnManager.destinations = [
-        { destination: { x: 2, y: 4 }, path: [], type: "normal" },
-        { destination: { x: 1, y: 0 }, path: [], type: "normal" },
-      ];
+  describe("Move pin", () => {
+    describe("test for Destination: ", () => {
+      beforeEach(() => {
+        turnManager.destinations = [
+          { destination: { x: 2, y: 4 }, path: [], type: "normal" },
+          { destination: { x: 1, y: 0 }, path: [], type: "normal" },
+        ];
+      });
+
+      it("Invalid destination, position should not be changed", () => {
+        const path = [
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
+        ];
+
+        const route = { destination: { x: 2, y: 0 }, path, type: "normal" };
+
+        const positions = turnManager.move(route);
+        assertNotEquals(positions.destination, getCoords(route.destination));
+      });
+
+      it("Valid destination, position should be changed to destination", () => {
+        const path = [
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
+          { x: 2, y: 1 },
+          { x: 2, y: 2 },
+          { x: 2, y: 3 },
+        ];
+
+        const route = { destination: { x: 2, y: 4 }, path, type: "normal" };
+
+        const positions = turnManager.move(route);
+        assertEquals(positions.destination, getCoords(route.destination));
+      });
     });
 
-    it("Invalid destination, position should not be changed", () => {
-      const path = [
-        { x: 1, y: 0 },
-        { x: 1, y: 1 },
-      ];
+    describe("Path penalty for premium path: ", () => {
+      it("One player is in path, should pay to one player", () => {
+        const path = [
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
+          { x: 1, y: 2 },
+        ];
 
-      const route = { destination: { x: 2, y: 0 }, path, type: "normal" };
+        turnManager.destinations = [{
+          destination: { x: 1, y: 3 },
+          path,
+          type: "premium",
+          recipients: [2],
+        }];
 
-      const positions = turnManager.move(route);
-      assertNotEquals(positions.destination, getCoords(route.destination));
-    });
+        const route = {
+          destination: { x: 1, y: 3 },
+          path,
+          type: "premium",
+          recipients: [2],
+        };
 
-    it("Valid destination, position should be changed to destination", () => {
-      const path = [
-        { x: 1, y: 0 },
-        { x: 1, y: 1 },
-        { x: 2, y: 1 },
-        { x: 2, y: 2 },
-        { x: 2, y: 3 },
-      ];
+        const positions = turnManager.move(route);
+        assertEquals(positions.destination, getCoords(route.destination));
+        assertEquals(currentPlayer.tokens, 4);
+      });
 
-      const route = { destination: { x: 2, y: 4 }, path, type: "normal" };
+      it("Two players is in path, should pay to two players", () => {
+        const path = [
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
+          { x: 1, y: 2 },
+          { x: 1, y: 3 },
+          { x: 1, y: 4 },
+        ];
 
-      const positions = turnManager.move(route);
-      assertEquals(positions.destination, getCoords(route.destination));
-    });
-  });
+        turnManager.destinations = [{
+          destination: { x: 1, y: 5 },
+          path,
+          type: "premium",
+          recipients: [2, 3],
+        }];
 
-  describe("Path penalty for premium path: ", () => {
-    it("One player is in path, should pay to one player", () => {
-      const path = [
-        { x: 1, y: 0 },
-        { x: 1, y: 1 },
-        { x: 1, y: 2 },
-      ];
+        const route = {
+          destination: { x: 1, y: 5 },
+          path,
+          type: "premium",
+          recipients: [2, 3],
+        };
 
-      turnManager.destinations = [{
-        destination: { x: 1, y: 3 },
-        path,
-        type: "premium",
-        recipients: [2],
-      }];
+        const positions = turnManager.move(route);
+        assertEquals(positions.destination, getCoords(route.destination));
+        assertEquals(currentPlayer.tokens, 2);
+      });
 
-      const route = {
-        destination: { x: 1, y: 3 },
-        path,
-        type: "premium",
-        recipients: [2],
-      };
+      it("No one in path, should not pay to any player", () => {
+        turnManager.destinations = [{
+          destination: { x: 2, y: 3 },
+          path: [],
+          type: "normal",
+        }];
 
-      const positions = turnManager.move(route);
-      assertEquals(positions.destination, getCoords(route.destination));
-      assertEquals(currentPlayer.tokens, 4);
-    });
+        const path = [
+          { x: 1, y: 0 },
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 0, y: 3 },
+        ];
 
-    it("Two players is in path, should pay to two players", () => {
-      const path = [
-        { x: 1, y: 0 },
-        { x: 1, y: 1 },
-        { x: 1, y: 2 },
-        { x: 1, y: 3 },
-        { x: 1, y: 4 },
-      ];
+        const route = { destination: { x: 2, y: 3 }, path, type: "normal" };
 
-      turnManager.destinations = [{
-        destination: { x: 1, y: 5 },
-        path,
-        type: "premium",
-        recipients: [2, 3],
-      }];
-
-      const route = {
-        destination: { x: 1, y: 5 },
-        path,
-        type: "premium",
-        recipients: [2, 3],
-      };
-
-      const positions = turnManager.move(route);
-      assertEquals(positions.destination, getCoords(route.destination));
-      assertEquals(currentPlayer.tokens, 2);
-    });
-
-    it("No one in path, should not pay to any player", () => {
-      turnManager.destinations = [{
-        destination: { x: 2, y: 3 },
-        path: [],
-        type: "normal",
-      }];
-
-      const path = [
-        { x: 1, y: 0 },
-        { x: 0, y: 0 },
-        { x: 0, y: 1 },
-        { x: 0, y: 2 },
-        { x: 0, y: 3 },
-      ];
-
-      const route = { destination: { x: 2, y: 3 }, path, type: "normal" };
-
-      const positions = turnManager.move(route);
-      assertEquals(positions.destination, getCoords(route.destination));
-      assertEquals(currentPlayer.tokens, 2);
+        const positions = turnManager.move(route);
+        assertEquals(positions.destination, getCoords(route.destination));
+        assertEquals(currentPlayer.tokens, 2);
+      });
     });
   });
 
@@ -250,9 +253,92 @@ describe("tests for moving pin", () => {
       assertEquals(adjYarns, expected);
     });
   });
+
+  describe("Swap Yarns: ", () => {
+    it("Source and destination yarns positions are valid, should be swapped", () => {
+      const source = { x: 1, y: 2 };
+      const destination = { x: 2, y: 3 };
+      //currentPlayer's position = {x:2, y: 3};
+      const expected = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 4, 2, 1],
+        [1, 2, 3, 3, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+
+      const swapResult = turnManager.freeSwap(source, destination);
+      assertEquals(swapResult.success, true);
+      assertEquals(mockGame.board.yarns, expected);
+    });
+
+    it("Source yarn position is not valid (out of board: negative value), should not be swapped", () => {
+      const source = { x: -1, y: 1 };
+      const destination = { x: 2, y: 2 };
+      const expected = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+
+      const swapResult = turnManager.freeSwap(source, destination);
+      assertEquals(swapResult.success, false);
+      assertEquals(mockGame.board.yarns, expected);
+    });
+
+    it("Source yarn position is not valid (out of board: higher value), should not be swapped", () => {
+      const source = { x: 5, y: 1 };
+      const destination = { x: 2, y: 2 };
+      const expected = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+
+      const swapResult = turnManager.freeSwap(source, destination);
+      assertEquals(swapResult.success, false);
+      assertEquals(mockGame.board.yarns, expected);
+    });
+
+    it("Destination yarn position is not valid (out of board: higher value), should not be swapped", () => {
+      const source = { x: 1, y: 1 };
+      const destination = { x: 5, y: 2 };
+      const expected = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+
+      const swapResult = turnManager.freeSwap(source, destination);
+      assertEquals(swapResult.success, false);
+      assertEquals(mockGame.board.yarns, expected);
+    });
+
+    it("Source and destination yarns positions are same, should not be swapped", () => {
+      const source = { x: 1, y: 1 };
+      const destination = { x: 1, y: 1 };
+      const expected = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+
+      const swapResult = turnManager.freeSwap(source, destination);
+      assertEquals(swapResult.success, false);
+      assertEquals(mockGame.board.yarns, expected);
+    });
+  });
 });
 
-describe("current user turn :", () => {
+describe("Roll dice and find possible path :", () => {
   let turnManager;
   const yarns = [
     [1, 1, 1, 1, 1],

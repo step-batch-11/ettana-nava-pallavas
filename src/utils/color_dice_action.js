@@ -9,7 +9,7 @@ export const extractPlayersPositions = (players) => {
   return pinsPositions;
 };
 
-export const findAdjacentYarns = (pinsLocations, yarns) => {
+export const mapAdjacentYarns = (pinsLocations, yarns) => {
   const pinYarns = {};
   const directions = [[0, 0], [0, -1], [-1, 0], [-1, -1]];
   const [rows, columns] = [yarns.length, yarns[0].length];
