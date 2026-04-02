@@ -8,21 +8,21 @@ import {
 import Bank from "../../src/models/bank.js";
 
 describe("Game route", () => {
-  const game = {
-    currentPlayer: 1,
-    players: [{ id: 1, designCards: [], actionCards: [] }],
-  };
-  const designCards = [{ "id": 1, "victoryPoints": 1 }];
-  const actionCards = [{
-    "id": 1,
-    "type": "move",
-    "description": "Move the pin to any unoccupied square.",
-  }];
-
-  const bank = new Bank(designCards, actionCards);
-  let app;
+  let app, actionCards, designCards, bank;
 
   beforeEach(() => {
+    const game = {
+      currentPlayer: 1,
+      players: [{ id: 1, designCards: [], actionCards: [] }],
+    };
+    designCards = [{ "id": 1, "victoryPoints": 1 }];
+    actionCards = [{
+      "id": 1,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }];
+
+    bank = new Bank(designCards, actionCards, (pattern) => pattern, () => 0);
     app = createApp(game, bank);
   });
 
@@ -35,7 +35,7 @@ describe("Game route", () => {
       availableActionCards: 1,
       availableDesignCards: 1,
       yarns: [1, 2, 3, 4, 5],
-      tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+      tiles: [1, 6],
     };
 
     assertEquals(response.status, 200);

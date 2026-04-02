@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { tax } from "../../src/models/action.js";
+import { removeCard, tax } from "../../src/models/action.js";
 import Bank from "../../src/models/bank.js";
 
 describe("Action Cards", () => {
@@ -36,8 +36,14 @@ describe("Action Cards", () => {
       const bankTokens = bank.getBank().tokens;
       tax(game, bank, 1);
       assertEquals(game.players[1].tokens, 0);
-      assertEquals(game.players[0].actionCards.length, 0); 
+      assertEquals(game.players[0].actionCards.length, 0);
       assertEquals(bankTokens, 55);
+    });
+
+    it("when removeCard function is called, then it should remove the card from the player action cards based on the id", () => {
+      const player = { id: 1, tokens: 2, actionCards: [{ id: 1 }] };
+      removeCard(player, 1);
+      assertEquals(player.actionCards.length, 0);
     });
   });
 });

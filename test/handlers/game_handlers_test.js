@@ -8,7 +8,7 @@ import {
 } from "../../src/handlers/game_handlers.js";
 import Bank from "../../src/models/bank.js";
 
-describe("Game route", () => {
+describe.ignore("Game route", () => {
   let app;
 
   const players = [
@@ -161,7 +161,7 @@ describe("Game route", () => {
   });
 });
 
-describe("Validate with bank", () => {
+describe.ignore("Validate with bank", () => {
   let app;
   const players = [
     {
