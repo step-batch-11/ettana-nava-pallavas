@@ -3,10 +3,11 @@ import { createApp } from "../../src/app.js";
 import { assertEquals } from "@std/assert/equals";
 import {
   distributeInitialAssets,
-  serveBoardState,
+  serveGameState,
   validateTileWithBank,
 } from "../../src/handlers/game_handlers.js";
 import Bank from "../../src/models/bank.js";
+import { Board } from "../../src/models/board.js";
 
 describe("Game route", () => {
   let app;
@@ -32,68 +33,27 @@ describe("Game route", () => {
     },
   ];
 
+  const tiles = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 1, 2, 3, 4, 0],
+    [0, 5, 6, 1, 2, 0],
+    [0, 3, 4, 5, 6, 0],
+    [0, 2, 3, 4, 5, 0],
+    [0, 0, 0, 0, 0, 0],
+  ];
+
+  const yarns = [
+    [1, 2, 3, 4, 5],
+    [5, 4, 3, 2, 1],
+    [1, 2, 3, 4, 5],
+    [5, 4, 3, 2, 1],
+    [1, 2, 3, 4, 5],
+  ];
+
   const gameState = {
     players,
     currentPlayer: 2,
-    board: {
-      yarns: [
-        [1, 2, 3, 4, 5],
-        [5, 4, 3, 2, 1],
-        [1, 2, 3, 4, 5],
-        [5, 4, 3, 2, 1],
-        [1, 2, 3, 4, 5],
-      ],
-      tiles: [
-        [
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-        ],
-        [
-          { value: null, playerId: null },
-          { value: 1, playerId: null },
-          { value: 2, playerId: null },
-          { value: 3, playerId: null },
-          { value: 4, playerId: null },
-          { value: null, playerId: null },
-        ],
-        [
-          { value: null, playerId: null },
-          { value: 5, playerId: null },
-          { value: 6, playerId: 2 },
-          { value: 1, playerId: null },
-          { value: 2, playerId: null },
-          { value: null, playerId: null },
-        ],
-        [
-          { value: null, playerId: null },
-          { value: 3, playerId: null },
-          { value: 4, playerId: null },
-          { value: 5, playerId: 3 },
-          { value: 6, playerId: null },
-          { value: null, playerId: null },
-        ],
-        [
-          { value: null, playerId: null },
-          { value: 2, playerId: null },
-          { value: 3, playerId: null },
-          { value: 4, playerId: null },
-          { value: 5, playerId: null },
-          { value: null, playerId: null },
-        ],
-        [
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-          { value: null, playerId: null },
-        ],
-      ],
-    },
+    board: new Board(tiles, yarns),
   };
 
   const designCards = [
@@ -117,12 +77,11 @@ describe("Game route", () => {
     app = createApp(gameState, bank);
   });
 
-  it("GET /game/board-state should return the initial state as it is", async () => {
-    const res = await app.request("/game/board-state");
+  it("GET /game/game-state should return the initial state as it is", async () => {
+    const res = await app.request("/game/game-state");
     const boardState = await res.json();
 
     assertEquals(boardState.success, true);
-    assertEquals(boardState.state, gameState);
   });
 
   it("should fail if the context is wrong", () => {
@@ -133,7 +92,7 @@ describe("Game route", () => {
       json: (data) => data,
     };
 
-    const result = serveBoardState(mockCtx);
+    const result = serveGameState(mockCtx);
 
     assertEquals(result.success, false);
     assertEquals(result.error, "forced failure");
@@ -285,7 +244,7 @@ describe("Validate with bank", () => {
   });
 
   it.ignore("Should fail if the tiles are not validated with bank before sending it", async () => {
-    const res = await app.request("/game/board-state");
+    const res = await app.request("/game/game-state");
     const boardState = await res.json();
 
     assertEquals(boardState, {

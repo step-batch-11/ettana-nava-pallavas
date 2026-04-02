@@ -1,3 +1,5 @@
+import { gameStateController } from "../controllers/game_controllers.js";
+
 export const validateTileWithBank = (boardTiles, bankTiles) => {
   const flatTiles = boardTiles.flat();
 
@@ -10,20 +12,16 @@ export const validateTileWithBank = (boardTiles, bankTiles) => {
   return bankTiles.some(({ value }) => counts[value] !== 2);
 };
 
-export const serveBoardState = (ctx) => {
+export const serveGameState = (ctx) => {
   try {
     const board = ctx.get("boardState");
     const bank = ctx.get("bank");
 
-    const _bankInfo = bank.getBank();
-
-    // if (validateTileWithBank(board.board.tiles, tiles)) {
-    //   return ctx.json({ success: false, error: "Tiles placement is wrong" });
-    // }
+    const gameState = gameStateController(board, bank);
 
     return ctx.json({
       success: true,
-      state: board,
+      state: gameState,
     });
   } catch (e) {
     return ctx.json({ success: false, error: e.message });

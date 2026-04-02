@@ -8,7 +8,6 @@ const main = () => {
   const bank = new Bank(designCards, actionCards);
   const PORT = Deno.env.get("PORT") || 8000;
   const app = createApp(_gameState, bank);
-
   Deno.serve({ port: PORT }, app.fetch);
 };
 

@@ -29,7 +29,6 @@ export default class TurnManager {
 
   findPossibleDestinations(totalSteps) {
     const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
-    console.log(currentPlayer);
 
     const start = currentPlayer.pin.position;
 
