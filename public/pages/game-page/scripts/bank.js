@@ -49,7 +49,7 @@ export const renderBankState = (bank) => {
 
   const tiles = document.querySelectorAll(".tile span");
   tiles.forEach((tile, index) => {
-    tile.textContent = bank.tiles[index].value;
+    tile.textContent = bank.tiles[index];
   });
 
   const yarns = document.querySelectorAll(".yarn");

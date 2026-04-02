@@ -12,14 +12,30 @@ import Game from "../../src/models/game.js";
 import { diceValue, tiles, yarns } from "../../src/data/state.js";
 
 describe("Game route", () => {
-  let app, game;
-
-  const designCards = [{ "id": 1, "victoryPoints": 1 }];
-  const actionCards = [{
+  let app, game, actionCards;
+  const designCards = [{
     "id": 1,
-    "type": "move",
-    "description": "Move the pin to any unoccupied square.",
+    "victoryPoints": 1,
+    "design": [
+      { "coord": { "x": 0, "y": 0 }, "color": 5 },
+      { "coord": { "x": 1, "y": 1 }, "color": 3 },
+      { "coord": { "x": 2, "y": 2 }, "color": 1 },
+      { "coord": { "x": 3, "y": 3 }, "color": 3 },
+      { "coord": { "x": 4, "y": 4 }, "color": 5 },
+    ],
+  }, {
+    "id": 2,
+    "victoryPoints": 1,
+    "design": [
+      { "coord": { "x": 1, "y": 0 }, "color": 5 },
+      { "coord": { "x": 2, "y": 1 }, "color": 5 },
+      { "coord": { "x": 3, "y": 2 }, "color": 5 },
+      { "coord": { "x": 4, "y": 3 }, "color": 5 },
+      { "coord": { "x": 3, "y": 1 }, "color": 1 },
+      { "coord": { "x": 4, "y": 0 }, "color": 1 },
+    ],
   }];
+
   beforeEach(() => {
     game = new Game(
       [
@@ -102,18 +118,12 @@ describe("Game route", () => {
   describe("Buy Action Card", () => {
     it("should give a new action card", async () => {
       const response = await app.request("/game/buy-action-card");
-      const card = await response.json();
+      const responseBody = await response.json();
 
       assertEquals(response.status, 200);
-      assertEquals(card, {
-        card: {
-          description: "Move the pin to any unoccupied square.",
-          id: 1,
-          type: "move",
-        },
-        message: "Action card bought successfully",
-        success: true,
-      });
+
+      assertEquals(responseBody.message, "Action card bought successfully");
+      assertEquals(responseBody.success, true);
     });
 
     it("should fail when context is invalid", () => {

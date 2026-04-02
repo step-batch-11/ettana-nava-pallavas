@@ -4,10 +4,10 @@ export const buyDesignCard = (ctx) => {
     const card = game.buyDesignCard();
 
     if (card === "NOT_ENOUGH_TOKEN") {
-      return {
+      return ctx.json({
         message: "You do not have enough tokens",
         success: false,
-      };
+      });
     }
 
     return ctx.json({
@@ -25,10 +25,10 @@ export const buyActionCard = (ctx) => {
     const card = game.buyActionCard();
 
     if (card === "NOT_ENOUGH_TOKEN") {
-      return {
+      return ctx.json({
         message: "You do not have enough tokens",
         success: false,
-      };
+      });
     }
 
     return ctx.json({

@@ -12,7 +12,7 @@ export const players = [
   {
     name: "Dinesh",
     id: 2,
-    tokens: 90,
+    tokens: 0,
     roomId: null,
     victoryPoint: 0,
     actionCards: [],

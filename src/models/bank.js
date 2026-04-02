@@ -4,19 +4,22 @@ export default class Bank {
   #designCards;
   #actionCards;
   #tokens = 55;
-  #tiles = [{ value: 1, playerId: null }, { value: 6, playerId: null }];
+  #tiles = [1, 6];
   #yarns = [1, 2, 3, 4, 5];
-  #shuffleFn;
-  #actionCardsStore;
   #initialToken;
   #designCardCost;
   #actionCardCost;
+  #randomFn;
 
-  constructor(designCards = [], actionCards = [], shuffleFn = shuffle) {
+  constructor(
+    designCards = [],
+    actionCards = [],
+    shuffleFn = shuffle,
+    randomFn = Math.random,
+  ) {
     this.#designCards = shuffleFn(designCards);
     this.#actionCards = shuffleFn(actionCards);
-    this.#actionCardsStore = structuredClone(actionCards);
-    this.#shuffleFn = shuffleFn;
+    this.#randomFn = randomFn;
     this.#initialToken = 2;
     this.#designCardCost = 3;
     this.#actionCardCost = 2;
@@ -41,16 +44,42 @@ export default class Bank {
     return this.#designCards.shift();
   }
 
-  buyActionCard() {
-    if (this.#actionCards.length === 0) {
-      this.#actionCards.push(this.#shuffleFn(...this.#actionCardsStore));
+  getDesignCard() {
+    if (this.#designCards.length === 0) {
+      throw new Error("No more design cards are remaining");
     }
 
+    return this.#designCards.shift();
+  }
+
+  exchangeDesignCard(card) {
+    if (this.#designCards.length === 0) {
+      throw new Error("No more design cards are remaining");
+    }
+
+    this.#designCards.push(card);
+    return this.#designCards.shift();
+  }
+
+  #randomInRange(min, max) {
+    return Math.round(this.#randomFn() * (max - min) + min);
+  }
+
+  getActionCard() {
+    const index = this.#randomInRange(0, 11);
+    return this.#actionCards[index];
+  }
+
+  buyActionCard() {
     this.#tokens += this.#actionCardCost;
-    return this.#actionCards.shift();
+    return this.getActionCard();
   }
 
   deductTokens(n) {
+    if (this.#tokens < n) {
+      throw new Error("No tokens remainig in the bank");
+    }
+
     this.#tokens -= n;
     return n;
   }
@@ -58,10 +87,6 @@ export default class Bank {
   incrementTokens(n) {
     this.#tokens += n;
     return n;
-  }
-
-  getActionCard() {
-    return this.#actionCards.pop();
   }
 
   distributeInitialAssets(players) {
@@ -72,5 +97,13 @@ export default class Bank {
         player.actionCards.push(this.#actionCards.pop());
       });
     }
+  }
+
+  exchangeYarn(yarn, index) {
+    return this.#yarns.splice(index, 1, yarn)[0];
+  }
+
+  exchangeTile(tile, index) {
+    return this.#tiles.splice(index, 1, tile)[0];
   }
 }
