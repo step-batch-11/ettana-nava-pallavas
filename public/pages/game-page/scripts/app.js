@@ -19,6 +19,8 @@ const handleClaim = async (e) => {
     return;
   }
   await hightLightPattern(status.result.matches);
+  renderGame(status.state);
+  addEventListener();
 };
 
 const addEventListener = () => {

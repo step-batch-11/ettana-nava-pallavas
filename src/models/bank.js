@@ -19,6 +19,14 @@ export default class Bank {
     this.#randomFn = randomFn;
   }
 
+  #randomInRange(min, max) {
+    return Math.round(this.#randomFn() * (max - min) + min);
+  }
+
+  getTokens() {
+    return this.#tokens;
+  }
+
   getBank() {
     return {
       tokens: this.#tokens,
@@ -27,23 +35,6 @@ export default class Bank {
       yarns: this.#yarns,
       tiles: this.#tiles,
     };
-  }
-
-  getDesignCard() {
-    if (this.#designCards.length === 0) {
-      throw new Error("No more design cards are remaining");
-    }
-
-    return this.#designCards.shift();
-  }
-
-  #randomInRange(min, max) {
-    return Math.round(this.#randomFn() * (max - min) + min);
-  }
-
-  getActionCard() {
-    const index = this.#randomInRange(0, 11);
-    return this.#actionCards[index];
   }
 
   deductTokens(n) {
@@ -58,5 +49,18 @@ export default class Bank {
   incrementTokens(n) {
     this.#tokens += n;
     return n;
+  }
+
+  getActionCard() {
+    const index = this.#randomInRange(0, this.#actionCards.length - 1);
+    return this.#actionCards[index];
+  }
+
+  getDesignCard() {
+    if (this.#designCards.length === 0) {
+      throw new Error("No more design cards are remaining");
+    }
+
+    return this.#designCards.shift();
   }
 }

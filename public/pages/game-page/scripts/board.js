@@ -205,7 +205,7 @@ const createPlayerCard = (player) => {
   const element = clone.querySelector(".player-card");
   clone.querySelector(".player-name").textContent = player.name;
   clone.querySelector(".avatar").src = "/assets/user_pin.png";
-  clone.querySelector(".stat1").textContent = player.victoryPoint;
+  clone.querySelector(".stat1").textContent = player.vp;
   clone.querySelector(".stat2").textContent = player.tokens;
 
   return { clone, element };

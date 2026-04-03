@@ -11,7 +11,7 @@ import Bank from "../../src/models/bank.js";
 import Player from "../../src/models/player.js";
 import Board from "../../src/models/board.js";
 import Game from "../../src/models/game.js";
-import TurnManager from "../../src/models/turn_manager.js";
+// import TurnManager from "../../src/models/turn_manager.js";
 
 describe.ignore("move request: ", () => {
   let app;

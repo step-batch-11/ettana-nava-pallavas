@@ -12,6 +12,14 @@ export const serveGameState = (ctx) => {
   }
 };
 
+export const handleDiceRoll = (ctx) => {
+  const game = ctx.get("gamestate");
+  const {diceValue, paths} = game.upkeep();
+
+  const gameState = game.getGameState();
+  
+  return ctx.json({ gameState, paths, diceValue });
+};
 export const buyDesignCard = (ctx) => {
   try {
     const game = ctx.get("gameState");
@@ -88,9 +96,11 @@ export const claimDesign = (ctx) => {
   const game = ctx.get("gameState");
   const designCardId = ctx.req.param("id");
   const result = game.claimDesign(designCardId);
+  const gameState = game.getGameState();
 
   return ctx.json({
     success: true,
     result,
+    state: gameState,
   });
 };
