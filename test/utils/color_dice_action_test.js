@@ -6,8 +6,8 @@ import {
   createLedger,
   distributeTokens,
   extractPlayersPositions,
-  mapAdjacentYarns,
   isInBoundary,
+  mapAdjacentYarns,
 } from "../../src/utils/color_dice_action.js";
 import Player from "../../src/models/player.js";
 

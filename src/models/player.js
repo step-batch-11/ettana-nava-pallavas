@@ -17,10 +17,10 @@ export default class Player {
 
   incrementVp() {
     this.#vp++;
-  } 
+  }
 
   getVp() {
-    return this.#vp
+    return this.#vp;
   }
 
   creditTokens(tokens) {
@@ -44,29 +44,27 @@ export default class Player {
   }
 
   getAc() {
-    return structuredClone(this.#ac)
+    return structuredClone(this.#ac);
   }
 
   getDc() {
-    return structuredClone(this.#dc)
+    return structuredClone(this.#dc);
   }
 
   #findCardIndex(container, target) {
-    return container.findIndex((card) =>
-      card.id === target.id
-    );
+    return container.findIndex((card) => card.id === target.id);
   }
 
   removeActionCard(card) {
-    if (!this.#ac.length) return
-    
+    if (!this.#ac.length) return;
+
     const cardIndex = this.#findCardIndex(this.#ac, card);
     this.#ac.splice(cardIndex, 1);
   }
 
   removeDesignCard(card) {
-    if (!this.#dc.length) return
-    
+    if (!this.#dc.length) return;
+
     const cardIndex = this.#findCardIndex(this.#dc, card);
     this.#dc.splice(cardIndex, 1);
   }
@@ -79,7 +77,7 @@ export default class Player {
       dc: this.#dc.length,
       ac: this.#ac.length,
       pinColor: this.#pinColor,
-      position: this.#position
+      position: this.#position,
     };
   }
 
@@ -88,15 +86,15 @@ export default class Player {
   }
 
   #setPosition(destination) {
-    this.#position = destination
+    this.#position = destination;
   }
 
   setup(pinColor, position) {
-    this.#pinColor = pinColor
-    this.#setPosition(position)
+    this.#pinColor = pinColor;
+    this.#setPosition(position);
   }
 
   move(destination) {
-    this.#setPosition(destination)
+    this.#setPosition(destination);
   }
 }
