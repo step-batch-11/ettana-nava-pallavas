@@ -185,7 +185,6 @@ const handleDragEnd = () => {
     console.log("action");
   } else {
     console.log("design");
-    
   }
 
   placeholder.remove();
