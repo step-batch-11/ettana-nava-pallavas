@@ -145,7 +145,7 @@ export const handleSwap = async (ctx) => {
   }
 };
 
-export const handleSwapPurchase = (ctx) => {
+export const handlePaidSwap = (ctx) => {
   const gameState = ctx.get("gameState");
 
   try {
@@ -153,7 +153,7 @@ export const handleSwapPurchase = (ctx) => {
 
     return ctx.json({
       success: true,
-      message: "Swap yarn",
+      message: "Yarns swapped successfully",
     }, 200);
   } catch (e) {
     return ctx.json(
