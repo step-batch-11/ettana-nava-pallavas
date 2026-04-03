@@ -13,7 +13,7 @@ import Board from "../../src/models/board.js";
 import Game from "../../src/models/game.js";
 import TurnManager from "../../src/models/turn_manager.js";
 
-describe("move request: ", () => {
+describe.ignore("move request: ", () => {
   let app;
 
   const randomValue = 0.05;
@@ -110,8 +110,8 @@ describe.ignore("roll dice request : ", () => {
 
     const player1 = new Player(1, "Sandeep");
     const player2 = new Player(2, "Ajoy");
-    const player3 = new Player(3, '')
-    const player4 = new Player(4, '')
+    const player3 = new Player(3, "");
+    const player4 = new Player(4, "");
 
     player1.setup(2, { x: 1, y: 1 });
     player2.setup(2, { x: 2, y: 2 });

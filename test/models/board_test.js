@@ -26,11 +26,15 @@ describe("matchPattern", () => {
     ];
     const { yarns } = board.getState();
 
-    assertEquals(board.matchPattern(yarns, pattern), [
+    const result = [
       { x: 0, y: 1 },
       { x: 0, y: 2 },
       { x: 0, y: 3 },
-    ]);
+    ];
+    const matchingStatus = board.matchPattern(yarns, pattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("should match pattern after translation", () => {
@@ -40,12 +44,16 @@ describe("matchPattern", () => {
       { coord: { x: 2, y: 2 }, color: 1 },
     ];
     const { yarns } = board.getState();
-
-    assertEquals(board.matchPattern(yarns, shiftedPattern), [
+    const result = [
       { x: 1, y: 0 },
       { x: 1, y: 1 },
       { x: 1, y: 2 },
-    ]);
+    ];
+
+    const matchingStatus = board.matchPattern(yarns, shiftedPattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("should allow different pattern colors to map to different yarns", () => {
@@ -56,11 +64,16 @@ describe("matchPattern", () => {
     ];
     const { yarns } = board.getState();
 
-    assertEquals(board.matchPattern(yarns, multiColorPattern), [
+    const result = [
       { x: 3, y: 2 },
       { x: 3, y: 3 },
       { x: 3, y: 4 },
-    ]);
+    ];
+
+    const matchingStatus = board.matchPattern(yarns, multiColorPattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("should match single-point pattern", () => {
@@ -68,11 +81,11 @@ describe("matchPattern", () => {
       { coord: { x: 0, y: 0 }, color: 1 },
     ];
     const { yarns } = board.getState();
+    const result = [{ x: 0, y: 0 }];
+    const matchingStatus = board.matchPattern(yarns, singlePointPattern);
 
-    assertEquals(board.matchPattern(yarns, singlePointPattern), [{
-      x: 0,
-      y: 0,
-    }]);
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("should fail when pattern goes out of bounds after translation", () => {
@@ -85,8 +98,9 @@ describe("matchPattern", () => {
       { coord: { x: 0, y: 5 }, color: 1 },
     ];
     const { yarns } = board.getState();
+    const matchingStatus = board.matchPattern(yarns, largePattern);
 
-    assertEquals(board.matchPattern(yarns, largePattern), null);
+    assertEquals(matchingStatus.isMatched, false);
   });
 
   it("should match vertical pattern after rotation", () => {
@@ -97,11 +111,15 @@ describe("matchPattern", () => {
     ];
     const { yarns } = board.getState();
 
-    assertEquals(board.matchPattern(yarns, verticalPattern), [
+    const result = [
       { x: 0, y: 1 },
       { x: 0, y: 2 },
       { x: 0, y: 3 },
-    ]);
+    ];
+    const matchingStatus = board.matchPattern(yarns, verticalPattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("should match a pattern that present before the actual design coordinate", () => {
@@ -113,12 +131,16 @@ describe("matchPattern", () => {
     ];
     const { yarns } = board.getState();
 
-    assertEquals(board.matchPattern(yarns, pattern), [
+    const result = [
       { x: 0, y: 1 },
       { x: 0, y: 2 },
       { x: 0, y: 3 },
       { x: 0, y: 4 },
-    ]);
+    ];
+    const matchingStatus = board.matchPattern(yarns, pattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("complex pattern matches after translation", () => {
@@ -144,7 +166,7 @@ describe("matchPattern", () => {
       { coord: { x: 4, y: 4 }, color: 4 },
     ];
 
-    assertEquals(board.matchPattern(boardState.yarns, pattern), [
+    const result = [
       { x: 1, y: 0 },
       { x: 1, y: 3 },
       { x: 2, y: 1 },
@@ -153,7 +175,11 @@ describe("matchPattern", () => {
       { x: 3, y: 2 },
       { x: 4, y: 0 },
       { x: 4, y: 3 },
-    ]);
+    ];
+    const matchingStatus = board.matchPattern(boardState.yarns, pattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 
   it("complex pattern matches after rotation", () => {
@@ -178,7 +204,7 @@ describe("matchPattern", () => {
     const board = new Board([], yarns);
     const boardState = board.getState();
 
-    assertEquals(board.matchPattern(boardState.yarns, pattern), [
+    const result = [
       { x: 0, y: 3 },
       { x: 1, y: 3 },
       { x: 2, y: 1 },
@@ -186,6 +212,10 @@ describe("matchPattern", () => {
       { x: 2, y: 3 },
       { x: 3, y: 3 },
       { x: 4, y: 3 },
-    ]);
+    ];
+    const matchingStatus = board.matchPattern(boardState.yarns, pattern);
+
+    assertEquals(matchingStatus.isMatched, true);
+    assertEquals(matchingStatus.matches, result);
   });
 });

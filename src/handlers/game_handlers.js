@@ -14,7 +14,7 @@ export const serveGameState = (ctx) => {
 
 export const claimDesign = (ctx) => {
   const game = ctx.get("gameState");
-  const designCardId = ctx.req.params("id");
+  const designCardId = ctx.req.param("id");
   const result = game.claimDesign(designCardId);
 
   return ctx.json({

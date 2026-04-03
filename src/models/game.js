@@ -39,12 +39,14 @@ export default class Game {
   }
 
   claimDesign(designCardId) {
-    const design = this.#players[this.#currentPlayerIndex].find(({ id }) =>
-      id === designCardId
-    );
+    const designCard = this.#players[this.#currentPlayerIndex]
+      .designCards.find((
+        { id },
+      ) => id === Number(designCardId));
+
     const { yarns } = this.#board.getState();
 
-    return this.#board.matchDesign(yarns, design);
+    return this.#board.matchPattern(yarns, designCard.design);
   }
 
   getGameState() {

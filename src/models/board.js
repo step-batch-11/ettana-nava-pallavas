@@ -21,10 +21,10 @@ export default class Board {
     let grid = generatePatternGrid(pattern);
     for (let count = 0; count < 4; count++) {
       const matches = doesPatternMatch(yarns, grid);
-      if (matches) return matches;
+      if (matches) return { isMatched: true, matches };
       grid = rotate(grid);
     }
 
-    return null;
+    return { isMatched: false };
   }
 }
