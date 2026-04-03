@@ -9,18 +9,22 @@ export default class Player {
   constructor(id, name) {
     this.id = id;
     this.name = name;
+
     this.#vp = 0;
     this.#tokens = 0;
+
     this.#dc = [];
     this.#ac = [];
+
+    this.#position = {};
   }
 
   incrementVp() {
     this.#vp++;
-  } 
+  }
 
   getVp() {
-    return this.#vp
+    return this.#vp;
   }
 
   creditTokens(tokens) {
@@ -28,6 +32,8 @@ export default class Player {
   }
 
   debitTokens(tokens) {
+    if (this.#tokens - tokens < 0) return;
+
     this.#tokens -= tokens;
   }
 
@@ -44,29 +50,27 @@ export default class Player {
   }
 
   getAc() {
-    return structuredClone(this.#ac)
+    return structuredClone(this.#ac);
   }
 
   getDc() {
-    return structuredClone(this.#dc)
+    return structuredClone(this.#dc);
   }
 
   #findCardIndex(container, target) {
-    return container.findIndex((card) =>
-      card.id === target.id
-    );
+    return container.findIndex((card) => card.id === target.id);
   }
 
   removeActionCard(card) {
-    if (!this.#ac.length) return
-    
+    if (!this.#ac.length) return;
+
     const cardIndex = this.#findCardIndex(this.#ac, card);
     this.#ac.splice(cardIndex, 1);
   }
 
   removeDesignCard(card) {
-    if (!this.#dc.length) return
-    
+    if (!this.#dc.length) return;
+
     const cardIndex = this.#findCardIndex(this.#dc, card);
     this.#dc.splice(cardIndex, 1);
   }
@@ -79,24 +83,25 @@ export default class Player {
       dc: this.#dc.length,
       ac: this.#ac.length,
       pinColor: this.#pinColor,
-      position: this.#position
+      position: this.#position,
     };
   }
 
   getPosition() {
-    return { ...this.#position };
+    return structuredClone(this.#position);
   }
 
-  #setPosition(destination) {
-    this.#position = destination
+  #setPosition(x, y) {
+    this.#position.x = x;
+    this.#position.y = y;
   }
 
-  setup(pinColor, position) {
-    this.#pinColor = pinColor
-    this.#setPosition(position)
+  setup(pinColor, { x, y }) {
+    this.#pinColor = pinColor;
+    this.#setPosition(x, y);
   }
 
-  move(destination) {
-    this.#setPosition(destination)
+  move({ x, y }) {
+    this.#setPosition(x, y);
   }
 }

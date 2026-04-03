@@ -1,3 +1,5 @@
+import { areYarnsSwappable } from "../utils/yarns.js";
+
 export default class Game {
   #players;
   #bank;
@@ -42,7 +44,7 @@ export default class Game {
     return {
       players: this.#players,
       bank: this.#bank,
-      board: this.#board.getState(),
+      board: this.#board,
       diceValue: this.#diceValue,
       currentPlayerId: this.#players[this.#currentPlayerIndex].id,
     };
@@ -50,5 +52,61 @@ export default class Game {
 
   getCurrentPlayerId() {
     return this.#players[this.#currentPlayerIndex].id;
+  }
+
+  #getPlayerById(id) {
+    return this.#players.find((player) => player.id === id);
+  }
+
+  #getCurrentPlayer() {
+    return this.#players[this.#currentPlayerIndex];
+  }
+
+  #processPathPenalty(payer, payees) {
+    return payees.map((payeeId) => {
+      const payee = this.#getPlayerById(payeeId);
+      payee.creditTokens(1);
+      payer.debitTokens(1);
+      return { payeeId, tokens: payee.tokens };
+    });
+  }
+
+  #isValidDestination({ x, y }) {
+    const destinations = this.#board.destinations;
+
+    return destinations.some(
+      ({ destination }) => destination.x === x && destination.y === y,
+    );
+  }
+
+  move(route) {
+    const currentPlayer = this.#getCurrentPlayer();
+    const currentPosition = currentPlayer.getPosition();
+    const destination = route.destination;
+
+    let payees;
+    if (this.#isValidDestination(destination)) {
+      if (route.type === "premium") {
+        payees = this.#processPathPenalty(currentPlayer, route.recipients);
+      }
+
+      currentPlayer.move(destination);
+      return { source: currentPosition, destination, payees };
+    }
+
+    return { source: currentPosition, destination: currentPosition };
+  }
+
+  freeSwap(source, destination) {
+    const currentPosition = (this.#getCurrentPlayer()).getPosition();
+    const currPlayerAdjYarns = this.#board.getAdjYarnsPositions(
+      currentPosition,
+    );
+
+    if (!areYarnsSwappable(source, destination, currPlayerAdjYarns)) {
+      throw new Error("You can't swap these yarns");
+    }
+
+    this.#board.swapYarns(source, destination);
   }
 }
