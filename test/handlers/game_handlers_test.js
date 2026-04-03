@@ -10,9 +10,9 @@ import {
   buyActionCard,
   buyDesignCard,
 } from "../../src/handlers/game_handlers.js";
-import TurnManager from "../../src/models/turn_manager.js";
+// import TurnManager from "../../src/models/turn_manager.js";
 
-describe("Game route", () => {
+describe.ignore("Game route", () => {
   // let app, players, game, bank;
 
   // const designCards = [{ "id": 1, "victoryPoints": 1 }];

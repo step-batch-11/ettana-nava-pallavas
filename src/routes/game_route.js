@@ -1,19 +1,17 @@
 import { Hono } from "hono";
-import {
-  handleDiceRoll,
-  handleMove,
-  handleSwap,
-} from "../handlers/turn_handler.js";
+import { handleMove, handleSwap } from "../handlers/turn_handler.js";
 import {
   buyActionCard,
   buyDesignCard,
-  playActionCard,
   claimDesign,
+  handleDiceRoll,
+  playActionCard,
   serveGameState,
 } from "../handlers/game_handlers.js";
-// import { claimDesign, serveGameState } from "../handlers/game_handlers.js";
 
 const gameRoute = new Hono();
+
+gameRoute.get("/roll-dice", handleDiceRoll);
 
 gameRoute.get("/game-state", serveGameState);
 gameRoute.get("/buy-design-card", buyDesignCard);

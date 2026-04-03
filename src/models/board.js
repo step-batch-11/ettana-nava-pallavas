@@ -23,16 +23,16 @@ export default class Board {
     const start = currentPlayer.getPosition();
 
     const playerData = players.map((player) => player.getPlayerData());
-
-    const routes = findRoutes(
-      start,
-      totalSteps,
-      this.#tiles,
-      playerData,
-    );
+    const routes = findRoutes(start, totalSteps, this.#tiles, playerData);
 
     this.destinations = routes;
     return this.destinations;
+  }
+
+
+
+  getTiles() {
+    return structuredClone(this.#tiles);
   }
 
   getState() {
