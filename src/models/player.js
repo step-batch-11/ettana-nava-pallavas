@@ -13,8 +13,11 @@ export default class Player {
     this.#name = name;
     this.#vp = 0;
     this.#tokens = 0;
+
     this.#dc = [];
     this.#ac = [];
+
+    this.#position = {};
   }
 
   incrementVp() {
@@ -30,6 +33,8 @@ export default class Player {
   }
 
   debitTokens(tokens) {
+    if (this.#tokens - tokens < 0) return;
+
     this.#tokens -= tokens;
   }
 
@@ -84,20 +89,7 @@ export default class Player {
   }
 
   getPosition() {
-    return { ...this.#position };
-  }
-
-  #setPosition(destination) {
-    this.#position = destination;
-  }
-
-  setup(pinColor, position) {
-    this.#pinColor = pinColor;
-    this.#setPosition(position);
-  }
-
-  move(destination) {
-    this.#setPosition(destination);
+    return structuredClone(this.#position);
   }
 
   getId() {
@@ -105,11 +97,24 @@ export default class Player {
   }
 
   getActionCard(id) {
-    const card =  this.#ac.find((card) => card.id === Number(id));
+    const card = this.#ac.find((card) => card.id === Number(id));
     if (!card) {
       throw new Error("Action card is missing");
     }
-
     return card;
+  }
+
+  #setPosition(x, y) {
+    this.#position.x = x;
+    this.#position.y = y;
+  }
+
+  setup(pinColor, { x, y }) {
+    this.#pinColor = pinColor;
+    this.#setPosition(x, y);
+  }
+
+  move({ x, y }) {
+    this.#setPosition(x, y);
   }
 }

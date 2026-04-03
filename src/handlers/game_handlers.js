@@ -83,3 +83,14 @@ export const playActionCard = async (context) => {
     return context.json({ success: false, message: err.message }, 400);
   }
 };
+
+export const claimDesign = (ctx) => {
+  const game = ctx.get("gameState");
+  const designCardId = ctx.req.param("id");
+  const result = game.claimDesign(designCardId);
+
+  return ctx.json({
+    success: true,
+    result,
+  });
+};
