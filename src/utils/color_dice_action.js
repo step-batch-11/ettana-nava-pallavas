@@ -3,8 +3,8 @@ export const isInBoundary = (x, y, rows, columns) =>
 
 export const extractPlayersPositions = (players) => {
   const pinsPositions = {};
-  players.forEach(({ id, pin }) => {
-    pinsPositions[id] = [pin.position.x, pin.position.y];
+  players.forEach((player) => {
+    pinsPositions[player.id] = Object.values(player.getPosition());
   });
   return pinsPositions;
 };
@@ -48,6 +48,6 @@ export const computeExpense = (distributionConfig) =>
 export const distributeTokens = (distributionConfig, players) => {
   Object.keys(distributionConfig).forEach((playerId) => {
     const player = players.find((player) => player.id === Number(playerId));
-    player.tokens += distributionConfig[playerId];
+    player.creditTokens(distributionConfig[playerId]);
   });
 };

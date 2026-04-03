@@ -13,7 +13,7 @@ export default class TurnManager {
   destinations;
 
   constructor(game, randomFn = Math.random) {
-    this.#game = game;
+    this.#game = game.getGameState();
     this.#randomFn = randomFn;
   }
 
@@ -28,11 +28,20 @@ export default class TurnManager {
   }
 
   findPossibleDestinations(totalSteps) {
-    const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
+    // console.log("in ----> ", this.#game);
+    const currentPlayer = this.#getPlayerById(this.#game.currentPlayerId);
+    // console.log("cp --> ", currentPlayer);
+    const start = currentPlayer.getPosition();
 
-    const start = currentPlayer.pin.position;
+    const playerData = this.#game.players.map((x) => x.getPlayerData());
 
-    const routes = findRoutes(start, totalSteps, this.#game.board.tiles);
+    // console.log("players data ---> ", playerData);
+    const routes = findRoutes(
+      start,
+      totalSteps,
+      this.#game.board.tiles,
+      playerData,
+    );
 
     this.destinations = routes;
     return this.destinations;
@@ -49,8 +58,8 @@ export default class TurnManager {
   #processPathPenalty(payer, payees) {
     return payees.map((payeeId) => {
       const payee = this.#getPlayerById(payeeId);
-      payee.tokens++;
-      payer.tokens--;
+      payee.creditTokens(1);
+      payer.debitTokens(1);
       return { payeeId, tokens: payee.tokens };
     });
   }
@@ -61,35 +70,22 @@ export default class TurnManager {
     );
   }
 
-  #displacePin(currentPlayer, destination, currentPosition) {
-    const destinationTile = this.#getTile(destination);
-    const prePositionTile = this.#getTile(currentPosition);
-
-    destinationTile.playerId = currentPlayer.id;
-    prePositionTile.playerId = null;
-  }
-
   move(route) {
-    const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
-
-    const currentPosition = currentPlayer.pin.position;
+    const currentPlayer = this.#getPlayerById(this.#game.currentPlayerId);
+    const currentPosition = currentPlayer.getPosition();
     const destination = route.destination;
+
     let payees;
     if (this.#isValidDestination(destination)) {
       if (route.type === "premium") {
         payees = this.#processPathPenalty(currentPlayer, route.recipients);
       }
-      currentPlayer.pin.position = destination;
-      this.#displacePin(currentPlayer, destination, currentPosition);
+      currentPlayer.move(destination);
 
       return { source: currentPosition, destination, payees };
     }
 
     return { source: currentPosition, destination: currentPosition };
-  }
-
-  #getYarnColor({ x, y }) {
-    return this.#game.board.yarns[x][y];
   }
 
   #isValidYarn({ x, y }, yarns) {
@@ -112,13 +108,17 @@ export default class TurnManager {
     );
   }
 
+  #getYarnColor({ x, y }) {
+    return this.#game.board.yarns[x][y];
+  }
+
   #areSamePositions({ x: x1, y: y1 }, { x: x2, y: y2 }) {
     return x1 === x2 && y1 === y2;
   }
 
   #getPlayerPosition(playerId) {
     const player = this.#game.players.find((player) => player.id === playerId);
-    return player.pin.position;
+    return player.getPosition();
   }
 
   #swapYarns(source, destination) {
@@ -143,7 +143,7 @@ export default class TurnManager {
   }
 
   freeSwap(source, destination) {
-    const currentPosition = this.#getPlayerPosition(this.#game.currentPlayer);
+    const currentPosition = this.#getPlayerPosition(this.#game.currentPlayerId);
     const currPlayerAdjYarns = this.getAdjYarnsPositions(currentPosition);
 
     if (this.#areYarnsSwappable(source, destination, currPlayerAdjYarns)) {
@@ -160,9 +160,9 @@ export default class TurnManager {
       if (bankData.availableActionCards <= 0) {
         return;
       }
-      const currentPlayer = this.#getPlayerById(this.#game.currentPlayer);
+      const currentPlayer = this.#getPlayerById(this.#game.currentPlayerId);
       const actionCard = bank.getActionCard();
-      currentPlayer.actionCards.push(actionCard);
+      currentPlayer.addActionCard(actionCard);
       return;
     }
 
