@@ -1,4 +1,3 @@
-import { add } from "../utils/arithmetic.js";
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
@@ -26,7 +25,7 @@ export default class Game {
     }
 
     const ledger = createLedger(colorId, this.#players, this.#board.getYarns());
-    const credit = Object.keys(ledger).reduce(add);
+    const credit = Object.keys(ledger).reduce((x, y) => x + y);
     if (this.#bank.getTokens() < credit) return;
 
     this.#players.forEach((player) => {
