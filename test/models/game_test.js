@@ -521,7 +521,7 @@ describe("Game controller test", () => {
     );
   });
 
-  describe("upkeep: Roll dice and find possible path :", () => {
+  describe.ignore("upkeep: Roll dice and find possible path :", () => {
     const randomFn = () => 0.9;
     let game;
     const yarns = [

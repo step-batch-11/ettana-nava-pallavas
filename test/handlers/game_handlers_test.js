@@ -13,18 +13,6 @@ import {
 } from "../../src/handlers/game_handlers.js";
 
 describe("Game route", () => {
-  // let app, players, game, bank;
-
-  // const designCards = [{ "id": 1, "victoryPoints": 1 }];
-  // const actionCards = [{
-  //   "id": 1,
-  //   "type": "move",
-  //   "description": "Move the pin to any unoccupied square.",
-  // }, {
-  //   "id": 4,
-  //   "type": "get tokens",
-  //   "description": "Get 3 tokens from the reserve.",
-  // }];
 
   let app,
     players,
@@ -191,7 +179,7 @@ describe("Game route", () => {
     );
   });
 
-  describe.ignore("move request: ", () => {
+  describe("move request: ", () => {
     let app;
 
     const randomValue = 0.05;
@@ -224,12 +212,15 @@ describe("Game route", () => {
       ];
 
       const board = new Board(tiles, yarns);
-      const diceValue = {
-        colorId: 1,
-        number: 2,
-      };
+      const diceValue = { colorId: 1, number: 2 };
 
-      const gameState = new Game(players, bank, board, diceValue);
+      const gameState = new Game(
+        players,
+        bank,
+        board,
+        diceValue,
+        () => randomValue,
+      );
       app = createApp(gameState);
     });
 

@@ -10,12 +10,13 @@ export default class Game {
   #diceValue;
   #currentPlayerIndex;
 
-  constructor(players, bank, board, diceValue) {
+  constructor(players, bank, board, diceValue, randomFn = Math.random) {
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = 0;
+    this.randomFn = randomFn;
   }
 
   distributeAssets({ colorId }, currentPlayer) {
@@ -36,9 +37,9 @@ export default class Game {
     return;
   }
 
-  rollDice(randomFn = Math.random) {
-    const colorId = Math.floor(randomFn() * 6) + 1;
-    const number = Math.floor(randomFn() * 6) + 1;
+  rollDice() {
+    const colorId = Math.floor(this.randomFn() * 6) + 1;
+    const number = Math.floor(this.randomFn() * 6) + 1;
 
     return { number, colorId };
   }
@@ -48,8 +49,8 @@ export default class Game {
     const diceValue = this.rollDice();
 
     this.destinations = this.#board.findPossiblePaths(
-      this.#players,
       currentPlayer,
+      this.#players,
       diceValue.number,
     );
 
@@ -128,6 +129,10 @@ export default class Game {
 
   #getOpponents() {
     return this.#players.toSpliced(this.#currentPlayerIndex, 1);
+  }
+
+  getBoard() {
+    return this.#board;
   }
 
   #findActionCard(currentPlayer, id) {

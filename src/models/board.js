@@ -19,7 +19,7 @@ export default class Board {
     return structuredClone(this.#yarns);
   }
 
-  findPossibleDestinations(currentPlayer, players, totalSteps) {
+  findPossiblePaths(currentPlayer, players, totalSteps) {
     const start = currentPlayer.getPosition();
 
     const playerData = players.map((player) => player.getPlayerData());

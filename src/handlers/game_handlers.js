@@ -13,11 +13,11 @@ export const serveGameState = (ctx) => {
 };
 
 export const handleDiceRoll = (ctx) => {
-  const game = ctx.get("gamestate");
-  const {diceValue, paths} = game.upkeep();
+  const game = ctx.get("gameState");
+  const { diceValue, paths } = game.upkeep();
 
   const gameState = game.getGameState();
-  
+
   return ctx.json({ gameState, paths, diceValue });
 };
 
@@ -108,7 +108,7 @@ export const claimDesign = (ctx) => {
 
 export const handleMove = async (ctx) => {
   const gameState = ctx.get("gameState");
-  const { board } = gameState.getGameState();
+  const board = gameState.getBoard();
 
   const destination = await ctx.req.json();
   const moveResult = gameState.move(destination);
