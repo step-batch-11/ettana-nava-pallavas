@@ -1,20 +1,14 @@
 export const buyDesignCard = (ctx) => {
   try {
     const game = ctx.get("gameState");
-    const currentPlayer = game.players.find((player) =>
-      player.id === game.currentPlayer
-    );
+    const card = game.buyDesignCard();
 
-    if (currentPlayer.tokens < 3) {
+    if (card === "NOT_ENOUGH_TOKEN") {
       return ctx.json({
-        success: false,
         message: "You do not have enough tokens",
+        success: false,
       });
     }
-
-    currentPlayer.tokens -= 3;
-    const card = game.bank.buyDesignCard();
-    currentPlayer.designCards.push(card);
 
     return ctx.json({
       success: true,
@@ -28,20 +22,14 @@ export const buyDesignCard = (ctx) => {
 export const buyActionCard = (ctx) => {
   try {
     const game = ctx.get("gameState");
-    const currentPlayer = game.players.find((player) =>
-      player.id === game.currentPlayer
-    );
+    const card = game.buyActionCard();
 
-    if (currentPlayer.tokens < 2) {
+    if (card === "NOT_ENOUGH_TOKEN") {
       return ctx.json({
-        success: false,
         message: "You do not have enough tokens",
+        success: false,
       });
     }
-    currentPlayer.tokens -= 2;
-
-    const card = game.bank.buyActionCard();
-    currentPlayer.actionCards.push(card);
 
     return ctx.json({
       success: true,

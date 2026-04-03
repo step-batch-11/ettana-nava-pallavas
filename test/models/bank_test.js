@@ -24,28 +24,28 @@ describe("bank", () => {
   });
 
   describe("Get bank", () => {
-    it("should return bank data in a rich object when passing shuffle function", () => {
+    it("when get bank function is called, then should return the current bank state", () => {
       const bank = new Bank(designCards, actionCards, shuffle);
       const result = {
         tokens: 55,
         availableDesignCards: 2,
         availableActionCards: 2,
         yarns: [1, 2, 3, 4, 5],
-        tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+        tiles: [1, 6],
       };
 
       assertEquals(bank.getBank(), result);
     });
 
     it(
-      "length of cards should be zero when design and action cards are undefined",
+      "when nothing is passed in place of action and design, then should show available design and action cards as 0",
       () => {
         const result = {
           tokens: 55,
           availableDesignCards: 0,
           availableActionCards: 0,
           yarns: [1, 2, 3, 4, 5],
-          tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+          tiles: [1, 6],
         };
         const bank = new Bank(undefined, undefined, shuffle);
         assertEquals(bank.getBank(), result);
@@ -53,7 +53,7 @@ describe("bank", () => {
     );
 
     it(
-      "should update bank state after initial token and card distribution",
+      "when game starts, then should update bank state after initial token and card distribution",
       () => {
         const players = [
           {
@@ -63,7 +63,7 @@ describe("bank", () => {
             victoryPoint: 0,
             actionCards: [],
             designCards: [],
-            pin: { color: 2, pos: { x: 2, y: 1 } },
+            pin: { color: 2, position: { x: 2, y: 1 } },
           },
           {
             name: "B",
@@ -72,7 +72,7 @@ describe("bank", () => {
             victoryPoint: 0,
             actionCards: [],
             designCards: [],
-            pin: { color: 3, pos: { x: 4, y: 1 } },
+            pin: { color: 3, position: { x: 4, y: 1 } },
           },
         ];
 
@@ -81,7 +81,7 @@ describe("bank", () => {
           availableDesignCards: 0,
           availableActionCards: 0,
           yarns: [1, 2, 3, 4, 5],
-          tiles: [{ value: 1, playerId: null }, { value: 6, playerId: null }],
+          tiles: [1, 6],
         };
 
         const bank = new Bank(designCards, actionCards, shuffle);
@@ -92,45 +92,49 @@ describe("bank", () => {
     );
   });
 
-  describe("Buy Design Card", () => {
-    it("shuld return new design card", () => {
-      const bank = new Bank(designCards, actionCards, (x) => x);
+  describe("Get Design Card", () => {
+    it("when get design card is called, then should return a design card and remove the card from the top of deck", () => {
+      const bank = new Bank(designCards, actionCards, shuffle);
       const result = { "id": 1, "victoryPoints": 1 };
 
-      assertEquals(bank.buyDesignCard(), result);
+      assertEquals(bank.getDesignCard(), result);
+      assertEquals(designCards.length, 1);
     });
 
-    it("shuld throw error as design card are empty", () => {
-      const bank = new Bank([], actionCards);
+    it("when no design cards remaining in the bank, then should throw error", () => {
+      const bank = new Bank([], actionCards, shuffle);
 
-      assertThrows(() => bank.buyDesignCard());
+      assertThrows(() => bank.getDesignCard());
     });
   });
 
-  describe("Buy Action Card", () => {
-    it("shuld return new action card", () => {
-      const bank = new Bank(designCards, actionCards, shuffle);
-      const result = {
-        "id": 1,
-        "type": "move",
-        "description": "Move the pin to any unoccupied square.",
-      };
+  describe("Get Action Card", () => {
+    it("when get action card is called, then should return a random action card from the deck and should not remove the card from the deck", () => {
+      const bank = new Bank(designCards, actionCards, shuffle, () => 0);
 
-      assertEquals(bank.buyActionCard(), result);
+      assertEquals(bank.getActionCard(), actionCards[0]);
+      assertEquals(actionCards.length, 2);
+    });
+  });
+
+  describe("Deduct Tokens", () => {
+    it("when token count is provided, then should deduct from the bank", () => {
+      const bank = new Bank(designCards, actionCards);
+      bank.deductTokens(2);
+      assertEquals(53, bank.getBank().tokens);
     });
 
-    it("should give new action card after re-shuffle when deck is empty", () => {
-      const bank = new Bank(designCards, actionCards, shuffle);
-      bank.buyActionCard();
-      bank.buyActionCard();
+    it("when there is no tokens in the bank, then should not deduct anything", () => {
+      const bank = new Bank(designCards, actionCards);
+      assertThrows(() => bank.deductTokens(56));
+    });
+  });
 
-      const result = {
-        "id": 1,
-        "type": "move",
-        "description": "Move the pin to any unoccupied square.",
-      };
-
-      assertEquals(bank.buyActionCard(), result);
+  describe("Increment Tokens", () => {
+    it("when token count is provided, then should increment from the bank", () => {
+      const bank = new Bank(designCards, actionCards);
+      bank.incrementTokens(2);
+      assertEquals(57, bank.getBank().tokens);
     });
   });
 });
