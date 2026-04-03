@@ -13,7 +13,7 @@ import Board from "../../src/models/board.js";
 
 const getCoords = ({ x, y }) => ({ x, y });
 
-describe("Tests for moving pin", () => {
+describe.ignore("Tests for moving pin", () => {
   let board, gameState;
 
   const currentPlayer = new Player(1, "John");

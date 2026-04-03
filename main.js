@@ -5,7 +5,6 @@ import Game from "./src/models/game.js";
 import Board from "./src/models/board.js";
 import { createApp } from "./src/app.js";
 import { diceValue, tiles, yarns } from "./src/data/state.js";
-import TurnManager from "./src/models/turn_manager.js";
 import Player from "./src/models/player.js";
 
 const main = () => {
@@ -29,10 +28,9 @@ const main = () => {
     diceValue,
   );
   game.distributeInitialAssets();
-  const turnManager = new TurnManager(game, Math.random);
 
   const PORT = Deno.env.get("PORT") || 8000;
-  const app = createApp(game, turnManager);
+  const app = createApp(game);
   Deno.serve({ port: PORT }, app.fetch);
 };
 

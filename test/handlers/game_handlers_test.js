@@ -29,6 +29,7 @@ describe.ignore("Game route", () => {
   let app,
     players,
     bank,
+    board,
     tiles,
     yarns,
     designCards,
@@ -73,14 +74,10 @@ describe.ignore("Game route", () => {
     const player1 = new Player(1, "Ajoy");
     player1.setup(2, { x: 2, y: 1 });
     player1.addAllDesignCardDev(...designCards);
-    // player1.addActionCard(...actionCards);
 
     const player2 = new Player(2, "Dinesh");
     player1.setup(3, { x: 4, y: 1 });
-    players = [
-      player1,
-      player2,
-    ];
+    players = [player1, player2];
 
     tiles = [
       [0, 0, 0, 0, 0, 0],
@@ -98,18 +95,14 @@ describe.ignore("Game route", () => {
       [5, 4, 3, 2, 1],
       [1, 2, 3, 4, 5],
     ];
+    board = new Board(tiles, yarns);
 
     bank = new Bank(designCards, actionCards);
-    game = new Game(
-      players,
-      bank,
-      new Board(tiles, yarns),
-      diceValue,
-    );
-    app = createApp(game, new TurnManager(game));
+    game = new Game(players, bank, board, diceValue);
+    app = createApp(game);
   });
 
-  describe("Buy Design Card", () => {
+  describe.ignore("Buy Design Card", () => {
     it("should give a new design card", async () => {
       players[0].creditTokens(5);
       const response = await app.request("/game/buy-design-card");
@@ -174,7 +167,7 @@ describe.ignore("Game route", () => {
     });
   });
 
-  describe("GET /game/claim-design", () => {
+  describe.ignore("GET /game/claim-design", () => {
     it(
       "should return details of design card if that design pattern has matched with the board",
       async () => {
@@ -198,7 +191,7 @@ describe.ignore("Game route", () => {
     );
   });
 
-  describe("Buy Action Card", () => {
+  describe.ignore("Buy Action Card", () => {
     it("should give a new action card", async () => {
       players[0].creditTokens(5);
       const response = await app.request("/game/buy-action-card");
@@ -241,7 +234,7 @@ describe.ignore("Game route", () => {
     });
   });
 
-  describe("Play Action Cards", () => {
+  describe.ignore("Play Action Cards", () => {
     describe("Tax Action Card", () => {
       it("when tax action card played, then one token from other players should be deducted and bank tokens should incremented: ", async () => {
         players[0].addActionCard({
