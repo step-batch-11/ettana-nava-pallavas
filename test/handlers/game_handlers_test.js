@@ -4,10 +4,9 @@ import { assertEquals } from "@std/assert/equals";
 import { serveGameState } from "../../src/handlers/game_handlers.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
-import TurnManager from "../../src/models/turn_manager.js";
 import Game from "../../src/models/game.js";
 
-describe.ignore("Game route", () => {
+describe("Game route", () => {
   let app,
     players,
     bank,
@@ -19,14 +18,48 @@ describe.ignore("Game route", () => {
     gameState;
 
   beforeEach(() => {
+    designCards = [
+      {
+        "id": 1,
+        "victoryPoints": 1,
+        "design": [
+          { coord: { x: 0, y: 0 }, color: 1 },
+          { coord: { x: 0, y: 1 }, color: 1 },
+          { coord: { x: 0, y: 2 }, color: 1 },
+        ],
+      },
+      {
+        "id": 2,
+        "victoryPoints": 1,
+        "design": [
+          { "coord": { "x": 1, "y": 0 }, "color": 5 },
+          { "coord": { "x": 2, "y": 1 }, "color": 5 },
+          { "coord": { "x": 3, "y": 2 }, "color": 5 },
+          { "coord": { "x": 4, "y": 3 }, "color": 5 },
+          { "coord": { "x": 3, "y": 1 }, "color": 1 },
+          { "coord": { "x": 4, "y": 0 }, "color": 1 },
+        ],
+      },
+    ];
+
+    actionCards = [{
+      "id": 1,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }, {
+      "id": 2,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }];
+
     players = [
       {
         name: "A",
         id: 1,
         tokens: 0,
         victoryPoint: 0,
-        actionCards: [],
-        designCards: [],
+        actionCards: actionCards,
+        designCards: designCards,
         pin: { color: 2, pos: { x: 2, y: 1 } },
       },
       {
@@ -57,21 +90,6 @@ describe.ignore("Game route", () => {
       [1, 2, 3, 4, 5],
     ];
 
-    designCards = [
-      { "id": 1, "victoryPoints": 1 },
-      { "id": 2, "victoryPoints": 1 },
-    ];
-
-    actionCards = [{
-      "id": 1,
-      "type": "move",
-      "description": "Move the pin to any unoccupied square.",
-    }, {
-      "id": 2,
-      "type": "move",
-      "description": "Move the pin to any unoccupied square.",
-    }];
-
     bank = new Bank(designCards, actionCards);
     board = new Board(tiles, yarns);
     gameState = new Game(
@@ -81,27 +99,53 @@ describe.ignore("Game route", () => {
       2,
     );
 
-    app = createApp(gameState, new TurnManager());
+    app = createApp(gameState);
   });
 
-  it("GET /game/game-state should return the initial state as it is", async () => {
-    const res = await app.request("/game/game-state");
-    const game = await res.json();
+  describe("GET /game/game-state", () => {
+    it("should return the initial state as it is", async () => {
+      const res = await app.request("/game/game-state");
+      const game = await res.json();
 
-    assertEquals(game.success, true);
+      assertEquals(game.success, true);
+    });
+
+    it("should fail if the context is wrong", () => {
+      const mockCtx = {
+        get: () => {
+          throw new Error("forced failure");
+        },
+        json: (data) => data,
+      };
+
+      const result = serveGameState(mockCtx);
+
+      assertEquals(result.success, false);
+      assertEquals(result.error, "forced failure");
+    });
   });
+  describe("GET /game/claim-design", () => {
+    it(
+      "should return details of design card if that design pattern has matched with the board",
+      async () => {
+        const res = await app.request("/game/claim-design/1");
+        const claimingStatus = await res.json();
 
-  it("should fail if the context is wrong", () => {
-    const mockCtx = {
-      get: () => {
-        throw new Error("forced failure");
+        assertEquals(claimingStatus.success, true);
+        assertEquals(claimingStatus.result.isMatched, true);
       },
-      json: (data) => data,
-    };
+    );
 
-    const result = serveGameState(mockCtx);
+    it(
+      "should return details of design card if that design pattern is not present in the board",
+      async () => {
+        const res = await app.request("/game/claim-design/2");
+        const claimingStatus = await res.json();
 
-    assertEquals(result.success, false);
-    assertEquals(result.error, "forced failure");
+        console.log(claimingStatus);
+        assertEquals(claimingStatus.success, true);
+        assertEquals(claimingStatus.result.isMatched, false);
+      },
+    );
   });
 });

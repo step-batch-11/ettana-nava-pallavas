@@ -11,3 +11,14 @@ export const serveGameState = (ctx) => {
     return ctx.json({ success: false, error: e.message });
   }
 };
+
+export const claimDesign = (ctx) => {
+  const game = ctx.get("gameState");
+  const designCardId = ctx.req.param("id");
+  const result = game.claimDesign(designCardId);
+
+  return ctx.json({
+    success: true,
+    result,
+  });
+};

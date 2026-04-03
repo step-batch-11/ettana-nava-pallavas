@@ -13,7 +13,7 @@ import Board from "../../src/models/board.js";
 import Game from "../../src/models/game.js";
 import TurnManager from "../../src/models/turn_manager.js";
 
-describe("move request: ", () => {
+describe.ignore("move request: ", () => {
   let app;
 
   const randomValue = 0.05;

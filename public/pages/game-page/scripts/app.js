@@ -8,22 +8,6 @@ import {
 } from "./deck.js";
 import { getGameState } from "./api.js";
 
-const _distributeInitialAssets = async () => {
-  await new Promise((res) => {
-    setTimeout(() => {
-      res(1);
-    }, 500);
-  });
-
-  const res = await fetch("/game/distribute-initial-assets");
-  await res.json();
-
-  const boardRes = await fetch("/game/game-state");
-  const { state } = await boardRes.json();
-  renderBoard(state);
-  renderBankState();
-};
-
 const addEventListener = () => {
   applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
@@ -57,7 +41,6 @@ const pattern = {
 const main = async () => {
   initBoard();
 
-  // await distributeInitialAssets();
   const state = await getGameState();
   renderGame(state);
 
