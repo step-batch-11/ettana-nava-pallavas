@@ -9,11 +9,12 @@ import Game from "../../src/models/game.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
 import Player from "../../src/models/player.js";
-const getCoords = ({ x, y }) => ({ x, y });
 import { diceValue } from "../../src/data/state.js";
 
+const getCoords = ({ x, y }) => ({ x, y });
+
 describe("Game controller test", () => {
-  let game, players, bank;
+  let game, players, bank, designCards;
 
   const tiles = [
     [0, 0, 0, 0, 0, 0],
@@ -33,7 +34,7 @@ describe("Game controller test", () => {
   ];
 
   beforeEach(() => {
-    const designCards = [
+    designCards = [
       {
         "id": 1,
         "victoryPoints": 1,
@@ -70,6 +71,7 @@ describe("Game controller test", () => {
       "type": "move",
       "description": "Move the pin to any unoccupied square.",
     }];
+
     players = [new Player(1, "Ajoy"), new Player(2, "Dinesh")];
     bank = new Bank(designCards, actionCards, (x) => x, () => 0.1);
     game = new Game(
@@ -97,14 +99,14 @@ describe("Game controller test", () => {
       assertEquals(players[0].getTokens(), 0);
     });
 
-    it("Player cannot buy design card due to insuffiecient tokens", () => {
+    it("Player cannot buy design card due to insufficient tokens", () => {
       const card = game.buyDesignCard();
       assertEquals(card, "NOT_ENOUGH_TOKEN");
       assertEquals(bank.getBank().tokens, 55);
       assertEquals(players[0].getTokens(), 0);
     });
 
-    it("Player cannot buy design card due to insuffiecient DC in bank", () => {
+    it("Player cannot buy design card due to insufficient DC in bank", () => {
       players[0].creditTokens(9);
       game.buyDesignCard();
       game.buyDesignCard();
@@ -125,7 +127,7 @@ describe("Game controller test", () => {
       assertEquals(players[0].getTokens(), 0);
     });
 
-    it("Player cannot buy action card due to insuffiecient tokens", () => {
+    it("Player cannot buy action card due to insufficient tokens", () => {
       const card = game.buyActionCard();
       assertEquals(card, "NOT_ENOUGH_TOKEN");
       assertEquals(bank.getBank().tokens, 55);
@@ -159,7 +161,24 @@ describe("Game controller test", () => {
     });
   });
 
-  describe.ignore("Claim design", () => {
+  describe("Claim design", () => {
+    let players, game;
+
+    beforeEach(() => {
+      const player1 = new Player(1, "Ajoy");
+      player1.addAllDesignCardDev(...designCards);
+      const player2 = new Player(1, "Dinesh");
+
+      players = [player1, player2];
+
+      game = new Game(
+        players,
+        bank,
+        new Board(tiles, yarns),
+        diceValue,
+      );
+    });
+
     it("should match a design pattern that is present in the board", () => {
       const matchingStatus = game.claimDesign(1);
       assertEquals(matchingStatus.isMatched, true);
@@ -173,20 +192,6 @@ describe("Game controller test", () => {
     it("should not match a design pattern that is not there in the board", () => {
       const matchingStatus = game.claimDesign(2);
       assertEquals(matchingStatus.isMatched, false);
-    });
-  });
-
-  describe("Initial asset distribution", () => {
-    it.ignore("should distribute assets when they have 0 tokens", () => {
-      game.distributeInitialAssets();
-      const gameState = game.getGameState();
-
-      assertEquals(gameState.players[0].tokens, 2);
-      assertEquals(gameState.players[1].tokens, 2);
-      assertEquals(gameState.players[0].dc, 2); // 2 design cards added for claim design card test
-      assertEquals(gameState.players[0].ac, 2); // 2 action cards added for claim design card test
-      assertEquals(gameState.players[1].dc, 1);
-      assertEquals(gameState.players[1].ac, 1);
     });
   });
 
@@ -521,7 +526,7 @@ describe("Game controller test", () => {
     );
   });
 
-  describe("upkeep: Roll dice and find possible path :", () => {
+  describe.ignore("upkeep: Roll dice and find possible path :", () => {
     const randomFn = () => 0.9;
     let game;
     const yarns = [

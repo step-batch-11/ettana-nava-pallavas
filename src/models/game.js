@@ -1,4 +1,4 @@
-import { add } from "../utils/arthimetic.js";
+import { add } from "../utils/arithmetic.js";
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
@@ -18,6 +18,7 @@ export default class Game {
     this.#randonFn = randomFn;
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = 0;
+    this.randomFn = randomFn;
   }
 
   distributeAssets({ colorId }, currentPlayer) {
@@ -96,9 +97,7 @@ export default class Game {
     const currentPlayer = this.#getCurrentPlayer();
     const designCard = currentPlayer
       .getDc()
-      .find((
-        { id },
-      ) => id === Number(designCardId));
+      .find(({ id }) => id === Number(designCardId));
 
     const { yarns } = this.#board.getState();
 
@@ -130,6 +129,10 @@ export default class Game {
 
   #getOpponents() {
     return this.#players.toSpliced(this.#currentPlayerIndex, 1);
+  }
+
+  getBoard() {
+    return this.#board;
   }
 
   #findActionCard(currentPlayer, id) {

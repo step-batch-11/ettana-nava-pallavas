@@ -108,7 +108,7 @@ export const claimDesign = (ctx) => {
 
 export const handleMove = async (ctx) => {
   const gameState = ctx.get("gameState");
-  const { board } = gameState.getGameState();
+  const board = gameState.getBoard();
 
   const destination = await ctx.req.json();
   const moveResult = gameState.move(destination);
