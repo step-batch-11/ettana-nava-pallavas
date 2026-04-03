@@ -133,7 +133,7 @@ describe("Game route", () => {
     });
   });
 
-  describe.ignore("GET /game/game-state", () => {
+  describe("GET /game/game-state", () => {
     it("should return the initial state as it is", async () => {
       const res = await app.request("/game/game-state");
       const game = await res.json();
@@ -155,7 +155,7 @@ describe("Game route", () => {
     });
   });
 
-  describe.ignore("GET /game/claim-design", () => {
+  describe("GET /game/claim-design", () => {
     it(
       "should return details of design card if that design pattern has matched with the board",
       async () => {
