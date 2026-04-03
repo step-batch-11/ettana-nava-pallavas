@@ -15,7 +15,7 @@ const main = () => {
     diceValue,
   );
 
-  gameState.distributeInitalAssets(players);
+  gameState.distributeInitialAssets(players);
 
   const turnManager = new TurnManager(gameState, Math.random);
 
