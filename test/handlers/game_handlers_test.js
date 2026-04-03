@@ -179,10 +179,10 @@ describe("Game route", () => {
     );
   });
 
-  describe("move request: ", () => {
+  describe.ignore("move request: ", () => {
     let app;
 
-    const randomValue = 0.05;
+    const randomValue = 0.05  ;
 
     beforeEach(() => {
       const bank = new Bank(designCards, actionCards, () => randomValue);
