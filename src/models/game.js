@@ -181,7 +181,6 @@ export default class Game {
 
   #isValidDestination({ x, y }) {
     const destinations = this.#board.destinations;
-    console.log({ destinations });
     return destinations.some(
       ({ destination }) => destination.x === x && destination.y === y,
     );
