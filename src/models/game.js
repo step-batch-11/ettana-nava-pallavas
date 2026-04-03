@@ -1,4 +1,5 @@
 import { areYarnsSwappable } from "../utils/yarns.js";
+import { getPlayerById } from "../utils/util.js";
 
 export default class Game {
   #players;
@@ -76,17 +77,13 @@ export default class Game {
     return this.#players[this.#currentPlayerIndex].id;
   }
 
-  #getPlayerById(id) {
-    return this.#players.find((player) => player.id === id);
-  }
-
   #getCurrentPlayer() {
     return this.#players[this.#currentPlayerIndex];
   }
 
   #processPathPenalty(payer, payees) {
     return payees.map((payeeId) => {
-      const payee = this.#getPlayerById(payeeId);
+      const payee = getPlayerById(this.#players, payeeId);
       payee.creditTokens(1);
       payer.debitTokens(1);
       return { payeeId, tokens: payee.tokens };

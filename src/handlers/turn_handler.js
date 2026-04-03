@@ -4,7 +4,6 @@ export const handleDiceRoll = (ctx) => {
     .getGameState();
 
   const player = players.find((player) => player.id === currentPlayerId);
-  console.log(game.getGameState());
   const diceValues = turnManager.rollDice();
   turnManager.processColorAction(
     diceValues.colorId,

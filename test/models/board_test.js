@@ -5,10 +5,7 @@ import Player from "../../src/models/player.js";
 import Game from "../../src/models/game.js";
 import { assertEquals } from "@std/assert/equals";
 import { assert } from "@std/assert/assert";
-
-const getPlayerById = (players, id) => {
-  return players.find((player) => player.id === id);
-};
+import { getPlayerById } from "../../src/utils/util.js";
 
 describe("board test", () => {
   let board, gameState;
@@ -29,7 +26,7 @@ describe("board test", () => {
     [0, 5, 6, 1, 2, 0],
     [0, 3, 4, 5, 6, 0],
   ];
-
+  let players;
   beforeEach(() => {
     board = new Board(tiles, yarns);
     const bank = new Bank([], []);
@@ -40,15 +37,14 @@ describe("board test", () => {
     player2.setup(2, { x: 3, y: 3 });
 
     const diceValue = { colorId: 1, number: 1 };
-
-    gameState = new Game([player, player2], bank, board, diceValue);
+    players = [player, player2];
+    gameState = new Game(players, bank, board, diceValue);
   });
 
-  describe.ignore("find possible path : ", () => {
+  describe("find possible path : ", () => {
     it("when position, steps given, should return all possible locations", () => {
-      const { players, currentPlayerId } = gameState.getGameState();
+      const { currentPlayerId } = gameState.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
-
       const actual = board.findPossibleDestinations(currentPlayer, players, 1);
       const expected = [
         { destination: { x: 1, y: 2 }, type: "normal", path: [{ x: 1, y: 1 }] },
@@ -90,14 +86,10 @@ describe("board test", () => {
 
       const diceValue = { colorId: 1, number: 2 };
 
-      const mockGame = new Game(
-        [player1, player2, player3, player4, player5, player6],
-        bank,
-        board,
-        diceValue,
-      );
+      const players = [player1, player2, player3, player4, player5, player6];
+      const mockGame = new Game(players, bank, board, diceValue);
 
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 1);
@@ -120,7 +112,7 @@ describe("board test", () => {
         return coords.length === set.size;
       };
 
-      const { players, currentPlayerId } = gameState.getGameState();
+      const { currentPlayerId } = gameState.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 4);
@@ -139,7 +131,7 @@ describe("board test", () => {
       const diceValue = { colorId: 1, number: 1 };
 
       const mockGame = new Game([player], bank, board, diceValue);
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 1);
@@ -169,16 +161,11 @@ describe("board test", () => {
       player5.setup(1, { x: 4, y: 3 });
 
       const diceValue = { colorId: 1, number: 1 };
+      const players = [player1, player2, player3, player4, player5];
+      const mockGame = new Game(players, bank, board, diceValue);
 
-      const mockGame = new Game(
-        [player1, player2, player3, player4, player5],
-        bank,
-        board,
-        diceValue,
-      );
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
-
       const actual = board.findPossibleDestinations(currentPlayer, players, 1);
       assertEquals(actual.length, 2);
     });
@@ -207,13 +194,9 @@ describe("board test", () => {
 
       const diceValue = { colorId: 1, number: 1 };
 
-      const mockGame = new Game(
-        [player1, player2, player3, player4, player5],
-        bank,
-        board,
-        diceValue,
-      );
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const players = [player1, player2, player3, player4, player5];
+      const mockGame = new Game(players, bank, board, diceValue);
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 2);
@@ -246,14 +229,10 @@ describe("board test", () => {
 
       const diceValue = { colorId: 1, number: 1 };
 
-      const mockGame = new Game(
-        [player1, player2, player3, player4, player5],
-        bank,
-        board,
-        diceValue,
-      );
+      const players = [player1, player2, player3, player4, player5];
+      const mockGame = new Game(players, bank, board, diceValue);
 
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 2);
@@ -287,14 +266,10 @@ describe("board test", () => {
 
       const diceValue = { colorId: 1, number: 1 };
 
-      const mockGame = new Game(
-        [player1, player2, player3, player4, player5],
-        bank,
-        board,
-        diceValue,
-      );
+      const players = [player1, player2, player3, player4, player5];
+      const mockGame = new Game(players, bank, board, diceValue);
 
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 3);
@@ -337,14 +312,10 @@ describe("board test", () => {
 
       const diceValue = { colorId: 1, number: 1 };
 
-      const mockGame = new Game(
-        [player1, player2, player3, player4, player5],
-        bank,
-        board,
-        diceValue,
-      );
+      const players = [player1, player2, player3, player4, player5];
+      const mockGame = new Game(players, bank, board, diceValue);
 
-      const { players, currentPlayerId } = mockGame.getGameState();
+      const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 3);
@@ -437,9 +408,7 @@ describe("matchPattern", () => {
   });
 
   it("should match single-point pattern", () => {
-    const singlePointPattern = [
-      { coord: { x: 0, y: 0 }, color: 1 },
-    ];
+    const singlePointPattern = [{ coord: { x: 0, y: 0 }, color: 1 }];
     const { yarns } = board.getState();
     const result = [{ x: 0, y: 0 }];
     const matchingStatus = board.matchPattern(yarns, singlePointPattern);
