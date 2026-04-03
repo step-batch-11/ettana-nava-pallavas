@@ -178,6 +178,16 @@ const handleDragEnd = () => {
   if (dragged) {
     dragged.classList.remove("dragging");
   }
+  const _ids = [...sourceContainer.querySelectorAll(".card-item")].map((card) =>
+    card.dataset.id
+  );
+  if (sourceContainer.id.includes("action")) {
+    console.log("action");
+  } else {
+    console.log("design");
+    
+  }
+
   placeholder.remove();
 };
 

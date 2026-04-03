@@ -1,4 +1,4 @@
-import { initBoard, renderBoard } from "./board.js";
+import { hightLightPattern, initBoard, renderBoard } from "./board.js";
 import { applyEventListenerOnDice, defaultDice } from "./game.js";
 import { attachBankEventListeners, renderBankState } from "./bank.js";
 import {
@@ -37,6 +37,23 @@ export const renderGame = (state) => {
   renderDeck(state.players, state.currentPlayerId);
 };
 
+const pattern = {
+  "id": 36,
+  "victoryPoints": 2,
+  "design": [
+    { "coord": { "x": 0, "y": 0 }, "color": 4 },
+    { "coord": { "x": 0, "y": 1 }, "color": 4 },
+    { "coord": { "x": 1, "y": 0 }, "color": 4 },
+    { "coord": { "x": 1, "y": 2 }, "color": 1 },
+    { "coord": { "x": 2, "y": 1 }, "color": 1 },
+    { "coord": { "x": 2, "y": 3 }, "color": 1 },
+    { "coord": { "x": 3, "y": 2 }, "color": 1 },
+    { "coord": { "x": 3, "y": 4 }, "color": 5 },
+    { "coord": { "x": 4, "y": 3 }, "color": 5 },
+    { "coord": { "x": 4, "y": 4 }, "color": 5 },
+  ],
+};
+
 const main = async () => {
   initBoard();
 
@@ -46,6 +63,8 @@ const main = async () => {
 
   defaultDice();
   addEventListener();
+
+  hightLightPattern(pattern.design);
 };
 
 globalThis.onload = main;

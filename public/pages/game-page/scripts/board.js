@@ -224,6 +224,14 @@ const renderPlayersCards = (players, currentPlayer) => {
   });
 };
 
+export const hightLightPattern = (pattern) => {
+  pattern.forEach(({ coord }) => {
+    board.querySelector(`#r-${coord.x}-c-${coord.y}`).classList.add(
+      "highlight",
+    );
+  });
+};
+
 export const initBoard = () => {
   createCells();
   createAllTiles();
