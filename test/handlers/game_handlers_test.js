@@ -10,7 +10,6 @@ import {
   buyActionCard,
   buyDesignCard,
 } from "../../src/handlers/game_handlers.js";
-// import TurnManager from "../../src/models/turn_manager.js";
 
 describe.ignore("Game route", () => {
   // let app, players, game, bank;
@@ -73,7 +72,6 @@ describe.ignore("Game route", () => {
     const player1 = new Player(1, "Ajoy");
     player1.setup(2, { x: 2, y: 1 });
     player1.addAllDesignCardDev(...designCards);
-    // player1.addActionCard(...actionCards);
 
     const player2 = new Player(2, "Dinesh");
     player1.setup(3, { x: 4, y: 1 });

@@ -1,15 +1,13 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { assert } from "@std/assert/assert";
-import { assertEquals } from "@std/assert/equals";
+import { assert, assertEquals, assertThrows } from "@std/assert";
 import Player from "../../src/models/player.js";
 import Bank from "../../src/models/bank.js";
 import Game from "../../src/models/game.js";
 import Board from "../../src/models/board.js";
 import { diceValue } from "../../src/data/state.js";
-import { assertThrows } from "@std/assert/throws";
 
 describe("Game controller test", () => {
-  let game, players, bank;
+  let game, players, bank, designCards;
 
   const tiles = [
     [0, 0, 0, 0, 0, 0],
@@ -29,7 +27,7 @@ describe("Game controller test", () => {
   ];
 
   beforeEach(() => {
-    const designCards = [
+    designCards = [
       {
         "id": 1,
         "victoryPoints": 1,
@@ -66,6 +64,7 @@ describe("Game controller test", () => {
       "type": "move",
       "description": "Move the pin to any unoccupied square.",
     }];
+
     players = [new Player(1, "Ajoy"), new Player(2, "Dinesh")];
     bank = new Bank(designCards, actionCards, (x) => x, () => 0.1);
     game = new Game(
@@ -155,7 +154,24 @@ describe("Game controller test", () => {
     });
   });
 
-  describe.ignore("Claim design", () => {
+  describe("Claim design", () => {
+    let players, game;
+
+    beforeEach(() => {
+      const player1 = new Player(1, "Ajoy");
+      player1.addAllDesignCardDev(...designCards);
+      const player2 = new Player(1, "Dinesh");
+
+      players = [player1, player2];
+
+      game = new Game(
+        players,
+        bank,
+        new Board(tiles, yarns),
+        diceValue,
+      );
+    });
+
     it("should match a design pattern that is present in the board", () => {
       const matchingStatus = game.claimDesign(1);
       assertEquals(matchingStatus.isMatched, true);
@@ -169,20 +185,6 @@ describe("Game controller test", () => {
     it("should not match a design pattern that is not there in the board", () => {
       const matchingStatus = game.claimDesign(2);
       assertEquals(matchingStatus.isMatched, false);
-    });
-  });
-
-  describe("Initial asset distribution", () => {
-    it.ignore("should distribute assets when they have 0 tokens", () => {
-      game.distributeInitialAssets();
-      const gameState = game.getGameState();
-
-      assertEquals(gameState.players[0].tokens, 2);
-      assertEquals(gameState.players[1].tokens, 2);
-      assertEquals(gameState.players[0].dc, 2); // 2 design cards added for claim design card test
-      assertEquals(gameState.players[0].ac, 2); // 2 action cards added for claim design card test
-      assertEquals(gameState.players[1].dc, 1);
-      assertEquals(gameState.players[1].ac, 1);
     });
   });
 
