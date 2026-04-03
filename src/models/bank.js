@@ -6,9 +6,6 @@ export default class Bank {
   #tokens = 55;
   #tiles = [1, 6];
   #yarns = [1, 2, 3, 4, 5];
-  #initialToken;
-  #designCardCost;
-  #actionCardCost;
   #randomFn;
 
   constructor(
@@ -20,9 +17,6 @@ export default class Bank {
     this.#designCards = shuffleFn(designCards);
     this.#actionCards = shuffleFn(actionCards);
     this.#randomFn = randomFn;
-    this.#initialToken = 2;
-    this.#designCardCost = 3;
-    this.#actionCardCost = 2;
   }
 
   getBank() {
@@ -64,15 +58,5 @@ export default class Bank {
   incrementTokens(n) {
     this.#tokens += n;
     return n;
-  }
-
-  distributeInitialAssets(players) {
-    if (!players.some((player) => player.tokens !== 0)) {
-      players.forEach((player) => {
-        player.tokens += this.deductTokens(this.#initialToken);
-        player.designCards.push(this.#designCards.pop());
-        player.actionCards.push(this.#actionCards.pop());
-      });
-    }
   }
 }

@@ -52,44 +52,7 @@ describe("bank", () => {
       },
     );
 
-    it(
-      "when game starts, then should update bank state after initial token and card distribution",
-      () => {
-        const players = [
-          {
-            name: "A",
-            id: 1,
-            tokens: 0,
-            victoryPoint: 0,
-            actionCards: [],
-            designCards: [],
-            pin: { color: 2, position: { x: 2, y: 1 } },
-          },
-          {
-            name: "B",
-            id: 1,
-            tokens: 0,
-            victoryPoint: 0,
-            actionCards: [],
-            designCards: [],
-            pin: { color: 3, position: { x: 4, y: 1 } },
-          },
-        ];
 
-        const result = {
-          tokens: 51,
-          availableDesignCards: 0,
-          availableActionCards: 0,
-          yarns: [1, 2, 3, 4, 5],
-          tiles: [1, 6],
-        };
-
-        const bank = new Bank(designCards, actionCards, shuffle);
-        bank.distributeInitialAssets(players);
-
-        assertEquals(bank.getBank(), result);
-      },
-    );
   });
 
   describe("Get Design Card", () => {

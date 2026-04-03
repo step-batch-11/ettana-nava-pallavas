@@ -2,6 +2,7 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import Game from "../../src/models/game.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
+import Player from "../../src/models/player.js";
 import { assertEquals } from "@std/assert/equals";
 
 describe("Game controller test", () => {
@@ -42,25 +43,17 @@ describe("Game controller test", () => {
     "description": "Move the pin to any unoccupied square.",
   }];
 
+  const player1 = new Player(1, "Ajoy");
+  player1.setup(2, { x: 2, y: 1 });
+  player1.addAllDesignCardDev(...designCards);
+  player1.addActionCard(actionCards[0]);
+
+  const player2 = new Player(2, "Dinesh");
+  player1.setup(3, { x: 4, y: 1 });
+
   const players = [
-    {
-      name: "A",
-      id: 1,
-      tokens: 0,
-      victoryPoint: 0,
-      actionCards: actionCards,
-      designCards: designCards,
-      pin: { color: 2, pos: { x: 2, y: 1 } },
-    },
-    {
-      name: "B",
-      id: 2,
-      tokens: 0,
-      victoryPoint: 0,
-      actionCards: [],
-      designCards: [],
-      pin: { color: 3, pos: { x: 4, y: 1 } },
-    },
+    player1,
+    player2,
   ];
 
   const tiles = [
@@ -112,12 +105,13 @@ describe("Game controller test", () => {
     it("should distribute assets when they have 0 tokens", () => {
       game.distributeInitialAssets();
       const gameState = game.getGameState();
+
       assertEquals(gameState.players[0].tokens, 2);
       assertEquals(gameState.players[1].tokens, 2);
-      assertEquals(gameState.players[0].designCards.length, 3); // 2 design cards added for claim design card test
-      assertEquals(gameState.players[0].actionCards.length, 3); // 2 action cards added for claim design card test
-      assertEquals(gameState.players[1].designCards.length, 1);
-      assertEquals(gameState.players[1].actionCards.length, 1);
+      assertEquals(gameState.players[0].dc, 3); // 2 design cards added for claim design card test
+      assertEquals(gameState.players[0].ac, 2); // 2 action cards added for claim design card test
+      assertEquals(gameState.players[1].dc, 1);
+      assertEquals(gameState.players[1].ac, 1);
     });
   });
 
@@ -126,5 +120,24 @@ describe("Game controller test", () => {
       const currentPlayerId = game.getCurrentPlayerId();
       assertEquals(currentPlayerId, 1);
     });
+  });
+
+  describe("Distribute initial assets", () => {
+    it(
+      "when game starts, then should update bank state after initial token and card distribution",
+      () => {
+        const result = {
+          tokens: 51,
+          availableDesignCards: 0,
+          availableActionCards: 2,
+          yarns: [1, 2, 3, 4, 5],
+          tiles: [1, 6],
+        };
+
+        game.distributeInitialAssets();
+
+        assertEquals(bank.getBank(), result);
+      },
+    );
   });
 });

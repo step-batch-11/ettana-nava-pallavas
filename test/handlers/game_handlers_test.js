@@ -5,6 +5,7 @@ import { serveGameState } from "../../src/handlers/game_handlers.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
 import Game from "../../src/models/game.js";
+import Player from "../../src/models/player.js";
 
 describe("Game route", () => {
   let app,
@@ -51,26 +52,16 @@ describe("Game route", () => {
       "type": "move",
       "description": "Move the pin to any unoccupied square.",
     }];
+    const player1 = new Player(1, "Ajoy");
+    player1.setup(2, { x: 2, y: 1 });
+    player1.addAllDesignCardDev(...designCards);
+    player1.addActionCard(...actionCards);
 
+    const player2 = new Player(2, "Dinesh");
+    player1.setup(3, { x: 4, y: 1 });
     players = [
-      {
-        name: "A",
-        id: 1,
-        tokens: 0,
-        victoryPoint: 0,
-        actionCards: actionCards,
-        designCards: designCards,
-        pin: { color: 2, pos: { x: 2, y: 1 } },
-      },
-      {
-        name: "B",
-        id: 2,
-        tokens: 0,
-        victoryPoint: 0,
-        actionCards: [],
-        designCards: [],
-        pin: { color: 3, pos: { x: 4, y: 1 } },
-      },
+      player1,
+      player2,
     ];
 
     tiles = [
@@ -106,7 +97,6 @@ describe("Game route", () => {
     it("should return the initial state as it is", async () => {
       const res = await app.request("/game/game-state");
       const game = await res.json();
-
       assertEquals(game.success, true);
     });
 
@@ -124,6 +114,7 @@ describe("Game route", () => {
       assertEquals(result.error, "forced failure");
     });
   });
+
   describe("GET /game/claim-design", () => {
     it(
       "should return details of design card if that design pattern has matched with the board",
@@ -142,7 +133,6 @@ describe("Game route", () => {
         const res = await app.request("/game/claim-design/2");
         const claimingStatus = await res.json();
 
-        console.log(claimingStatus);
         assertEquals(claimingStatus.success, true);
         assertEquals(claimingStatus.result.isMatched, false);
       },

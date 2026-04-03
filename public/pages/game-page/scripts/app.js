@@ -2,40 +2,36 @@ import { hightLightPattern, initBoard, renderBoard } from "./board.js";
 import { applyEventListenerOnDice, defaultDice } from "./game.js";
 import { attachBankEventListeners, renderBankState } from "./bank.js";
 import {
+  addClaimEventListener,
   addDragEventListenerOnDeck,
   addToggleEventListenerOnDeck,
   renderDeck,
 } from "./deck.js";
-import { getGameState } from "./api.js";
+import { claimDesignCard, getGameState } from "./api.js";
+import { showToast } from "../../utils/utils.js";
+
+const handleClaim = async (e) => {
+  const card = e.target.closest(".card-item");
+  const status = await claimDesignCard(card.dataset.id);
+  if (!status.result.isMatched) {
+    showToast("Pattern is not matched", "e");
+    return;
+  }
+  await hightLightPattern(status.result.matches);
+};
 
 const addEventListener = () => {
   applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
   addDragEventListenerOnDeck();
+  addClaimEventListener(handleClaim);
   attachBankEventListeners();
 };
 
 export const renderGame = (state) => {
   renderBoard(state);
   renderBankState(state.bank);
-  renderDeck(state.players, state.currentPlayerId);
-};
-
-const pattern = {
-  "id": 36,
-  "victoryPoints": 2,
-  "design": [
-    { "coord": { "x": 0, "y": 0 }, "color": 4 },
-    { "coord": { "x": 0, "y": 1 }, "color": 4 },
-    { "coord": { "x": 1, "y": 0 }, "color": 4 },
-    { "coord": { "x": 1, "y": 2 }, "color": 1 },
-    { "coord": { "x": 2, "y": 1 }, "color": 1 },
-    { "coord": { "x": 2, "y": 3 }, "color": 1 },
-    { "coord": { "x": 3, "y": 2 }, "color": 1 },
-    { "coord": { "x": 3, "y": 4 }, "color": 5 },
-    { "coord": { "x": 4, "y": 3 }, "color": 5 },
-    { "coord": { "x": 4, "y": 4 }, "color": 5 },
-  ],
+  renderDeck(state.deck);
 };
 
 const main = async () => {
@@ -46,8 +42,6 @@ const main = async () => {
 
   defaultDice();
   addEventListener();
-
-  hightLightPattern(pattern.design);
 };
 
 globalThis.onload = main;
