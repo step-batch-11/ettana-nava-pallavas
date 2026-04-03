@@ -22,7 +22,8 @@ export default class Game {
     if (currentPlayer.tokens < 3) return "NOT_ENOUGH_TOKEN";
 
     currentPlayer.tokens -= 3;
-    const card = this.#bank.buyDesignCard();
+    const card = this.#bank.getDesignCard();
+    this.#bank.incrementTokens(3);
     currentPlayer.designCards.push(card);
   }
 
@@ -31,7 +32,8 @@ export default class Game {
     if (currentPlayer.tokens < 2) return "NOT_ENOUGH_TOKEN";
 
     currentPlayer.tokens -= 2;
-    const card = this.#bank.buyActionCard();
+    const card = this.#bank.getActionCard();
+    this.#bank.incrementTokens(2);
     currentPlayer.actionCards.push(card);
     return card;
   }
@@ -39,10 +41,14 @@ export default class Game {
   getGameState() {
     return {
       players: this.#players,
-      bank: this.#bank.getBank(),
+      bank: this.#bank,
       board: this.#board.getState(),
       diceValue: this.#diceValue,
       currentPlayerId: this.#players[this.#currentPlayerIndex].id,
     };
+  }
+
+  getCurrentPlayerId() {
+    return this.#players[this.#currentPlayerIndex].id;
   }
 }

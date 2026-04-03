@@ -1,25 +1,12 @@
-export const players = [
-  {
-    name: "Ajoy",
-    id: 1,
-    tokens: 0,
-    roomId: null,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 2, position: { x: 2, y: 2 } },
-  },
-  {
-    name: "Dinesh",
-    id: 2,
-    tokens: 0,
-    roomId: null,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 3, position: { x: 3, y: 3 } },
-  },
-];
+import Player from "../models/player.js";
+
+const player1 = new Player(1, "Ajoy");
+const player2 = new Player(2, "Dinesh");
+
+player1.setup(2, { x: 2, y: 2 });
+player2.setup(3, { x: 3, y: 3 });
+
+export const players = [player1, player2];
 
 export const diceValue = {
   colorId: 1,

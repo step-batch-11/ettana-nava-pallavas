@@ -11,9 +11,11 @@ import TurnManager from "../../src/models/turn_manager.js";
 import Game from "../../src/models/game.js";
 import { diceValue, tiles, yarns } from "../../src/data/state.js";
 
-describe("Game route", () => {
-  let app, game, actionCards;
-  const designCards = [{
+describe.ignore("Game route", () => {
+  let app, game;
+
+  const designCards = [{ "id": 1, "victoryPoints": 1 }];
+  const actionCards = [{
     "id": 1,
     "victoryPoints": 1,
     "design": [

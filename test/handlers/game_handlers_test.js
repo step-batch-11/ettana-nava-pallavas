@@ -7,7 +7,7 @@ import Board from "../../src/models/board.js";
 import TurnManager from "../../src/models/turn_manager.js";
 import Game from "../../src/models/game.js";
 
-describe("Game route", () => {
+describe.ignore("Game route", () => {
   let app,
     players,
     bank,

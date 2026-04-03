@@ -6,33 +6,21 @@ import {
   createLedger,
   distributeTokens,
   extractPlayersPositions,
-  isInBoundary,
   mapAdjacentYarns,
+  isInBoundary,
 } from "../../src/utils/color_dice_action.js";
+import Player from "../../src/models/player.js";
 
 describe("color dice actions : ", () => {
   let players;
+
+  const player1 = new Player(1, "John");
+  const player2 = new Player(2, "Jane");
+  player1.setup(2, { x: 2, y: 2 });
+  player2.setup(3, { x: 3, y: 3 });
+
   beforeEach(() => {
-    players = [
-      {
-        name: "Ajoy",
-        id: 1,
-        tokens: 0,
-        victoryPoint: 0,
-        actionCards: [],
-        designCards: [],
-        pin: { color: 2, position: { x: 2, y: 2 } },
-      },
-      {
-        name: "Dinesh",
-        id: 2,
-        tokens: 0,
-        victoryPoint: 0,
-        actionCards: [],
-        designCards: [],
-        pin: { color: 3, position: { x: 3, y: 3 } },
-      },
-    ];
+    players = [player1, player2];
   });
   describe("coordinates validations : ", () => {
     it("when coordinates given within the boundary then , should return true : ", () => {
@@ -138,7 +126,7 @@ describe("color dice actions : ", () => {
   describe("distribution of tokens :", () => {
     it("when distribution configuration and players given, then should increase the count of the player's token count", () => {
       distributeTokens({ "1": 1, "2": 1 }, players);
-      const actual = players.every(({ tokens }) => tokens === 1);
+      const actual = players.every((player) => player.getTokens() === 1);
       const expected = true;
       assertEquals(actual, expected);
     });

@@ -13,7 +13,7 @@ export const createApp = (
   app.use(loggerFn());
 
   app.use("/game/*", async (ctx, next) => {
-    ctx.set("gameState", gameState);
+    ctx.set("gameState", gameState.getGameState());
     ctx.set("turnManager", turnManager);
     await next();
   });
