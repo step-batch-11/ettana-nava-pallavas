@@ -5,11 +5,12 @@ export default class Player {
   #ac;
   #position;
   #pinColor;
+  #id;
+  #name;
 
   constructor(id, name) {
-    this.id = id;
-    this.name = name;
-
+    this.#id = id;
+    this.#name = name;
     this.#vp = 0;
     this.#tokens = 0;
 
@@ -19,8 +20,8 @@ export default class Player {
     this.#position = {};
   }
 
-  incrementVp() {
-    this.#vp++;
+  updateVp(n) {
+    this.#vp += n;
   }
 
   getVp() {
@@ -80,18 +81,31 @@ export default class Player {
 
   getPlayerData() {
     return {
-      playerId: this.id,
-      name: this.name,
+      playerId: this.#id,
+      name: this.#name,
       tokens: this.#tokens,
       dc: this.#dc.length,
       ac: this.#ac.length,
       pinColor: this.#pinColor,
       position: this.#position,
+      vp: this.#vp,
     };
   }
 
   getPosition() {
     return structuredClone(this.#position);
+  }
+
+  getId() {
+    return this.#id;
+  }
+
+  getActionCard(id) {
+    const card = this.#ac.find((card) => card.id === Number(id));
+    if (!card) {
+      throw new Error("Action card is missing");
+    }
+    return card;
   }
 
   #setPosition(x, y) {

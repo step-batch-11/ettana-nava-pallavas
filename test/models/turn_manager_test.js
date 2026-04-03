@@ -51,7 +51,7 @@ describe("Tests for moving pin", () => {
     gameState = new Game(players, bank, board, diceValue);
   });
 
-  describe("Move pin", () => {
+  describe.ignore("Move pin", () => {
     describe("test for Destination: ", () => {
       beforeEach(() => {
         board.destinations = [

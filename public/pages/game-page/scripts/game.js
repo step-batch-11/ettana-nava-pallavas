@@ -225,7 +225,7 @@ export const applyEventListenerOnDice = () => {
     const { diceValues, destinations } = await rollDice();
     updateDice(diceValues);
     const state = await getGameState();
-    await renderGame(state);
+    renderGame(state);
     removeMoveClass();
     removeTileEventListeners();
     renderMoveOptions(destinations);
