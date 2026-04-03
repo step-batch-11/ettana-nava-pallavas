@@ -113,6 +113,7 @@ export const handleMove = async (ctx) => {
   const destination = await ctx.req.json();
   const moveResult = gameState.move(destination);
   const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
+  const swappableYarns = adjYarns.length > 1 ? adjYarns : [];
 
   if (moveResult.source === moveResult.destination) {
     return ctx.json({ success: false, message: "You can't move there" }, 400);
@@ -120,7 +121,7 @@ export const handleMove = async (ctx) => {
 
   return ctx.json({
     success: true,
-    data: { adjYarns, moveResult },
+    data: { adjYarns: swappableYarns, moveResult },
     message: "Moved successfully",
   }, 200);
 };
