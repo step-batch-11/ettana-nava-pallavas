@@ -14,11 +14,11 @@ export const serveGameState = (ctx) => {
 
 export const handleDiceRoll = (ctx) => {
   const game = ctx.get("gameState");
-  const { diceValue, paths } = game.upkeep();
+  const { diceValues, destinations } = game.upkeep();
 
   const gameState = game.getGameState();
 
-  return ctx.json({ gameState, paths, diceValue });
+  return ctx.json({ gameState, destinations, diceValues });
 };
 
 export const buyDesignCard = (ctx) => {

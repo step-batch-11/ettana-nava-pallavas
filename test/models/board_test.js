@@ -33,7 +33,7 @@ describe("board test", () => {
     const player = new Player(2, "john");
     player.setup(1, { x: 1, y: 1 });
 
-    const player2 = new Player(123, "john");
+    const player2 = new Player(1, "john");
     player2.setup(2, { x: 3, y: 3 });
 
     const diceValue = { colorId: 1, number: 1 };
@@ -330,6 +330,29 @@ describe("board test", () => {
       assertEquals(point.recipients, [2]);
       assertEquals(actual.length, 5);
     });
+  });
+
+  describe("getTiles", () => {
+    const yarns = [
+      [1, 1, 1, 1, 1],
+      [2, 2, 2, 2, 2],
+      [3, 3, 3, 3, 3],
+      [4, 4, 4, 4, 4],
+      [5, 5, 5, 5, 5],
+    ];
+
+    const tiles = [
+      [0, 1, 2, 3, 4, 0],
+      [0, 5, 6, 1, 2, 0],
+      [0, 3, 4, 5, 6, 0],
+      [0, 1, 2, 3, 4, 0],
+      [0, 5, 6, 1, 2, 0],
+      [0, 3, 4, 5, 6, 0],
+    ];
+    board = new Board(tiles, yarns);
+
+    const actual = board.getTiles();
+    assertEquals(actual, tiles);
   });
 });
 

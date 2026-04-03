@@ -559,7 +559,7 @@ describe("Game controller test", () => {
       const diceValue = { colorId: 1, number: 1 };
       const players = [player1, player2];
 
-      game = new Game(players, bank, board, diceValue);
+      game = new Game(players, bank, board, diceValue, () => 0.9);
     });
 
     describe("roll dice :", () => {
