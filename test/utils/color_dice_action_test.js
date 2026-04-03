@@ -1,5 +1,5 @@
 import { assertEquals } from "@std/assert";
-import { beforeEach, describe, it } from "@std/testing/bdd";
+import { describe, it } from "@std/testing/bdd";
 import {
   createLedger,
   findAdjacentYarns,
@@ -8,43 +8,6 @@ import {
 } from "../../src/utils/color_dice_action.js";
 
 describe("color_dice_action", () => {
-  let color, players, yarns;
-  beforeEach(() => {
-    color = 2;
-    players = [
-      {
-        name: "Ajoy",
-        id: 1,
-        tokens: 0,
-        roomId: null,
-        victoryPoint: 0,
-        actionCards: [],
-        designCards: [],
-        pinColor: 2,
-        position: { x: 2, y: 2 },
-      },
-      {
-        name: "Dinesh",
-        id: 2,
-        tokens: 90,
-        roomId: null,
-        victoryPoint: 0,
-        actionCards: [],
-        designCards: [],
-        pinColor: 3,
-        position: { x: 3, y: 3 },
-      },
-    ];
-
-    yarns = [
-      [1, 2, 3, 4, 5],
-      [5, 4, 3, 2, 1],
-      [1, 2, 3, 4, 5],
-      [5, 4, 3, 2, 1],
-      [1, 2, 3, 4, 5],
-    ];
-  });
-
   describe("isValidPosition", () => {
     it("should return true for a position that is on the board", () => {
       const isValid = isValidPosition({ x: 1, y: 1 });
