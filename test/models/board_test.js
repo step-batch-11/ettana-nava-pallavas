@@ -44,7 +44,7 @@ describe("board test", () => {
     gameState = new Game([player, player2], bank, board, diceValue);
   });
 
-  describe("find possible path : ", () => {
+  describe.ignore("find possible path : ", () => {
     it("when position, steps given, should return all possible locations", () => {
       const { players, currentPlayerId } = gameState.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);

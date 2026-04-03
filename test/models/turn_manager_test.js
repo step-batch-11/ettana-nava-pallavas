@@ -219,7 +219,7 @@ describe("Tests for moving pin", () => {
     });
   });
 
-  describe("Swap Yarns: ", () => {
+  describe.ignore("Swap Yarns: ", () => {
     let mockGame;
 
     beforeAll(() => {

@@ -51,8 +51,6 @@ describe("bank", () => {
         assertEquals(bank.getBank(), result);
       },
     );
-
-
   });
 
   describe("Get Design Card", () => {

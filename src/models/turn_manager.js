@@ -34,7 +34,6 @@ export default class TurnManager {
     return this.#game.board.tiles[point.x][point.y];
   }
 
-
   #getPlayerPosition(playerId) {
     const player = this.#game.players.find((player) => player.id === playerId);
     return player.getPosition();

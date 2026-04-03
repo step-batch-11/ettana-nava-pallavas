@@ -53,7 +53,6 @@ export default class Game {
         { id },
       ) => id === Number(designCardId));
 
-
     const { yarns } = this.#board.getState();
 
     return this.#board.matchPattern(yarns, designCard.design);
