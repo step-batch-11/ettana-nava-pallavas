@@ -165,7 +165,7 @@ const attachPenaltyTooltip = (tile, penalty) => {
 };
 
 const reRenderGameState = async () => {
-  const res = await fetch("/game/board-state");
+  const res = await fetch("/game/game-state");
   const { state } = await res.json();
   renderGame(state);
 };
