@@ -60,7 +60,27 @@ describe("Game route", () => {
       },
     ];
 
-    players = [new Player(1, "Ajoy"), new Player(2, "Dinesh")];
+    actionCards = [{
+      "id": 1,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }, {
+      "id": 2,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }];
+
+    const player1 = new Player(1, "Ajoy");
+    player1.setup(2, { x: 2, y: 1 });
+    player1.addAllDesignCardDev(...designCards);
+    // player1.addActionCard(...actionCards);
+
+    const player2 = new Player(2, "Dinesh");
+    player1.setup(3, { x: 4, y: 1 });
+    players = [
+      player1,
+      player2,
+    ];
 
     tiles = [
       [0, 0, 0, 0, 0, 0],
@@ -136,7 +156,6 @@ describe("Game route", () => {
     it("should return the initial state as it is", async () => {
       const res = await app.request("/game/game-state");
       const game = await res.json();
-
       assertEquals(game.success, true);
     });
 
@@ -155,7 +174,7 @@ describe("Game route", () => {
     });
   });
 
-  describe.ignore("GET /game/claim-design", () => {
+  describe("GET /game/claim-design", () => {
     it(
       "should return details of design card if that design pattern has matched with the board",
       async () => {
@@ -173,7 +192,6 @@ describe("Game route", () => {
         const res = await app.request("/game/claim-design/2");
         const claimingStatus = await res.json();
 
-        console.log(claimingStatus);
         assertEquals(claimingStatus.success, true);
         assertEquals(claimingStatus.result.isMatched, false);
       },

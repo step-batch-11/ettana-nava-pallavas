@@ -16,7 +16,14 @@ export default class Game {
   }
 
   distributeInitialAssets() {
-    this.#bank.distributeInitialAssets(this.#players);
+    this.#players.forEach((player) => {
+      const token = this.#bank.deductTokens(2);
+      const designCard = this.#bank.getDesignCard();
+      const actionCard = this.#bank.getActionCard();
+      player.addDesignCard(designCard);
+      player.addActionCard(actionCard);
+      player.creditTokens(token);
+    });
   }
 
   buyDesignCard() {
@@ -44,7 +51,7 @@ export default class Game {
 
   claimDesign(designCardId) {
     const designCard = this.#players[this.#currentPlayerIndex]
-      .designCards.find((
+      .getDc().find((
         { id },
       ) => id === Number(designCardId));
 
@@ -55,11 +62,15 @@ export default class Game {
 
   getGameState() {
     return {
-      players: this.#players,
-      bank: this.#bank,
-      board: this.#board,
+      players: this.#players.map((player) => player.getPlayerData()),
+      bank: this.#bank.getBank(),
+      board: this.#board.getState(),
       diceValue: this.#diceValue,
-      currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
+      currentPlayerId: this.#players[this.#currentPlayerIndex].id,
+      deck: {
+        actionCards: this.#players[this.#currentPlayerIndex].getAc(),
+        designCards: this.#players[this.#currentPlayerIndex].getDc(),
+      },
     };
   }
 

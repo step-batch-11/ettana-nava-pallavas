@@ -10,43 +10,18 @@ import { assertThrows } from "@std/assert/throws";
 describe("Game controller test", () => {
   let game, players, bank;
 
-  const designCards = [
-    {
-      "id": 1,
-      "victoryPoints": 1,
-      "design": [
-        { coord: { x: 0, y: 0 }, color: 1 },
-        { coord: { x: 0, y: 1 }, color: 1 },
-        { coord: { x: 0, y: 2 }, color: 1 },
-      ],
-    },
-    {
-      "id": 2,
-      "victoryPoints": 1,
-      "design": [
-        { "coord": { "x": 1, "y": 0 }, "color": 5 },
-        { "coord": { "x": 2, "y": 1 }, "color": 5 },
-        { "coord": { "x": 3, "y": 2 }, "color": 5 },
-        { "coord": { "x": 4, "y": 3 }, "color": 5 },
-        { "coord": { "x": 3, "y": 1 }, "color": 1 },
-        { "coord": { "x": 4, "y": 0 }, "color": 1 },
-      ],
-    },
-  ];
+  // const player1 = new Player(1, "Ajoy");
+  // player1.setup(2, { x: 2, y: 1 });
+  // player1.addAllDesignCardDev(...designCards);
+  // player1.addActionCard(actionCards[0]);
 
-  const actionCards = [{
-    "id": 1,
-    "type": "move",
-    "description": "Move the pin to any unoccupied square.",
-  }, {
-    "id": 4,
-    "type": "get tokens",
-    "description": "Get 3 tokens from the reserve.",
-  }, {
-    "id": 2,
-    "type": "move",
-    "description": "Move the pin to any unoccupied square.",
-  }];
+  // const player2 = new Player(2, "Dinesh");
+  // player1.setup(3, { x: 4, y: 1 });
+
+  // players = [
+  //   player1,
+  //   player2,
+  // ];
 
   const tiles = [
     [0, 0, 0, 0, 0, 0],
@@ -66,6 +41,43 @@ describe("Game controller test", () => {
   ];
 
   beforeEach(() => {
+    const designCards = [
+      {
+        "id": 1,
+        "victoryPoints": 1,
+        "design": [
+          { coord: { x: 0, y: 0 }, color: 1 },
+          { coord: { x: 0, y: 1 }, color: 1 },
+          { coord: { x: 0, y: 2 }, color: 1 },
+        ],
+      },
+      {
+        "id": 2,
+        "victoryPoints": 1,
+        "design": [
+          { "coord": { "x": 1, "y": 0 }, "color": 5 },
+          { "coord": { "x": 2, "y": 1 }, "color": 5 },
+          { "coord": { "x": 3, "y": 2 }, "color": 5 },
+          { "coord": { "x": 4, "y": 3 }, "color": 5 },
+          { "coord": { "x": 3, "y": 1 }, "color": 1 },
+          { "coord": { "x": 4, "y": 0 }, "color": 1 },
+        ],
+      },
+    ];
+
+    const actionCards = [{
+      "id": 1,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }, {
+      "id": 4,
+      "type": "get tokens",
+      "description": "Get 3 tokens from the reserve.",
+    }, {
+      "id": 2,
+      "type": "move",
+      "description": "Move the pin to any unoccupied square.",
+    }];
     players = [new Player(1, "Ajoy"), new Player(2, "Dinesh")];
     bank = new Bank(designCards, actionCards, (x) => x, () => 0.1);
     game = new Game(
@@ -81,14 +93,14 @@ describe("Game controller test", () => {
       players[0].creditTokens(3);
       const card = game.buyDesignCard();
       assertEquals(card, {
-      "id": 1,
-      "victoryPoints": 1,
-      "design": [
-        { coord: { x: 0, y: 0 }, color: 1 },
-        { coord: { x: 0, y: 1 }, color: 1 },
-        { coord: { x: 0, y: 2 }, color: 1 },
-      ],
-    });
+        "id": 1,
+        "victoryPoints": 1,
+        "design": [
+          { coord: { x: 0, y: 0 }, color: 1 },
+          { coord: { x: 0, y: 1 }, color: 1 },
+          { coord: { x: 0, y: 2 }, color: 1 },
+        ],
+      });
       assertEquals(bank.getBank().tokens, 58);
       assertEquals(players[0].getTokens(), 0);
     });
@@ -101,7 +113,8 @@ describe("Game controller test", () => {
     });
 
     it("Player cannot buy design card due to insuffiecient DC in bank", () => {
-      players[0].creditTokens(6);
+      players[0].creditTokens(9);
+      game.buyDesignCard();
       game.buyDesignCard();
       assertThrows(() => game.buyDesignCard());
     });
@@ -175,12 +188,13 @@ describe("Game controller test", () => {
     it.ignore("should distribute assets when they have 0 tokens", () => {
       game.distributeInitialAssets();
       const gameState = game.getGameState();
+
       assertEquals(gameState.players[0].tokens, 2);
       assertEquals(gameState.players[1].tokens, 2);
-      assertEquals(gameState.players[0].designCards.length, 3); // 2 design cards added for claim design card test
-      assertEquals(gameState.players[0].actionCards.length, 3); // 2 action cards added for claim design card test
-      assertEquals(gameState.players[1].designCards.length, 1);
-      assertEquals(gameState.players[1].actionCards.length, 1);
+      assertEquals(gameState.players[0].dc, 3); // 2 design cards added for claim design card test
+      assertEquals(gameState.players[0].ac, 2); // 2 action cards added for claim design card test
+      assertEquals(gameState.players[1].dc, 1);
+      assertEquals(gameState.players[1].ac, 1);
     });
   });
 
@@ -189,5 +203,24 @@ describe("Game controller test", () => {
       const currentPlayerId = game.getCurrentPlayerId();
       assertEquals(currentPlayerId, 1);
     });
+  });
+
+  describe("Distribute initial assets", () => {
+    it(
+      "when game starts, then should update bank state after initial token and card distribution",
+      () => {
+        const result = {
+          tokens: 51,
+          availableDesignCards: 0,
+          availableActionCards: 3,
+          yarns: [1, 2, 3, 4, 5],
+          tiles: [1, 6],
+        };
+
+        game.distributeInitialAssets();
+
+        assertEquals(bank.getBank(), result);
+      },
+    );
   });
 });
