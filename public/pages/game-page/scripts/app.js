@@ -17,9 +17,9 @@ const handleClaim = async (e) => {
     showToast("Pattern is not matched", "e");
     return;
   }
-  await hightLightPattern(status.result.matches);
   renderGame(status.state);
   addEventListener();
+  await hightLightPattern(status.result.matches);
 };
 
 const addEventListener = () => {

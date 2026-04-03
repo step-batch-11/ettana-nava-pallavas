@@ -1,53 +1,31 @@
-export const isInBoundary = (x, y, rows, columns) =>
-  x <= rows && x >= 0 && y <= columns && y >= 0;
+const YARN_ROWS = 4;
+const YARN_COLUMNS = 4;
 
-export const extractPlayersPositions = (players) => {
-  const pinsPositions = {};
-  players.forEach((player) => {
-    pinsPositions[player.id] = Object.values(player.getPosition());
-  });
-  return pinsPositions;
+export const isValidPosition = ({ x, y }) => {
+  return x <= YARN_ROWS && x >= 0 && y <= YARN_COLUMNS && y >= 0;
 };
 
-export const mapAdjacentYarns = (pinsLocations, yarns) => {
-  const pinYarns = {};
-  const directions = [[0, 0], [0, -1], [-1, 0], [-1, -1]];
-  const [rows, columns] = [yarns.length, yarns[0].length];
-  Object.keys(pinsLocations).forEach((pinId) => {
-    const [x, y] = pinsLocations[pinId];
+export const findAdjacentYarns = (position) => {
+  const topLeft = { x: position.x - 1, y: position.y - 1 };
+  const topRight = { x: position.x - 1, y: position.y };
+  const bottomLeft = { x: position.x, y: position.y - 1 };
+  const bottomRight = { x: position.x, y: position.y };
 
-    directions.forEach(([x1, y1]) => {
-      pinYarns[pinId] = pinYarns[pinId] || [];
-      if (isInBoundary(x + x1, y + y1, rows, columns)) {
-        const yarn = yarns[x + x1][y + y1];
-        pinYarns[pinId].push(yarn);
-      }
-    });
-  });
-
-  return pinYarns;
+  return [topLeft, topRight, bottomLeft, bottomRight].filter(isValidPosition);
 };
 
-export const computeSettlement = (adjYarns, targetYarn) =>
-  adjYarns.filter((yarn) => yarn === targetYarn).length;
+export const settlement = (player, color, yarns) => {
+  const position = player.getPosition();
+  const eligibleYarns = findAdjacentYarns(position)
+    .filter(({ x, y }) => yarns[x][y] === color);
 
-export const createLedger = (adjYarnsMap, yarn) => {
+  return eligibleYarns.length;
+};
+
+export const createLedger = (color, players, yarns) => {
   const ledger = {};
-
-  Object.keys(adjYarnsMap).forEach((pinId) => {
-    const yarns = adjYarnsMap[pinId];
-    ledger[pinId] = computeSettlement(yarns, yarn);
+  players.forEach((player) => {
+    ledger[player.getId()] = settlement(player, color, yarns);
   });
-
   return ledger;
-};
-
-export const computeExpense = (distributionConfig) =>
-  Object.values(distributionConfig).reduce((a, b) => a + b, 0);
-
-export const distributeTokens = (distributionConfig, players) => {
-  Object.keys(distributionConfig).forEach((playerId) => {
-    const player = players.find((player) => player.id === Number(playerId));
-    player.creditTokens(distributionConfig[playerId]);
-  });
 };

@@ -1,4 +1,7 @@
+import { add } from "../utils/arthimetic.js";
+import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
+import { getPlayerById } from "../utils/util.js";
 
 export default class Game {
   #players;
@@ -13,6 +16,45 @@ export default class Game {
     this.#board = board;
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = 0;
+  }
+
+  distributeAssets({ colorId }, currentPlayer) {
+    if (colorId === 6) {
+      currentPlayer.addActionCard(this.#bank.getActionCard());
+      return;
+    }
+
+    const ledger = createLedger(colorId, this.#players, this.#board.getYarns());
+    const credit = Object.keys(ledger).reduce(add);
+    if (this.#bank.getTokens() < credit) return;
+
+    this.#players.forEach((player) => {
+      const id = player.getId();
+      this.#bank.deductTokens(ledger[id]);
+      player.creditTokens(ledger[id]);
+    });
+    return;
+  }
+
+  rollDice(randomFn = Math.random) {
+    const colorId = Math.floor(randomFn() * 6) + 1;
+    const number = Math.floor(randomFn() * 6) + 1;
+
+    return { number, colorId };
+  }
+
+  upkeep() {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+    const diceValue = this.rollDice();
+
+    this.destinations = this.#board.findPossiblePaths(
+      this.#players,
+      currentPlayer,
+      diceValue.number,
+    );
+
+    this.distributeAssets(diceValue, currentPlayer);
+    return { diceValue, paths: this.destinations };
   }
 
   distributeInitialAssets() {
@@ -30,7 +72,6 @@ export default class Game {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
     if (currentPlayer.getTokens() < 3) return "NOT_ENOUGH_TOKEN";
 
-    // currentPlayer.tokens -= 3;
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
     this.#bank.incrementTokens(3);
@@ -73,7 +114,7 @@ export default class Game {
       bank: this.#bank.getBank(),
       board: this.#board.getState(),
       diceValue: this.#diceValue,
-      currentPlayerId: this.#players[this.#currentPlayerIndex].id,
+      currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       deck: {
         actionCards: this.#players[this.#currentPlayerIndex].getAc(),
         designCards: this.#players[this.#currentPlayerIndex].getDc(),
@@ -122,17 +163,13 @@ export default class Game {
     };
   }
 
-  #getPlayerById(id) {
-    return this.#players.find((player) => player.getId() === id);
-  }
-
   #getCurrentPlayer() {
     return this.#players[this.#currentPlayerIndex];
   }
 
   #processPathPenalty(payer, payees) {
     return payees.map((payeeId) => {
-      const payee = this.#getPlayerById(payeeId);
+      const payee = getPlayerById(this.#players, payeeId);
       payee.creditTokens(1);
       payer.debitTokens(1);
       return { payeeId, tokens: payee.tokens };
