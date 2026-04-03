@@ -15,6 +15,8 @@ const main = () => {
     diceValue,
   );
 
+  gameState.distributeInitalAssets(players);
+
   const turnManager = new TurnManager(gameState, Math.random);
 
   const PORT = Deno.env.get("PORT") || 8000;
