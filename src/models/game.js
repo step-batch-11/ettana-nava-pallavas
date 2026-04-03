@@ -13,7 +13,7 @@ export default class Game {
     this.#currentPlayerIndex = 0;
   }
 
-  distributeInitalAssets() {
+  distributeInitialAssets() {
     this.#bank.distributeInitialAssets(this.#players);
   }
 
@@ -34,6 +34,15 @@ export default class Game {
     const card = this.#bank.buyActionCard();
     currentPlayer.actionCards.push(card);
     return card;
+  }
+
+  claimDesign(designCardId) {
+    const design = this.#players[this.#currentPlayerIndex].find(({ id }) =>
+      id === designCardId
+    );
+    const { yarns } = this.#board.getState();
+
+    return this.#board.matchDesign(yarns, design);
   }
 
   getGameState() {
