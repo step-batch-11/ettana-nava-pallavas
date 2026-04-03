@@ -8,7 +8,7 @@ import {
 } from "../../src/utils/color_dice_action.js";
 
 describe("color_dice_action", () => {
-  let players, color, yarns;
+  let color, players, yarns;
   beforeEach(() => {
     color = 2;
     players = [

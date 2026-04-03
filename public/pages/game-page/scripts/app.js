@@ -1,48 +1,46 @@
-import { initBoard, renderBoard } from "./board.js";
+import { hightLightPattern, initBoard, renderBoard } from "./board.js";
 import { applyEventListenerOnDice, defaultDice } from "./game.js";
 import { attachBankEventListeners, renderBankState } from "./bank.js";
 import {
+  addClaimEventListener,
   addDragEventListenerOnDeck,
   addToggleEventListenerOnDeck,
   renderDeck,
 } from "./deck.js";
-import { getGameState } from "./api.js";
+import { claimDesignCard, getGameState } from "./api.js";
+import { showToast } from "../../utils/utils.js";
 
-const distributeInitialAssets = async () => {
-  await new Promise((res) => {
-    setTimeout(() => {
-      res(1);
-    }, 500);
-  });
-
-  const res = await fetch("/game/distribute-initial-assets");
-  await res.json();
-
-  const boardRes = await fetch("/game/game-state");
-  const { state } = await boardRes.json();
-  renderBoard(state);
-  renderBankState();
+const handleClaim = async (e) => {
+  const card = e.target.closest(".card-item");
+  const status = await claimDesignCard(card.dataset.id);
+  if (!status.result.isMatched) {
+    showToast("Pattern is not matched", "e");
+    return;
+  }
+  await hightLightPattern(status.result.matches);
+  renderGame(status.state);
+  addEventListener();
 };
 
 const addEventListener = () => {
   applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
   addDragEventListenerOnDeck();
+  addClaimEventListener(handleClaim);
   attachBankEventListeners();
 };
 
-export const renderGame = async (state) => {
+export const renderGame = (state) => {
   renderBoard(state);
-  await renderBankState();
-  renderDeck(state.players, state.currentPlayer);
+  renderBankState(state.bank);
+  renderDeck(state.deck);
 };
 
 const main = async () => {
   initBoard();
 
-  await distributeInitialAssets();
   const state = await getGameState();
-  await renderGame(state);
+  renderGame(state);
 
   defaultDice();
   addEventListener();

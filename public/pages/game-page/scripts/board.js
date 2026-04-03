@@ -164,7 +164,7 @@ const createSVGPlayerIcon = () => {
 const renderPlayerPins = (players, currentPlayer) => {
   players.forEach((player) => {
     const el = board.querySelector(
-      `#tile${player.pin.position.x}${player.pin.position.y}`,
+      `#tile${player.position.x}${player.position.y}`,
     );
     el.innerHTML = "";
     const icon = createDiv("player-icon tile-value");
@@ -205,7 +205,7 @@ const createPlayerCard = (player) => {
   const element = clone.querySelector(".player-card");
   clone.querySelector(".player-name").textContent = player.name;
   clone.querySelector(".avatar").src = "/assets/user_pin.png";
-  clone.querySelector(".stat1").textContent = player.victoryPoint;
+  clone.querySelector(".stat1").textContent = player.vp;
   clone.querySelector(".stat2").textContent = player.tokens;
 
   return { clone, element };
@@ -221,6 +221,26 @@ const renderPlayersCards = (players, currentPlayer) => {
     }
 
     playersContainer.appendChild(clone);
+  });
+};
+
+export const hightLightPattern = async (pattern) => {
+  pattern.forEach(({ x, y }) => {
+    board.querySelector(`#r-${x}-c-${y}`).classList.add(
+      "highlight",
+    );
+  });
+
+  await new Promise((res) => {
+    setTimeout(() => {
+      res(1);
+    }, 5000);
+  });
+
+  pattern.forEach(({ x, y }) => {
+    board.querySelector(`#r-${x}-c-${y}`).classList.remove(
+      "highlight",
+    );
   });
 };
 
