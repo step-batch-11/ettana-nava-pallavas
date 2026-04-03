@@ -55,7 +55,7 @@ describe("Game route", () => {
     const player1 = new Player(1, "Ajoy");
     player1.setup(2, { x: 2, y: 1 });
     player1.addAllDesignCardDev(...designCards);
-    player1.addActionCard(...actionCards);
+    // player1.addActionCard(...actionCards);
 
     const player2 = new Player(2, "Dinesh");
     player1.setup(3, { x: 4, y: 1 });

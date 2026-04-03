@@ -25,7 +25,7 @@ describe("player", () => {
     });
 
     it("increment vp by 1", () => {
-      player.incrementVp();
+      player.updateVp(1);
 
       assertEquals(player.getVp(), 1);
     });

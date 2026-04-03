@@ -108,7 +108,7 @@ describe("Game controller test", () => {
 
       assertEquals(gameState.players[0].tokens, 2);
       assertEquals(gameState.players[1].tokens, 2);
-      assertEquals(gameState.players[0].dc, 3); // 2 design cards added for claim design card test
+      assertEquals(gameState.players[0].dc, 2); // 2 design cards added for claim design card test
       assertEquals(gameState.players[0].ac, 2); // 2 action cards added for claim design card test
       assertEquals(gameState.players[1].dc, 1);
       assertEquals(gameState.players[1].ac, 1);

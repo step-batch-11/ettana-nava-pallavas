@@ -48,14 +48,21 @@ export default class Game {
   }
 
   claimDesign(designCardId) {
-    const designCard = this.#players[this.#currentPlayerIndex]
-      .getDc().find((
+    const currentPlayer = this.#getCurrentPlayer();
+    const designCard = currentPlayer
+      .getDc()
+      .find((
         { id },
       ) => id === Number(designCardId));
 
     const { yarns } = this.#board.getState();
 
-    return this.#board.matchPattern(yarns, designCard.design);
+    const status = this.#board.matchPattern(yarns, designCard.design);
+    if (status.isMatched) {
+      currentPlayer.updateVp(designCard.victoryPoints);
+      currentPlayer.removeDesignCard(designCard);
+    }
+    return status;
   }
 
   getGameState() {

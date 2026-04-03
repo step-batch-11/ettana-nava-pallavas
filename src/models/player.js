@@ -19,8 +19,8 @@ export default class Player {
     this.#position = {};
   }
 
-  incrementVp() {
-    this.#vp++;
+  updateVp(n) {
+    this.#vp += n;
   }
 
   getVp() {
@@ -87,6 +87,7 @@ export default class Player {
       ac: this.#ac.length,
       pinColor: this.#pinColor,
       position: this.#position,
+      vp: this.#vp,
     };
   }
 

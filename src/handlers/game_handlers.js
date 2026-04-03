@@ -16,9 +16,11 @@ export const claimDesign = (ctx) => {
   const game = ctx.get("gameState");
   const designCardId = ctx.req.param("id");
   const result = game.claimDesign(designCardId);
+  const gameState = game.getGameState();
 
   return ctx.json({
     success: true,
     result,
+    state: gameState,
   });
 };
