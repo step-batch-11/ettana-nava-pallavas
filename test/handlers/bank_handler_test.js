@@ -7,7 +7,6 @@ import {
 } from "../../src/handlers/bank_handler.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
-import TurnManager from "../../src/models/turn_manager.js";
 import Game from "../../src/models/game.js";
 import { diceValue, tiles, yarns } from "../../src/data/state.js";
 
@@ -66,7 +65,7 @@ describe.ignore("Game route", () => {
       new Board(tiles, yarns),
       diceValue,
     );
-    app = createApp(game, new TurnManager());
+    app = createApp(game, []);
   });
 
   describe("Buy Design Card", () => {

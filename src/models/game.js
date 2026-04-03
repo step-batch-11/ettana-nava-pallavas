@@ -120,4 +120,14 @@ export default class Game {
 
     this.#board.swapYarns(source, destination);
   }
+
+  purchaseSwap() {
+    const swapCost = 3;
+    const currentPlayer = this.#getCurrentPlayer();
+    if (currentPlayer.getTokens() < swapCost) {
+      throw new Error("You don't have enough tokens")
+    }
+    currentPlayer.debitTokens(swapCost);
+  }
+
 }

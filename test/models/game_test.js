@@ -1,8 +1,13 @@
-import { beforeEach, describe, it } from "@std/testing/bdd";
+import { beforeAll, beforeEach, describe, it } from "@std/testing/bdd";
 import Game from "../../src/models/game.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
+import Player from "../../src/models/player.js";
 import { assertEquals } from "@std/assert/equals";
+import { assertThrows } from "@std/assert/throws";
+import { assertNotEquals } from "@std/assert/not-equals";
+
+const getCoords = ({ x, y }) => ({ x, y });
 
 describe("Game controller test", () => {
   let game;
@@ -125,6 +130,322 @@ describe("Game controller test", () => {
     it("Get current player id", () => {
       const currentPlayerId = game.getCurrentPlayerId();
       assertEquals(currentPlayerId, 1);
+    });
+  });
+
+  describe("Tests for moving pin and swap yarns", () => {
+    let board, gameState;
+
+    const currentPlayer = new Player(1, "John");
+    currentPlayer.setup(3, { x: 1, y: 0 });
+    currentPlayer.creditTokens(5);
+
+    beforeEach(() => {
+      const player2 = new Player(2, "Jane");
+      const player3 = new Player(3, "Jean");
+
+      player2.setup(2, { x: 1, y: 2 });
+      player3.setup(1, { x: 1, y: 4 });
+
+      const players = [currentPlayer, player2, player3];
+      const tiles = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 2, 3, 4, 0],
+        [0, 5, 6, 1, 2, 0],
+        [0, 3, 4, 5, 6, 0],
+        [0, 2, 3, 4, 5, 0],
+        [0, 0, 0, 0, 0, 0],
+      ];
+      const yarns = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+
+      board = new Board(tiles, yarns);
+      const bank = new Bank([], []);
+      const diceValue = { colorId: 1, number: 2 };
+
+      gameState = new Game(players, bank, board, diceValue);
+    });
+
+    describe("Move pin", () => {
+      describe("test for Destination: ", () => {
+        beforeEach(() => {
+          board.destinations = [
+            { destination: { x: 2, y: 4 }, path: [], type: "normal" },
+            { destination: { x: 1, y: 0 }, path: [], type: "normal" },
+          ];
+        });
+
+        it("Invalid destination, position should not be changed", () => {
+          const path = [
+            { x: 1, y: 0 },
+            { x: 1, y: 1 },
+          ];
+
+          const route = { destination: { x: 2, y: 0 }, path, type: "normal" };
+
+          const positions = gameState.move(route);
+          assertNotEquals(positions.destination, getCoords(route.destination));
+        });
+
+        it("Valid destination, position should be changed to destination", () => {
+          const path = [
+            { x: 1, y: 0 },
+            { x: 1, y: 1 },
+            { x: 2, y: 1 },
+            { x: 2, y: 2 },
+            { x: 2, y: 3 },
+          ];
+
+          const route = { destination: { x: 2, y: 4 }, path, type: "normal" };
+
+          const positions = gameState.move(route);
+          assertEquals(positions.destination, getCoords(route.destination));
+        });
+      });
+
+      describe("Path penalty for premium path: ", () => {
+        it("One player is in path, should pay to one player", () => {
+          const path = [
+            { x: 1, y: 0 },
+            { x: 1, y: 1 },
+            { x: 1, y: 2 },
+          ];
+
+          board.destinations = [{
+            destination: { x: 1, y: 3 },
+            path,
+            type: "premium",
+            recipients: [2],
+          }];
+
+          const route = {
+            destination: { x: 1, y: 3 },
+            path,
+            type: "premium",
+            recipients: [2],
+          };
+
+          const positions = gameState.move(route);
+          assertEquals(positions.destination, getCoords(route.destination));
+          assertEquals(currentPlayer.getTokens(), 4);
+        });
+
+        it("Two players is in path, should pay to two players", () => {
+          const path = [
+            { x: 1, y: 0 },
+            { x: 1, y: 1 },
+            { x: 1, y: 2 },
+            { x: 1, y: 3 },
+            { x: 1, y: 4 },
+          ];
+
+          board.destinations = [{
+            destination: { x: 1, y: 5 },
+            path,
+            type: "premium",
+            recipients: [2, 3],
+          }];
+
+          const route = {
+            destination: { x: 1, y: 5 },
+            path,
+            type: "premium",
+            recipients: [2, 3],
+          };
+
+          const positions = gameState.move(route);
+          assertEquals(positions.destination, getCoords(route.destination));
+          assertEquals(currentPlayer.getTokens(), 2);
+        });
+
+        it("No one in path, should not pay to any player", () => {
+          board.destinations = [{
+            destination: { x: 2, y: 3 },
+            path: [],
+            type: "normal",
+          }];
+
+          const path = [
+            { x: 1, y: 0 },
+            { x: 0, y: 0 },
+            { x: 0, y: 1 },
+            { x: 0, y: 2 },
+            { x: 0, y: 3 },
+          ];
+
+          const route = { destination: { x: 2, y: 3 }, path, type: "normal" };
+
+          const positions = gameState.move(route);
+          assertEquals(positions.destination, getCoords(route.destination));
+          assertEquals(currentPlayer.getTokens(), 2);
+        });
+      });
+    });
+
+    describe("Get adjacent yarns: ", () => {
+      it("It is a normal tile, should give four adjacent yarns position", () => {
+        const pinPosition = { x: 1, y: 2 };
+        const adjYarns = board.getAdjYarnsPositions(pinPosition);
+        const expected = [
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+          { x: 1, y: 1 },
+          { x: 1, y: 2 },
+        ];
+        assertEquals(adjYarns, expected);
+      });
+
+      it("It is a side (top) tile, should give two adjacent yarns position", () => {
+        const pinPosition = { x: 0, y: 2 };
+        const adjYarns = board.getAdjYarnsPositions(pinPosition);
+        const expected = [
+          { x: 0, y: 1 },
+          { x: 0, y: 2 },
+        ];
+        assertEquals(adjYarns, expected);
+      });
+
+      it("It is a side (bottom) tile, should give two adjacent yarns position", () => {
+        const pinPosition = { x: 5, y: 2 };
+        const adjYarns = board.getAdjYarnsPositions(pinPosition);
+        const expected = [
+          { x: 4, y: 1 },
+          { x: 4, y: 2 },
+        ];
+        assertEquals(adjYarns, expected);
+      });
+
+      it("It is a corner (left-top) tile, should give only one adjacent yarn position", () => {
+        const pinPosition = { x: 5, y: 0 };
+        const adjYarns = board.getAdjYarnsPositions(pinPosition);
+        const expected = [
+          { x: 4, y: 0 },
+        ];
+        assertEquals(adjYarns, expected);
+      });
+
+      it("It is a corner (right-bottom) tile, should give only one adjacent yarn position", () => {
+        const pinPosition = { x: 0, y: 5 };
+        const adjYarns = board.getAdjYarnsPositions(pinPosition);
+        const expected = [
+          { x: 0, y: 4 },
+        ];
+        assertEquals(adjYarns, expected);
+      });
+    });
+
+    describe("Free yarn swap: ", () => {
+      let mockGame;
+
+      beforeAll(() => {
+        mockGame = gameState.getGameState();
+      });
+
+      it("Source and destination yarns positions are valid, should be swapped", () => {
+        const source = { x: 1, y: 2 };
+        const destination = { x: 2, y: 3 };
+        const expected = [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ];
+
+        gameState.freeSwap(source, destination);
+        assertEquals(mockGame.board.getYarns(), expected);
+      });
+
+      it("Source yarn position is not valid (out of board: negative value), should not be swapped", () => {
+        const source = { x: -1, y: 1 };
+        const destination = { x: 2, y: 2 };
+        const expected = [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ];
+
+        assertThrows(() => gameState.freeSwap(source, destination));
+        assertEquals(mockGame.board.getYarns(), expected);
+      });
+
+      it("Source yarn position is not valid (out of board: higher value), should not be swapped", () => {
+        const source = { x: 5, y: 1 };
+        const destination = { x: 2, y: 2 };
+        const expected = [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ];
+
+        assertThrows(() => gameState.freeSwap(source, destination));
+        assertEquals(mockGame.board.getYarns(), expected);
+      });
+
+      it("Destination yarn position is not valid (out of board: higher value), should not be swapped", () => {
+        const source = { x: 1, y: 1 };
+        const destination = { x: 5, y: 2 };
+        const expected = [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ];
+
+        assertThrows(() => gameState.freeSwap(source, destination));
+        assertEquals(mockGame.board.getYarns(), expected);
+      });
+
+      it("Source and destination yarns positions are same, should not be swapped", () => {
+        const source = { x: 1, y: 1 };
+        const destination = { x: 1, y: 1 };
+        const expected = [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ];
+
+        assertThrows(() => gameState.freeSwap(source, destination));
+        assertEquals(mockGame.board.getYarns(), expected);
+      });
+    });
+
+    describe("Paid yarn swap", () => {
+      let mockGame;
+
+      beforeEach(() => {
+        mockGame = gameState.getGameState();
+      });
+
+      it("Player have more than 3 tokens, should get a chance", () => {
+        const { currentPlayerId, players } = mockGame;
+        const currentPlayer = players.find((player) =>
+          player.id === currentPlayerId
+        );
+
+        currentPlayer.creditTokens(3);
+        const tokens = currentPlayer.getTokens();
+
+        gameState.purchaseSwap();
+        const updatedTokens = currentPlayer.getTokens();
+        assertEquals(tokens - 3, updatedTokens);
+      });
+
+      it("Player don't have more than 3 tokens, should throw an error", () => {
+        assertThrows(() => gameState.purchaseSwa());
+      });
     });
   });
 });

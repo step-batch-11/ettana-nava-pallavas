@@ -5,7 +5,6 @@ import { logger } from "hono/logger";
 
 export const createApp = (
   gameState,
-  turnManager,
   loggerFn = logger,
 ) => {
   const app = new Hono();
@@ -14,7 +13,6 @@ export const createApp = (
 
   app.use("/game/*", async (ctx, next) => {
     ctx.set("gameState", gameState);
-    ctx.set("turnManager", turnManager);
     await next();
   });
 

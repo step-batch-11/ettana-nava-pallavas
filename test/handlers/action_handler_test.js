@@ -3,8 +3,6 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import { createApp } from "../../src/app.js";
 import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
-import TurnManager from "../../src/models/turn_manager.js";
-
 describe.ignore("Game route", () => {
   let app, game;
 
@@ -18,7 +16,7 @@ describe.ignore("Game route", () => {
       bank: new Bank([], []),
       board: new Board([], []),
     };
-    app = createApp(game, new TurnManager());
+    app = createApp(game, []);
   });
 
   it("when tax action card played, then one token should be deducted and bank tokens should incremented: ", async () => {
