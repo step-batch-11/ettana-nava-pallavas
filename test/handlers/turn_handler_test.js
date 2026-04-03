@@ -100,6 +100,81 @@ describe.ignore("move request: ", () => {
   });
 });
 
+describe("Swap Yarns: ", () => {
+  let app;
+  const randomFn = (_) => 0.5;
+
+  beforeEach(() => {
+    const yarns = [
+      [1, 2, 3, 4, 5],
+      [5, 4, 3, 2, 1],
+      [1, 2, 3, 4, 5],
+      [5, 4, 3, 2, 1],
+      [1, 2, 3, 4, 5],
+    ];
+    const player = new Player(1, "jane");
+    player.setup(2, { x: 3, y: 4 });
+
+    const bank = new Bank(designCards, actionCards, () => 0.1);
+    const board = new Board([[]], yarns);
+    const mockGameState = new Game([player], bank, board, {});
+
+    const turnManager = new TurnManager(mockGameState, randomFn);
+    app = createApp(mockGameState, turnManager);
+  });
+
+  it("Requesting with valid yarns positions, should be swapped", async () => {
+    const draggablePosition = { x: 3, y: 4 };
+    const yarnPosition = { x: 2, y: 3 };
+
+    const response = await app.request("/game/swap", {
+      method: "POST",
+      body: JSON.stringify({ draggablePosition, yarnPosition }),
+      headers: { "content-type": "application/json" },
+    });
+
+    const moveResult = await response.json();
+
+    assertEquals(response.status, 200);
+    assertEquals(moveResult.success, true);
+    assertEquals(moveResult.message, "Swapped successfully");
+  });
+
+  it("Requesting with invalid source yarn position, should not be swapped", async () => {
+    const draggablePosition = { x: 6, y: 1 };
+    const yarnPosition = { x: 2, y: 2 };
+
+    const response = await app.request("/game/swap", {
+      method: "POST",
+      body: JSON.stringify({ draggablePosition, yarnPosition }),
+      headers: { "content-type": "application/json" },
+    });
+
+    const moveResult = await response.json();
+
+    assertEquals(response.status, 400);
+    assertEquals(moveResult.success, false);
+    assertEquals(moveResult.message, "You can't swap these yarns");
+  });
+
+  it("Requesting with same source and destination yarns positions, should not be swapped", async () => {
+    const draggablePosition = { x: 1, y: 1 };
+    const yarnPosition = { x: 1, y: 1 };
+
+    const response = await app.request("/game/swap", {
+      method: "POST",
+      body: JSON.stringify({ draggablePosition, yarnPosition }),
+      headers: { "content-type": "application/json" },
+    });
+
+    const moveResult = await response.json();
+
+    assertEquals(response.status, 400);
+    assertEquals(moveResult.success, false);
+    assertEquals(moveResult.message, "You can't swap these yarns");
+  });
+});
+
 describe.ignore("roll dice request : ", () => {
   let app;
   let bank;

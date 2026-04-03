@@ -9,10 +9,14 @@ export default class Player {
   constructor(id, name) {
     this.id = id;
     this.name = name;
+
     this.#vp = 0;
     this.#tokens = 0;
+
     this.#dc = [];
     this.#ac = [];
+
+    this.#position = {};
   }
 
   incrementVp() {
@@ -28,6 +32,8 @@ export default class Player {
   }
 
   debitTokens(tokens) {
+    if (this.#tokens - tokens < 0) return;
+
     this.#tokens -= tokens;
   }
 
@@ -85,19 +91,20 @@ export default class Player {
   }
 
   getPosition() {
-    return { ...this.#position };
+    return structuredClone(this.#position);
   }
 
-  #setPosition(destination) {
-    this.#position = destination;
+  #setPosition(x, y) {
+    this.#position.x = x;
+    this.#position.y = y;
   }
 
-  setup(pinColor, position) {
+  setup(pinColor, { x, y }) {
     this.#pinColor = pinColor;
-    this.#setPosition(position);
+    this.#setPosition(x, y);
   }
 
-  move(destination) {
-    this.#setPosition(destination);
+  move({ x, y }) {
+    this.#setPosition(x, y);
   }
 }
