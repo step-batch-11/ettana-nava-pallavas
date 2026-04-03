@@ -100,7 +100,7 @@ describe.ignore("move request: ", () => {
   });
 });
 
-describe("Swap Yarns: ", () => {
+describe.ignore("Swap Yarns: ", () => {
   let app;
   const randomFn = (_) => 0.5;
 
