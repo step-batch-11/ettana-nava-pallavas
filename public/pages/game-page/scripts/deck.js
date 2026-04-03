@@ -1,4 +1,6 @@
 import { colorsMap } from "../../../assets/colors.js";
+import { showToast } from "../../utils/utils.js";
+import { renderGame } from "./app.js";
 
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
@@ -211,4 +213,23 @@ export const addClaimEventListener = (handleClaim) => {
 export const renderDeck = (deck) => {
   renderDesignCards(deck.designCards);
   renderActionCards(deck.actionCards);
+};
+
+export const attachPlayActionCard = () => {
+  const actionCards = document.querySelectorAll(".action-cards .card-item");
+
+  actionCards.forEach((card) => {
+    card.addEventListener("click", async () => {
+      const id = card.dataset.id;
+      const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+      const { state, success, message } = await res.json();
+
+      if (!success) {
+        return showToast(message, "e");
+      }
+
+      showToast(message);
+      renderGame(state);
+    });
+  });
 };

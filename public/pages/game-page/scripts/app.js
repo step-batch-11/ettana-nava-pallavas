@@ -5,6 +5,7 @@ import {
   addClaimEventListener,
   addDragEventListenerOnDeck,
   addToggleEventListenerOnDeck,
+  attachPlayActionCard,
   renderDeck,
 } from "./deck.js";
 import { claimDesignCard, getGameState } from "./api.js";
@@ -26,12 +27,14 @@ const addEventListener = () => {
   addDragEventListenerOnDeck();
   addClaimEventListener(handleClaim);
   attachBankEventListeners();
+  attachPlayActionCard();
 };
 
 export const renderGame = (state) => {
   renderBoard(state);
   renderBankState(state.bank);
   renderDeck(state.deck);
+  addEventListener();
 };
 
 const main = async () => {
@@ -41,7 +44,6 @@ const main = async () => {
   renderGame(state);
 
   defaultDice();
-  addEventListener();
 };
 
 globalThis.onload = main;

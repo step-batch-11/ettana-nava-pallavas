@@ -13,6 +13,11 @@ const main = () => {
   player1.setup(1, { x: 1, y: 1 });
 
   player1.addAllDesignCardDev(...designCards);
+  player1.addActionCard({
+    id: 6,
+    "type": "tax",
+    "description": "Other player will give 1 token to bank",
+  });
 
   const player2 = new Player(2, "Dinesh");
   player2.setup(2, { x: 3, y: 3 });

@@ -65,11 +65,11 @@ export const playActionCard = async (context) => {
     };
 
     if (id in actionCardHandlers) {
-      const { affectedPlayers, gameState } = game.playTaxActionCard(id);
+      const { affectedPlayers, state } = game.playTaxActionCard(id);
 
       return context.json({
         affectedPlayers,
-        gameState,
+        state,
         success: true,
         message: "Tax action card played",
       });

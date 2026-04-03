@@ -111,7 +111,7 @@ export default class Game {
 
     return {
       affectedPlayers,
-      gameState: this.getGameState(),
+      state: this.getGameState(),
     };
   }
 
