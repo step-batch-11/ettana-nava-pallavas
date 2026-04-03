@@ -112,7 +112,7 @@ export default class Game {
       bank: this.#bank.getBank(),
       board: this.#board.getState(),
       diceValue: this.#diceValue,
-      currentPlayerId: this.#players[this.#currentPlayerIndex].id,
+      currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       deck: {
         actionCards: this.#players[this.#currentPlayerIndex].getAc(),
         designCards: this.#players[this.#currentPlayerIndex].getDc(),
@@ -157,7 +157,7 @@ export default class Game {
 
     return {
       affectedPlayers,
-      gameState: this.getGameState(),
+      state: this.getGameState(),
     };
   }
 
@@ -211,5 +211,14 @@ export default class Game {
     }
 
     this.#board.swapYarns(source, destination);
+  }
+
+  purchaseSwap() {
+    const swapCost = 3;
+    const currentPlayer = this.#getCurrentPlayer();
+    if (currentPlayer.getTokens() < swapCost) {
+      throw new Error("You don't have enough tokens");
+    }
+    currentPlayer.debitTokens(swapCost);
   }
 }

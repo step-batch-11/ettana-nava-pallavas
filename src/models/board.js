@@ -29,8 +29,6 @@ export default class Board {
     return this.destinations;
   }
 
-
-
   getTiles() {
     return structuredClone(this.#tiles);
   }
