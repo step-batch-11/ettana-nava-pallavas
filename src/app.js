@@ -4,8 +4,7 @@ import gameRoute from "./routes/game_route.js";
 import { logger } from "hono/logger";
 
 export const createApp = (
-  game,
-  turnManager,
+  gameState,
   loggerFn = logger,
 ) => {
   const app = new Hono();
@@ -13,8 +12,7 @@ export const createApp = (
   app.use(loggerFn());
 
   app.use("/game/*", async (ctx, next) => {
-    ctx.set("gameState", game);
-    ctx.set("turnManager", turnManager);
+    ctx.set("gameState", gameState);
     await next();
   });
 

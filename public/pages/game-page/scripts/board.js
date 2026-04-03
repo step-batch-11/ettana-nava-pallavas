@@ -187,7 +187,7 @@ const renderNumberTiles = (tiles) => {
       el.innerHTML = "";
 
       const innerContent = createDiv("tile-value");
-      innerContent.textContent = tile;
+      innerContent.textContent = tile || "";
       el.appendChild(innerContent);
     });
   });

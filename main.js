@@ -21,16 +21,17 @@ const main = () => {
   const player2 = new Player(2, "Dinesh");
   player2.setup(2, { x: 3, y: 3 });
 
-  const game = new Game(
+  const gameState = new Game(
     [player1, player2],
     new Bank(designCards, actionCards),
     new Board(tiles, yarns),
     diceValue,
   );
-  game.distributeInitialAssets();
+
+  gameState.distributeInitialAssets();
 
   const PORT = Deno.env.get("PORT") || 8000;
-  const app = createApp(game);
+  const app = createApp(gameState);
   Deno.serve({ port: PORT }, app.fetch);
 };
 

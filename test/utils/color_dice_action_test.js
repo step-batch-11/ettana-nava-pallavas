@@ -4,7 +4,7 @@ import {
   createLedger,
   findAdjacentYarns,
   isValidPosition,
-  settelement,
+  settlement,
 } from "../../src/utils/color_dice_action.js";
 
 describe("color_dice_action", () => {
@@ -155,7 +155,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 1, y: 1 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 1;
 
       assertEquals(credit, expected);
@@ -175,7 +175,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 1, y: 1 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 2;
 
       assertEquals(credit, expected);
@@ -195,7 +195,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 1, y: 1 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 3;
 
       assertEquals(credit, expected);
@@ -215,7 +215,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 1, y: 1 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 4;
 
       assertEquals(credit, expected);
@@ -235,7 +235,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 0, y: 0 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 1;
 
       assertEquals(credit, expected);
@@ -255,7 +255,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 3, y: 3 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 0;
 
       assertEquals(credit, expected);
@@ -275,7 +275,7 @@ describe("color_dice_action", () => {
         getPosition: () => ({ x: 5, y: 5 }),
       };
 
-      const credit = settelement(player, 1, yarns);
+      const credit = settlement(player, 1, yarns);
       const expected = 0;
 
       assertEquals(credit, expected);

@@ -14,7 +14,7 @@ export const findAdjacentYarns = (position) => {
   return [topLeft, topRight, bottomLeft, bottomRight].filter(isValidPosition);
 };
 
-export const settelement = (player, color, yarns) => {
+export const settlement = (player, color, yarns) => {
   const position = player.getPosition();
   const eligibleYarns = findAdjacentYarns(position)
     .filter(({ x, y }) => yarns[x][y] === color);
@@ -25,7 +25,7 @@ export const settelement = (player, color, yarns) => {
 export const createLedger = (color, players, yarns) => {
   const ledger = {};
   players.forEach((player) => {
-    ledger[player.getId()] = settelement(player, color, yarns);
+    ledger[player.getId()] = settlement(player, color, yarns);
   });
   return ledger;
 };
