@@ -4,22 +4,27 @@ export default class Bank {
   #designCards;
   #actionCards;
   #tokens = 55;
-  #tiles = [{ value: 1, playerId: null }, { value: 6, playerId: null }];
+  #tiles = [1, 6];
   #yarns = [1, 2, 3, 4, 5];
-  #shuffleFn;
-  #actionCardsStore;
-  #initialToken;
-  #designCardCost;
-  #actionCardCost;
+  #randomFn;
 
-  constructor(designCards = [], actionCards = [], shuffleFn = shuffle) {
+  constructor(
+    designCards = [],
+    actionCards = [],
+    shuffleFn = shuffle,
+    randomFn = Math.random,
+  ) {
     this.#designCards = shuffleFn(designCards);
     this.#actionCards = shuffleFn(actionCards);
-    this.#actionCardsStore = structuredClone(actionCards);
-    this.#shuffleFn = shuffleFn;
-    this.#initialToken = 2;
-    this.#designCardCost = 3;
-    this.#actionCardCost = 2;
+    this.#randomFn = randomFn;
+  }
+
+  #randomInRange(min, max) {
+    return Math.round(this.#randomFn() * (max - min) + min);
+  }
+
+  getTokens() {
+    return this.#tokens;
   }
 
   getBank() {
@@ -32,25 +37,11 @@ export default class Bank {
     };
   }
 
-  buyDesignCard() {
-    if (this.#designCards.length === 0) {
-      throw new Error("No more design cards are remaining");
-    }
-
-    this.#tokens += this.#designCardCost;
-    return this.#designCards.shift();
-  }
-
-  buyActionCard() {
-    if (this.#actionCards.length === 0) {
-      this.#actionCards.push(this.#shuffleFn(...this.#actionCardsStore));
-    }
-
-    this.#tokens += this.#actionCardCost;
-    return this.#actionCards.shift();
-  }
-
   deductTokens(n) {
+    if (this.#tokens < n) {
+      throw new Error("No tokens remainig in the bank");
+    }
+
     this.#tokens -= n;
     return n;
   }
@@ -61,7 +52,16 @@ export default class Bank {
   }
 
   getActionCard() {
-    return this.#actionCards.pop();
+    const index = this.#randomInRange(0, this.#actionCards.length - 1);
+    return this.#actionCards[index];
+  }
+
+  getDesignCard() {
+    if (this.#designCards.length === 0) {
+      throw new Error("No more design cards are remaining");
+    }
+
+    return this.#designCards.shift();
   }
 
   distributeInitialAssets(players) {

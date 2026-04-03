@@ -99,7 +99,7 @@ export default class TurnManager {
     return x >= 0 && x < rows && y >= 0 && y < columns;
   }
 
-  getAdjYarnsPositions(pinPosition) {
+  getAdjYarnsPositions(pinPosition) { //again?
     const yarns = [
       { x: pinPosition.x - 1, y: pinPosition.y - 1 },
       { x: pinPosition.x - 1, y: pinPosition.y },

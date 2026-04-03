@@ -12,3 +12,12 @@ export const serveGameState = (ctx) => {
     return ctx.json({ success: false, error: e.message });
   }
 };
+
+export const handleDiceRoll = (ctx) => {
+  const game = ctx.get("gamestate");
+  const {diceValue, paths} = game.upkeep();
+
+  const gameState = game.getGameState();
+  
+  return ctx.json({ gameState, paths, diceValue });
+};
