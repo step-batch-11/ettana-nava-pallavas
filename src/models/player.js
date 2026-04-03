@@ -5,10 +5,12 @@ export default class Player {
   #ac;
   #position;
   #pinColor;
+  #id;
+  #name;
 
   constructor(id, name) {
-    this.id = id;
-    this.name = name;
+    this.#id = id;
+    this.#name = name;
     this.#vp = 0;
     this.#tokens = 0;
     this.#dc = [];
@@ -17,10 +19,10 @@ export default class Player {
 
   incrementVp() {
     this.#vp++;
-  } 
+  }
 
   getVp() {
-    return this.#vp
+    return this.#vp;
   }
 
   creditTokens(tokens) {
@@ -44,42 +46,40 @@ export default class Player {
   }
 
   getAc() {
-    return structuredClone(this.#ac)
+    return structuredClone(this.#ac);
   }
 
   getDc() {
-    return structuredClone(this.#dc)
+    return structuredClone(this.#dc);
   }
 
   #findCardIndex(container, target) {
-    return container.findIndex((card) =>
-      card.id === target.id
-    );
+    return container.findIndex((card) => card.id === target.id);
   }
 
   removeActionCard(card) {
-    if (!this.#ac.length) return
-    
+    if (!this.#ac.length) return;
+
     const cardIndex = this.#findCardIndex(this.#ac, card);
     this.#ac.splice(cardIndex, 1);
   }
 
   removeDesignCard(card) {
-    if (!this.#dc.length) return
-    
+    if (!this.#dc.length) return;
+
     const cardIndex = this.#findCardIndex(this.#dc, card);
     this.#dc.splice(cardIndex, 1);
   }
 
   getPlayerData() {
     return {
-      playerId: this.id,
-      name: this.name,
+      playerId: this.#id,
+      name: this.#name,
       tokens: this.#tokens,
       dc: this.#dc.length,
       ac: this.#ac.length,
       pinColor: this.#pinColor,
-      position: this.#position
+      position: this.#position,
     };
   }
 
@@ -88,15 +88,28 @@ export default class Player {
   }
 
   #setPosition(destination) {
-    this.#position = destination
+    this.#position = destination;
   }
 
   setup(pinColor, position) {
-    this.#pinColor = pinColor
-    this.#setPosition(position)
+    this.#pinColor = pinColor;
+    this.#setPosition(position);
   }
 
   move(destination) {
-    this.#setPosition(destination)
+    this.#setPosition(destination);
+  }
+
+  getId() {
+    return this.#id;
+  }
+
+  getActionCard(id) {
+    const card =  this.#ac.find((card) => card.id === Number(id));
+    if (!card) {
+      throw new Error("Action card is missing");
+    }
+
+    return card;
   }
 }

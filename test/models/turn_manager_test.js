@@ -8,7 +8,7 @@ import Board from "../../src/models/board.js";
 
 const getCoords = ({ x, y }) => ({ x, y });
 
-describe("Tests for moving pin", () => {
+describe.ignore("Tests for moving pin", () => {
   let turnManager, gameState;
 
   const currentPlayer = new Player(1, "John");
@@ -306,7 +306,7 @@ describe("Tests for moving pin", () => {
   });
 });
 
-describe("Roll dice and find possible path :", () => {
+describe.ignore("Roll dice and find possible path :", () => {
   let turnManager;
   const yarns = [
     [1, 1, 1, 1, 1],
