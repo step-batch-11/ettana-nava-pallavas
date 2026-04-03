@@ -5,14 +5,14 @@ export const buyDesignCard = (ctx) => {
       player.id === game.currentPlayer
     );
 
-    if (currentPlayer.tokens < 3) {
+    if (currentPlayer.tokens < 3) { //method -> Player class
       return ctx.json({
         success: false,
         message: "You do not have enough tokens",
       });
     }
 
-    currentPlayer.tokens -= 3;
+    currentPlayer.tokens -= 3; //method -> Player class
     const card = game.bank.buyDesignCard();
     currentPlayer.designCards.push(card);
 

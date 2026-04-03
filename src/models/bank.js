@@ -35,29 +35,11 @@ export default class Bank {
     };
   }
 
-  buyDesignCard() {
-    if (this.#designCards.length === 0) {
-      throw new Error("No more design cards are remaining");
-    }
-
-    this.#tokens += this.#designCardCost;
-    return this.#designCards.shift();
-  }
-
   getDesignCard() {
     if (this.#designCards.length === 0) {
       throw new Error("No more design cards are remaining");
     }
 
-    return this.#designCards.shift();
-  }
-
-  exchangeDesignCard(card) {
-    if (this.#designCards.length === 0) {
-      throw new Error("No more design cards are remaining");
-    }
-
-    this.#designCards.push(card);
     return this.#designCards.shift();
   }
 
@@ -68,11 +50,6 @@ export default class Bank {
   getActionCard() {
     const index = this.#randomInRange(0, 11);
     return this.#actionCards[index];
-  }
-
-  buyActionCard() {
-    this.#tokens += this.#actionCardCost;
-    return this.getActionCard();
   }
 
   deductTokens(n) {
@@ -97,13 +74,5 @@ export default class Bank {
         player.actionCards.push(this.getActionCard());
       });
     }
-  }
-
-  exchangeYarn(yarn, index) {
-    return this.#yarns.splice(index, 1, yarn)[0];
-  }
-
-  exchangeTile(tile, index) {
-    return this.#tiles.splice(index, 1, tile)[0];
   }
 }
