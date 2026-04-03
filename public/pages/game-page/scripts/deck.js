@@ -1,4 +1,5 @@
 import { colorsMap } from "../../../assets/colors.js";
+
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
 const designCardContainer = document.getElementById("design-card-panel");
@@ -178,6 +179,15 @@ const handleDragEnd = () => {
   if (dragged) {
     dragged.classList.remove("dragging");
   }
+  const _ids = [...sourceContainer.querySelectorAll(".card-item")].map((card) =>
+    card.dataset.id
+  );
+  if (sourceContainer.id.includes("action")) {
+    console.log("action");
+  } else {
+    console.log("design");
+  }
+
   placeholder.remove();
 };
 
@@ -190,9 +200,15 @@ export const addDragEventListenerOnDeck = () => {
   });
 };
 
-export const renderDeck = (players, currentPlayerId) => {
-  const currentPlayer = players.find((player) => player.id === currentPlayerId);
+export const addClaimEventListener = (handleClaim) => {
+  designCardContainer.querySelectorAll(".card-item").forEach(
+    (card) => {
+      card.addEventListener("dblclick", handleClaim);
+    },
+  );
+};
 
-  renderDesignCards(currentPlayer.designCards);
-  renderActionCards(currentPlayer.actionCards);
+export const renderDeck = (deck) => {
+  renderDesignCards(deck.designCards);
+  renderActionCards(deck.actionCards);
 };

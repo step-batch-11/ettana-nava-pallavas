@@ -50,6 +50,7 @@
   background-color: var(--purple);
   border: 2px solid var(--gold-light);
   margin: 0 auto;
+  cursor: pointer;
 }
 
 .panel.expanded .card-item .card-item-top {

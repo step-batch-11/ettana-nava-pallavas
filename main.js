@@ -4,17 +4,26 @@ import Bank from "./src/models/bank.js";
 import Game from "./src/models/game.js";
 import Board from "./src/models/board.js";
 import { createApp } from "./src/app.js";
-import { diceValue, players, tiles, yarns } from "./src/data/state.js";
+import { diceValue, tiles, yarns } from "./src/data/state.js";
+import Player from "./src/models/player.js";
 
 const main = () => {
+  const player1 = new Player(1, "Ajoy");
+  player1.setup(1, { x: 1, y: 1 });
+
+  player1.addAllDesignCardDev(...designCards);
+
+  const player2 = new Player(2, "Dinesh");
+  player2.setup(2, { x: 3, y: 3 });
+
   const gameState = new Game(
-    players,
+    [player1, player2],
     new Bank(designCards, actionCards),
     new Board(tiles, yarns),
     diceValue,
   );
 
-  gameState.distributeInitialAssets(players);
+  gameState.distributeInitialAssets();
 
   const PORT = Deno.env.get("PORT") || 8000;
   const app = createApp(gameState);

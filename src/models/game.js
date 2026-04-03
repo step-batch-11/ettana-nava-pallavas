@@ -16,57 +16,114 @@ export default class Game {
   }
 
   distributeInitialAssets() {
-    this.#bank.distributeInitialAssets(this.#players);
+    this.#players.forEach((player) => {
+      const token = this.#bank.deductTokens(2);
+      const designCard = this.#bank.getDesignCard();
+      const actionCard = this.#bank.getActionCard();
+      player.addDesignCard(designCard);
+      player.addActionCard(actionCard);
+      player.creditTokens(token);
+    });
   }
 
   buyDesignCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.tokens < 3) return "NOT_ENOUGH_TOKEN";
+    if (currentPlayer.getTokens() < 3) return "NOT_ENOUGH_TOKEN";
 
-    currentPlayer.tokens -= 3;
+    // currentPlayer.tokens -= 3;
     const card = this.#bank.getDesignCard();
+    currentPlayer.debitTokens(3);
     this.#bank.incrementTokens(3);
-    currentPlayer.designCards.push(card);
+    currentPlayer.addActionCard(card);
+    return card;
   }
 
   buyActionCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.tokens < 2) return "NOT_ENOUGH_TOKEN";
+    if (currentPlayer.getTokens() < 2) return "NOT_ENOUGH_TOKEN";
 
-    currentPlayer.tokens -= 2;
     const card = this.#bank.getActionCard();
+    currentPlayer.debitTokens(2);
     this.#bank.incrementTokens(2);
-    currentPlayer.actionCards.push(card);
+    currentPlayer.addActionCard(card);
     return card;
   }
 
   claimDesign(designCardId) {
-    const designCard = this.#players[this.#currentPlayerIndex]
-      .designCards.find((
+    const currentPlayer = this.#getCurrentPlayer();
+    const designCard = currentPlayer
+      .getDc()
+      .find((
         { id },
       ) => id === Number(designCardId));
 
     const { yarns } = this.#board.getState();
 
-    return this.#board.matchPattern(yarns, designCard.design);
+    const status = this.#board.matchPattern(yarns, designCard.design);
+    if (status.isMatched) {
+      currentPlayer.updateVp(designCard.victoryPoints);
+      currentPlayer.removeDesignCard(designCard);
+    }
+    return status;
   }
 
   getGameState() {
     return {
-      players: this.#players,
-      bank: this.#bank,
-      board: this.#board,
+      players: this.#players.map((player) => player.getPlayerData()),
+      bank: this.#bank.getBank(),
+      board: this.#board.getState(),
       diceValue: this.#diceValue,
       currentPlayerId: this.#players[this.#currentPlayerIndex].id,
+      deck: {
+        actionCards: this.#players[this.#currentPlayerIndex].getAc(),
+        designCards: this.#players[this.#currentPlayerIndex].getDc(),
+      },
     };
   }
 
   getCurrentPlayerId() {
-    return this.#players[this.#currentPlayerIndex].id;
+    return this.#players[this.#currentPlayerIndex].getId();
+  }
+
+  #getOpponents() {
+    return this.#players.toSpliced(this.#currentPlayerIndex, 1);
+  }
+
+  #findActionCard(currentPlayer, id) {
+    const actionCards = currentPlayer.getAc();
+    return actionCards.find((card) => card.id === Number(id));
+  }
+
+  #collectTax(otherPlayers) {
+    const affectedPlayers = [];
+    let collectedTax = 0;
+    otherPlayers.forEach((player) => {
+      if (player.getTokens() > 0) {
+        affectedPlayers.push(player.getId());
+        player.debitTokens(1);
+        collectedTax++;
+      }
+    });
+    return { collectedTax, affectedPlayers };
+  }
+
+  playTaxActionCard(id) {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+    const card = currentPlayer.getActionCard(id);
+    const otherPlayers = this.#getOpponents();
+    const { collectedTax, affectedPlayers } = this.#collectTax(otherPlayers);
+
+    this.#bank.incrementTokens(collectedTax);
+    currentPlayer.removeActionCard(card);
+
+    return {
+      affectedPlayers,
+      gameState: this.getGameState(),
+    };
   }
 
   #getPlayerById(id) {
-    return this.#players.find((player) => player.id === id);
+    return this.#players.find((player) => player.getId() === id);
   }
 
   #getCurrentPlayer() {
@@ -125,9 +182,8 @@ export default class Game {
     const swapCost = 3;
     const currentPlayer = this.#getCurrentPlayer();
     if (currentPlayer.getTokens() < swapCost) {
-      throw new Error("You don't have enough tokens")
+      throw new Error("You don't have enough tokens");
     }
     currentPlayer.debitTokens(swapCost);
   }
-
 }

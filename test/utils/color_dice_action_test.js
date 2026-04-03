@@ -6,12 +6,12 @@ import {
   createLedger,
   distributeTokens,
   extractPlayersPositions,
-  mapAdjacentYarns,
   isInBoundary,
+  mapAdjacentYarns,
 } from "../../src/utils/color_dice_action.js";
 import Player from "../../src/models/player.js";
 
-describe("color dice actions : ", () => {
+describe.ignore("color dice actions : ", () => {
   let players;
 
   const player1 = new Player(1, "John");

@@ -1,13 +1,13 @@
 import { Hono } from "hono";
 import {
+  buyActionCard,
+  buyDesignCard,
   claimDesign,
   handleMove,
   handleSwap,
+  playActionCard,
   serveGameState,
 } from "../handlers/game_handlers.js";
-
-import { buyActionCard, buyDesignCard } from "../handlers/bank_handler.js";
-import { handleActionCard } from "../handlers/action_handler.js";
 
 const gameRoute = new Hono();
 
@@ -18,6 +18,6 @@ gameRoute.get("/claim-design/:id", claimDesign);
 // gameRoute.post("/roll", handleDiceRoll);
 gameRoute.post("/move", handleMove);
 gameRoute.post("/swap", handleSwap);
-gameRoute.patch("/action-card/:id", handleActionCard);
+gameRoute.patch("/action-card/:id", playActionCard);
 
 export default gameRoute;

@@ -62,7 +62,7 @@ export default class Board {
 
     return yarns.filter((yarn) => isValidPosition(yarn, this.#yarns));
   }
-  
+
   matchPattern(yarns, pattern) {
     let grid = generatePatternGrid(pattern);
     for (let count = 0; count < 4; count++) {
