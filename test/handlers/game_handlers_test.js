@@ -13,7 +13,6 @@ import {
 } from "../../src/handlers/game_handlers.js";
 
 describe("Game route", () => {
-
   let app,
     players,
     bank,
@@ -179,10 +178,10 @@ describe("Game route", () => {
     );
   });
 
-  describe.ignore("move request: ", () => {
+  describe("move request: ", () => {
     let app;
 
-    const randomValue = 0.05  ;
+    const randomValue = 0.05;
 
     beforeEach(() => {
       const bank = new Bank(designCards, actionCards, () => randomValue);

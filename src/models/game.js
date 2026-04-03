@@ -9,13 +9,11 @@ export default class Game {
   #board;
   #diceValue;
   #currentPlayerIndex;
-  #randonFn;
 
   constructor(players, bank, board, diceValue, randomFn = Math.random) {
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
-    this.#randonFn = randomFn;
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = 0;
     this.randomFn = randomFn;
@@ -40,8 +38,8 @@ export default class Game {
   }
 
   rollDice() {
-    const colorId = Math.floor(this.#randonFn() * 6) + 1;
-    const number = Math.floor(this.#randonFn() * 6) + 1;
+    const colorId = Math.floor(this.randomFn() * 6) + 1;
+    const number = Math.floor(this.randomFn() * 6) + 1;
 
     return { number, colorId };
   }
@@ -51,13 +49,13 @@ export default class Game {
     const diceValues = this.rollDice();
 
     this.destinations = this.#board.findPossibleDestinations(
-      this.#players,
       currentPlayer,
+      this.#players,
       diceValues.number,
     );
 
     this.distributeAssets(diceValues, currentPlayer);
-    return { diceValue: diceValues, destinations: this.destinations };
+    return { diceValues, destinations: this.destinations };
   }
 
   distributeInitialAssets() {
@@ -183,7 +181,7 @@ export default class Game {
 
   #isValidDestination({ x, y }) {
     const destinations = this.#board.destinations;
-    console.log({destinations})
+    console.log({ destinations });
     return destinations.some(
       ({ destination }) => destination.x === x && destination.y === y,
     );

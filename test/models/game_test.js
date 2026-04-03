@@ -16,6 +16,8 @@ const getCoords = ({ x, y }) => ({ x, y });
 describe("Game controller test", () => {
   let game, players, bank, designCards;
 
+  const randomFn = () => 0.9;
+
   const tiles = [
     [0, 0, 0, 0, 0, 0],
     [0, 1, 2, 3, 4, 0],
@@ -79,6 +81,7 @@ describe("Game controller test", () => {
       bank,
       new Board(tiles, yarns),
       diceValue,
+      randomFn,
     );
   });
 
@@ -526,8 +529,7 @@ describe("Game controller test", () => {
     );
   });
 
-  describe.ignore("upkeep: Roll dice and find possible path :", () => {
-    const randomFn = () => 0.9;
+  describe("upkeep: Roll dice and find possible path :", () => {
     let game;
     const yarns = [
       [1, 1, 1, 1, 1],
@@ -564,7 +566,7 @@ describe("Game controller test", () => {
 
     describe("roll dice :", () => {
       it("when rollDice invoked, should return two random values :", () => {
-        const actual = game.rollDice(randomFn);
+        const actual = game.rollDice();
         const expected = { number: 6, colorId: 6 };
         assertEquals(actual, expected);
       });
@@ -608,7 +610,7 @@ describe("Game controller test", () => {
         bank = new Bank([], actionCards, (x) => x);
         const diceValue = { colorId: 2, number: 2 };
 
-        game = new Game(players, bank, board, diceValue);
+        game = new Game(players, bank, board, diceValue, randomFn);
       });
 
       it("after rolling dice when color id is other than black, then should distribute the tokens to players based on the positions and yarns surrounded by the players pins", () => {
