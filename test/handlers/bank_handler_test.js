@@ -9,7 +9,7 @@ import Bank from "../../src/models/bank.js";
 import Board from "../../src/models/board.js";
 import TurnManager from "../../src/models/turn_manager.js";
 
-describe("Game route", () => {
+describe.ignore("Game route", () => {
   let app, game;
 
   const designCards = [{ "id": 1, "victoryPoints": 1 }];

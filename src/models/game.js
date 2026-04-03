@@ -16,10 +16,14 @@ export default class Game {
   getGameState() {
     return {
       players: this.#players,
-      bank: this.#bank.getBank(),
+      bank: this.#bank,
       board: this.#board.getState(),
       diceValue: this.#diceValue,
       currentPlayerId: this.#players[this.#currentPlayerIndex].id,
     };
+  }
+
+  getCurrentPlayerId() {
+    return this.#players[this.#currentPlayerIndex].id;
   }
 }

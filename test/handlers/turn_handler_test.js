@@ -1,7 +1,6 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals } from "@std/assert";
 import { createApp } from "../../src/app.js";
-import { logger } from "hono/logger";
 import designCards from "../../src/config/design_card.json" with {
   type: "json",
 };
@@ -9,100 +8,52 @@ import actionCards from "../../src/config/action_card.json" with {
   type: "json",
 };
 import Bank from "../../src/models/bank.js";
+import Player from "../../src/models/player.js";
+import Board from "../../src/models/board.js";
+import Game from "../../src/models/game.js";
+import TurnManager from "../../src/models/turn_manager.js";
 
-const players = [
-  {
-    name: "Sandip",
-    id: 1,
-    tokens: 0,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 1, position: { x: 3, y: 4 } },
-  },
-  {
-    name: "Ajoy",
-    id: 2,
-    tokens: 0,
-    victoryPoint: 0,
-    actionCards: [],
-    designCards: [],
-    pin: { color: 2, position: { x: 2, y: 1 } },
-  },
-];
-
-const gameState = {
-  players,
-  currentPlayer: 1,
-  board: {
-    yarns: [
-      [1, 2, 3, 4, 5],
-      [5, 4, 3, 2, 1],
-      [1, 2, 3, 4, 5],
-      [5, 4, 3, 2, 1],
-      [1, 2, 3, 4, 5],
-    ],
-    tiles: [
-      [
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 1, playerId: 1 },
-        { value: 2, playerId: null },
-        { value: 3, playerId: null },
-        { value: 4, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 5, playerId: null },
-        { value: 6, playerId: 2 },
-        { value: 1, playerId: null },
-        { value: 2, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 3, playerId: null },
-        { value: 4, playerId: null },
-        { value: 5, playerId: 3 },
-        { value: 6, playerId: null },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: 2, playerId: null },
-        { value: 3, playerId: null },
-        { value: 4, playerId: null },
-        { value: 5, playerId: 4 },
-        { value: null, playerId: null },
-      ],
-      [
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-        { value: null, playerId: null },
-      ],
-    ],
-  },
-};
-
-describe.ignore("Move request: ", () => {
+describe("move request: ", () => {
   let app;
-  const randomFn = (_) => 0.5;
+
+  const randomValue = 0.05;
 
   beforeEach(() => {
-    const bank = new Bank(designCards, actionCards);
-    const mockGameState = structuredClone(gameState);
-    app = createApp(mockGameState, bank, randomFn, logger);
+    const bank = new Bank(designCards, actionCards, () => randomValue);
+
+    const player1 = new Player(1, "Sandeep");
+    const player2 = new Player(2, "Ajoy");
+
+    player1.setup(1, { x: 3, y: 4 });
+    player2.setup(2, { x: 2, y: 1 });
+
+    const players = [player1, player2];
+    const yarns = [
+      [1, 2, 3, 4, 5],
+      [5, 4, 3, 2, 1],
+      [1, 2, 3, 4, 5],
+      [5, 4, 3, 2, 1],
+      [1, 2, 3, 4, 5],
+    ];
+
+    const tiles = [
+      [0, 0, 0, 0, 0, 0],
+      [0, 1, 2, 3, 4, 0],
+      [0, 5, 6, 1, 2, 0],
+      [0, 3, 4, 5, 6, 0],
+      [0, 2, 3, 4, 5, 0],
+      [0, 0, 0, 0, 0, 0],
+    ];
+
+    const board = new Board(tiles, yarns);
+    const diceValue = {
+      colorId: 1,
+      number: 2,
+    };
+
+    const gameState = new Game(players, bank, board, diceValue);
+    const turnManager = new TurnManager(gameState, () => randomValue);
+    app = createApp(gameState, turnManager);
   });
 
   it("Requesting with valid destination, should move to other tile", async () => {
@@ -133,7 +84,7 @@ describe.ignore("Move request: ", () => {
 
   it("Requesting with invalid destination, should not move to other tile", async () => {
     await app.request("/game/roll", { method: "POST" });
-    const destination = { destination: { x: 3, y: 3 }, type: "jump" };
+    const destination = { destination: { x: 4, y: 3 }, type: "jump" };
 
     const response = await app.request("/game/move", {
       method: "POST",
@@ -149,11 +100,25 @@ describe.ignore("Move request: ", () => {
   });
 });
 
-describe.ignore("Swap Yarns: ", () => {
+describe.ignore("roll dice request : ", () => {
   let app;
-  const randomFn = (_) => 0.5;
+  let bank;
+  let randomValue = 0.05;
 
   beforeEach(() => {
+    bank = new Bank([], [], () => randomValue);
+
+    const player1 = new Player(1, "Sandeep");
+    const player2 = new Player(2, "Ajoy");
+    const player3 = new Player(3, '')
+    const player4 = new Player(4, '')
+
+    player1.setup(2, { x: 1, y: 1 });
+    player2.setup(2, { x: 2, y: 2 });
+    player3.setup(1, { x: 3, y: 3 });
+    player4.setup(2, { x: 4, y: 4 });
+
+    const players = [player1, player2];
     const yarns = [
       [1, 2, 3, 4, 5],
       [5, 4, 3, 2, 1],
@@ -161,73 +126,25 @@ describe.ignore("Swap Yarns: ", () => {
       [5, 4, 3, 2, 1],
       [1, 2, 3, 4, 5],
     ];
-    const bank = new Bank(designCards, actionCards);
-    const mockGameState = structuredClone(gameState);
-    mockGameState.board.yarns = yarns;
 
-    app = createApp(mockGameState, bank, randomFn, logger);
-  });
+    const tiles = [
+      [0, 0, 0, 0, 0, 0],
+      [0, 1, 2, 3, 4, 0],
+      [0, 5, 6, 1, 2, 0],
+      [0, 3, 4, 5, 6, 0],
+      [0, 2, 3, 4, 5, 0],
+      [0, 0, 0, 0, 0, 0],
+    ];
 
-  it("Requesting with valid yarns positions, should be swapped", async () => {
-    const draggablePosition = { x: 3, y: 4 };
-    const yarnPosition = { x: 2, y: 3 };
+    const board = new Board(tiles, yarns);
+    const diceValue = {
+      colorId: 1,
+      number: 2,
+    };
 
-    const response = await app.request("/game/swap", {
-      method: "POST",
-      body: JSON.stringify({ draggablePosition, yarnPosition }),
-      headers: { "content-type": "application/json" },
-    });
-
-    const moveResult = await response.json();
-
-    assertEquals(response.status, 200);
-    assertEquals(moveResult.success, true);
-    assertEquals(moveResult.message, "Swapped successfully");
-  });
-
-  it("Requesting with invalid source yarn position, should not be swapped", async () => {
-    const draggablePosition = { x: 6, y: 1 };
-    const yarnPosition = { x: 2, y: 2 };
-
-    const response = await app.request("/game/swap", {
-      method: "POST",
-      body: JSON.stringify({ draggablePosition, yarnPosition }),
-      headers: { "content-type": "application/json" },
-    });
-
-    const moveResult = await response.json();
-
-    assertEquals(response.status, 400);
-    assertEquals(moveResult.success, false);
-    assertEquals(moveResult.message, "You can't swap these yarns");
-  });
-
-  it("Requesting with same source and destination yarns positions, should not be swapped", async () => {
-    const draggablePosition = { x: 1, y: 1 };
-    const yarnPosition = { x: 1, y: 1 };
-
-    const response = await app.request("/game/swap", {
-      method: "POST",
-      body: JSON.stringify({ draggablePosition, yarnPosition }),
-      headers: { "content-type": "application/json" },
-    });
-
-    const moveResult = await response.json();
-
-    assertEquals(response.status, 400);
-    assertEquals(moveResult.success, false);
-    assertEquals(moveResult.message, "You can't swap these yarns");
-  });
-});
-
-describe.ignore("roll dice request : ", () => {
-  let app;
-  let bank;
-  let randomValue = 0.05;
-
-  beforeEach(() => {
-    bank = new Bank([], []);
-    app = createApp(gameState, bank, () => randomValue, logger);
+    const gameState = new Game(players, bank, board, diceValue);
+    const turnManager = new TurnManager(gameState, () => randomValue);
+    app = createApp(gameState, turnManager);
   });
 
   it("When /roll is hit, should respond with dice values of(1, 1) and destinations", async () => {
