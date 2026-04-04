@@ -9,6 +9,8 @@ export default class Game {
   #board;
   #diceValue;
   #currentPlayerIndex;
+  #randonFn;
+  #playerActions;
 
   constructor(
     players,
@@ -24,6 +26,7 @@ export default class Game {
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex;
     this.randomFn = randomFn;
+    this.#playerActions = { isMoved: false };
   }
 
   distributeAssets({ colorId }, currentPlayer) {
@@ -165,7 +168,57 @@ export default class Game {
     return {
       result: { affectedPlayers, message: "tax played succesfully" },
       state: this.getGameState(),
+      message: "Tax action card played",
     };
+  }
+
+  getPlayersPositions() {
+    return this.#players.map((player) => player.getPosition());
+  }
+
+  getPossibleDestinations() {
+    const availableDestinations = [];
+    const occupiedPositions = this.getPlayersPositions();
+    const tiles = this.#board.getTiles();
+
+    for (let row = 0; row < tiles.length; row++) {
+      for (let col = 0; col < tiles[row].length; col++) {
+        const isOccupied = occupiedPositions.some(({ x, y }) =>
+          row === x && col === y
+        );
+        if (!isOccupied) {
+          availableDestinations.push([row, col]);
+        }
+      }
+    }
+
+    return availableDestinations;
+  }
+
+  playMoveActionCard(id) {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+    if (this.#playerActions.isMoved) {
+      throw new Error("Already move action performed!");
+    }
+
+    const card = currentPlayer.getActionCard(id);
+    const availableDestinations = this.getPossibleDestinations();
+
+    currentPlayer.removeActionCard(card);
+    this.#playerActions.isMoved = true;
+
+    return {
+      result: { availableDestinations },
+      state: this.getGameState(),
+      message: "Move action card played",
+    };
+  }
+
+  movePlayer(destination) {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+    const source = currentPlayer.getPosition();
+    currentPlayer.move(destination);
+    return { source, destination };
   }
 
   #filterOpponents(filterFn) {

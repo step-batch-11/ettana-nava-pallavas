@@ -75,6 +75,7 @@ export const playActionCard = async (context) => {
 
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(id),
+      1: (id) => game.playMoveActionCard(id),
       16: (id) => game.playVictoryPoint(id),
       4: (id) => game.playCollectToken(id),
       7: (id) => game.getDesignCardActionCard(id),
@@ -166,6 +167,27 @@ export const handleMove = async (ctx) => {
     },
     200,
   );
+};
+
+export const handleActionCardMove = async (ctx) => {
+  const gameState = ctx.get("gameState");
+  const board = gameState.getBoard();
+
+  const { destination } = await ctx.req.json();
+  const moveResult = gameState.movePlayer(destination);
+  const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
+
+  console.log({ adjYarns, destination, moveResult });
+
+  if (moveResult.source === moveResult.destination) {
+    return ctx.json({ success: false, message: "You can't move there" }, 400);
+  }
+
+  return ctx.json({
+    success: true,
+    data: { adjYarns, moveResult },
+    message: "Moved successfully",
+  }, 200);
 };
 
 export const handleSwap = async (ctx) => {

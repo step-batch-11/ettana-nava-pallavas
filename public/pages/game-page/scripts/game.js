@@ -137,8 +137,8 @@ const highlightAdjacentYarns = (yarns) => {
   });
 };
 
-const fetchMoveResult = async (destination) => {
-  const response = await fetch("/game/move", {
+const fetchMoveResult = async (destination, path = "move") => {
+  const response = await fetch(`/game/${path}`, {
     method: "POST",
     body: JSON.stringify(destination),
     headers: { "content-type": "application/json" },
@@ -183,8 +183,8 @@ const displacePin = ({ source, destination }) => {
   removeMoveClass();
 };
 
-const handlePlayerMove = async (destination) => {
-  const response = await fetchMoveResult(destination);
+export const handlePlayerMove = async (destination) => {
+  const response = await fetchMoveResult(destination, destination.path);
 
   if (!response.success) {
     alert(response.message);
@@ -192,6 +192,7 @@ const handlePlayerMove = async (destination) => {
   }
 
   const { adjYarns, moveResult } = response.data;
+
   highlightAdjacentYarns(adjYarns);
   displacePin(moveResult);
   removeTileEventListeners();

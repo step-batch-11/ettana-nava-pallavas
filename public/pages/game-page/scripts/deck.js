@@ -1,5 +1,6 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
+import { handlePlayerMove } from "./game.js";
 import { addEventListener, renderGame } from "./app.js";
 import { playVpActionCard } from "./api.js";
 
@@ -238,9 +239,26 @@ export const attachPlayActionCard = () => {
       const { state, success, result } = await res.json();
 
       if (!success) {
-        return showToast(message, "e");
+        return showToast(result.message, "e");
       }
 
+      if (id === "1") {
+        result.availableDestinations.forEach((destination) => {
+          const [x, y] = destination;
+          const id = `#tile${x}${y}`;
+          const tile = document.querySelector(id);
+          tile.classList.add(`jump-move`);
+
+          tile.addEventListener(
+            "click",
+            () =>
+              handlePlayerMove({
+                destination: { x, y },
+                path: "action-card-move",
+              }),
+          );
+        });
+      }
       showToast(result.message);
       renderGame(state);
       addEventListener();

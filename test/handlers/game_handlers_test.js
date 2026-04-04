@@ -395,13 +395,11 @@ describe("Game route", () => {
         const response = await app.request("/game/action-card/6", {
           method: "PATCH",
         });
-        const res = await response.json();
+        const { success, result } = await response.json();
 
         assertEquals(response.status, 200);
-
-        assertEquals(res.success, true);
-        assertEquals(res.result.affectedPlayers, [2]);
-
+        assertEquals(result.affectedPlayers, [2]);
+        assertEquals(success, true);
         assertEquals(bank.getBank().tokens, 56);
         assertEquals(players[1].getTokens(), 1);
         assertEquals(players[0].getAc(), []);
@@ -455,6 +453,91 @@ describe("Game route", () => {
         assertEquals(response.status, 400);
         assertEquals(players[1].getTokens(), 0);
         assertEquals(bank.getBank().tokens, 55);
+        assertEquals(players[0].getAc().length, 0);
+      });
+    });
+
+    describe("Move Action Card", () => {
+      it("when move action card played, then should return all unoccupied postions on the board and remove the action card : ", async () => {
+        players[0].setup(1, { x: 0, y: 0 });
+        players[1].setup(2, { x: 1, y: 1 });
+        const expectedDestinations = [
+          [0, 1],
+          [0, 2],
+          [0, 3],
+          [0, 4],
+          [0, 5],
+          [1, 0],
+          [1, 2],
+          [1, 3],
+          [1, 4],
+          [1, 5],
+          [2, 0],
+          [2, 1],
+          [2, 2],
+          [2, 3],
+          [2, 4],
+          [2, 5],
+          [3, 0],
+          [3, 1],
+          [3, 2],
+          [3, 3],
+          [3, 4],
+          [3, 5],
+          [4, 0],
+          [4, 1],
+          [4, 2],
+          [4, 3],
+          [4, 4],
+          [4, 5],
+          [5, 0],
+          [5, 1],
+          [5, 2],
+          [5, 3],
+          [5, 4],
+          [5, 5],
+        ];
+        players[0].addActionCard({
+          id: 1,
+          "type": "move",
+          "description": "Move to any unoccupied position",
+        });
+
+        const response = await app.request("/game/action-card/1", {
+          method: "PATCH",
+        });
+        const { success, result } = await response.json();
+
+        assertEquals(success, true);
+        assertEquals(response.status, 200);
+        assertEquals(result.availableDestinations, expectedDestinations);
+        assertEquals(players[0].getAc(), []);
+      });
+
+      it("when played action card is invalid, then should throw error and no update in state: ", async () => {
+        players[0].addActionCard({
+          id: 1,
+          "type": "move",
+          "description": "Move to any unoccupied position",
+        });
+        const response = await app.request("/game/action-card/0", {
+          method: "PATCH",
+        });
+        const { success } = await response.json();
+
+        assertEquals(success, false);
+        assertEquals(response.status, 400);
+        assertEquals(players[0].getAc().length, 1);
+      });
+
+      it("when player does not have move action card but wants to play, then should throw error and no update in state: ", async () => {
+        const response = await app.request("/game/action-card/1", {
+          method: "PATCH",
+        });
+        const { success } = await response.json();
+
+        assertEquals(success, false);
+        assertEquals(response.status, 400);
         assertEquals(players[0].getAc().length, 0);
       });
     });

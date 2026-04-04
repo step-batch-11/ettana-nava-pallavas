@@ -98,4 +98,11 @@ describe("bank", () => {
       assertEquals(57, bank.getBank().tokens);
     });
   });
+
+  describe("Get Tokens", () => {
+    it("should give available tokens in the bank", () => {
+      const bank = new Bank(designCards, actionCards);
+      assertEquals(55, bank.getTokens());
+    });
+  });
 });
