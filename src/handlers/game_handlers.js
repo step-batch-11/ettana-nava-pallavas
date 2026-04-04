@@ -16,9 +16,9 @@ export const handleDiceRoll = (ctx) => {
   try {
     const game = ctx.get("gameState");
     const { diceValues, destinations } = game.upkeep();
-  
+
     const gameState = game.getGameState();
-  
+
     return ctx.json({ gameState, destinations, diceValues });
   } catch {
     return ctx.json({ success: false, error: e.message });
@@ -75,9 +75,10 @@ export const playActionCard = async (context) => {
 
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(id),
-      16: (id) => game.playVictoryPoint(id),
+      7: (id) => game.getDesignCardActionCard(id),
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
+      16: (id) => game.playVictoryPoint(id),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
     };
 
