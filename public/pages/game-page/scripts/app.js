@@ -20,7 +20,7 @@ const handleClaim = async (e) => {
   }
   renderGame(status.state);
   addEventListener();
-  await highlightPattern(status.result.matches);
+  highlightPattern(status.result.matches);
 };
 
 export const addEventListener = () => {
