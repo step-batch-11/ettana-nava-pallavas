@@ -230,8 +230,7 @@ export default class Game {
   playStealCard(id, filterFn) {
     const currentPlayer = this.#getCurrentPlayer();
 
-    const card = currentPlayer.getActionCard(id);
-    if (!card) throw new Error("player don't have card");
+    const _card = currentPlayer.getActionCard(id);
 
     const opponents = this.#filterOpponents(filterFn);
 
