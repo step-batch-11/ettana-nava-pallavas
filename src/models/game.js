@@ -86,7 +86,7 @@ export default class Game {
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
     this.#bank.incrementTokens(3);
-    currentPlayer.addActionCard(card);
+    currentPlayer.addDesignCard (card);
     return card;
   }
 

@@ -100,6 +100,7 @@ describe("Game controller test", () => {
       });
       assertEquals(bank.getBank().tokens, 58);
       assertEquals(players[0].getTokens(), 0);
+      assertEquals(players[0].getDc().length, 1);
     });
 
     it("Player cannot buy design card due to insufficient tokens", () => {
@@ -107,6 +108,7 @@ describe("Game controller test", () => {
       assertEquals(card, "NOT_ENOUGH_TOKEN");
       assertEquals(bank.getBank().tokens, 55);
       assertEquals(players[0].getTokens(), 0);
+      assertEquals(players[0].getDc().length, 0);
     });
 
     it("Player cannot buy design card due to insufficient DC in bank", () => {
@@ -128,6 +130,7 @@ describe("Game controller test", () => {
       });
       assertEquals(bank.getBank().tokens, 57);
       assertEquals(players[0].getTokens(), 0);
+      assertEquals(players[0].getAc().length, 1);
     });
 
     it("Player cannot buy action card due to insufficient tokens", () => {
@@ -135,6 +138,7 @@ describe("Game controller test", () => {
       assertEquals(card, "NOT_ENOUGH_TOKEN");
       assertEquals(bank.getBank().tokens, 55);
       assertEquals(players[0].getTokens(), 0);
+      assertEquals(players[0].getAc().length, 0);
     });
   });
 
@@ -756,75 +760,74 @@ describe("Game controller test", () => {
       game.playMoveActionCard(1);
       assertThrows(() => game.playMoveActionCard(1));
     });
+  });
+  describe("Paid swap", () => {
+    let board, game;
 
-    describe("Paid swap", () => {
-      let board, game;
+    const currentPlayer = new Player(1, "John");
+    currentPlayer.setup(3, { x: 1, y: 0 });
+    currentPlayer.creditTokens(5);
 
-      const currentPlayer = new Player(1, "John");
-      currentPlayer.setup(3, { x: 1, y: 0 });
-      currentPlayer.creditTokens(5);
+    beforeEach(() => {
+      const player2 = new Player(2, "Jane");
+      const player3 = new Player(3, "Jean");
 
-      beforeEach(() => {
-        const player2 = new Player(2, "Jane");
-        const player3 = new Player(3, "Jean");
+      player2.setup(2, { x: 1, y: 2 });
+      player3.setup(1, { x: 1, y: 4 });
 
-        player2.setup(2, { x: 1, y: 2 });
-        player3.setup(1, { x: 1, y: 4 });
+      const players = [currentPlayer, player2, player3];
+      const tiles = [
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 2, 3, 4, 0],
+        [0, 5, 6, 1, 2, 0],
+        [0, 3, 4, 5, 6, 0],
+        [0, 2, 3, 4, 5, 0],
+        [0, 0, 0, 0, 0, 0],
+      ];
+      const yarns = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
 
-        const players = [currentPlayer, player2, player3];
-        const tiles = [
-          [0, 0, 0, 0, 0, 0],
-          [0, 1, 2, 3, 4, 0],
-          [0, 5, 6, 1, 2, 0],
-          [0, 3, 4, 5, 6, 0],
-          [0, 2, 3, 4, 5, 0],
-          [0, 0, 0, 0, 0, 0],
-        ];
-        const yarns = [
-          [1, 2, 3, 4, 5],
-          [5, 4, 3, 2, 1],
-          [1, 2, 3, 4, 5],
-          [5, 4, 3, 2, 1],
-          [1, 2, 3, 4, 5],
-        ];
+      board = new Board(tiles, yarns);
+      const bank = new Bank([], []);
+      const diceValue = { colorId: 1, number: 2 };
 
-        board = new Board(tiles, yarns);
-        const bank = new Bank([], []);
-        const diceValue = { colorId: 1, number: 2 };
+      game = new Game(players, bank, board, diceValue);
+    });
 
-        game = new Game(players, bank, board, diceValue);
-      });
+    it("Player has sufficient tokens, yarns should be swapped", () => {
+      const tokens = currentPlayer.getTokens();
+      const source = { x: 1, y: 2 };
+      const destination = { x: 2, y: 3 };
 
-      it("Player has sufficient tokens, yarns should be swapped", () => {
-        const tokens = currentPlayer.getTokens();
-        const source = { x: 1, y: 2 };
-        const destination = { x: 2, y: 3 };
+      game.paidSwap(source, destination);
 
-        game.paidSwap(source, destination);
+      const updatedTokens = currentPlayer.getTokens();
+      assertEquals(tokens - 3, updatedTokens);
+    });
 
-        const updatedTokens = currentPlayer.getTokens();
-        assertEquals(tokens - 3, updatedTokens);
-      });
+    it("Player don't have more than 3 tokens, should throw an error", () => {
+      assertThrows(() => game.paidSwap());
+    });
 
-      it("Player don't have more than 3 tokens, should throw an error", () => {
-        assertThrows(() => game.paidSwap());
-      });
+    it("Player has sufficient tokens (invalid source), yarns should not be swapped", () => {
+      currentPlayer.creditTokens(3);
+      const source = { x: -1, y: 2 };
+      const destination = { x: 2, y: 3 };
 
-      it("Player has sufficient tokens (invalid source), yarns should not be swapped", () => {
-        currentPlayer.creditTokens(3);
-        const source = { x: -1, y: 2 };
-        const destination = { x: 2, y: 3 };
+      assertThrows(() => game.paidSwap(source, destination));
+    });
 
-        assertThrows(() => game.paidSwap(source, destination));
-      });
+    it("Player has sufficient tokens (invalid destination), yarns should not be swapped", () => {
+      currentPlayer.creditTokens(3);
+      const source = { x: 1, y: 2 };
+      const destination = { x: 6, y: 3 };
 
-      it("Player has sufficient tokens (invalid destination), yarns should not be swapped", () => {
-        currentPlayer.creditTokens(3);
-        const source = { x: 1, y: 2 };
-        const destination = { x: 6, y: 3 };
-
-        assertThrows(() => game.paidSwap(source, destination));
-      });
+      assertThrows(() => game.paidSwap(source, destination));
     });
   });
 });
