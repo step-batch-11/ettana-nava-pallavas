@@ -186,8 +186,8 @@ const displacePin = ({ source, destination }) => {
   removeMoveClass();
 };
 
-export const handlePlayerMove = async (destination) => {
-  const response = await fetchMoveResult(destination, destination.path);
+export const handlePlayerMove = async (destination, path = "move") => {
+  const response = await fetchMoveResult(destination, path);
 
   if (!response.success) {
     alert(response.message);

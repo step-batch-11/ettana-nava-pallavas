@@ -26,6 +26,7 @@
   width: 100%;
   position: relative;
   transition: all 0.4s ease;
+  color: white;
 }
 
 .cards::-webkit-scrollbar {

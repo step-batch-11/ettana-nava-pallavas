@@ -115,7 +115,7 @@ export default class Game {
     const status = this.#board.matchPattern(yarns, designCard.design);
     if (status.isMatched) {
       currentPlayer.updateVp(designCard.victoryPoints);
-      currentPlayer.removeDesignCard(designCard);
+      currentPlayer.removeDesignCard(Number(designCardId));
     }
     return status;
   }
@@ -227,8 +227,12 @@ export default class Game {
 
     const availableDestinations = this.getPossibleDestinations();
 
+    // console.log(availableDestinations);
+
     currentPlayer.removeActionCard(id);
     this.#playerActions.isMoved = true;
+
+    // const a = availableDestinations.map(([x,y]) => ({x,y}))
 
     return {
       result: { availableDestinations },
@@ -336,7 +340,10 @@ export default class Game {
   }
 
   #isValidDestination({ x, y }) {
-    const destinations = this.#board.destinations;
+    const destinations = this.#board.destinations || [];
+
+    // console.log(this.#board);
+
     return destinations.some(
       ({ destination }) => destination.x === x && destination.y === y,
     );

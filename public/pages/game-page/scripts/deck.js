@@ -258,8 +258,7 @@ export const attachPlayActionCard = () => {
               () =>
                 handlePlayerMove({
                   destination: { x, y },
-                  path: "action-card-move",
-                }),
+                }, "action-card-move"),
             );
           });
         }
