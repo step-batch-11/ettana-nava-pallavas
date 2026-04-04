@@ -314,9 +314,9 @@ describe("color_dice_action", () => {
         },
       ];
 
-      const legder = createLedger(1, players, yarns);
+      const ledger = createLedger(1, players, yarns);
       const expected = { 1: 1, 2: 1, 3: 1, 4: 1 };
-      assertEquals(legder, expected);
+      assertEquals(ledger, expected);
     });
 
     it("only player has one adjacent and gets 1, everyone else 0", () => {

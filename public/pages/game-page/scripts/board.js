@@ -224,7 +224,7 @@ const renderPlayersCards = (players, currentPlayer) => {
   });
 };
 
-export const hightLightPattern = async (pattern) => {
+export const highlightPattern = async (pattern) => {
   pattern.forEach(({ x, y }) => {
     board.querySelector(`#r-${x}-c-${y}`).classList.add(
       "highlight",
