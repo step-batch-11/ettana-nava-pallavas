@@ -93,10 +93,11 @@ export const playActionCard = async (context) => {
     const id = await context.req.param("id");
 
     const actionCardHandlers = {
-      6: (_) => game.playTaxActionCard(6),
-      16: (_) => game.playVictoryPoint(16),
-      4: (_) => game.playCollectToken(4),
-      7: (id) => game.getDesignCardActionCard(id),
+      6: (id) => game.playTaxActionCard(Number(id)),
+      16: (id) => game.playVictoryPoint(Number(id)),
+      4: (id) => game.playCollectToken(Number(id)),
+      1: (id) => game.playMoveActionCard(Number(id)),
+      7: (id) => game.getDesignCardActionCard(Number(id)),
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
@@ -186,6 +187,25 @@ export const handleMove = async (ctx) => {
     },
     200,
   );
+};
+
+export const handleActionCardMove = async (ctx) => {
+  const gameState = ctx.get("gameState");
+  const board = gameState.getBoard();
+
+  const { destination } = await ctx.req.json();
+  const moveResult = gameState.movePlayer(destination);
+  const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
+
+  if (moveResult.source === moveResult.destination) {
+    return ctx.json({ success: false, message: "You can't move there" }, 400);
+  }
+
+  return ctx.json({
+    success: true,
+    data: { adjYarns, moveResult },
+    message: "Moved successfully",
+  }, 200);
 };
 
 export const handleSwap = async (ctx) => {

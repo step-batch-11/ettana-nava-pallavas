@@ -20,15 +20,13 @@ const handleClaim = async (e) => {
   }
   renderGame(status.state);
   addEventListener();
-  await highlightPattern(status.result.matches);
+  highlightPattern(status.result.matches);
 };
 
 export const addEventListener = () => {
-  applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
   addDragEventListenerOnDeck();
   addClaimEventListener(handleClaim);
-  attachBankEventListeners();
   attachPlayActionCard();
 };
 
@@ -36,7 +34,6 @@ export const renderGame = (state) => {
   renderBoard(state);
   renderBankState(state);
   renderDeck(state.deck);
-  addEventListener();
 };
 
 const main = async () => {
@@ -47,6 +44,8 @@ const main = async () => {
 
   defaultDice();
   addEventListener();
+  applyEventListenerOnDice();
+  attachBankEventListeners();
 };
 
 globalThis.onload = main;

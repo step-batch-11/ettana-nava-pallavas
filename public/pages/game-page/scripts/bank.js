@@ -19,7 +19,7 @@ const sendRequest = async (path) => {
 const designCardListeners = () => {
   const designCard = document.querySelector(".design-card");
 
-  designCard.addEventListener("click", async () => {
+  designCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
       showToast(response.message, "e");
@@ -35,7 +35,7 @@ const designCardListeners = () => {
 const actionCardListeners = () => {
   const actionCard = document.querySelector(".action-card");
 
-  actionCard.addEventListener("click", async () => {
+  actionCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-action-card");
 
     if (!response.success) {

@@ -13,6 +13,7 @@ export default class Game {
   #board;
   #diceValue;
   #currentPlayerIndex;
+  #playerActions;
 
   constructor(
     players,
@@ -28,6 +29,7 @@ export default class Game {
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex;
     this.randomFn = randomFn;
+    this.#playerActions = { isMoved: false };
   }
 
   distributeAssets({ colorId }, currentPlayer) {
@@ -87,7 +89,7 @@ export default class Game {
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
     this.#bank.incrementTokens(3);
-    currentPlayer.addActionCard(card);
+    currentPlayer.addDesignCard(card);
     return card;
   }
 
@@ -171,6 +173,7 @@ export default class Game {
     return {
       result: { affectedPlayers, message: "Tax payed successfully" },
       state: this.getGameState(),
+      message: "Tax action card played",
     };
   }
 
@@ -187,6 +190,58 @@ export default class Game {
 
     this.#board.swapYarns(source, destination);
     currentPlayer.removeActionCard(cardId);
+  }
+
+  getPlayersPositions() {
+    return this.#players.map((player) => player.getPosition());
+  }
+
+  getPossibleDestinations() {
+    const availableDestinations = [];
+    const occupiedPositions = this.getPlayersPositions();
+    const tiles = this.#board.getTiles();
+
+    for (let row = 0; row < tiles.length; row++) {
+      for (let col = 0; col < tiles[row].length; col++) {
+        const isOccupied = occupiedPositions.some(({ x, y }) =>
+          row === x && col === y
+        );
+        if (!isOccupied) {
+          availableDestinations.push([row, col]);
+        }
+      }
+    }
+
+    return availableDestinations;
+  }
+
+  playMoveActionCard(id) {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+    if (this.#playerActions.isMoved) {
+      throw new Error("Already move action performed!");
+    }
+
+    if (!currentPlayer.haveActionCard(id)) {
+      throw new Error("Don't have this action card");
+    }
+
+    const availableDestinations = this.getPossibleDestinations();
+
+    currentPlayer.removeActionCard(id);
+    this.#playerActions.isMoved = true;
+
+    return {
+      result: { availableDestinations },
+      state: this.getGameState(),
+      message: "Move action card played",
+    };
+  }
+
+  movePlayer(destination) {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+    const source = currentPlayer.getPosition();
+    currentPlayer.move(destination);
+    return { source, destination };
   }
 
   #filterOpponents(filterFn) {
