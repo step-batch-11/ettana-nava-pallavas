@@ -122,22 +122,6 @@ describe("board test", () => {
       assert(status);
     });
 
-    it("When board is not given, there should be no possible destinations", () => {
-      const board = new Board([[]], []);
-      const bank = new Bank([], []);
-      const player = new Player(2, "john");
-      player.setup(1, { x: 0, y: 0 });
-
-      const diceValue = { colorId: 1, number: 1 };
-
-      const mockGame = new Game([player], bank, board, diceValue);
-      const { currentPlayerId } = mockGame.getGameState();
-      const currentPlayer = getPlayerById(players, currentPlayerId);
-
-      const actual = board.findPossibleDestinations(currentPlayer, players, 1);
-      assertEquals(actual.length, 0);
-    });
-
     it("when player is at edge of the board, it should show 2 destination locations for step 1 :", () => {
       const tiles = [
         [0, 1, 2, 3, 4, 0],

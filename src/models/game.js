@@ -120,7 +120,7 @@ export default class Game {
     return status;
   }
 
-  getGameState() {
+  getGameState(id = 1) {
     return {
       players: this.#players.map((player) => player.getPlayerData()),
       bank: this.#bank.getBank(),
@@ -128,8 +128,8 @@ export default class Game {
       diceValue: this.#diceValue,
       currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       deck: {
-        actionCards: this.#players[this.#currentPlayerIndex].getAc(),
-        designCards: this.#players[this.#currentPlayerIndex].getDc(),
+        actionCards: getPlayerById(this.#players, id).getAc(),
+        designCards: getPlayerById(this.#players, id).getDc(),
       },
     };
   }
