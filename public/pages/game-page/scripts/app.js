@@ -23,7 +23,7 @@ const handleClaim = async (e) => {
   await highlightPattern(status.result.matches);
 };
 
-const addEventListener = () => {
+export const addEventListener = () => {
   applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
   addDragEventListenerOnDeck();

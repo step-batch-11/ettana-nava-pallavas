@@ -1,6 +1,6 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
-import { renderGame } from "./app.js";
+import { renderGame, addEventListener } from "./app.js";
 
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
@@ -230,6 +230,7 @@ export const attachPlayActionCard = () => {
 
       showToast(message);
       renderGame(state);
+      addEventListener();
     });
   });
 };
