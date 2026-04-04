@@ -161,7 +161,7 @@ const createSVGPlayerIcon = () => {
   return svg;
 };
 
-const renderPlayerPins = (players, currentPlayer) => {
+const renderPlayerPins = (players, currentPlayerId) => {
   players.forEach((player) => {
     const el = board.querySelector(
       `#tile${player.position.x}${player.position.y}`,
@@ -173,7 +173,7 @@ const renderPlayerPins = (players, currentPlayer) => {
     icon.appendChild(svgIcon);
     el.appendChild(icon);
 
-    if (player.id === currentPlayer) {
+    if (player.playerId === currentPlayerId) {
       const icon = el.querySelector("svg");
       icon.classList.add("current-player");
     }
@@ -193,9 +193,9 @@ const renderNumberTiles = (tiles) => {
   });
 };
 
-const renderTilesContent = (tiles, currentPlayer, players) => {
+const renderTilesContent = (tiles, currentPlayerId, players) => {
   renderNumberTiles(tiles);
-  renderPlayerPins(players, currentPlayer);
+  renderPlayerPins(players, currentPlayerId);
 };
 
 const createPlayerCard = (player) => {
@@ -211,12 +211,12 @@ const createPlayerCard = (player) => {
   return { clone, element };
 };
 
-const renderPlayersCards = (players, currentPlayer) => {
+const renderPlayersCards = (players, currentPlayerId) => {
   playersContainer.innerHTML = "";
   players.forEach((player) => {
     const { clone, element } = createPlayerCard(player);
 
-    if (player.id === currentPlayer) {
+    if (player.id === currentPlayerId) {
       element.classList.add("current-player-card");
     }
 
@@ -251,6 +251,6 @@ export const initBoard = () => {
 
 export const renderBoard = (state) => {
   renderYarns(state.board.yarns);
-  renderTilesContent(state.board.tiles, state.currentPlayer, state.players);
-  renderPlayersCards(state.players, state.currentPlayer);
+  renderTilesContent(state.board.tiles, state.currentPlayerId, state.players);
+  renderPlayersCards(state.players, state.currentPlayerId);
 };
