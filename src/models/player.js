@@ -103,9 +103,11 @@ export default class Player {
 
   getActionCard(id) {
     const card = this.#ac.find((card) => card.id === Number(id));
+
     if (!card) {
       throw new Error("Action card is missing");
     }
+
     return card;
   }
 
