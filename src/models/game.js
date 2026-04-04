@@ -1,7 +1,11 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
-import { areSamePositions } from "../utils/common.js";
+import {
+  areSamePositions,
+  randomBw,
+  updatePlayerCards,
+} from "../utils/common.js";
 
 export default class Game {
   #players;
@@ -10,12 +14,19 @@ export default class Game {
   #diceValue;
   #currentPlayerIndex;
 
-  constructor(players, bank, board, diceValue, randomFn = Math.random) {
+  constructor(
+    players,
+    bank,
+    board,
+    diceValue,
+    randomFn = Math.random,
+    currentPlayerIndex = 0,
+  ) {
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
     this.#diceValue = diceValue;
-    this.#currentPlayerIndex = 0;
+    this.#currentPlayerIndex = currentPlayerIndex;
     this.randomFn = randomFn;
   }
 
@@ -26,7 +37,7 @@ export default class Game {
     }
 
     const ledger = createLedger(colorId, this.#players, this.#board.getYarns());
-    const credit = Object.keys(ledger).reduce((x, y) => x + y);
+    const credit = Object.values(ledger).reduce((x, y) => x + y);
     if (this.#bank.getTokens() < credit) return;
 
     this.#players.forEach((player) => {
@@ -133,11 +144,6 @@ export default class Game {
     return this.#board;
   }
 
-  #findActionCard(currentPlayer, id) {
-    const actionCards = currentPlayer.getAc();
-    return actionCards.find((card) => card.id === Number(id));
-  }
-
   #collectTax(otherPlayers) {
     const affectedPlayers = [];
     let collectedTax = 0;
@@ -153,15 +159,17 @@ export default class Game {
 
   playTaxActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    const card = currentPlayer.getActionCard(id);
+    if (!currentPlayer.haveActionCard(id)) {
+      throw new Error("Card is missing");
+    }
     const otherPlayers = this.#getOpponents();
     const { collectedTax, affectedPlayers } = this.#collectTax(otherPlayers);
 
     this.#bank.incrementTokens(collectedTax);
-    currentPlayer.removeActionCard(card);
+    currentPlayer.removeActionCard(id);
 
     return {
-      affectedPlayers,
+      result: { affectedPlayers, message: "Tax payed successfully" },
       state: this.getGameState(),
     };
   }
@@ -169,14 +177,94 @@ export default class Game {
   swapYarnActionCard(source, destination) {
     const cardId = 25;
     const currentPlayer = this.#getCurrentPlayer();
-    const card = this.#findActionCard(currentPlayer, cardId);
 
-    if (card === undefined || areSamePositions(source, destination)) {
+    if (
+      !currentPlayer.haveActionCard(cardId) ||
+      areSamePositions(source, destination)
+    ) {
       throw new Error("Player don't have this action card");
     }
 
     this.#board.swapYarns(source, destination);
-    currentPlayer.removeActionCard(card);
+    currentPlayer.removeActionCard(cardId);
+  }
+
+  #filterOpponents(filterFn) {
+    const opponents = this.#getOpponents();
+
+    return opponents.filter(filterFn).map((player) => player.getId());
+  }
+
+  playStealCard(id, filterFn) {
+    const currentPlayer = this.#getCurrentPlayer();
+
+    const card = currentPlayer.getActionCard(id);
+    if (!card) throw new Error("player don't have card");
+
+    const opponents = this.#filterOpponents(filterFn);
+
+    return { result: opponents, state: this.getGameState() };
+  }
+
+  #takeRandomCard(player) {
+    const cards = player.getAc();
+    if (cards.length === 0) throw new Error("Player has no cards");
+
+    const randomId = randomBw(cards.length);
+    const card = cards[randomId];
+
+    player.removeActionCard(card.id);
+    return card;
+  }
+
+  stealActionCard(playerId) {
+    const actionCardId = 22;
+    const currentPlayer = this.#getCurrentPlayer();
+
+    if (currentPlayer.getId() === playerId) {
+      throw new Error("player cant take from himself");
+    }
+
+    const card = currentPlayer.getActionCard(actionCardId);
+
+    const player = getPlayerById(this.#players, playerId);
+    const newCard = this.#takeRandomCard(player);
+
+    updatePlayerCards(currentPlayer, card, newCard);
+
+    return { result: "stolen card", state: this.getGameState() };
+  }
+
+  #takeToken(player) {
+    const tokens = player.getTokens();
+    if (tokens === 0) throw new Error("Player has no tokens");
+
+    if (tokens >= 2) {
+      player.debitTokens(2);
+      return 2;
+    }
+
+    player.debitTokens(1);
+    return 1;
+  }
+
+  stealTokens(playerId) {
+    const actionCardId = 10;
+    const currentPlayer = this.#getCurrentPlayer();
+
+    if (currentPlayer.getId() === playerId) {
+      throw new Error("player cant take from himself");
+    }
+
+    currentPlayer.getActionCard(actionCardId);
+
+    const player = getPlayerById(this.#players, playerId);
+    const stolenTokens = this.#takeToken(player);
+
+    currentPlayer.creditTokens(stolenTokens);
+    player.removeActionCard(actionCardId);
+
+    return { result: "stolen tokens", state: this.getGameState() };
   }
 
   #getCurrentPlayer() {
@@ -218,7 +306,7 @@ export default class Game {
   }
 
   freeSwap(source, destination) {
-    const currentPosition = (this.#getCurrentPlayer()).getPosition();
+    const currentPosition = this.#getCurrentPlayer().getPosition();
     const currPlayerAdjYarns = this.#board.getAdjYarnsPositions(
       currentPosition,
     );
@@ -241,5 +329,49 @@ export default class Game {
     }
     this.#board.swapYarns(source, destination);
     currentPlayer.debitTokens(swapCost);
+  }
+
+  getDesignCardActionCard(id) {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+
+    const actionCard = currentPlayer.getActionCard(id);
+
+    const designCard = this.#bank.getDesignCard();
+    currentPlayer.addDesignCard(designCard);
+    currentPlayer.removeActionCard(actionCard);
+
+    return {
+      result: { message: "design card added" },
+      state: this.getGameState(),
+    };
+  }
+
+  playVictoryPoint(id) {
+    const currentPlayer = this.#getCurrentPlayer();
+
+    currentPlayer.removeActionCard(id);
+    currentPlayer.updateVp(1);
+
+    return {
+      state: this.getGameState(),
+      result: {
+        message: "Victory point added to the deck",
+      },
+    };
+  }
+
+  playCollectToken(id) {
+    const currentPlayer = this.#getCurrentPlayer();
+
+    const tokens = this.#bank.deductTokens(3);
+    currentPlayer.removeActionCard(id);
+    currentPlayer.creditTokens(tokens);
+
+    return {
+      state: this.getGameState(),
+      result: {
+        message: "Tokens added",
+      },
+    };
   }
 }

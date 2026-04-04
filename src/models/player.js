@@ -79,14 +79,14 @@ export default class Player {
   }
 
   removeActionCard(cardId) {
-    if (!this.#ac.length) return;
+    if (!this.#ac.length || !this.haveActionCard(cardId)) return;
 
     const cardIndex = this.#findCardIndex(this.#ac, cardId);
     this.#ac.splice(cardIndex, 1);
   }
 
   removeDesignCard(cardId) {
-    if (!this.#dc.length) return;
+    if (!this.#dc.length || !this.haveDesignCard(cardId)) return;
 
     const cardIndex = this.#findCardIndex(this.#dc, cardId);
     this.#dc.splice(cardIndex, 1);
@@ -115,9 +115,11 @@ export default class Player {
 
   getActionCard(id) {
     const card = this.#ac.find((card) => card.id === Number(id));
+
     if (!card) {
       throw new Error("Action card is missing");
     }
+
     return card;
   }
 

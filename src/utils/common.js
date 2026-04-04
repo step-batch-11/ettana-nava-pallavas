@@ -11,3 +11,11 @@ export const isValidPosition = ({ x, y }, grid) => {
 
   return x >= 0 && x < rows && y >= 0 && y < columns;
 };
+
+export const randomBw = (max, min = 0, randomFn = Math.random) =>
+  Math.floor(min + randomFn() * (max - min));
+
+export const updatePlayerCards = (player, card, newCard) => {
+  player.removeActionCard(card.id);
+  player.addActionCard(newCard);
+};

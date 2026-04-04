@@ -13,12 +13,16 @@ export const serveGameState = (ctx) => {
 };
 
 export const handleDiceRoll = (ctx) => {
-  const game = ctx.get("gameState");
-  const { diceValues, destinations } = game.upkeep();
+  try {
+    const game = ctx.get("gameState");
+    const { diceValues, destinations } = game.upkeep();
 
-  const gameState = game.getGameState();
+    const gameState = game.getGameState();
 
-  return ctx.json({ gameState, destinations, diceValues });
+    return ctx.json({ gameState, destinations, diceValues });
+  } catch {
+    return ctx.json({ success: false, error: e.message });
+  }
 };
 
 export const buyDesignCard = (ctx) => {
@@ -89,22 +93,57 @@ export const playActionCard = async (context) => {
     const id = await context.req.param("id");
 
     const actionCardHandlers = {
-      6: (id) => game.playTaxActionCard(id),
+      6: (_) => game.playTaxActionCard(6),
+      16: (_) => game.playVictoryPoint(16),
+      4: (_) => game.playCollectToken(4),
+      7: (id) => game.getDesignCardActionCard(id),
+      10: (id) =>
+        game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
+      22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
     };
 
     if (id in actionCardHandlers) {
-      const { affectedPlayers, state } = game.playTaxActionCard(id);
+      const { result, state } = actionCardHandlers[id](id);
 
       return context.json({
-        affectedPlayers,
+        result,
         state,
         success: true,
-        message: "Tax action card played",
       });
     }
 
     return context.json(
       { success: false, message: "Invalid action card" },
+      400,
+    );
+  } catch (err) {
+    return context.json({ success: false, message: err.message }, 400);
+  }
+};
+
+export const stealFromOpponent = async (context) => {
+  try {
+    const game = context.get("gameState");
+    const type = await context.req.param("type");
+    const { playerId } = await context.req.json();
+
+    const stealHandlers = {
+      "action-card": (id) => game.stealActionCard(id),
+      tokens: (id) => game.stealTokens(id),
+    };
+
+    if (type in stealHandlers) {
+      const { result, state } = stealHandlers[type](playerId);
+
+      return context.json({
+        result,
+        state,
+        success: true,
+      });
+    }
+
+    return context.json(
+      { success: false, message: "Invalid steal action card" },
       400,
     );
   } catch (err) {
@@ -139,11 +178,14 @@ export const handleMove = async (ctx) => {
     return ctx.json({ success: false, message: "You can't move there" }, 400);
   }
 
-  return ctx.json({
-    success: true,
-    data: { adjYarns: swappableYarns, moveResult },
-    message: "Moved successfully",
-  }, 200);
+  return ctx.json(
+    {
+      success: true,
+      data: { adjYarns: swappableYarns, moveResult },
+      message: "Moved successfully",
+    },
+    200,
+  );
 };
 
 export const handleSwap = async (ctx) => {
@@ -153,15 +195,15 @@ export const handleSwap = async (ctx) => {
     const { draggablePosition, yarnPosition } = await ctx.req.json();
     gameState.freeSwap(draggablePosition, yarnPosition);
 
-    return ctx.json({
-      success: true,
-      message: "Swapped successfully",
-    }, 200);
-  } catch (e) {
     return ctx.json(
-      { success: false, message: e.message },
-      400,
+      {
+        success: true,
+        message: "Swapped successfully",
+      },
+      200,
     );
+  } catch (e) {
+    return ctx.json({ success: false, message: e.message }, 400);
   }
 };
 
@@ -177,9 +219,6 @@ export const handlePaidSwap = async (ctx) => {
       message: "Swapped successfully",
     }, 200);
   } catch (e) {
-    return ctx.json(
-      { success: false, message: e.message },
-      400,
-    );
+    return ctx.json({ success: false, message: e.message }, 400);
   }
 };

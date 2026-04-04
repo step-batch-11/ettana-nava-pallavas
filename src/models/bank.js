@@ -39,7 +39,7 @@ export default class Bank {
 
   deductTokens(n) {
     if (this.#tokens < n) {
-      throw new Error("No tokens remainig in the bank");
+      throw new Error("No tokens remaining in the bank");
     }
 
     this.#tokens -= n;

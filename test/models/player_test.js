@@ -109,7 +109,7 @@ describe("Player Class", () => {
       player.addActionCard({ id: 1 });
 
       assertEquals(player.getAc().length, 1);
-      player.removeActionCard({ id: 1 });
+      player.removeActionCard(1);
       assertEquals(player.getAc().length, 0);
     });
   });
@@ -126,7 +126,7 @@ describe("Player Class", () => {
 
       assertEquals(player.getDc().length, 1);
 
-      player.removeDesignCard({ id: 1 });
+      player.removeDesignCard(1);
       assertEquals(player.getDc().length, 0);
     });
   });

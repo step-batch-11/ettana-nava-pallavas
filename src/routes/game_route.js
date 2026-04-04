@@ -9,6 +9,7 @@ import {
   handleSwap,
   playActionCard,
   serveGameState,
+  stealFromOpponent,
   swapYarnActionCard,
 } from "../handlers/game_handlers.js";
 
@@ -25,5 +26,6 @@ gameRoute.post("/swap", handleSwap);
 gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
 gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
+gameRoute.post("/steal/:type", stealFromOpponent);
 
 export default gameRoute;

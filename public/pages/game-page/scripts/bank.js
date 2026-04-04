@@ -1,6 +1,4 @@
 import { colorsMap } from "/assets/colors.js";
-import { renderDeck } from "./deck.js";
-import { renderBoard } from "./board.js";
 import { showToast } from "../../utils/utils.js";
 import {
   handleDragLeave,
@@ -11,6 +9,7 @@ import {
   removeYarnHighlighting,
   reRenderGameState,
 } from "./game.js";
+import { addEventListener, renderGame } from "./app.js";
 
 const sendRequest = async (path) => {
   const response = await fetch(path);
@@ -28,9 +27,8 @@ const designCardListeners = () => {
     }
 
     const { state } = await sendRequest("/game/game-state");
-    renderBoard(state);
-    renderDeck(state.players, state.currentPlayerId);
-    renderBankState();
+    renderGame(state);
+    addEventListener();
   });
 };
 
@@ -46,9 +44,8 @@ const actionCardListeners = () => {
     }
 
     const { state } = await sendRequest("/game/game-state");
-    renderBoard(state);
-    renderDeck(state.players, state.currentPlayerId);
-    renderBankState();
+    renderGame(state);
+    addEventListener();
   });
 };
 

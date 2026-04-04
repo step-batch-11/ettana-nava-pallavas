@@ -1,7 +1,8 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
-import { renderGame } from "./app.js";
 import { highLightYarns } from "./bank.js";
+import { addEventListener, renderGame } from "./app.js";
+import { playVpActionCard } from "./api.js";
 
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
@@ -211,8 +212,19 @@ export const addClaimEventListener = (handleClaim) => {
   );
 };
 
+const isVictoryPointCardPresent = async (card) => {
+  if (card.some((c) => c.id === 16)) {
+    const { result, success, state } = await playVpActionCard();
+    if (success) {
+      showToast(result.message);
+    }
+    renderGame(state);
+  }
+};
+
 export const renderDeck = (deck) => {
   renderDesignCards(deck.designCards);
+  isVictoryPointCardPresent(deck.actionCards);
   renderActionCards(deck.actionCards);
 };
 
@@ -220,20 +232,21 @@ export const attachPlayActionCard = () => {
   const actionCards = document.querySelectorAll(".action-cards .card-item");
 
   actionCards.forEach((card) => {
-    card.addEventListener("click", async () => {
+    card.addEventListener("dblclick", async () => {
       if (card.id === "a-25") {
         highLightYarns("game/action-card/swap-yarn");
       } else {
         const id = card.dataset.id;
         const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-        const { state, success, message } = await res.json();
+        const { state, success, result } = await res.json();
 
         if (!success) {
           return showToast(message, "e");
         }
 
-        showToast(message);
+        showToast(result.message);
         renderGame(state);
+        addEventListener();
       }
     });
   });

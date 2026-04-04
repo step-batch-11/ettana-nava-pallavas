@@ -603,11 +603,13 @@ describe("Game route", () => {
         const response = await app.request("/game/action-card/6", {
           method: "PATCH",
         });
-        const { success, affectedPlayers } = await response.json();
+        const res = await response.json();
 
-        assertEquals(success, true);
         assertEquals(response.status, 200);
-        assertEquals(affectedPlayers, [2]);
+
+        assertEquals(res.success, true);
+        assertEquals(res.result.affectedPlayers, [2]);
+
         assertEquals(bank.getBank().tokens, 56);
         assertEquals(players[1].getTokens(), 1);
         assertEquals(players[0].getAc(), []);
@@ -623,11 +625,11 @@ describe("Game route", () => {
         const response = await app.request("/game/action-card/6", {
           method: "PATCH",
         });
-        const { success, affectedPlayers } = await response.json();
+        const { success, result } = await response.json();
 
         assertEquals(success, true);
         assertEquals(response.status, 200);
-        assertEquals(affectedPlayers, []);
+        assertEquals(result.affectedPlayers, []);
         assertEquals(bank.getBank().tokens, 55);
         assertEquals(players[1].getTokens(), 0);
         assertEquals(players[0].getAc(), []);
