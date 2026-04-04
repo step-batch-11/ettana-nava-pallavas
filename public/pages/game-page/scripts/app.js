@@ -1,4 +1,4 @@
-import { hightLightPattern, initBoard, renderBoard } from "./board.js";
+import { highlightPattern, initBoard, renderBoard } from "./board.js";
 import { applyEventListenerOnDice, defaultDice } from "./game.js";
 import { attachBankEventListeners, renderBankState } from "./bank.js";
 import {
@@ -20,7 +20,7 @@ const handleClaim = async (e) => {
   }
   renderGame(status.state);
   addEventListener();
-  await hightLightPattern(status.result.matches);
+  await highlightPattern(status.result.matches);
 };
 
 const addEventListener = () => {

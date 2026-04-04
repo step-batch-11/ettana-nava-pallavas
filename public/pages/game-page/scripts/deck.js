@@ -159,11 +159,11 @@ const renderActionCards = (cards) => {
     actionCard.dataset.id = card.id;
     actionCard.id = `a-${card.id}`;
 
-    const actioinDetails = document.createElement("section");
-    actioinDetails.classList.add("action-details");
-    actioinDetails.textContent = card.description;
+    const actionDetails = document.createElement("section");
+    actionDetails.classList.add("action-details");
+    actionDetails.textContent = card.description;
 
-    actionCard.append(actioinDetails);
+    actionCard.append(actionDetails);
     actionCardContainer.appendChild(actionCard);
   });
 };
