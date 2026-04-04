@@ -67,14 +67,14 @@ export default class Player {
   }
 
   removeActionCard(card) {
-    if (!this.#ac.length) return;
+    if (this.#ac.length === 0) return;
 
     const cardIndex = this.#findCardIndex(this.#ac, card);
     this.#ac.splice(cardIndex, 1);
   }
 
   removeDesignCard(card) {
-    if (!this.#dc.length) return;
+    if (this.#dc.length === 0) return;
 
     const cardIndex = this.#findCardIndex(this.#dc, card);
     this.#dc.splice(cardIndex, 1);

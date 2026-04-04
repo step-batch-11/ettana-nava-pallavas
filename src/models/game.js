@@ -25,7 +25,7 @@ export default class Game {
     }
 
     const ledger = createLedger(colorId, this.#players, this.#board.getYarns());
-    const credit = Object.keys(ledger).reduce((x, y) => x + y);
+    const credit = Object.values(ledger).reduce((x, y) => x + y);
     if (this.#bank.getTokens() < credit) return;
 
     this.#players.forEach((player) => {
@@ -160,7 +160,7 @@ export default class Game {
     currentPlayer.removeActionCard(card);
 
     return {
-      affectedPlayers,
+      result: { affectedPlayers, message: "tax played succesfully" },
       state: this.getGameState(),
     };
   }
@@ -223,5 +223,20 @@ export default class Game {
       throw new Error("You don't have enough tokens");
     }
     currentPlayer.debitTokens(swapCost);
+  }
+
+  getDesignCardActionCard() {
+    const currentPlayer = this.#players[this.#currentPlayerIndex];
+
+    const actionCard = currentPlayer.getActionCard(7);
+
+    const designCard = this.#bank.getDesignCard();
+    currentPlayer.addDesignCard(designCard);
+    currentPlayer.removeActionCard(actionCard);
+
+    return {
+      result: { message: "design card added" },
+      state: this.getGameState(),
+    };
   }
 }

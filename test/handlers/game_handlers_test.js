@@ -89,6 +89,63 @@ describe("Game route", () => {
     app = createApp(game);
   });
 
+  // describe("GET game/roll", () => {
+  //   let app;
+
+  //   const randomValue = 0.05;
+
+  //   beforeEach(() => {
+  //     const bank = new Bank(designCards, actionCards, () => randomValue);
+
+  //     const player1 = new Player(1, "Sandeep");
+  //     const player2 = new Player(2, "Ajoy");
+
+  //     player1.setup(1, { x: 3, y: 4 });
+  //     player2.setup(2, { x: 2, y: 1 });
+
+  //     const players = [player1, player2];
+  //     const yarns = [
+  //       [1, 2, 3, 4, 5],
+  //       [5, 4, 3, 2, 1],
+  //       [1, 2, 3, 4, 5],
+  //       [5, 4, 3, 2, 1],
+  //       [1, 2, 3, 4, 5],
+  //     ];
+
+  //     const tiles = [
+  //       [0, 0, 0, 0, 0, 0],
+  //       [0, 1, 2, 3, 4, 0],
+  //       [0, 5, 6, 1, 2, 0],
+  //       [0, 3, 4, 5, 6, 0],
+  //       [0, 2, 3, 4, 5, 0],
+  //       [0, 0, 0, 0, 0, 0],
+  //     ];
+
+  //     const board = new Board(tiles, yarns);
+  //     const diceValue = { colorId: 1, number: 2 };
+
+  //     const gameState = new Game(
+  //       players,
+  //       bank,
+  //       board,
+  //       diceValue,
+  //       () => randomValue,
+  //     );
+  //     app = createApp(gameState);
+  //   });
+
+  //   it("should give a object with diceValue and destinations", async() => {
+  //     await app.request("/game/roll", { method: "POST" });
+  //     const destination = { destination: { x: 2, y: 3 }, type: "jump" };
+
+  //     const response = await app.request("/game/move", {
+  //       method: "POST",
+  //       body: JSON.stringify(destination),
+  //       headers: { "content-type": "application/json" },
+  //     });
+  //   })
+  // })
+
   describe("Buy Design Card", () => {
     it("should give a new design card", async () => {
       players[0].creditTokens(5);
@@ -395,11 +452,13 @@ describe("Game route", () => {
         const response = await app.request("/game/action-card/6", {
           method: "PATCH",
         });
-        const { success, affectedPlayers } = await response.json();
+        const res = await response.json();
 
-        assertEquals(success, true);
         assertEquals(response.status, 200);
-        assertEquals(affectedPlayers, [2]);
+
+        assertEquals(res.success, true);
+        assertEquals(res.result.affectedPlayers, [2]);
+
         assertEquals(bank.getBank().tokens, 56);
         assertEquals(players[1].getTokens(), 1);
         assertEquals(players[0].getAc(), []);
@@ -415,11 +474,11 @@ describe("Game route", () => {
         const response = await app.request("/game/action-card/6", {
           method: "PATCH",
         });
-        const { success, affectedPlayers } = await response.json();
+        const { success, result } = await response.json();
 
         assertEquals(success, true);
         assertEquals(response.status, 200);
-        assertEquals(affectedPlayers, []);
+        assertEquals(result.affectedPlayers, []);
         assertEquals(bank.getBank().tokens, 55);
         assertEquals(players[1].getTokens(), 0);
         assertEquals(players[0].getAc(), []);

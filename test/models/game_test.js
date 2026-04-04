@@ -146,8 +146,8 @@ describe("Game controller test", () => {
         "type": "tax",
         "description": "Get 3 tokens from the reserve.",
       });
-      const { affectedPlayers } = game.playTaxActionCard(6);
-      assertEquals(affectedPlayers, [2]);
+      const { result } = game.playTaxActionCard(6);
+      assertEquals(result.affectedPlayers, [2]);
     });
     it("Player plays tax action card successfully, but no one is affected", () => {
       players[0].addActionCard({
@@ -155,12 +155,33 @@ describe("Game controller test", () => {
         "type": "tax",
         "description": "Get 3 tokens from the reserve.",
       });
-      const { affectedPlayers } = game.playTaxActionCard(6);
-      assertEquals(affectedPlayers, []);
+      const { result } = game.playTaxActionCard(6);
+      assertEquals(result.affectedPlayers, []);
     });
 
     it("Player cannot play tax action card, as he doesn't have the card", () => {
       assertThrows(() => game.playTaxActionCard(6));
+    });
+  });
+
+  describe("Play Get-Design-Card Action Card", () => {
+    it("should add a design card to player deck, if action card is present in player", () => {
+      players[0].addActionCard({ id: 7 });
+
+      const actual = game.getDesignCardActionCard();
+      const expected = {
+        result: {
+          message: "design card added",
+        },
+        state: game.getGameState(),
+      };
+      assertEquals(actual, expected);
+      assertEquals(players[0].getPlayerData().dc, 1);
+    });
+
+    it("should not add design card to player deck, if action card isn't present in player", () => {
+      assertThrows(() => game.getDesignCardActionCard());
+      assertEquals(players[0].getPlayerData().dc, 0);
     });
   });
 
@@ -530,40 +551,6 @@ describe("Game controller test", () => {
   });
 
   describe("upkeep: Roll dice and find possible path :", () => {
-    let game;
-    const yarns = [
-      [1, 1, 1, 1, 1],
-      [2, 2, 2, 2, 2],
-      [3, 3, 3, 3, 3],
-      [4, 4, 4, 4, 4],
-      [5, 5, 5, 5, 5],
-    ];
-
-    const tiles = [
-      [0, 1, 2, 3, 4, 0],
-      [0, 5, 6, 1, 2, 0],
-      [0, 3, 4, 5, 6, 0],
-      [0, 1, 2, 3, 4, 0],
-      [0, 5, 6, 1, 2, 0],
-      [0, 3, 4, 5, 6, 0],
-    ];
-
-    beforeEach(() => {
-      const board = new Board(tiles, yarns);
-      const bank = new Bank([], []);
-
-      const player1 = new Player(2, "john");
-      player1.setup(1, { x: 1, y: 1 });
-
-      const player2 = new Player(1, "alex");
-      player2.setup(2, { x: 3, y: 3 });
-
-      const diceValue = { colorId: 1, number: 1 };
-      const players = [player1, player2];
-
-      game = new Game(players, bank, board, diceValue, () => 0.9);
-    });
-
     describe("roll dice :", () => {
       it("when rollDice invoked, should return two random values :", () => {
         const actual = game.rollDice();
