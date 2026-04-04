@@ -3,6 +3,7 @@
     "dev": "deno run --watch -A main.js",
     "start": "deno run -A main.js",
     "test": "deno test -A",
+    "watch": "deno test -A --watch",
     "coverage": "deno test --coverage -A",
     "detailed": "deno coverage --detailed",
     "lint": "deno lint",

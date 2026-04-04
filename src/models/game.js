@@ -10,12 +10,19 @@ export default class Game {
   #diceValue;
   #currentPlayerIndex;
 
-  constructor(players, bank, board, diceValue, randomFn = Math.random) {
+  constructor(
+    players,
+    bank,
+    board,
+    diceValue,
+    randomFn = Math.random,
+    currentPlayerIndex = 0,
+  ) {
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
     this.#diceValue = diceValue;
-    this.#currentPlayerIndex = 0;
+    this.#currentPlayerIndex = currentPlayerIndex;
     this.randomFn = randomFn;
   }
 
@@ -193,8 +200,9 @@ export default class Game {
     const actionCardId = 22;
     const currentPlayer = this.#getCurrentPlayer();
 
-    if (currentPlayer.getId() === playerId)
+    if (currentPlayer.getId() === playerId) {
       throw new Error("player cant take from himself");
+    }
 
     const card = currentPlayer.getActionCard(actionCardId);
 
@@ -223,8 +231,9 @@ export default class Game {
     const actionCardId = 10;
     const currentPlayer = this.#getCurrentPlayer();
 
-    if (currentPlayer.getId() === playerId)
+    if (currentPlayer.getId() === playerId) {
       throw new Error("player cant take from himself");
+    }
 
     currentPlayer.getActionCard(actionCardId);
 
@@ -276,8 +285,9 @@ export default class Game {
 
   freeSwap(source, destination) {
     const currentPosition = this.#getCurrentPlayer().getPosition();
-    const currPlayerAdjYarns =
-      this.#board.getAdjYarnsPositions(currentPosition);
+    const currPlayerAdjYarns = this.#board.getAdjYarnsPositions(
+      currentPosition,
+    );
 
     if (!areYarnsSwappable(source, destination, currPlayerAdjYarns)) {
       throw new Error("You can't swap these yarns");
@@ -308,6 +318,36 @@ export default class Game {
     return {
       result: { message: "design card added" },
       state: this.getGameState(),
+    };
+  }
+
+  playVictoryPoint(id) {
+    const currentPlayer = this.#getCurrentPlayer();
+    const card = currentPlayer.getActionCard(id);
+    currentPlayer.removeActionCard(card);
+    currentPlayer.updateVp(1);
+
+    return {
+      state: this.getGameState(),
+      result: {
+        message: "Victory point added to the deck",
+      },
+    };
+  }
+
+  playCollectToken(id) {
+    const currentPlayer = this.#getCurrentPlayer();
+    const card = currentPlayer.getActionCard(id);
+
+    const tokens = this.#bank.deductTokens(3);
+    currentPlayer.removeActionCard(card);
+    currentPlayer.creditTokens(tokens);
+
+    return {
+      state: this.getGameState(),
+      result: {
+        message: "Tokens added",
+      },
     };
   }
 }

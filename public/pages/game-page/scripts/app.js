@@ -36,6 +36,7 @@ export const renderGame = (state) => {
   renderBoard(state);
   renderBankState(state.bank);
   renderDeck(state.deck);
+  addEventListener();
 };
 
 const main = async () => {
