@@ -218,6 +218,7 @@ const isVictoryPointCardPresent = async (card) => {
       showToast(result.message);
     }
     renderGame(state);
+    addEventListener();
   }
 };
 
