@@ -1,6 +1,7 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
+import { randomBw, updatePlayerCards } from "../utils/common.js";
 
 export default class Game {
   #players;
@@ -132,11 +133,6 @@ export default class Game {
     return this.#board;
   }
 
-  #findActionCard(currentPlayer, id) {
-    const actionCards = currentPlayer.getAc();
-    return actionCards.find((card) => card.id === Number(id));
-  }
-
   #collectTax(otherPlayers) {
     const affectedPlayers = [];
     let collectedTax = 0;
@@ -163,6 +159,81 @@ export default class Game {
       result: { affectedPlayers, message: "tax played succesfully" },
       state: this.getGameState(),
     };
+  }
+
+  #filterOpponents(filterFn) {
+    const opponents = this.#getOpponents();
+
+    return opponents.filter(filterFn).map((player) => player.getId());
+  }
+
+  playStealCard(id, filterFn) {
+    const currentPlayer = this.#getCurrentPlayer();
+
+    const card = currentPlayer.getActionCard(id);
+    if (!card) throw new Error("player don't have card");
+
+    const opponents = this.#filterOpponents(filterFn);
+
+    return { result: opponents, state: this.getGameState() };
+  }
+
+  #takeRandomCard(player) {
+    const cards = player.getAc();
+    if (cards.length === 0) throw new Error("Player has no cards");
+
+    const randomId = randomBw(cards.length);
+    const card = cards[randomId];
+
+    player.removeActionCard(card);
+    return card;
+  }
+
+  stealActionCard(playerId) {
+    const actionCardId = 22;
+    const currentPlayer = this.#getCurrentPlayer();
+
+    if (currentPlayer.getId() === playerId)
+      throw new Error("player cant take from himself");
+
+    const card = currentPlayer.getActionCard(actionCardId);
+
+    const player = getPlayerById(this.#players, playerId);
+    const newCard = this.#takeRandomCard(player);
+
+    updatePlayerCards(currentPlayer, card, newCard);
+
+    return { result: "stolen card", state: this.getGameState() };
+  }
+
+  #takeToken(player) {
+    const tokens = player.getTokens();
+    if (tokens === 0) throw new Error("Player has no tokens");
+
+    if (tokens >= 2) {
+      player.debitTokens(2);
+      return 2;
+    }
+
+    player.debitTokens(1);
+    return 1;
+  }
+
+  stealTokens(playerId) {
+    const actionCardId = 10;
+    const currentPlayer = this.#getCurrentPlayer();
+
+    if (currentPlayer.getId() === playerId)
+      throw new Error("player cant take from himself");
+
+    currentPlayer.getActionCard(actionCardId);
+
+    const player = getPlayerById(this.#players, playerId);
+    const stolenTokens = this.#takeToken(player);
+
+    currentPlayer.creditTokens(stolenTokens);
+
+    return { result: "stolen tokens", state: this.getGameState() };
   }
 
   #getCurrentPlayer() {
@@ -204,10 +275,9 @@ export default class Game {
   }
 
   freeSwap(source, destination) {
-    const currentPosition = (this.#getCurrentPlayer()).getPosition();
-    const currPlayerAdjYarns = this.#board.getAdjYarnsPositions(
-      currentPosition,
-    );
+    const currentPosition = this.#getCurrentPlayer().getPosition();
+    const currPlayerAdjYarns =
+      this.#board.getAdjYarnsPositions(currentPosition);
 
     if (!areYarnsSwappable(source, destination, currPlayerAdjYarns)) {
       throw new Error("You can't swap these yarns");
@@ -216,12 +286,13 @@ export default class Game {
     this.#board.swapYarns(source, destination);
   }
 
-  purchaseSwap() {
+  paidSwap(source, destination) {
     const swapCost = 3;
     const currentPlayer = this.#getCurrentPlayer();
     if (currentPlayer.getTokens() < swapCost) {
       throw new Error("You don't have enough tokens");
     }
+    this.#board.swapYarns(source, destination);
     currentPlayer.debitTokens(swapCost);
   }
 

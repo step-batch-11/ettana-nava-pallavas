@@ -43,6 +43,10 @@ export default class Board {
 
   swapYarns(source, destination) {
     const boardYarns = this.#yarns;
+
+    if (!isValidPosition(source, boardYarns) || !isValidPosition(destination, boardYarns)) {
+      throw new Error("Invalid position");
+    };
     const sourceYarnColor = this.#getYarnColor(source);
     const destYarnColor = this.#getYarnColor(destination);
 
