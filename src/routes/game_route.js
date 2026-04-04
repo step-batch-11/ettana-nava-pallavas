@@ -5,9 +5,11 @@ import {
   claimDesign,
   handleDiceRoll,
   handleMove,
+  handlePaidSwap,
   handleSwap,
   playActionCard,
   serveGameState,
+  swapYarnActionCard,
 } from "../handlers/game_handlers.js";
 
 const gameRoute = new Hono();
@@ -20,6 +22,8 @@ gameRoute.get("/buy-action-card", buyActionCard);
 gameRoute.get("/claim-design/:id", claimDesign);
 gameRoute.post("/move", handleMove);
 gameRoute.post("/swap", handleSwap);
+gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
+gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
 
 export default gameRoute;

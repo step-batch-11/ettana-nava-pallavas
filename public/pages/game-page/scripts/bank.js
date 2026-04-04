@@ -2,6 +2,15 @@ import { colorsMap } from "/assets/colors.js";
 import { renderDeck } from "./deck.js";
 import { renderBoard } from "./board.js";
 import { showToast } from "../../utils/utils.js";
+import {
+  handleDragLeave,
+  handleDragOver,
+  handleStartDrag,
+  removeCellEventListeners,
+  removeYarnEventListeners,
+  removeYarnHighlighting,
+  reRenderGameState,
+} from "./game.js";
 
 const sendRequest = async (path) => {
   const response = await fetch(path);
@@ -43,7 +52,118 @@ const actionCardListeners = () => {
   });
 };
 
-export const renderBankState = (bank) => {
+const getCurrentPlayer = (state) => {
+  const currentPlayerId = state.currentPlayerId;
+
+  return state.players.find((player) => player.playerId === currentPlayerId);
+};
+
+const getAllYarnsPosition = () => {
+  const mockBoardYarns = [
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+  ];
+  return mockBoardYarns.flatMap((_, i) =>
+    mockBoardYarns[i].map((_, j) => ({ x: i, y: j }))
+  );
+};
+
+const fetchPaidSwapResult = async (
+  draggablePosition,
+  yarnPosition,
+  resource,
+) => {
+  const response = await fetch(resource, {
+    method: "POST",
+    body: JSON.stringify({ draggablePosition, yarnPosition }),
+    headers: { "content-type": "application/json" },
+  });
+
+  return await response.json();
+};
+
+const swapYarns = async (draggablePosition, yarnPosition, resource) => {
+  const response = await fetchPaidSwapResult(
+    draggablePosition,
+    yarnPosition,
+    resource,
+  );
+
+  await reRenderGameState();
+  if (!response.success) {
+    showToast(response.message, "e");
+  }
+  removeYarnHighlighting();
+  removeYarnEventListeners();
+  removeCellEventListeners();
+  showToast(response.message, "d");
+};
+
+const handleDrop = async (e, cell, yarnPosition, resource) => {
+  const draggableId = e.dataTransfer.getData("text/plain");
+  const draggablePosition = JSON.parse(
+    e.dataTransfer.getData("application/json"),
+  );
+  const yarn = cell.querySelector(".dot");
+
+  const octagon = cell.querySelector("polygon");
+  octagon.style.stroke = "";
+
+  if (yarn.id !== draggableId) {
+    await swapYarns(draggablePosition, yarnPosition, resource);
+  }
+};
+
+const addDragAndDrop = (yarn, yarnPosition, resource) => {
+  yarn.addEventListener("dragstart", (e) => handleStartDrag(e, yarnPosition));
+  const cell = yarn.parentElement;
+  cell.classList.add("active");
+
+  cell.addEventListener("dragover", (e) => handleDragOver(e, cell));
+  cell.addEventListener("dragleave", (e) => handleDragLeave(e, cell));
+  cell.addEventListener(
+    "drop",
+    (e) => handleDrop(e, cell, yarnPosition, resource),
+  );
+};
+
+export const highLightYarns = (resource) => {
+  const yarnsPosition = getAllYarnsPosition();
+
+  yarnsPosition.forEach((yarnPosition) => {
+    const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
+    const yarn = document.querySelector(id);
+    yarn.draggable = true;
+    yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
+    addDragAndDrop(yarn, yarnPosition, resource);
+  });
+};
+
+const handleSwapEvent = (_) => {
+  highLightYarns("/game/paid-swap");
+};
+
+const swapListener = () => {
+  const button = document.querySelector(".swap-btn");
+
+  button.removeEventListener("click", handleSwapEvent);
+  button.addEventListener("click", handleSwapEvent);
+};
+
+const setButton = (state) => {
+  const currentPlayer = getCurrentPlayer(state);
+  const swapButton = document.querySelector(".swap-btn");
+
+  swapButton.disabled = currentPlayer.tokens < 3;
+};
+
+export const renderBankState = (state) => {
+  const bank = state.bank;
+  setButton(state);
+
   const tokenPlaceholder = document.querySelector("#token-count");
   tokenPlaceholder.textContent = bank.tokens;
 
@@ -61,4 +181,5 @@ export const renderBankState = (bank) => {
 export const attachBankEventListeners = () => {
   designCardListeners();
   actionCardListeners();
+  swapListener();
 };

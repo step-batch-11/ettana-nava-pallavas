@@ -1,6 +1,7 @@
-import { getGameState, rollDice } from "./api.js";
-import { renderGame } from "./app.js";
+import { rollDice } from "./api.js";
+import { addEventListener, renderGame } from "./app.js";
 import { colorsMap } from "/assets/colors.js";
+import { showToast } from "../../utils/utils.js";
 
 const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
@@ -13,7 +14,7 @@ const updateDice = ({ number, colorId }) => {
   colorDice.replaceChildren(diceColor);
 };
 
-const removeEventListeners = (elements) => {
+export const removeEventListeners = (elements) => {
   elements.forEach((tile) => {
     tile.replaceWith(tile.cloneNode(true));
   });
@@ -36,7 +37,7 @@ const removeMoveClass = () => {
   removeClasses(".tile", "premium-move", "normal-move", "jump-move");
 };
 
-const removeYarnHighlighting = () => {
+export const removeYarnHighlighting = () => {
   const yarns = document.querySelectorAll(".dot");
   yarns.forEach((yarn) => {
     yarn.draggable = false;
@@ -44,28 +45,28 @@ const removeYarnHighlighting = () => {
   });
 };
 
-const removeCellEventListeners = () => {
+export const removeCellEventListeners = () => {
   const cells = document.querySelectorAll(".cell");
   removeEventListeners(cells);
 };
 
-const removeYarnEventListeners = () => {
+export const removeYarnEventListeners = () => {
   const yarns = document.querySelectorAll(".dot");
   removeEventListeners(yarns);
 };
 
-const handleStartDrag = (e, yarnPosition) => {
+export const handleStartDrag = (e, yarnPosition) => {
   e.dataTransfer.setData("text/plain", e.target.id);
   e.dataTransfer.setData("application/json", JSON.stringify(yarnPosition));
 };
 
-const handleDragOver = (e, cell) => {
+export const handleDragOver = (e, cell) => {
   e.preventDefault();
   const octagon = cell.querySelector("polygon");
   octagon.style.stroke = "orange";
 };
 
-const handleDragLeave = (_, cell) => {
+export const handleDragLeave = (_, cell) => {
   const octagon = cell.querySelector("polygon");
   octagon.style.stroke = "";
 };
@@ -82,11 +83,13 @@ const fetchSwapResult = async (draggablePosition, yarnPosition) => {
 const swapYarns = async (draggablePosition, yarnPosition) => {
   const response = await fetchSwapResult(draggablePosition, yarnPosition);
   await reRenderGameState();
-  if (response.success) {
-    removeYarnHighlighting();
-    removeYarnEventListeners();
-    removeCellEventListeners();
+  if (!response.success) {
+    showToast(response.message, "e");
   }
+  removeYarnHighlighting();
+  removeYarnEventListeners();
+  removeCellEventListeners();
+  showToast(response.message, "d");
 };
 
 const handleDrop = async (e, cell, yarnPosition) => {
@@ -127,7 +130,7 @@ const addDragAndDrop = (yarn, yarnPosition) => {
   document.addEventListener("click", documentClickHandler);
 };
 
-const highlightAdjacentYarns = (yarns) => {
+export const highlightAdjacentYarns = (yarns) => {
   yarns.forEach((yarnPosition) => {
     const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
     const yarn = document.querySelector(id);
@@ -164,10 +167,11 @@ const attachPenaltyTooltip = (tile, penalty) => {
   });
 };
 
-const reRenderGameState = async () => {
+export const reRenderGameState = async () => {
   const res = await fetch("/game/game-state");
   const { state } = await res.json();
   renderGame(state);
+  addEventListener();
 };
 
 const displacePin = ({ source, destination }) => {
@@ -219,17 +223,21 @@ const renderMoveOptions = (destinations) => {
   });
 };
 
+const handleRollDice = async () => {
+  const { diceValues, destinations } = await rollDice();
+  updateDice(diceValues);
+  reRenderGameState();
+  removeMoveClass();
+  removeTileEventListeners();
+  renderMoveOptions(destinations);
+};
+
 export const applyEventListenerOnDice = () => {
   const dice = document.querySelector("#dice");
-  dice.addEventListener("click", async () => {
-    const { diceValues, destinations } = await rollDice();
-    updateDice(diceValues);
-    const state = await getGameState();
-    renderGame(state);
-    removeMoveClass();
-    removeTileEventListeners();
-    renderMoveOptions(destinations);
-  });
+
+  dice.removeEventListener("click", handleRollDice);
+
+  dice.addEventListener("click", handleRollDice);
 };
 
 export const defaultDice = () => {

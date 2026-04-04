@@ -63,20 +63,32 @@ export default class Player {
   }
 
   #findCardIndex(container, target) {
-    return container.findIndex((card) => card.id === target.id);
+    return container.findIndex((card) => card.id === target);
   }
 
-  removeActionCard(card) {
+  #haveCard(container, cardId) {
+    return container.some((card) => card.id === cardId);
+  }
+
+  haveActionCard(id) {
+    return this.#haveCard(this.#ac, id);
+  }
+
+  haveDesignCard(id) {
+    return this.#haveCard(this.#dc, id);
+  }
+
+  removeActionCard(cardId) {
     if (!this.#ac.length) return;
 
-    const cardIndex = this.#findCardIndex(this.#ac, card);
+    const cardIndex = this.#findCardIndex(this.#ac, cardId);
     this.#ac.splice(cardIndex, 1);
   }
 
-  removeDesignCard(card) {
+  removeDesignCard(cardId) {
     if (!this.#dc.length) return;
 
-    const cardIndex = this.#findCardIndex(this.#dc, card);
+    const cardIndex = this.#findCardIndex(this.#dc, cardId);
     this.#dc.splice(cardIndex, 1);
   }
 

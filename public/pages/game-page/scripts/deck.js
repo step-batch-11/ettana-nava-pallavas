@@ -1,6 +1,7 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
 import { renderGame } from "./app.js";
+import { highLightYarns } from "./bank.js";
 
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
@@ -159,11 +160,11 @@ const renderActionCards = (cards) => {
     actionCard.dataset.id = card.id;
     actionCard.id = `a-${card.id}`;
 
-    const actioinDetails = document.createElement("section");
-    actioinDetails.classList.add("action-details");
-    actioinDetails.textContent = card.description;
+    const actionDetails = document.createElement("section");
+    actionDetails.classList.add("action-details");
+    actionDetails.textContent = card.description;
 
-    actionCard.append(actioinDetails);
+    actionCard.append(actionDetails);
     actionCardContainer.appendChild(actionCard);
   });
 };
@@ -220,16 +221,20 @@ export const attachPlayActionCard = () => {
 
   actionCards.forEach((card) => {
     card.addEventListener("click", async () => {
-      const id = card.dataset.id;
-      const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-      const { state, success, message } = await res.json();
+      if (card.id === "a-25") {
+        highLightYarns("game/action-card/swap-yarn");
+      } else {
+        const id = card.dataset.id;
+        const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+        const { state, success, message } = await res.json();
 
-      if (!success) {
-        return showToast(message, "e");
+        if (!success) {
+          return showToast(message, "e");
+        }
+
+        showToast(message);
+        renderGame(state);
       }
-
-      showToast(message);
-      renderGame(state);
     });
   });
 };

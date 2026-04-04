@@ -23,7 +23,7 @@ const handleClaim = async (e) => {
   await hightLightPattern(status.result.matches);
 };
 
-const addEventListener = () => {
+export const addEventListener = () => {
   applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
   addDragEventListenerOnDeck();
@@ -34,7 +34,7 @@ const addEventListener = () => {
 
 export const renderGame = (state) => {
   renderBoard(state);
-  renderBankState(state.bank);
+  renderBankState(state);
   renderDeck(state.deck);
 };
 

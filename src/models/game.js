@@ -1,6 +1,7 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
+import { areSamePositions } from "../utils/common.js";
 
 export default class Game {
   #players;
@@ -165,6 +166,19 @@ export default class Game {
     };
   }
 
+  swapYarnActionCard(source, destination) {
+    const cardId = 25;
+    const currentPlayer = this.#getCurrentPlayer();
+    const card = this.#findActionCard(currentPlayer, cardId);
+
+    if (card === undefined || areSamePositions(source, destination)) {
+      throw new Error("Player don't have this action card");
+    }
+
+    this.#board.swapYarns(source, destination);
+    currentPlayer.removeActionCard(card);
+  }
+
   #getCurrentPlayer() {
     return this.#players[this.#currentPlayerIndex];
   }
@@ -219,7 +233,10 @@ export default class Game {
   paidSwap(source, destination) {
     const swapCost = 3;
     const currentPlayer = this.#getCurrentPlayer();
-    if (currentPlayer.getTokens() < swapCost) {
+    if (
+      currentPlayer.getTokens() < swapCost ||
+      areSamePositions(source, destination)
+    ) {
       throw new Error("You don't have enough tokens");
     }
     this.#board.swapYarns(source, destination);
