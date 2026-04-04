@@ -24,11 +24,9 @@ const handleClaim = async (e) => {
 };
 
 export const addEventListener = () => {
-  applyEventListenerOnDice();
   addToggleEventListenerOnDeck();
   addDragEventListenerOnDeck();
   addClaimEventListener(handleClaim);
-  attachBankEventListeners();
   attachPlayActionCard();
 };
 
@@ -36,7 +34,6 @@ export const renderGame = (state) => {
   renderBoard(state);
   renderBankState(state.bank);
   renderDeck(state.deck);
-  addEventListener();
 };
 
 const main = async () => {
@@ -47,6 +44,8 @@ const main = async () => {
 
   defaultDice();
   addEventListener();
+  applyEventListenerOnDice();
+  attachBankEventListeners();
 };
 
 globalThis.onload = main;
