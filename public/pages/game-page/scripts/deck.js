@@ -1,7 +1,8 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
-import { renderGame } from "./app.js";
+import { addEventListener, renderGame } from "./app.js";
 import { playVpActionCard } from "./api.js";
+
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
 const designCardContainer = document.getElementById("design-card-panel");
@@ -241,6 +242,7 @@ export const attachPlayActionCard = () => {
 
       showToast(result.message);
       renderGame(state);
+      addEventListener();
     });
   });
 };
