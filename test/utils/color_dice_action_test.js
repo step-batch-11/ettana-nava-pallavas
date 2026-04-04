@@ -314,9 +314,9 @@ describe("color_dice_action", () => {
         },
       ];
 
-      const legder = createLedger(1, players, yarns);
+      const ledger = createLedger(1, players, yarns);
       const expected = { 1: 1, 2: 1, 3: 1, 4: 1 };
-      assertEquals(legder, expected);
+      assertEquals(ledger, expected);
     });
 
     it("only player has one adjacent and gets 1, everyone else 0", () => {
@@ -350,9 +350,9 @@ describe("color_dice_action", () => {
         },
       ];
 
-      const legder = createLedger(1, players, yarns);
+      const ledger = createLedger(1, players, yarns);
       const expected = { 1: 1, 2: 0, 3: 0, 4: 0 };
-      assertEquals(legder, expected);
+      assertEquals(ledger, expected);
     });
 
     it("no player has any adjacent everyone 0", () => {
@@ -386,9 +386,9 @@ describe("color_dice_action", () => {
         },
       ];
 
-      const legder = createLedger(1, players, yarns);
+      const ledger = createLedger(1, players, yarns);
       const expected = { 1: 0, 2: 0, 3: 0, 4: 0 };
-      assertEquals(legder, expected);
+      assertEquals(ledger, expected);
     });
 
     it("one player has 4 adjacent and everyone 0", () => {
@@ -422,9 +422,9 @@ describe("color_dice_action", () => {
         },
       ];
 
-      const legder = createLedger(1, players, yarns);
+      const ledger = createLedger(1, players, yarns);
       const expected = { 1: 4, 2: 0, 3: 0, 4: 0 };
-      assertEquals(legder, expected);
+      assertEquals(ledger, expected);
     });
 
     it("rolled color value is 6", () => {
@@ -458,9 +458,9 @@ describe("color_dice_action", () => {
         },
       ];
 
-      const legder = createLedger(6, players, yarns);
+      const ledger = createLedger(6, players, yarns);
       const expected = { 1: 0, 2: 0, 3: 0, 4: 0 };
-      assertEquals(legder, expected);
+      assertEquals(ledger, expected);
     });
   });
 });

@@ -1,5 +1,5 @@
 import { getGameState, rollDice } from "./api.js";
-import { renderGame } from "./app.js";
+import { renderGame, addEventListener } from "./app.js";
 import { colorsMap } from "/assets/colors.js";
 
 const updateDice = ({ number, colorId }) => {
@@ -168,6 +168,7 @@ const reRenderGameState = async () => {
   const res = await fetch("/game/game-state");
   const { state } = await res.json();
   renderGame(state);
+  addEventListener();
 };
 
 const displacePin = ({ source, destination }) => {

@@ -19,7 +19,7 @@ export default class Board {
     return structuredClone(this.#yarns);
   }
 
-  findPossiblePaths(currentPlayer, players, totalSteps) {
+  findPossibleDestinations(currentPlayer, players, totalSteps) {
     const start = currentPlayer.getPosition();
 
     const playerData = players.map((player) => player.getPlayerData());
@@ -43,6 +43,13 @@ export default class Board {
 
   swapYarns(source, destination) {
     const boardYarns = this.#yarns;
+
+    if (
+      !isValidPosition(source, boardYarns) ||
+      !isValidPosition(destination, boardYarns)
+    ) {
+      throw new Error("Invalid position");
+    }
     const sourceYarnColor = this.#getYarnColor(source);
     const destYarnColor = this.#getYarnColor(destination);
 

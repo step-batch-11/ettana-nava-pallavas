@@ -1,7 +1,8 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
-import { renderGame } from "./app.js";
 import { handlePlayerMove } from "./game.js";
+import { addEventListener, renderGame } from "./app.js";
+import { playVpActionCard } from "./api.js";
 
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
@@ -160,11 +161,11 @@ const renderActionCards = (cards) => {
     actionCard.dataset.id = card.id;
     actionCard.id = `a-${card.id}`;
 
-    const actioinDetails = document.createElement("section");
-    actioinDetails.classList.add("action-details");
-    actioinDetails.textContent = card.description;
+    const actionDetails = document.createElement("section");
+    actionDetails.classList.add("action-details");
+    actionDetails.textContent = card.description;
 
-    actionCard.append(actioinDetails);
+    actionCard.append(actionDetails);
     actionCardContainer.appendChild(actionCard);
   });
 };
@@ -211,8 +212,19 @@ export const addClaimEventListener = (handleClaim) => {
   );
 };
 
+const isVictoryPointCardPresent = async (card) => {
+  if (card.some((c) => c.id === 16)) {
+    const { result, success, state } = await playVpActionCard();
+    if (success) {
+      showToast(result.message);
+    }
+    renderGame(state);
+  }
+};
+
 export const renderDeck = (deck) => {
   renderDesignCards(deck.designCards);
+  isVictoryPointCardPresent(deck.actionCards);
   renderActionCards(deck.actionCards);
 };
 
@@ -223,10 +235,10 @@ export const attachPlayActionCard = () => {
     card.addEventListener("dblclick", async () => {
       const id = card.dataset.id;
       const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-      const { result, state, success, message } = await res.json();
+      const { state, success, result } = await res.json();
 
       if (!success) {
-        return showToast(message, "e");
+        return showToast(result.message, "e");
       }
 
       if (id === "1") {
@@ -246,8 +258,9 @@ export const attachPlayActionCard = () => {
           );
         });
       }
-      showToast(message);
+      showToast(result.message);
       renderGame(state);
+      addEventListener();
     });
   });
 };

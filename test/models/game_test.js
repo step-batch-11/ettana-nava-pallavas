@@ -16,6 +16,8 @@ const getCoords = ({ x, y }) => ({ x, y });
 describe("Game controller test", () => {
   let game, players, bank, designCards;
 
+  const randomFn = () => 0.9;
+
   const tiles = [
     [0, 0, 0, 0, 0, 0],
     [0, 1, 2, 3, 4, 0],
@@ -79,6 +81,7 @@ describe("Game controller test", () => {
       bank,
       new Board(tiles, yarns),
       diceValue,
+      randomFn,
     );
   });
 
@@ -158,6 +161,27 @@ describe("Game controller test", () => {
 
     it("Player cannot play tax action card, as he doesn't have the card", () => {
       assertThrows(() => game.playTaxActionCard(6));
+    });
+  });
+
+  describe("Play Get-Design-Card Action Card", () => {
+    it("should add a design card to player deck, if action card is present in player", () => {
+      players[0].addActionCard({ id: 7 });
+
+      const actual = game.getDesignCardActionCard(7);
+      const expected = {
+        result: {
+          message: "design card added",
+        },
+        state: game.getGameState(),
+      };
+      assertEquals(actual, expected);
+      assertEquals(players[0].getPlayerData().dc, 1);
+    });
+
+    it("should not add design card to player deck, if action card isn't present in player", () => {
+      assertThrows(() => game.getDesignCardActionCard(7));
+      assertEquals(players[0].getPlayerData().dc, 0);
     });
   });
 
@@ -490,21 +514,6 @@ describe("Game controller test", () => {
         assertEquals(mockGame.board.yarns, expected);
       });
     });
-
-    describe("Paid yarn swap", () => {
-      it("Player have more than 3 tokens, should get a chance", () => {
-        currentPlayer.creditTokens(3);
-        const tokens = currentPlayer.getTokens();
-
-        gameState.purchaseSwap();
-        const updatedTokens = currentPlayer.getTokens();
-        assertEquals(tokens - 3, updatedTokens);
-      });
-
-      it("Player don't have more than 3 tokens, should throw an error", () => {
-        assertThrows(() => gameState.purchaseSwa());
-      });
-    });
   });
 
   describe("Distribute initial assets", () => {
@@ -526,45 +535,10 @@ describe("Game controller test", () => {
     );
   });
 
-  describe.ignore("upkeep: Roll dice and find possible path :", () => {
-    const randomFn = () => 0.9;
-    let game;
-    const yarns = [
-      [1, 1, 1, 1, 1],
-      [2, 2, 2, 2, 2],
-      [3, 3, 3, 3, 3],
-      [4, 4, 4, 4, 4],
-      [5, 5, 5, 5, 5],
-    ];
-
-    const tiles = [
-      [0, 1, 2, 3, 4, 0],
-      [0, 5, 6, 1, 2, 0],
-      [0, 3, 4, 5, 6, 0],
-      [0, 1, 2, 3, 4, 0],
-      [0, 5, 6, 1, 2, 0],
-      [0, 3, 4, 5, 6, 0],
-    ];
-
-    beforeEach(() => {
-      const board = new Board(tiles, yarns);
-      const bank = new Bank([], []);
-
-      const player1 = new Player(2, "john");
-      player1.setup(1, { x: 1, y: 1 });
-
-      const player2 = new Player(1, "alex");
-      player2.setup(2, { x: 3, y: 3 });
-
-      const diceValue = { colorId: 1, number: 1 };
-      const players = [player1, player2];
-
-      game = new Game(players, bank, board, diceValue, () => 0.9);
-    });
-
+  describe("upkeep: Roll dice and find possible path :", () => {
     describe("roll dice :", () => {
       it("when rollDice invoked, should return two random values :", () => {
-        const actual = game.rollDice(randomFn);
+        const actual = game.rollDice();
         const expected = { number: 6, colorId: 6 };
         assertEquals(actual, expected);
       });
@@ -608,7 +582,7 @@ describe("Game controller test", () => {
         bank = new Bank([], actionCards, (x) => x);
         const diceValue = { colorId: 2, number: 2 };
 
-        game = new Game(players, bank, board, diceValue);
+        game = new Game(players, bank, board, diceValue, randomFn);
       });
 
       it("after rolling dice when color id is other than black, then should distribute the tokens to players based on the positions and yarns surrounded by the players pins", () => {
@@ -781,6 +755,76 @@ describe("Game controller test", () => {
       });
       game.playMoveActionCard(1);
       assertThrows(() => game.playMoveActionCard(1));
+    });
+
+    describe("Paid swap", () => {
+      let board, game;
+
+      const currentPlayer = new Player(1, "John");
+      currentPlayer.setup(3, { x: 1, y: 0 });
+      currentPlayer.creditTokens(5);
+
+      beforeEach(() => {
+        const player2 = new Player(2, "Jane");
+        const player3 = new Player(3, "Jean");
+
+        player2.setup(2, { x: 1, y: 2 });
+        player3.setup(1, { x: 1, y: 4 });
+
+        const players = [currentPlayer, player2, player3];
+        const tiles = [
+          [0, 0, 0, 0, 0, 0],
+          [0, 1, 2, 3, 4, 0],
+          [0, 5, 6, 1, 2, 0],
+          [0, 3, 4, 5, 6, 0],
+          [0, 2, 3, 4, 5, 0],
+          [0, 0, 0, 0, 0, 0],
+        ];
+        const yarns = [
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+          [5, 4, 3, 2, 1],
+          [1, 2, 3, 4, 5],
+        ];
+
+        board = new Board(tiles, yarns);
+        const bank = new Bank([], []);
+        const diceValue = { colorId: 1, number: 2 };
+
+        game = new Game(players, bank, board, diceValue);
+      });
+
+      it("Player has sufficient tokens, yarns should be swapped", () => {
+        const tokens = currentPlayer.getTokens();
+        const source = { x: 1, y: 2 };
+        const destination = { x: 2, y: 3 };
+
+        game.paidSwap(source, destination);
+
+        const updatedTokens = currentPlayer.getTokens();
+        assertEquals(tokens - 3, updatedTokens);
+      });
+
+      it("Player don't have more than 3 tokens, should throw an error", () => {
+        assertThrows(() => game.paidSwap());
+      });
+
+      it("Player has sufficient tokens (invalid source), yarns should not be swapped", () => {
+        currentPlayer.creditTokens(3);
+        const source = { x: -1, y: 2 };
+        const destination = { x: 2, y: 3 };
+
+        assertThrows(() => game.paidSwap(source, destination));
+      });
+
+      it("Player has sufficient tokens (invalid destination), yarns should not be swapped", () => {
+        currentPlayer.creditTokens(3);
+        const source = { x: 1, y: 2 };
+        const destination = { x: 6, y: 3 };
+
+        assertThrows(() => game.paidSwap(source, destination));
+      });
     });
   });
 });

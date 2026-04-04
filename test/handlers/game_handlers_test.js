@@ -178,7 +178,7 @@ describe("Game route", () => {
     );
   });
 
-  describe.ignore("move request: ", () => {
+  describe("move request: ", () => {
     let app;
 
     const randomValue = 0.05;
@@ -397,9 +397,9 @@ describe("Game route", () => {
         });
         const { success, result } = await response.json();
 
-        assertEquals(success, true);
         assertEquals(response.status, 200);
         assertEquals(result.affectedPlayers, [2]);
+        assertEquals(success, true);
         assertEquals(bank.getBank().tokens, 56);
         assertEquals(players[1].getTokens(), 1);
         assertEquals(players[0].getAc(), []);

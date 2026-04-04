@@ -38,14 +38,14 @@ describe("board test", () => {
 
     const diceValue = { colorId: 1, number: 1 };
     players = [player, player2];
-    gameState = new Game(players, bank, board, diceValue);
+    gameState = new Game(players, bank, board, diceValue, () => 0.9);
   });
 
   describe("find possible path : ", () => {
     it("when position, steps given, should return all possible locations", () => {
       const { currentPlayerId } = gameState.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
-      const actual = board.findPossiblePaths(currentPlayer, players, 1);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 1);
       const expected = [
         { destination: { x: 1, y: 2 }, type: "normal", path: [{ x: 1, y: 1 }] },
         { destination: { x: 2, y: 1 }, type: "normal", path: [{ x: 1, y: 1 }] },
@@ -92,7 +92,7 @@ describe("board test", () => {
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 1);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 1);
       const expected = [
         { destination: { x: 1, y: 2 }, type: "normal", path: [{ x: 1, y: 1 }] },
         { destination: { x: 2, y: 1 }, type: "normal", path: [{ x: 1, y: 1 }] },
@@ -115,7 +115,7 @@ describe("board test", () => {
       const { currentPlayerId } = gameState.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 4);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 4);
       const status = actual.every(
         ({ type, path }) => type === "jump" || areDistinct(path),
       );
@@ -134,7 +134,7 @@ describe("board test", () => {
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 1);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 1);
       assertEquals(actual.length, 0);
     });
 
@@ -166,7 +166,7 @@ describe("board test", () => {
 
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
-      const actual = board.findPossiblePaths(currentPlayer, players, 1);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 1);
       assertEquals(actual.length, 2);
     });
 
@@ -199,7 +199,7 @@ describe("board test", () => {
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 2);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 2);
       assertEquals(actual.length, 6);
     });
     it("when player is blocked ,should show at least one premium destination ", () => {
@@ -235,7 +235,7 @@ describe("board test", () => {
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 2);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 2);
       assert(actual.some((x) => x.type === "premium"));
       assertEquals(actual.length, 6);
     });
@@ -272,7 +272,7 @@ describe("board test", () => {
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 3);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 3);
       const route = actual.find(
         (loc) => loc.destination.x === 1 && loc.destination.y === 2,
       );
@@ -318,7 +318,7 @@ describe("board test", () => {
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
-      const actual = board.findPossiblePaths(currentPlayer, players, 3);
+      const actual = board.findPossibleDestinations(currentPlayer, players, 3);
       const point = actual.find(
         (loc) => loc.destination.x === 1 && loc.destination.y === 2,
       );

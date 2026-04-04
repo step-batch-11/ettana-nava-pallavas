@@ -13,12 +13,16 @@ export const serveGameState = (ctx) => {
 };
 
 export const handleDiceRoll = (ctx) => {
-  const game = ctx.get("gameState");
-  const { diceValues, destinations } = game.upkeep();
+  try {
+    const game = ctx.get("gameState");
+    const { diceValues, destinations } = game.upkeep();
 
-  const gameState = game.getGameState();
+    const gameState = game.getGameState();
 
-  return ctx.json({ gameState, destinations, diceValues });
+    return ctx.json({ gameState, destinations, diceValues });
+  } catch {
+    return ctx.json({ success: false, error: e.message });
+  }
 };
 
 export const buyDesignCard = (ctx) => {
@@ -72,16 +76,56 @@ export const playActionCard = async (context) => {
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(id),
       1: (id) => game.playMoveActionCard(id),
+      16: (id) => game.playVictoryPoint(id),
+      4: (id) => game.playCollectToken(id),
+      7: (id) => game.getDesignCardActionCard(id),
+      10: (id) =>
+        game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
+      22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
     };
 
     if (id in actionCardHandlers) {
-      const { result, state, message } = actionCardHandlers[id](id);
+      const { result, state } = actionCardHandlers[id](id);
 
-      return context.json({ result, state, success: true, message });
+      return context.json({
+        result,
+        state,
+        success: true,
+      });
     }
 
     return context.json(
       { success: false, message: "Invalid action card" },
+      400,
+    );
+  } catch (err) {
+    return context.json({ success: false, message: err.message }, 400);
+  }
+};
+
+export const stealFromOpponent = async (context) => {
+  try {
+    const game = context.get("gameState");
+    const type = await context.req.param("type");
+    const { playerId } = await context.req.json();
+
+    const stealHandlers = {
+      "action-card": (id) => game.stealActionCard(id),
+      tokens: (id) => game.stealTokens(id),
+    };
+
+    if (type in stealHandlers) {
+      const { result, state } = stealHandlers[type](playerId);
+
+      return context.json({
+        result,
+        state,
+        success: true,
+      });
+    }
+
+    return context.json(
+      { success: false, message: "Invalid steal action card" },
       400,
     );
   } catch (err) {
@@ -109,23 +153,27 @@ export const handleMove = async (ctx) => {
   const destination = await ctx.req.json();
   const moveResult = gameState.move(destination);
   const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
+  const swappableYarns = adjYarns.length > 1 ? adjYarns : [];
 
   if (moveResult.source === moveResult.destination) {
     return ctx.json({ success: false, message: "You can't move there" }, 400);
   }
 
-  return ctx.json({
-    success: true,
-    data: { adjYarns, moveResult },
-    message: "Moved successfully",
-  }, 200);
+  return ctx.json(
+    {
+      success: true,
+      data: { adjYarns: swappableYarns, moveResult },
+      message: "Moved successfully",
+    },
+    200,
+  );
 };
 
 export const handleActionCardMove = async (ctx) => {
   const gameState = ctx.get("gameState");
   const board = gameState.getBoard();
 
-  const {destination} = await ctx.req.json();
+  const { destination } = await ctx.req.json();
   const moveResult = gameState.movePlayer(destination);
   const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
 
@@ -149,32 +197,32 @@ export const handleSwap = async (ctx) => {
   try {
     gameState.freeSwap(draggablePosition, yarnPosition);
 
-    return ctx.json({
-      success: true,
-      message: "Swapped successfully",
-    }, 200);
-  } catch (e) {
     return ctx.json(
-      { success: false, message: e.message },
-      400,
+      {
+        success: true,
+        message: "Swapped successfully",
+      },
+      200,
     );
+  } catch (e) {
+    return ctx.json({ success: false, message: e.message }, 400);
   }
 };
 
-export const handleSwapPurchase = (ctx) => {
+export const handlePaidSwap = (ctx) => {
   const gameState = ctx.get("gameState");
 
   try {
     gameState.paidSwap();
 
-    return ctx.json({
-      success: true,
-      message: "Swap yarn",
-    }, 200);
-  } catch (e) {
     return ctx.json(
-      { success: false, message: e.message },
-      400,
+      {
+        success: true,
+        message: "Yarns swapped successfully",
+      },
+      200,
     );
+  } catch (e) {
+    return ctx.json({ success: false, message: e.message }, 400);
   }
 };

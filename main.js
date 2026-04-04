@@ -6,6 +6,7 @@ import Board from "./src/models/board.js";
 import { createApp } from "./src/app.js";
 import { diceValue, tiles, yarns } from "./src/data/state.js";
 import Player from "./src/models/player.js";
+import { getActionCard } from "./src/utils/mock_data.js";
 
 const main = () => {
   const player1 = new Player(1, "Ajoy");
@@ -23,6 +24,9 @@ const main = () => {
     "description": "Move to any unoccupied position",
   });
 
+  player1.addActionCard(getActionCard(6));
+  player1.addActionCard(getActionCard(16));
+  player1.addActionCard(getActionCard(4));
 
   const player2 = new Player(2, "Dinesh");
   player2.setup(2, { x: 3, y: 3 });
