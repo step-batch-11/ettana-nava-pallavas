@@ -1,6 +1,7 @@
 import { colorsMap } from "../../../assets/colors.js";
 import { showToast } from "../../utils/utils.js";
 import { renderGame } from "./app.js";
+import { handlePlayerMove } from "./game.js";
 
 const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
@@ -219,15 +220,32 @@ export const attachPlayActionCard = () => {
   const actionCards = document.querySelectorAll(".action-cards .card-item");
 
   actionCards.forEach((card) => {
-    card.addEventListener("click", async () => {
+    card.addEventListener("dblclick", async () => {
       const id = card.dataset.id;
       const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-      const { state, success, message } = await res.json();
+      const { result, state, success, message } = await res.json();
 
       if (!success) {
         return showToast(message, "e");
       }
 
+      if (id === "1") {
+        result.availableDestinations.forEach((destination) => {
+          const [x, y] = destination;
+          const id = `#tile${x}${y}`;
+          const tile = document.querySelector(id);
+          tile.classList.add(`jump-move`);
+
+          tile.addEventListener(
+            "click",
+            () =>
+              handlePlayerMove({
+                destination: { x, y },
+                path: "action-card-move",
+              }),
+          );
+        });
+      }
       showToast(message);
       renderGame(state);
     });

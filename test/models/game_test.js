@@ -143,8 +143,8 @@ describe("Game controller test", () => {
         "type": "tax",
         "description": "Get 3 tokens from the reserve.",
       });
-      const { affectedPlayers } = game.playTaxActionCard(6);
-      assertEquals(affectedPlayers, [2]);
+      const { result } = game.playTaxActionCard(6);
+      assertEquals(result.affectedPlayers, [2]);
     });
     it("Player plays tax action card successfully, but no one is affected", () => {
       players[0].addActionCard({
@@ -152,8 +152,8 @@ describe("Game controller test", () => {
         "type": "tax",
         "description": "Get 3 tokens from the reserve.",
       });
-      const { affectedPlayers } = game.playTaxActionCard(6);
-      assertEquals(affectedPlayers, []);
+      const { result } = game.playTaxActionCard(6);
+      assertEquals(result.affectedPlayers, []);
     });
 
     it("Player cannot play tax action card, as he doesn't have the card", () => {
@@ -655,6 +655,132 @@ describe("Game controller test", () => {
         const actual = players.every((player) => player.getTokens() === 0);
         assert(actual);
       });
+    });
+  });
+
+  describe("players positions : ", () => {
+    it("should return the position of the players :", () => {
+      players[0].setup(1, { x: 0, y: 0 });
+      players[1].setup(2, { x: 1, y: 1 });
+      const positions = game.getPlayersPositions();
+      const expectedPositions = [{ x: 0, y: 0 }, { x: 1, y: 1 }];
+      assertEquals(positions, expectedPositions);
+    });
+  });
+
+  describe("Get Possible Destinations : ", () => {
+    it("should return the position of the players :", () => {
+      players[0].setup(1, { x: 0, y: 0 });
+      players[1].setup(2, { x: 1, y: 1 });
+      const positions = game.getPossibleDestinations();
+      const expectedDestinations = [
+        [0, 1],
+        [0, 2],
+        [0, 3],
+        [0, 4],
+        [0, 5],
+        [1, 0],
+        [1, 2],
+        [1, 3],
+        [1, 4],
+        [1, 5],
+        [2, 0],
+        [2, 1],
+        [2, 2],
+        [2, 3],
+        [2, 4],
+        [2, 5],
+        [3, 0],
+        [3, 1],
+        [3, 2],
+        [3, 3],
+        [3, 4],
+        [3, 5],
+        [4, 0],
+        [4, 1],
+        [4, 2],
+        [4, 3],
+        [4, 4],
+        [4, 5],
+        [5, 0],
+        [5, 1],
+        [5, 2],
+        [5, 3],
+        [5, 4],
+        [5, 5],
+      ];
+      assertEquals(positions, expectedDestinations);
+      assertEquals(positions.length, 34);
+    });
+  });
+
+  describe("Play Move Action Card", () => {
+    it("Player plays move action card successfully", () => {
+      players[0].setup(1, { x: 0, y: 0 });
+      players[1].setup(2, { x: 1, y: 1 });
+      const expectedDestinations = [
+        [0, 1],
+        [0, 2],
+        [0, 3],
+        [0, 4],
+        [0, 5],
+        [1, 0],
+        [1, 2],
+        [1, 3],
+        [1, 4],
+        [1, 5],
+        [2, 0],
+        [2, 1],
+        [2, 2],
+        [2, 3],
+        [2, 4],
+        [2, 5],
+        [3, 0],
+        [3, 1],
+        [3, 2],
+        [3, 3],
+        [3, 4],
+        [3, 5],
+        [4, 0],
+        [4, 1],
+        [4, 2],
+        [4, 3],
+        [4, 4],
+        [4, 5],
+        [5, 0],
+        [5, 1],
+        [5, 2],
+        [5, 3],
+        [5, 4],
+        [5, 5],
+      ];
+      players[0].addActionCard({
+        id: 1,
+        "type": "move",
+        "description": "Move to any unoccupied position",
+      });
+      const { result } = game.playMoveActionCard(1);
+
+      assertEquals(result.availableDestinations, expectedDestinations);
+      assertEquals(players[0].getAc(), []);
+    });
+
+    it("Player cannot play move action card, as he doesn't have the card", () => {
+      players[0].setup(1, { x: 0, y: 0 });
+      players[1].setup(2, { x: 1, y: 1 });
+      assertThrows(() => game.playTaxActionCard(1));
+    });
+
+    it("Player cannot play move action card, as he already moved", () => {
+      players[0].setup(1, { x: 0, y: 0 });
+      players[1].setup(2, { x: 1, y: 1 });
+      players[0].addActionCard({
+        id: 1,
+        "type": "move",
+        "description": "Move to any unoccupied position",
+      });
+      game.playMoveActionCard(1);
+      assertThrows(() => game.playMoveActionCard(1));
     });
   });
 });

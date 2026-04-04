@@ -17,6 +17,12 @@ const main = () => {
     "type": "tax",
     "description": "Other player will give 1 token to bank",
   });
+  player1.addActionCard({
+    id: 1,
+    "type": "move",
+    "description": "Move to any unoccupied position",
+  });
+
 
   const player2 = new Player(2, "Dinesh");
   player2.setup(2, { x: 3, y: 3 });
