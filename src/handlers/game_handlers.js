@@ -77,6 +77,7 @@ export const playActionCard = async (context) => {
       6: (id) => game.playTaxActionCard(id),
       16: (id) => game.playVictoryPoint(id),
       4: (id) => game.playCollectToken(id),
+      7: (id) => game.getDesignCardActionCard(id),
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),

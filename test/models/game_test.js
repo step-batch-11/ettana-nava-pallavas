@@ -168,7 +168,7 @@ describe("Game controller test", () => {
     it("should add a design card to player deck, if action card is present in player", () => {
       players[0].addActionCard({ id: 7 });
 
-      const actual = game.getDesignCardActionCard();
+      const actual = game.getDesignCardActionCard(7);
       const expected = {
         result: {
           message: "design card added",
@@ -180,7 +180,7 @@ describe("Game controller test", () => {
     });
 
     it("should not add design card to player deck, if action card isn't present in player", () => {
-      assertThrows(() => game.getDesignCardActionCard());
+      assertThrows(() => game.getDesignCardActionCard(7));
       assertEquals(players[0].getPlayerData().dc, 0);
     });
   });
@@ -689,10 +689,10 @@ describe("Game controller test", () => {
       currentPlayer.creditTokens(3);
       const source = { x: -1, y: 2 };
       const destination = { x: 2, y: 3 };
-      
+
       assertThrows(() => game.paidSwap(source, destination));
     });
-    
+
     it("Player has sufficient tokens (invalid destination), yarns should not be swapped", () => {
       currentPlayer.creditTokens(3);
       const source = { x: 1, y: 2 };

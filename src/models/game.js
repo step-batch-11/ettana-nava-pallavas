@@ -306,10 +306,10 @@ export default class Game {
     currentPlayer.debitTokens(swapCost);
   }
 
-  getDesignCardActionCard() {
+  getDesignCardActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
 
-    const actionCard = currentPlayer.getActionCard(7);
+    const actionCard = currentPlayer.getActionCard(id);
 
     const designCard = this.#bank.getDesignCard();
     currentPlayer.addDesignCard(designCard);
