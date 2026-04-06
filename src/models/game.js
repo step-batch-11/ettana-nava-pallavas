@@ -347,25 +347,6 @@ export default class Game {
     };
   }
 
-  playReplaceActionCard(id) {
-    const currentPlayer = this.getCurrentPlayer();
-
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("Card is missing");
-    }
-    const availableDestinations = this.getPossibleDestinations();
-
-    currentPlayer.removeActionCard(id);
-
-    return {
-      state: this.getGameState(),
-      result: {
-        availableDestinations,
-        message: "Tiles replaced",
-      },
-    };
-  }
-
   getPlayerById(id) {
     return this.#players.find((player) => player.getId() === Number(id));
   }

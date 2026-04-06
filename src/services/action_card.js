@@ -17,7 +17,9 @@ export default class ActionCardService {
           game,
           (opponent) => opponent.getAc().length > 0,
         ),
+      34: () => Replace.play(this.played, id, game),
     };
+
     return actions[id]();
   }
 
@@ -29,7 +31,7 @@ export default class ActionCardService {
     }
 
     const actions = {
-      34: (...params) => Replace.play(...params),
+      34: (...params) => Replace.performAction(...params),
       10: (...params) => Steal.stealTokens(...params),
       22: (...params) => Steal.stealActionCard(...params),
     };

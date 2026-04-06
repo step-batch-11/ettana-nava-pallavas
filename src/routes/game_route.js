@@ -7,7 +7,6 @@ import {
   handleDiceRoll,
   handleMove,
   handlePaidSwap,
-  handleReplaceTile,
   handleSwap,
   performActionCard,
   playActionCard,
@@ -29,6 +28,5 @@ gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
 gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
 gameRoute.post("/perform-action-card", performActionCard);
-gameRoute.patch("/replace-tile", handleReplaceTile);
 
 export default gameRoute;
