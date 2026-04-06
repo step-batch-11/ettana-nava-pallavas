@@ -1,10 +1,7 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
-import {  getPlayerById } from "../utils/util.js";
-import {
-  areSamePositions,
-  isValidMove,
-} from "../utils/common.js";
+import { getPlayerById } from "../utils/util.js";
+import { areSamePositions, isValidMove } from "../utils/common.js";
 
 export default class Game {
   #players;
@@ -371,5 +368,21 @@ export default class Game {
 
   getPlayerById(id) {
     return this.#players.find((player) => player.getId() === Number(id));
+  }
+
+  getBoardTileValue(position) {
+    return this.#board.getTileValue(position);
+  }
+
+  getBankTileValue(position) {
+    return this.#bank.getTileValue(position);
+  }
+
+  changeBoardTileValue(position, value) {
+    return this.#board.changeTileValue(position, value);
+  }
+
+  changeBankTileValue(position, value) {
+    return this.#bank.changeTileValue(position, value);
   }
 }

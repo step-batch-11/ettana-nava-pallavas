@@ -88,7 +88,7 @@ export const playActionCard = (context) => {
   try {
     const game = context.get("gameState");
     const actionCardService = context.get("actionCardService");
-    const id = context.req.param("id");
+    const id = Number(context.req.param("id"));
 
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(id),
@@ -225,6 +225,27 @@ export const handlePaidSwap = async (ctx) => {
       success: true,
       message: "Swapped successfully",
     }, 200);
+  } catch (e) {
+    return ctx.json({ success: false, message: e.message }, 400);
+  }
+};
+
+export const handleReplaceTile = async (context) => {
+  try {
+    const body = await context.req.json();
+    const game = context.get("gameState");
+    const boardTileValue = game.getBoardTileValue(body.source);
+    const bankTileValue = game.getBankTileValue(body.destination);
+    game.changeBoardTileValue(body.source, bankTileValue);
+    game.changeBankTileValue(body.destination, boardTileValue);
+
+    return context.json({
+      success: true,
+      result: {
+        state: game.getGameState(),
+        message: "Tiles changed with reserved",
+      },
+    });
   } catch (e) {
     return ctx.json({ success: false, message: e.message }, 400);
   }
