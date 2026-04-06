@@ -90,6 +90,7 @@ export const swapYarnActionCard = async (ctx) => {
 export const playActionCard = async (context) => {
   try {
     const game = context.get("gameState");
+    const actionCardService = context.get("actionCardService");
     const id = await context.req.param("id");
 
     const actionCardHandlers = {
@@ -101,6 +102,7 @@ export const playActionCard = async (context) => {
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
+      34: (id) => actionCardService.playAction(Number(id), game),
     };
 
     if (id in actionCardHandlers) {

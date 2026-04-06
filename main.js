@@ -7,12 +7,14 @@ import { createApp } from "./src/app.js";
 import { diceValue, tiles, yarns } from "./src/data/state.js";
 import Player from "./src/models/player.js";
 import { getActionCard } from "./src/utils/mock_data.js";
+import ActionCardService from "./src/services/action_card.js";
 
 const main = () => {
   const player1 = new Player(1, "A");
   player1.setup(1, { x: 1, y: 1 });
 
   // player1.addAllDesignCardDev(...designCards);
+  player1.addActionCard(getActionCard(34)); // Replace Action Card
   player1.addActionCard(getActionCard(6));
   player1.addActionCard(getActionCard(1));
   player1.addActionCard(getActionCard(6));
@@ -28,11 +30,12 @@ const main = () => {
     new Board(tiles, yarns),
     diceValue,
   );
+  const actionCardService = new ActionCardService();
 
   gameState.distributeInitialAssets();
 
   const PORT = Deno.env.get("PORT") || 8000;
-  const app = createApp(gameState);
+  const app = createApp(gameState, actionCardService);
   Deno.serve({ port: PORT }, app.fetch);
 };
 
