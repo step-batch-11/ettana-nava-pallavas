@@ -76,8 +76,8 @@ const claimDesignCardEventListener = () => {
   if (designCardContainer.dataset.listenerAdded) return;
   designCardContainer.addEventListener("dblclick", (e) => {
     const card = e.target.closest(".card-item");
-
-    if (!card) return;
+    const button = e.target.closest(".rotate-design");
+    if (!card || button) return;
     if (!designCardContainer.contains(card)) return;
 
     handleClaimDesignCard(card);
