@@ -15,9 +15,10 @@ export default class ActionCardService {
           this.played,
           id,
           game,
-          (opponent) => opponent.getAc().length > 0,
+          (opponent) => opponent.getAc().length,
         ),
     };
+    
     return actions[id]();
   }
 
@@ -29,9 +30,9 @@ export default class ActionCardService {
     }
 
     const actions = {
-      34: (...params) => Replace.play(...params),
-      10: (...params) => Steal.stealTokens(...params),
-      22: (...params) => Steal.stealActionCard(...params),
+      34: Replace.play,
+      10: Steal.stealTokens,
+      22: Steal.stealActionCard,
     };
 
     return actions[payload.cardId](payload, currentPlayer, this.played, game);

@@ -1,16 +1,15 @@
-import { updatePlayerCards } from "../../utils/common.js";
 import { createStolenMsg } from "../../utils/util.js";
 
 export default class Steal {
-  static play(played, id, game, filterFn) {
+  static play(played, id, game, predicate) {
     played["steal"] = true;
-    const currentPlayer = game.getCurrentPlayer();
 
+    const currentPlayer = game.getCurrentPlayer();
     if (!currentPlayer.haveActionCard(id)) {
       throw new Error("You don't have card");
     }
 
-    const opponents = game.filterOpponents(filterFn);
+    const opponents = game.filterOpponents(predicate);
 
     return { result: opponents, state: game.getGameState() };
   }
@@ -64,7 +63,8 @@ export default class Steal {
     const opponentPlayer = game.getPlayerById(opponentPlayerId);
     const newCard = opponentPlayer.takeRandomCard();
 
-    updatePlayerCards(currentPlayer, cardId, newCard);
+    player.removeActionCard(cardId);
+    player.addActionCard(newCard);
 
     const message = createStolenMsg(
       currentPlayer.getPlayerData(),

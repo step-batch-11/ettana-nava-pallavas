@@ -240,10 +240,10 @@ export default class Game {
     return { source, destination };
   }
 
-  filterOpponents(filterFn) {
+  filterOpponents(predicate) {
     const opponents = this.#getOpponents();
 
-    return opponents.filter(filterFn).map((player) => player.getId());
+    return opponents.filter(predicate).map((player) => player.getId());
   }
 
   getCurrentPlayer() {
