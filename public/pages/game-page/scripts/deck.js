@@ -84,11 +84,10 @@ const claimDesignCardEventListener = () => {
   });
 
   designCardContainer.addEventListener("click", (e) => {
-    console.log(e);
-
+    const button = e.target.closest(".rotate-design");
     const card = e.target.closest(".card-item");
 
-    if (!card) return;
+    if (!button || !card) return;
     if (!designCardContainer.contains(card)) return;
 
     rotateDesignCard(card);
