@@ -66,8 +66,8 @@ export default class Player {
     return container.findIndex((card) => card.id === target);
   }
 
-  #haveCard(container, cardId) {
-    return container.some((card) => card.id === cardId);
+  #haveCard(actionCards, cardId) {
+    return actionCards.some((card) => card.id === cardId);
   }
 
   haveActionCard(id) {

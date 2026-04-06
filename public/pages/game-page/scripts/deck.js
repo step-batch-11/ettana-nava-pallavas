@@ -16,6 +16,7 @@ import {
 import {
   handleActionCardSwap,
   handleMoveActionCard,
+  handleReplaceActionCard,
 } from "./handlers/action_card_handlers.js";
 
 import { highlightPattern } from "./board.js";
@@ -114,6 +115,10 @@ const playActionCardEventListener = () => {
 
     if (id === "1") {
       return handleMoveActionCard();
+    }
+
+    if (id === "34") {
+      return handleReplaceActionCard();
     }
 
     try {
