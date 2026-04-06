@@ -7,7 +7,7 @@ export default class Replace {
       throw new Error("Card is missing");
     }
 
-    const availableDestinations = game.getPossibleDestinations();
+    const availableDestinations = game.getChangeAbleTiles();
 
     return {
       state: game.getGameState(),
