@@ -10,11 +10,13 @@ import {
   handleDragEnd,
   handleDragOver,
   handleDragStart,
+  rotateDesignCard,
 } from "./handlers/deck_handlers.js";
 
 import {
   handleActionCardSwap,
   handleMoveActionCard,
+  handleReplaceActionCard,
   performSteal,
 } from "./handlers/action_card_handlers.js";
 
@@ -24,7 +26,6 @@ const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
 const designCardContainer = document.getElementById("design-card-panel");
 const actionCardContainer = document.getElementById("action-card-panel");
-
 const sourceContainer = { element: null };
 const dragged = { element: null };
 
@@ -75,14 +76,23 @@ const handleClaimDesignCard = async (card) => {
 
 const claimDesignCardEventListener = () => {
   if (designCardContainer.dataset.listenerAdded) return;
-
   designCardContainer.addEventListener("dblclick", (e) => {
     const card = e.target.closest(".card-item");
-
-    if (!card) return;
+    const button = e.target.closest(".rotate-design");
+    if (!card || button) return;
     if (!designCardContainer.contains(card)) return;
 
     handleClaimDesignCard(card);
+  });
+
+  designCardContainer.addEventListener("click", (e) => {
+    const button = e.target.closest(".rotate-design");
+    const card = e.target.closest(".card-item");
+
+    if (!button || !card) return;
+    if (!designCardContainer.contains(card)) return;
+
+    rotateDesignCard(card);
   });
 
   designCardContainer.dataset.listenerAdded = true;
@@ -115,13 +125,17 @@ const playActionCardEventListener = () => {
     if (id === "22") {
       return performSteal(id, "action-card");
     }
+    
+    if (id === "34") {
+      return handleReplaceActionCard();
+    }
 
     try {
       const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-      const { state, success, result } = await res.json();
+      const { state, success, result, message } = await res.json();
 
       if (!success) {
-        return showToast(result.message, "e");
+        return showToast(message, "e");
       }
 
       showToast(result.message);

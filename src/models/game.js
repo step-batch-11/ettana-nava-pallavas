@@ -1,7 +1,11 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { createStolenMsg, getPlayerById } from "../utils/util.js";
-import { areSamePositions, updatePlayerCards } from "../utils/common.js";
+import {
+  areSamePositions,
+  isValidMove,
+  updatePlayerCards,
+} from "../utils/common.js";
 
 export default class Game {
   #players;
@@ -101,7 +105,7 @@ export default class Game {
   }
 
   claimDesign(designCardId) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
     const designCard = currentPlayer
       .getDc()
       .find(({ id }) => id === Number(designCardId));
@@ -175,7 +179,7 @@ export default class Game {
 
   swapYarnActionCard(source, destination) {
     const cardId = 25;
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
 
     if (
       !currentPlayer.haveActionCard(cardId) ||
@@ -223,12 +227,8 @@ export default class Game {
 
     const availableDestinations = this.getPossibleDestinations();
 
-    // console.log(availableDestinations);
-
     currentPlayer.removeActionCard(id);
     this.#playerActions.isMoved = true;
-
-    // const a = availableDestinations.map(([x,y]) => ({x,y}))
 
     return {
       result: { availableDestinations },
@@ -251,7 +251,7 @@ export default class Game {
   }
 
   playStealCard(id, filterFn) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
 
     const _card = currentPlayer.getActionCard(id);
 
@@ -261,7 +261,7 @@ export default class Game {
   }
 
   stealActionCard(playerId, actionCardId) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
 
     if (currentPlayer.getId() === playerId) {
       throw new Error("player can't take from himself");
@@ -285,7 +285,7 @@ export default class Game {
   }
 
   stealTokens(playerId, actionCardId) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
 
     if (currentPlayer.getId() === playerId) {
       throw new Error("player can't take from himself");
@@ -309,7 +309,7 @@ export default class Game {
     return { result: { message }, state: this.getGameState() };
   }
 
-  #getCurrentPlayer() {
+  getCurrentPlayer() {
     return this.#players[this.#currentPlayerIndex];
   }
 
@@ -322,23 +322,13 @@ export default class Game {
     });
   }
 
-  #isValidDestination({ x, y }) {
-    const destinations = this.#board.destinations || [];
-
-    // console.log(this.#board);
-
-    return destinations.some(
-      ({ destination }) => destination.x === x && destination.y === y,
-    );
-  }
-
   move(route) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
     const currentPosition = currentPlayer.getPosition();
     const destination = route.destination;
 
     let payees;
-    if (this.#isValidDestination(destination)) {
+    if (isValidMove(destination, this.#board.destinations || [])) {
       if (route.type === "premium") {
         payees = this.#processPathPenalty(currentPlayer, route.recipients);
       }
@@ -351,7 +341,7 @@ export default class Game {
   }
 
   freeSwap(source, destination) {
-    const currentPosition = this.#getCurrentPlayer().getPosition();
+    const currentPosition = this.getCurrentPlayer().getPosition();
     const currPlayerAdjYarns = this.#board.getAdjYarnsPositions(
       currentPosition,
     );
@@ -365,7 +355,7 @@ export default class Game {
 
   paidSwap(source, destination) {
     const swapCost = 3;
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
     if (
       currentPlayer.getTokens() < swapCost ||
       areSamePositions(source, destination)
@@ -379,11 +369,11 @@ export default class Game {
   getDesignCardActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
 
-    const actionCard = currentPlayer.getActionCard(id);
+    currentPlayer.getActionCard(id);
 
     const designCard = this.#bank.getDesignCard();
     currentPlayer.addDesignCard(designCard);
-    currentPlayer.removeActionCard(actionCard);
+    currentPlayer.removeActionCard(id);
 
     return {
       result: { message: "design card added" },
@@ -392,7 +382,7 @@ export default class Game {
   }
 
   playVictoryPoint(id) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
 
     currentPlayer.removeActionCard(id);
     currentPlayer.updateVp(1);
@@ -406,7 +396,7 @@ export default class Game {
   }
 
   playCollectToken(id) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
 
     const tokens = this.#bank.deductTokens(3);
     currentPlayer.removeActionCard(id);
@@ -416,6 +406,25 @@ export default class Game {
       state: this.getGameState(),
       result: {
         message: "Tokens added",
+      },
+    };
+  }
+
+  playReplaceActionCard(id) {
+    const currentPlayer = this.getCurrentPlayer();
+
+    if (!currentPlayer.haveActionCard(id)) {
+      throw new Error("Card is missing");
+    }
+    const availableDestinations = this.getPossibleDestinations();
+
+    currentPlayer.removeActionCard(id);
+
+    return {
+      state: this.getGameState(),
+      result: {
+        availableDestinations,
+        message: "Tiles replaced",
       },
     };
   }

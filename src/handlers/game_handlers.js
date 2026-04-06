@@ -3,10 +3,7 @@ export const serveGameState = (ctx) => {
     const game = ctx.get("gameState");
     const gameState = game.getGameState();
 
-    return ctx.json({
-      success: true,
-      state: gameState,
-    });
+    return ctx.json({ success: true, state: gameState });
   } catch (e) {
     return ctx.json({ success: false, error: e.message });
   }
@@ -20,7 +17,7 @@ export const handleDiceRoll = (ctx) => {
     const gameState = game.getGameState();
 
     return ctx.json({ gameState, destinations, diceValues });
-  } catch {
+  } catch (e) {
     return ctx.json({ success: false, error: e.message });
   }
 };
@@ -90,7 +87,8 @@ export const swapYarnActionCard = async (ctx) => {
 export const playActionCard = (context) => {
   try {
     const game = context.get("gameState");
-    const id = context.req.param("id");
+    const actionCardService = context.get("actionCardService");
+    const id =  context.req.param("id");
 
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(id),
@@ -101,6 +99,7 @@ export const playActionCard = (context) => {
       22: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       10: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
+      34: (id) => actionCardService.playAction(Number(id), game),
     };
 
     if (id in actionCardHandlers) {
