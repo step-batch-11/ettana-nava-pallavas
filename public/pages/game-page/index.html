@@ -96,8 +96,7 @@
                 <img
                   src="/assets/victory_point.png"
                   alt="victory point icon"
-                  class="stat-icon"
-                />
+                  class="stat-icon" />
                 <span class="stat-value stat1"></span>
               </div>
 
@@ -105,8 +104,7 @@
                 <img
                   src="/assets/token.png"
                   alt="Token icon"
-                  class="stat-icon"
-                />
+                  class="stat-icon" />
                 <span class="stat-value stat2"></span>
               </div>
             </div>
@@ -114,6 +112,16 @@
         </div>
       </template>
     </div>
+
+    <dialog id="diceDialog">
+      <h3>Select Dice</h3>
+
+      <div class="dice-container" id="diceContainer"></div>
+
+      <div class="actions">
+        <button class="submit" id="submit-popup">Submit</button>
+      </div>
+    </dialog>
     <div id="toast" class="toast"></div>
   </body>
 </html>

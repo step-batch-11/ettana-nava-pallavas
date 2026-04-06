@@ -1,6 +1,11 @@
 import { handleSwapEvent } from "./board_handlers.js";
-import { showToast } from "../../../utils/utils.js";
-import { handlePlayerMove } from "../utilities/game_utilities.js";
+import {
+  createPopup,
+  openDialog,
+  showToast,
+  submitDice,
+} from "../../../utils/utils.js";
+import { handlePlayerMove, updateDice } from "../utilities/game_utilities.js";
 import { renderGame } from "../app.js";
 
 export const handleActionCardSwap = (path) => {
@@ -78,4 +83,32 @@ export const handleReplaceActionCard = async () => {
   showToast(result.message);
   renderGame(state);
   return;
+};
+
+export const handleGainToken = () => {
+  createPopup();
+  openDialog();
+
+  const dice = document.querySelector("#dice");
+  const newDice = dice.cloneNode(true);
+  dice.parentNode.replaceChild(newDice, dice);
+
+  const submitButton = document.getElementById("submit-popup");
+
+  submitButton.addEventListener("click", () => {
+    const number = submitDice();
+
+    newDice.addEventListener("click", async () => {
+      const res = await fetch(`/game/action-card/31`, {
+        method: "PATCH",
+        body: JSON.stringify({ number }),
+      });
+
+      const responseBody = await res.json();
+      newDice.parentNode.replaceChild(dice, newDice);
+      updateDice(responseBody.result.diceValues);
+      renderGame(responseBody.state);
+      showToast(responseBody.result.message);
+    });
+  });
 };

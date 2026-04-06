@@ -7,19 +7,19 @@ import {
 } from "./utilities/game_utilities.js";
 import { removeTileEventListeners } from "./utilities/board_utilities.js";
 
-const handleRollDice = async () => {
+const rollDiceForTurn = async () => {
   const { diceValues, destinations } = await rollDice();
   updateDice(diceValues);
   removeMoveClass();
   removeTileEventListeners();
   renderMoveOptions(destinations);
-  renderGame(); // sunte pacchis na ??
+  renderGame();
 };
 
 export const rollDiceEventListener = () => {
   const dice = document.querySelector("#dice");
   if (dice.dataset.listenerAdded) return;
-  dice.addEventListener("click", handleRollDice);
+  dice.addEventListener("click", rollDiceForTurn);
   dice.dataset.listenerAdded = true;
 };
 

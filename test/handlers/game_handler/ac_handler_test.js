@@ -35,7 +35,7 @@ describe("Action card handlers", () => {
     board = new Board(mockTiles(), mockYarns());
 
     bank = new Bank(getAllDesignCard(), getAllActionCard());
-    game = new Game(players, bank, board, diceValue, 0);
+    game = new Game(players, bank, board, diceValue, Math.random, 0);
     app = createApp(game);
   });
 
@@ -102,6 +102,21 @@ describe("Action card handlers", () => {
       assertEquals(bankTokensBefore - 3, bankTokensAfter);
     });
   });
+
+  // describe("PATCH /action-card/31 (Gain Tokens)", () => {
+  //   it("Player should get tokes if they get dice number more that or equal their guess", async () => {
+  //     const currentPlayer = players[0];
+  //     const cardId = acMap.gainToken;
+  //     const victoryPointAc = getActionCard(cardId);
+  //     currentPlayer.addActionCard(victoryPointAc);
+
+  //     const res = await app.request(`/game/action-card/${cardId}`, {
+  //       method: "PATCH",
+  //     });
+
+  //     const { success } = await res.json();
+  //   });
+  // });
 
   describe("Failed endpoints", () => {
     it("Should fail if card id is invalid", async () => {

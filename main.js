@@ -14,13 +14,17 @@ const main = () => {
   player1.setup(1, { x: 1, y: 1 });
 
   // player1.addAllDesignCardDev(...designCards);
-  player1.addActionCard(getActionCard(34)); // Replace Action Card
+  // player1.addActionCard(getActionCard(34)); // Replace Action Card
   player1.addAllDesignCardDev(...designCards);
-  player1.addActionCard(getActionCard(6));
-  player1.addActionCard(getActionCard(1));
-  player1.addActionCard(getActionCard(6));
-  player1.addActionCard(getActionCard(16));
-  player1.addActionCard(getActionCard(4));
+  player1.addActionCard(getActionCard(31));
+  player1.addActionCard(getActionCard(31));
+  player1.addActionCard(getActionCard(31));
+  player1.addActionCard(getActionCard(31));
+
+  // player1.addActionCard(getActionCard(1));
+  // player1.addActionCard(getActionCard(6));
+  // player1.addActionCard(getActionCard(16));
+  // player1.addActionCard(getActionCard(4));
 
   const player2 = new Player(2, "B");
   player2.setup(2, { x: 3, y: 3 });

@@ -5,6 +5,7 @@ import { colorsMap } from "/assets/colors.js";
 export const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
   const colorDice = document.querySelector("#color-dice");
+
   numberDice.textContent = number;
   const diceColor = document.createElement("span");
   diceColor.classList.add("dice-color");
@@ -15,7 +16,7 @@ export const updateDice = ({ number, colorId }) => {
 
 export const removeEventListeners = (elements) => { // Can use .removeEventListener
   elements.forEach((tile) => {
-    tile.replaceWith(tile.cloneNode(true)); 
+    tile.replaceWith(tile.cloneNode(true));
   });
 };
 

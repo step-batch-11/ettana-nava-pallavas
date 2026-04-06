@@ -48,6 +48,7 @@ export default class Game {
       this.#bank.deductTokens(ledger[id]);
       player.creditTokens(ledger[id]);
     });
+
     return;
   }
 
@@ -61,7 +62,7 @@ export default class Game {
   upkeep() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
     const diceValues = this.rollDice();
-
+    this.#diceValue = diceValues;
     this.destinations = this.#board.findPossibleDestinations(
       currentPlayer,
       this.#players,
@@ -147,6 +148,10 @@ export default class Game {
     return this.#board;
   }
 
+  getBank() {
+    return this.#bank;
+  }
+  
   #collectTax(otherPlayers) {
     const affectedPlayers = [];
     let collectedTax = 0;

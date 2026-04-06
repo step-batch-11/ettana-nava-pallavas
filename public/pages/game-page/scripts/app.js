@@ -29,4 +29,4 @@ const main = () => {
   // }, 2000);
 };
 
-globalThis.onload = main;
+globalThis.window.onload = main;

@@ -1,6 +1,6 @@
 import { showToast } from "../../utils/utils.js";
 import { addEventListener, renderGame } from "./app.js";
-import { claimDesignCard, playVpActionCard } from "./api.js";
+import { claimDesignCard, playActionCard } from "./api.js";
 import {
   createActionCard,
   createDesignCard,
@@ -15,6 +15,7 @@ import {
 
 import {
   handleActionCardSwap,
+  handleGainToken,
   handleMoveActionCard,
   handleReplaceActionCard,
 } from "./handlers/action_card_handlers.js";
@@ -50,7 +51,7 @@ const renderActionCards = (cards) => {
 
 const isVictoryPointCardPresent = async (card) => {
   if (card.some((c) => c.id === 16)) {
-    const { result, success, state } = await playVpActionCard(16);
+    const { result, success, state } = await playActionCard(16);
     if (success) {
       showToast(result.message);
     }
@@ -119,6 +120,10 @@ const playActionCardEventListener = () => {
 
     if (id === "34") {
       return handleReplaceActionCard();
+    }
+
+    if (id === "31") {
+      return handleGainToken();
     }
 
     try {

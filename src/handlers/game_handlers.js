@@ -100,18 +100,20 @@ export const playActionCard = async (context) => {
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
       34: (id) => actionCardService.playAction(Number(id), game),
+      31: async (id) => {
+        const payload = await context.req.json();
+        return actionCardService.playAction(Number(id), game, payload);
+      },
     };
 
     if (id in actionCardHandlers) {
       const { result, state } = actionCardHandlers[id](id);
-
       return context.json({
         result,
         state,
         success: true,
       });
     }
-
     return context.json(
       { success: false, message: "Invalid action card" },
       400,
