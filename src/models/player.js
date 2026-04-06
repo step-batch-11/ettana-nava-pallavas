@@ -1,3 +1,5 @@
+import { randomBw } from "../utils/common.js";
+
 export default class Player {
   #vp;
   #tokens;
@@ -135,5 +137,29 @@ export default class Player {
 
   move({ x, y }) {
     this.#setPosition(x, y);
+  }
+
+  takeRandomCard() {
+    const cards = this.getAc();
+    if (cards.length === 0) throw new Error("Player has no cards");
+
+    const randomId = randomBw(cards.length);
+    const card = cards[randomId];
+
+    this.removeActionCard(card.id);
+    return card;
+  }
+
+  takeToken() {
+    const tokens = this.getTokens();
+    if (tokens === 0) throw new Error("Player has no tokens");
+
+    if (tokens >= 2) {
+      this.debitTokens(2);
+      return 2;
+    }
+
+    this.debitTokens(1);
+    return 1;
   }
 }

@@ -87,24 +87,24 @@ export const swapYarnActionCard = async (ctx) => {
   }
 };
 
-export const playActionCard = async (context) => {
+export const playActionCard = (context) => {
   try {
     const game = context.get("gameState");
-    const id = await context.req.param("id");
+    const id = context.req.param("id");
 
     const actionCardHandlers = {
-      6: (id) => game.playTaxActionCard(Number(id)),
-      16: (id) => game.playVictoryPoint(Number(id)),
-      4: (id) => game.playCollectToken(Number(id)),
-      1: (id) => game.playMoveActionCard(Number(id)),
-      7: (id) => game.getDesignCardActionCard(Number(id)),
-      10: (id) =>
+      6: (id) => game.playTaxActionCard(id),
+      16: (id) => game.playVictoryPoint(id),
+      4: (id) => game.playCollectToken(id),
+      1: (id) => game.playMoveActionCard(id),
+      7: (id) => game.getDesignCardActionCard(id),
+      22: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
-      22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
+      10: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
     };
 
     if (id in actionCardHandlers) {
-      const { result, state } = actionCardHandlers[id](id);
+      const { result, state } = actionCardHandlers[id](Number(id));
 
       return context.json({
         result,
@@ -125,16 +125,19 @@ export const playActionCard = async (context) => {
 export const stealFromOpponent = async (context) => {
   try {
     const game = context.get("gameState");
-    const type = await context.req.param("type");
-    const { playerId } = await context.req.json();
+    const type = context.req.param("type");
+    const { playerId, cardId } = await context.req.json();
 
     const stealHandlers = {
-      "action-card": (id) => game.stealActionCard(id),
-      tokens: (id) => game.stealTokens(id),
+      "action-card": (id, cardId) => game.stealActionCard(id, cardId),
+      "tokens": (id, cardId) => game.stealTokens(id, cardId),
     };
 
     if (type in stealHandlers) {
-      const { result, state } = stealHandlers[type](playerId);
+      const { result, state } = stealHandlers[type](
+        Number(playerId),
+        Number(cardId),
+      );
 
       return context.json({
         result,
@@ -144,11 +147,14 @@ export const stealFromOpponent = async (context) => {
     }
 
     return context.json(
-      { success: false, message: "Invalid steal action card" },
+      { success: false, result: { message: "Invalid action card" } },
       400,
     );
   } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+    return context.json(
+      { success: false, result: { message: err.message } },
+      400,
+    );
   }
 };
 

@@ -15,6 +15,7 @@ import {
 import {
   handleActionCardSwap,
   handleMoveActionCard,
+  performSteal,
 } from "./handlers/action_card_handlers.js";
 
 import { highlightPattern } from "./board.js";
@@ -105,6 +106,14 @@ const playActionCardEventListener = () => {
 
     if (id === "1") {
       return handleMoveActionCard();
+    }
+
+    if (id === "10") {
+      return performSteal(id, "tokens");
+    }
+
+    if (id === "22") {
+      return performSteal(id, "action-card");
     }
 
     try {
