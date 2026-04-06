@@ -68,17 +68,36 @@ export const buyActionCard = (ctx) => {
   }
 };
 
+export const swapYarnActionCard = async (ctx) => {
+  const game = ctx.get("gameState");
+
+  try {
+    const { draggablePosition, yarnPosition } = await ctx.req.json();
+
+    game.swapYarnActionCard(draggablePosition, yarnPosition);
+    return ctx.json({
+      success: true,
+      message: "Swapped successfully",
+    }, 200);
+  } catch (e) {
+    return ctx.json(
+      { success: false, message: e.message },
+      400,
+    );
+  }
+};
+
 export const playActionCard = async (context) => {
   try {
     const game = context.get("gameState");
     const id = await context.req.param("id");
 
     const actionCardHandlers = {
-      6: (id) => game.playTaxActionCard(id),
-      1: (id) => game.playMoveActionCard(id),
-      16: (id) => game.playVictoryPoint(id),
-      4: (id) => game.playCollectToken(id),
-      7: (id) => game.getDesignCardActionCard(id),
+      6: (id) => game.playTaxActionCard(Number(id)),
+      16: (id) => game.playVictoryPoint(Number(id)),
+      4: (id) => game.playCollectToken(Number(id)),
+      1: (id) => game.playMoveActionCard(Number(id)),
+      7: (id) => game.getDesignCardActionCard(Number(id)),
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
@@ -153,6 +172,7 @@ export const handleMove = async (ctx) => {
   const destination = await ctx.req.json();
   const moveResult = gameState.move(destination);
   const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
+
   const swappableYarns = adjYarns.length > 1 ? adjYarns : [];
 
   if (moveResult.source === moveResult.destination) {
@@ -177,8 +197,6 @@ export const handleActionCardMove = async (ctx) => {
   const moveResult = gameState.movePlayer(destination);
   const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
 
-  console.log({ adjYarns, destination, moveResult });
-
   if (moveResult.source === moveResult.destination) {
     return ctx.json({ success: false, message: "You can't move there" }, 400);
   }
@@ -193,8 +211,8 @@ export const handleActionCardMove = async (ctx) => {
 export const handleSwap = async (ctx) => {
   const gameState = ctx.get("gameState");
 
-  const { draggablePosition, yarnPosition } = await ctx.req.json();
   try {
+    const { draggablePosition, yarnPosition } = await ctx.req.json();
     gameState.freeSwap(draggablePosition, yarnPosition);
 
     return ctx.json(
@@ -209,19 +227,17 @@ export const handleSwap = async (ctx) => {
   }
 };
 
-export const handlePaidSwap = (ctx) => {
+export const handlePaidSwap = async (ctx) => {
   const gameState = ctx.get("gameState");
+  const { draggablePosition, yarnPosition } = await ctx.req.json();
 
   try {
-    gameState.paidSwap();
+    gameState.paidSwap(draggablePosition, yarnPosition);
 
-    return ctx.json(
-      {
-        success: true,
-        message: "Yarns swapped successfully",
-      },
-      200,
-    );
+    return ctx.json({
+      success: true,
+      message: "Swapped successfully",
+    }, 200);
   } catch (e) {
     return ctx.json({ success: false, message: e.message }, 400);
   }

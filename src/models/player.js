@@ -63,20 +63,32 @@ export default class Player {
   }
 
   #findCardIndex(container, target) {
-    return container.findIndex((card) => card.id === target.id);
+    return container.findIndex((card) => card.id === target);
   }
 
-  removeActionCard(card) {
-    if (this.#ac.length === 0) return;
+  #haveCard(container, cardId) {
+    return container.some((card) => card.id === cardId);
+  }
 
-    const cardIndex = this.#findCardIndex(this.#ac, card);
+  haveActionCard(id) {
+    return this.#haveCard(this.#ac, id);
+  }
+
+  haveDesignCard(id) {
+    return this.#haveCard(this.#dc, id);
+  }
+
+  removeActionCard(cardId) {
+    if (!this.#ac.length || !this.haveActionCard(cardId)) return;
+
+    const cardIndex = this.#findCardIndex(this.#ac, cardId);
     this.#ac.splice(cardIndex, 1);
   }
 
-  removeDesignCard(card) {
-    if (this.#dc.length === 0) return;
+  removeDesignCard(cardId) {
+    if (!this.#dc.length || !this.haveDesignCard(cardId)) return;
 
-    const cardIndex = this.#findCardIndex(this.#dc, card);
+    const cardIndex = this.#findCardIndex(this.#dc, cardId);
     this.#dc.splice(cardIndex, 1);
   }
 

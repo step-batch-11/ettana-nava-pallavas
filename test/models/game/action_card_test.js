@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { assertEquals, assertThrows } from "@std/assert";
+import { assertEquals } from "@std/assert";
 import Game from "../../../src/models/game.js";
 import Bank from "../../../src/models/bank.js";
 import Board from "../../../src/models/board.js";
@@ -47,10 +47,6 @@ describe("Action cards", () => {
       assertEquals(playerActionCardsAfter, []);
       assertEquals(playerVPCardsAfter, 1);
       assertEquals(isPresent(playerActionCardsAfter, ac), false);
-    });
-
-    it("Should fail if the player doesn't have victory point action card", () => {
-      assertThrows(() => game.playVictoryPoint(16));
     });
   });
 

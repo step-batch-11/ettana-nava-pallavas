@@ -164,7 +164,7 @@ describe("test action handlers", () => {
     });
 
     it("case: when player has no steal token card", async () => {
-      players[0].removeActionCard(actionCards[0]);
+      players[0].removeActionCard(actionCards[0].id);
       const body = { playerId: 2 };
 
       const response = await app.request("/game/steal/tokens", {

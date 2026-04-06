@@ -41,6 +41,7 @@ describe("Action card handlers", () => {
 
   describe("PATCH /action-card/16 (Victory Point)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
+      const currentPlayer = players[0];
       const victoryPointAc = {
         id: 16,
         type: "victory point",
@@ -48,7 +49,7 @@ describe("Action card handlers", () => {
           "1 Victory point. Reveal the card immediately and keep face-up. Cannot be stolen.",
       };
 
-      players[0].addActionCard(victoryPointAc);
+      currentPlayer.addActionCard(victoryPointAc);
 
       const res = await app.request("/game/action-card/16", {
         method: "PATCH",
@@ -56,8 +57,7 @@ describe("Action card handlers", () => {
 
       const { success } = await res.json();
 
-      const playerData = players[0].getPlayerData();
-      const playerActionsCards = players[0].getAc();
+      const playerData = currentPlayer.getPlayerData();
 
       const expectedPlayerData = {
         playerId: 1,
@@ -73,16 +73,17 @@ describe("Action card handlers", () => {
       assertEquals(success, true);
       assertEquals(res.ok, true);
       assertEquals(playerData.vp, expectedPlayerData.vp);
-      assertEquals(isPresent(playerActionsCards, victoryPointAc), false);
+      assertEquals(currentPlayer.haveActionCard(16), false);
     });
   });
   describe("PATCH /action-card/4 (Collect Tokens)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
+      const currentPlayer = players[0];
       const cardId = acMap.collectToken;
       const victoryPointAc = getActionCard(cardId);
-      players[0].addActionCard(victoryPointAc);
+      currentPlayer.addActionCard(victoryPointAc);
 
-      const playerTokensBefore = players[0].getPlayerData().tokens;
+      const playerTokensBefore = currentPlayer.getPlayerData().tokens;
       const bankTokensBefore = bank.getBank().tokens;
       const res = await app.request(`/game/action-card/${cardId}`, {
         method: "PATCH",
@@ -90,8 +91,8 @@ describe("Action card handlers", () => {
 
       const { success } = await res.json();
 
-      const playerTokensAfter = players[0].getPlayerData().tokens;
-      const playerActionsCards = players[0].getAc();
+      const playerTokensAfter = currentPlayer.getPlayerData().tokens;
+      const playerActionsCards = currentPlayer.getAc();
       const bankTokensAfter = bank.getBank().tokens;
 
       assertEquals(success, true);

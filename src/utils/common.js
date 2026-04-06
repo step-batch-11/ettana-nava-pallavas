@@ -16,6 +16,6 @@ export const randomBw = (max, min = 0, randomFn = Math.random) =>
   Math.floor(min + randomFn() * (max - min));
 
 export const updatePlayerCards = (player, card, newCard) => {
-  player.removeActionCard(card);
+  player.removeActionCard(card.id);
   player.addActionCard(newCard);
 };

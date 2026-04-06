@@ -63,7 +63,7 @@ describe("testing stealing actions", () => {
 
     it("when current players has no steal action card", () => {
       const actionCard = actionCards[1];
-      players[0].removeActionCard(actionCard);
+      players[0].removeActionCard(actionCard.id);
 
       assertThrows(() => game.playStealCard(actionCard.id, actionCardFn));
     });
@@ -94,7 +94,7 @@ describe("testing stealing actions", () => {
 
     it("when current players has no steal action card", () => {
       const actionCard = actionCards[0];
-      players[0].removeActionCard(actionCard);
+      players[0].removeActionCard(actionCard.id);
 
       assertThrows(() => game.playStealCard(actionCard.id, tokensFn));
     });
@@ -107,21 +107,21 @@ describe("testing stealing actions", () => {
 
     it("testing when the current player selected himself", () => {
       assertThrows(() =>
-        game.stealActionCard(players[0].getId(), actionCardFn),
+        game.stealActionCard(players[0].getId(), actionCardFn)
       );
     });
 
     it("testing when the current player have no steal action card", () => {
-      players[0].removeActionCard(actionCards[1]);
+      players[0].removeActionCard(actionCards[1].id);
 
       assertThrows(() =>
-        game.stealActionCard(players[1].getId(), actionCardFn),
+        game.stealActionCard(players[1].getId(), actionCardFn)
       );
     });
 
     it("testing when the selected opponent has no cards", () => {
       assertThrows(() =>
-        game.stealActionCard(players[1].getId(), actionCardFn),
+        game.stealActionCard(players[1].getId(), actionCardFn)
       );
     });
 
@@ -146,7 +146,7 @@ describe("testing stealing actions", () => {
     });
 
     it("testing when the current player have no steal action card", () => {
-      players[0].removeActionCard(actionCards[0]);
+      players[0].removeActionCard(actionCards[0].id);
 
       assertThrows(() => game.stealTokens(players[1].getId(), tokensFn));
     });

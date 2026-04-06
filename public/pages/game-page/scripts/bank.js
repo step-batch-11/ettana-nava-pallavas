@@ -1,16 +1,14 @@
 import { colorsMap } from "/assets/colors.js";
 import { showToast } from "../../utils/utils.js";
-import { addEventListener, renderGame } from "./app.js";
+import { renderGame } from "./app.js";
+import { sendRequest } from "./api.js";
+import { handleSwapEvent } from "./handlers/board_handlers.js";
 
-const sendRequest = async (path) => {
-  const response = await fetch(path);
-  return await response.json();
-};
-
-const designCardListeners = () => {
+const buyDesignCardEventListener = () => {
   const designCard = document.querySelector(".design-card");
 
-  designCard.addEventListener("click", async () => {
+  if (designCard.dataset.listenerAdded) return;
+  designCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
       showToast(response.message, "e");
@@ -19,14 +17,16 @@ const designCardListeners = () => {
 
     const { state } = await sendRequest("/game/game-state");
     renderGame(state);
-    addEventListener();
   });
+
+  designCard.dataset.listenerAdded = true;
 };
 
-const actionCardListeners = () => {
+const buyActionCardEventListener = () => {
   const actionCard = document.querySelector(".action-card");
 
-  actionCard.addEventListener("click", async () => {
+  if (actionCard.dataset.listenerAdded) return;
+  actionCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-action-card");
 
     if (!response.success) {
@@ -35,12 +35,36 @@ const actionCardListeners = () => {
     }
 
     const { state } = await sendRequest("/game/game-state");
-     renderGame(state);
-    addEventListener();
+    renderGame(state);
   });
+
+  actionCard.dataset.listenerAdded = true;
 };
 
-export const renderBankState = (bank) => {
+const getCurrentPlayer = (state) => {
+  const currentPlayerId = state.currentPlayerId;
+  return state.players.find((player) => player.playerId === currentPlayerId);
+};
+
+const buyPaidSwapListener = () => {
+  const button = document.querySelector(".swap-btn");
+
+  if (button.dataset.listenerAdded) return;
+  button.addEventListener("click", () => handleSwapEvent("/game/paid-swap"));
+  button.dataset.listenerAdded = true;
+};
+
+const setButtonForBuyingPaidSwap = (state) => {
+  const currentPlayer = getCurrentPlayer(state);
+  const buySwapButton = document.querySelector(".swap-btn");
+
+  buySwapButton.disabled = currentPlayer.tokens < 3;
+};
+
+export const renderBankReserve = (state) => {
+  const bank = state.bank;
+  setButtonForBuyingPaidSwap(state);
+
   const tokenPlaceholder = document.querySelector("#token-count");
   tokenPlaceholder.textContent = bank.tokens;
 
@@ -56,6 +80,7 @@ export const renderBankState = (bank) => {
 };
 
 export const attachBankEventListeners = () => {
-  designCardListeners();
-  actionCardListeners();
+  buyDesignCardEventListener();
+  buyActionCardEventListener();
+  buyPaidSwapListener();
 };

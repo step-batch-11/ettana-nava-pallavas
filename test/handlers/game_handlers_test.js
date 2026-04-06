@@ -178,7 +178,7 @@ describe("Game route", () => {
     );
   });
 
-  describe("move request: ", () => {
+  describe("Move Pin: ", () => {
     let app;
 
     const randomValue = 0.05;
@@ -264,6 +264,214 @@ describe("Game route", () => {
       assertEquals(response.status, 400);
       assertEquals(moveResult.success, false);
       assertEquals(moveResult.message, "You can't move there");
+    });
+  });
+
+  describe("Swap Yarns Action Card", () => {
+    let app;
+    let currentPlayer;
+    let yarns;
+
+    beforeEach(() => {
+      yarns = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+      currentPlayer = new Player(1, "jane");
+      currentPlayer.setup(2, { x: 3, y: 4 });
+
+      const bank = new Bank(designCards, actionCards, () => 0.1);
+      const board = new Board([[]], yarns);
+      const mockGameState = new Game([currentPlayer], bank, board, {});
+
+      app = createApp(mockGameState);
+    });
+
+    it("Player have swap yarn action card, yarns should be swapped", async () => {
+      currentPlayer.addActionCard({
+        "id": 25,
+        "type": "swap yarns",
+        "description": "Swap positions of any two yarns on the board.",
+      });
+
+      const draggablePosition = { x: 1, y: 1 };
+      const yarnPosition = { x: 2, y: 3 };
+
+      const response = await app.request("/game/action-card/swap-yarn", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 200);
+      assertEquals(moveResult.success, true);
+      assertEquals(moveResult.message, "Swapped successfully");
+    });
+
+    it("Player don't have swap yarn action card, yarns should not be swapped", async () => {
+      const draggablePosition = { x: 1, y: 1 };
+      const yarnPosition = { x: 2, y: 3 };
+
+      const response = await app.request("/game/action-card/swap-yarn", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 400);
+      assertEquals(moveResult.success, false);
+      assertEquals(moveResult.message, "Player don't have this action card");
+    });
+
+    it("Player have swap yarn action card (invalid source), yarns should not be swapped", async () => {
+      currentPlayer.addActionCard({
+        "id": 25,
+        "type": "swap yarns",
+        "description": "Swap positions of any two yarns on the board.",
+      });
+
+      const draggablePosition = { x: 5, y: 1 };
+      const yarnPosition = { x: 2, y: 3 };
+
+      const response = await app.request("/game/action-card/swap-yarn", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 400);
+      assertEquals(moveResult.success, false);
+      assertEquals(moveResult.message, "Invalid position");
+    });
+
+    it("Player have swap yarn action card (invalid destination), yarns should not be swapped", async () => {
+      currentPlayer.addActionCard({
+        "id": 25,
+        "type": "swap yarns",
+        "description": "Swap positions of any two yarns on the board.",
+      });
+
+      const draggablePosition = { x: 1, y: 1 };
+      const yarnPosition = { x: -2, y: 3 };
+
+      const response = await app.request("/game/action-card/swap-yarn", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 400);
+      assertEquals(moveResult.success, false);
+      assertEquals(moveResult.message, "Invalid position");
+    });
+  });
+
+  describe("Paid Swap Yarn", () => {
+    let app;
+    let currentPlayer;
+    let yarns;
+
+    beforeEach(() => {
+      yarns = [
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ];
+      currentPlayer = new Player(1, "jane");
+      currentPlayer.setup(2, { x: 3, y: 4 });
+
+      const bank = new Bank(designCards, actionCards, () => 0.1);
+      const board = new Board([[]], yarns);
+      const mockGameState = new Game([currentPlayer], bank, board, {});
+
+      app = createApp(mockGameState);
+    });
+
+    it("Player have more than 3 tokens, yarns should be swapped", async () => {
+      currentPlayer.creditTokens(4);
+
+      const draggablePosition = { x: 1, y: 1 };
+      const yarnPosition = { x: 2, y: 3 };
+
+      const response = await app.request("/game/paid-swap", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 200);
+      assertEquals(moveResult.success, true);
+      assertEquals(moveResult.message, "Swapped successfully");
+    });
+
+    it("Player have less than 3 tokens, yarns should not be swapped", async () => {
+      const draggablePosition = { x: 1, y: 1 };
+      const yarnPosition = { x: 2, y: 3 };
+
+      const response = await app.request("/game/paid-swap", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 400);
+      assertEquals(moveResult.success, false);
+      assertEquals(moveResult.message, "You don't have enough tokens");
+    });
+
+    it("Player have more than 3 tokens (invalid source), yarns should not be swapped", async () => {
+      currentPlayer.creditTokens(4);
+
+      const draggablePosition = { x: 1, y: 5 };
+      const yarnPosition = { x: 2, y: 3 };
+
+      const response = await app.request("/game/paid-swap", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 400);
+      assertEquals(moveResult.success, false);
+      assertEquals(moveResult.message, "Invalid position");
+    });
+
+    it("Player have more than 3 tokens (invalid destination), yarns should be swapped", async () => {
+      currentPlayer.creditTokens(4);
+
+      const draggablePosition = { x: 1, y: 1 };
+      const yarnPosition = { x: 2, y: -3 };
+
+      const response = await app.request("/game/paid-swap", {
+        method: "POST",
+        body: JSON.stringify({ draggablePosition, yarnPosition }),
+        headers: { "content-type": "application/json" },
+      });
+
+      const moveResult = await response.json();
+
+      assertEquals(response.status, 400);
+      assertEquals(moveResult.success, false);
+      assertEquals(moveResult.message, "Invalid position");
     });
   });
 
@@ -458,7 +666,7 @@ describe("Game route", () => {
     });
 
     describe("Move Action Card", () => {
-      it("when move action card played, then should return all unoccupied postions on the board and remove the action card : ", async () => {
+      it("when move action card played, then should return all unoccupied positions on the board and remove the action card : ", async () => {
         players[0].setup(1, { x: 0, y: 0 });
         players[1].setup(2, { x: 1, y: 1 });
         const expectedDestinations = [

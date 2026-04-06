@@ -6,10 +6,12 @@ import {
   handleActionCardMove,
   handleDiceRoll,
   handleMove,
+  handlePaidSwap,
   handleSwap,
   playActionCard,
   serveGameState,
-  stealFromOpponent
+  stealFromOpponent,
+  swapYarnActionCard,
 } from "../handlers/game_handlers.js";
 
 const gameRoute = new Hono();
@@ -23,7 +25,9 @@ gameRoute.get("/claim-design/:id", claimDesign);
 gameRoute.post("/move", handleMove);
 gameRoute.post("/action-card-move", handleActionCardMove);
 gameRoute.post("/swap", handleSwap);
+gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
+gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
 gameRoute.post("/steal/:type", stealFromOpponent);
 
 export default gameRoute;
