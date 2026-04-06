@@ -16,8 +16,8 @@ import {
 
 const gameRoute = new Hono();
 
-gameRoute.post("/roll", handleDiceRoll);
 
+gameRoute.post("/roll", handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
 gameRoute.get("/buy-design-card", buyDesignCard);
 gameRoute.get("/buy-action-card", buyActionCard);

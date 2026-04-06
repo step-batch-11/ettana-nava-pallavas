@@ -3,10 +3,7 @@ export const serveGameState = (ctx) => {
     const game = ctx.get("gameState");
     const gameState = game.getGameState();
 
-    return ctx.json({
-      success: true,
-      state: gameState,
-    });
+    return ctx.json({ success: true, state: gameState });
   } catch (e) {
     return ctx.json({ success: false, error: e.message });
   }
@@ -20,7 +17,7 @@ export const handleDiceRoll = (ctx) => {
     const gameState = game.getGameState();
 
     return ctx.json({ gameState, destinations, diceValues });
-  } catch {
+  } catch (e) {
     return ctx.json({ success: false, error: e.message });
   }
 };

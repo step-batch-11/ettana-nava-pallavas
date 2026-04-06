@@ -15,6 +15,7 @@ const main = () => {
 
   // player1.addAllDesignCardDev(...designCards);
   player1.addActionCard(getActionCard(34)); // Replace Action Card
+  player1.addAllDesignCardDev(...designCards);
   player1.addActionCard(getActionCard(6));
   player1.addActionCard(getActionCard(1));
   player1.addActionCard(getActionCard(6));

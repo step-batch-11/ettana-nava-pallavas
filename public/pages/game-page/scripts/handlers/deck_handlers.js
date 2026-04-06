@@ -58,3 +58,14 @@ export const handleDragEnd = (dragged, sourceContainer, placeholder) => {
 
   placeholder.remove();
 };
+
+export const rotateDesignCard = (card) => {
+  const designGrid = card.querySelector(".design");
+
+  let angle = Number.parseInt(card.dataset.angle || "0", 10);
+
+  angle += 90;
+
+  card.dataset.angle = angle;
+  designGrid.style.transform = `rotateZ(${angle}deg)`;
+};
