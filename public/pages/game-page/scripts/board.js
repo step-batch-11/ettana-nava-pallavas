@@ -166,6 +166,8 @@ const renderPlayerPins = (players, currentPlayerId) => {
     const el = board.querySelector(
       `#tile${player.position.x}${player.position.y}`,
     );
+    if (!el) return;
+    
     el.innerHTML = "";
     const icon = createDiv("player-icon tile-value");
     icon.dataset.id = player.id;

@@ -237,35 +237,35 @@ export const attachPlayActionCard = () => {
     card.addEventListener("dblclick", async () => {
       if (card.id === "a-25") {
         highLightYarns("game/action-card/swap-yarn");
-      } else {
-        const id = card.dataset.id;
-        const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-        const { state, success, result } = await res.json();
-
-        if (!success) {
-          return showToast(result.message, "e");
-        }
-
-        if (id === "1") {
-          result.availableDestinations.forEach((destination) => {
-            const [x, y] = destination;
-            const id = `#tile${x}${y}`;
-            const tile = document.querySelector(id);
-            tile.classList.add(`jump-move`);
-
-            tile.addEventListener(
-              "click",
-              () =>
-                handlePlayerMove({
-                  destination: { x, y },
-                }, "action-card-move"),
-            );
-          });
-        }
-        showToast(result.message);
-        renderGame(state);
-        addEventListener();
+        return;
       }
+      const id = card.dataset.id;
+      const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+      const { state, success, result, message } = await res.json();
+
+      if (!success) {
+        return showToast(message, "e");
+      }
+
+      if (id === "1") {
+        result.availableDestinations.forEach((destination) => {
+          const [x, y] = destination;
+          const id = `#tile${x}${y}`;
+          const tile = document.querySelector(id);
+          tile.classList.add(`jump-move`);
+
+          tile.addEventListener(
+            "click",
+            () =>
+              handlePlayerMove({
+                destination: { x, y },
+              }, "action-card-move"),
+          );
+        });
+      }
+      showToast(result.message);
+      renderGame(state);
+      addEventListener();
     });
   });
 };

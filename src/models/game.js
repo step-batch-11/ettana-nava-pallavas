@@ -227,12 +227,8 @@ export default class Game {
 
     const availableDestinations = this.getPossibleDestinations();
 
-    // console.log(availableDestinations);
-
     currentPlayer.removeActionCard(id);
     this.#playerActions.isMoved = true;
-
-    // const a = availableDestinations.map(([x,y]) => ({x,y}))
 
     return {
       result: { availableDestinations },
@@ -342,8 +338,6 @@ export default class Game {
   #isValidDestination({ x, y }) {
     const destinations = this.#board.destinations || [];
 
-    // console.log(this.#board);
-
     return destinations.some(
       ({ destination }) => destination.x === x && destination.y === y,
     );
@@ -396,11 +390,11 @@ export default class Game {
   getDesignCardActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
 
-    const actionCard = currentPlayer.getActionCard(id);
+    currentPlayer.getActionCard(id);
 
     const designCard = this.#bank.getDesignCard();
     currentPlayer.addDesignCard(designCard);
-    currentPlayer.removeActionCard(actionCard);
+    currentPlayer.removeActionCard(id);
 
     return {
       result: { message: "design card added" },

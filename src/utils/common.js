@@ -19,3 +19,8 @@ export const updatePlayerCards = (player, card, newCard) => {
   player.removeActionCard(card.id);
   player.addActionCard(newCard);
 };
+
+export const isValidMove = ({ x, y }, possibleDestinations) => {
+  return possibleDestinations
+    .some(({ destination }) => destination.x === x && destination.y === y);
+};
