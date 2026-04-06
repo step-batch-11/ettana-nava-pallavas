@@ -442,4 +442,20 @@ export default class Game {
       },
     };
   }
+
+  getBoardTileValue(position) {
+    return this.#board.getTileValue(position);
+  }
+
+  getBankTileValue(position) {
+    return this.#bank.getTileValue(position);
+  }
+
+  changeBoardTileValue(position, value) {
+    return this.#board.changeTileValue(position, value);
+  }
+
+  changeBankTileValue(position, value) {
+    return this.#bank.changeTileValue(position, value);
+  }
 }

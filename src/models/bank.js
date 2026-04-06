@@ -63,4 +63,12 @@ export default class Bank {
 
     return this.#designCards.shift();
   }
+
+  getTileValue(index) {
+    return this.#tiles[index];
+  }
+
+  changeTileValue(index, value) {
+    this.#tiles.splice(index, 1, value);
+  }
 }

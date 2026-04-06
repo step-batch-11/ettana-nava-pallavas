@@ -116,3 +116,11 @@ export const handleSwapEvent = (path = "/game/paid-swap") => {
     addDragAndDropOnYarns(yarn, yarnPosition, path);
   });
 };
+
+export const removeTileHighlighting = () => {
+  const tiles = document.querySelectorAll(".tile");
+  tiles.forEach((tile) => {
+    tile.classList.remove("jump-move");
+    tile.style.boxShadow = "none";
+  });
+};

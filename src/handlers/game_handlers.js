@@ -84,22 +84,22 @@ export const swapYarnActionCard = async (ctx) => {
   }
 };
 
-export const playActionCard = async (context) => {
+export const playActionCard = (context) => {
   try {
     const game = context.get("gameState");
     const actionCardService = context.get("actionCardService");
-    const id = await context.req.param("id");
+    const id = Number(context.req.param("id"));
 
     const actionCardHandlers = {
-      6: (id) => game.playTaxActionCard(Number(id)),
-      16: (id) => game.playVictoryPoint(Number(id)),
-      4: (id) => game.playCollectToken(Number(id)),
-      1: (id) => game.playMoveActionCard(Number(id)),
-      7: (id) => game.getDesignCardActionCard(Number(id)),
+      6: (id) => game.playTaxActionCard(id),
+      16: (id) => game.playVictoryPoint(id),
+      4: (id) => game.playCollectToken(id),
+      1: (id) => game.playMoveActionCard(id),
+      7: (id) => game.getDesignCardActionCard(id),
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
-      34: (id) => actionCardService.playAction(Number(id), game),
+      34: (id) => actionCardService.playAction(id, game),
     };
 
     if (id in actionCardHandlers) {
@@ -124,7 +124,7 @@ export const playActionCard = async (context) => {
 export const stealFromOpponent = async (context) => {
   try {
     const game = context.get("gameState");
-    const type = await context.req.param("type");
+    const type = context.req.param("type");
     const { playerId } = await context.req.json();
 
     const stealHandlers = {
@@ -237,6 +237,27 @@ export const handlePaidSwap = async (ctx) => {
       success: true,
       message: "Swapped successfully",
     }, 200);
+  } catch (e) {
+    return ctx.json({ success: false, message: e.message }, 400);
+  }
+};
+
+export const handleReplaceTile = async (context) => {
+  try {
+    const body = await context.req.json();
+    const game = context.get("gameState");
+    const boardTileValue = game.getBoardTileValue(body.source);
+    const bankTileValue = game.getBankTileValue(body.destination);
+    game.changeBoardTileValue(body.source, bankTileValue);
+    game.changeBankTileValue(body.destination, boardTileValue);
+
+    return context.json({
+      success: true,
+      result: {
+        state: game.getGameState(),
+        message: "Tiles changed with reserved",
+      },
+    });
   } catch (e) {
     return ctx.json({ success: false, message: e.message }, 400);
   }

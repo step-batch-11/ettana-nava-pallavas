@@ -2,6 +2,7 @@ import Replace from "../models/action_cards/replace.js";
 
 export default class ActionCardService {
   constructor() {
+    this.played = {};
   }
 
   playAction(id, game) {
@@ -12,7 +13,7 @@ export default class ActionCardService {
     }
 
     const actions = {
-      34: () => Replace.play(id, currentPlayer, game),
+      34: () => Replace.play(this.played, id, currentPlayer, game),
     };
 
     return actions[id]();
