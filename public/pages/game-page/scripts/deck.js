@@ -119,10 +119,10 @@ const playActionCardEventListener = () => {
 
     try {
       const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-      const { state, success, result } = await res.json();
+      const { state, success, result, message } = await res.json();
 
       if (!success) {
-        return showToast(result.message, "e");
+        return showToast(message, "e");
       }
 
       showToast(result.message);

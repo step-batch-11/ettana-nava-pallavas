@@ -3,6 +3,7 @@ import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
 import {
   areSamePositions,
+  isValidMove,
   randomBw,
   updatePlayerCards,
 } from "../utils/common.js";
@@ -227,12 +228,8 @@ export default class Game {
 
     const availableDestinations = this.getPossibleDestinations();
 
-    // console.log(availableDestinations);
-
     currentPlayer.removeActionCard(id);
     this.#playerActions.isMoved = true;
-
-    // const a = availableDestinations.map(([x,y]) => ({x,y}))
 
     return {
       result: { availableDestinations },
@@ -339,23 +336,13 @@ export default class Game {
     });
   }
 
-  #isValidDestination({ x, y }) {
-    const destinations = this.#board.destinations || [];
-
-    // console.log(this.#board);
-
-    return destinations.some(
-      ({ destination }) => destination.x === x && destination.y === y,
-    );
-  }
-
   move(route) {
     const currentPlayer = this.#getCurrentPlayer();
     const currentPosition = currentPlayer.getPosition();
     const destination = route.destination;
 
     let payees;
-    if (this.#isValidDestination(destination)) {
+    if (isValidMove(destination, this.#board.destinations || [])) {
       if (route.type === "premium") {
         payees = this.#processPathPenalty(currentPlayer, route.recipients);
       }
@@ -396,11 +383,11 @@ export default class Game {
   getDesignCardActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
 
-    const actionCard = currentPlayer.getActionCard(id);
+    currentPlayer.getActionCard(id);
 
     const designCard = this.#bank.getDesignCard();
     currentPlayer.addDesignCard(designCard);
-    currentPlayer.removeActionCard(actionCard);
+    currentPlayer.removeActionCard(id);
 
     return {
       result: { message: "design card added" },
