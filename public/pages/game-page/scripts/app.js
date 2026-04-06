@@ -1,51 +1,32 @@
-import { highlightPattern, initBoard, renderBoard } from "./board.js";
-import { applyEventListenerOnDice, defaultDice } from "./game.js";
-import { attachBankEventListeners, renderBankState } from "./bank.js";
-import {
-  addClaimEventListener,
-  addDragEventListenerOnDeck,
-  addToggleEventListenerOnDeck,
-  attachPlayActionCard,
-  renderDeck,
-} from "./deck.js";
-import { claimDesignCard, getGameState } from "./api.js";
-import { showToast } from "../../utils/utils.js";
-
-const handleClaim = async (e) => {
-  const card = e.target.closest(".card-item");
-  const status = await claimDesignCard(card.dataset.id);
-  if (!status.result.isMatched) {
-    showToast("Pattern is not matched", "e");
-    return;
-  }
-  renderGame(status.state);
-  addEventListener();
-  highlightPattern(status.result.matches);
-};
+import { initBoard, renderBoard, renderPlayers } from "./board.js";
+import { defaultDice, rollDiceEventListener } from "./game.js";
+import { attachBankEventListeners, renderBankReserve } from "./bank.js";
+import { attachDeckEventListener, renderDeck } from "./deck.js";
+import { getGameState } from "./api.js";
 
 export const addEventListener = () => {
-  addToggleEventListenerOnDeck();
-  addDragEventListenerOnDeck();
-  addClaimEventListener(handleClaim);
-  attachPlayActionCard();
+  attachDeckEventListener();
+  attachBankEventListeners();
+  rollDiceEventListener();
 };
 
-export const renderGame = (state) => {
+export const renderGame = async () => {
+  const state = await getGameState();
   renderBoard(state);
-  renderBankState(state);
+  renderPlayers(state.players, state.currentPlayerId);
+  renderBankReserve(state);
   renderDeck(state.deck);
 };
 
-const main = async () => {
+const main = () => {
   initBoard();
-
-  const state = await getGameState();
-  renderGame(state);
-
+  renderGame();
   defaultDice();
   addEventListener();
-  applyEventListenerOnDice();
-  attachBankEventListeners();
+
+  setInterval(() => {
+    renderGame();
+  }, 2000);
 };
 
 globalThis.onload = main;
