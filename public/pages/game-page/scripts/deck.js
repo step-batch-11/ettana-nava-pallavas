@@ -10,6 +10,7 @@ import {
   handleDragEnd,
   handleDragOver,
   handleDragStart,
+  rotateDesignCard,
 } from "./handlers/deck_handlers.js";
 
 import {
@@ -23,7 +24,6 @@ const panels = document.querySelectorAll(".panel");
 const containers = document.querySelectorAll(".cards");
 const designCardContainer = document.getElementById("design-card-panel");
 const actionCardContainer = document.getElementById("action-card-panel");
-
 const sourceContainer = { element: null };
 const dragged = { element: null };
 
@@ -74,7 +74,6 @@ const handleClaimDesignCard = async (card) => {
 
 const claimDesignCardEventListener = () => {
   if (designCardContainer.dataset.listenerAdded) return;
-
   designCardContainer.addEventListener("dblclick", (e) => {
     const card = e.target.closest(".card-item");
 
@@ -82,6 +81,17 @@ const claimDesignCardEventListener = () => {
     if (!designCardContainer.contains(card)) return;
 
     handleClaimDesignCard(card);
+  });
+
+  designCardContainer.addEventListener("click", (e) => {
+    console.log(e);
+
+    const card = e.target.closest(".card-item");
+
+    if (!card) return;
+    if (!designCardContainer.contains(card)) return;
+
+    rotateDesignCard(card);
   });
 
   designCardContainer.dataset.listenerAdded = true;

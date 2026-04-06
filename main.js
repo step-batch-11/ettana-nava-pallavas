@@ -12,7 +12,7 @@ const main = () => {
   const player1 = new Player(1, "A");
   player1.setup(1, { x: 1, y: 1 });
 
-  // player1.addAllDesignCardDev(...designCards);
+  player1.addAllDesignCardDev(...designCards);
   player1.addActionCard(getActionCard(6));
   player1.addActionCard(getActionCard(1));
   player1.addActionCard(getActionCard(6));

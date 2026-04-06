@@ -55,8 +55,9 @@
 }
 
 .panel.expanded .card-item .card-item-top {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 
 .panel.expanded .card-item .card-item-bottom {
@@ -147,6 +148,8 @@
   row-gap: 4px;
   border-radius: 5px;
   width: 85%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
 }
 
 .color-item {
