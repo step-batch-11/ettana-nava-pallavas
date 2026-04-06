@@ -88,7 +88,7 @@ export const playActionCard = (context) => {
   try {
     const game = context.get("gameState");
     const actionCardService = context.get("actionCardService");
-    const id =  context.req.param("id");
+    const id = context.req.param("id");
 
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(id),
@@ -96,10 +96,9 @@ export const playActionCard = (context) => {
       4: (id) => game.playCollectToken(id),
       1: (id) => game.playMoveActionCard(id),
       7: (id) => game.getDesignCardActionCard(id),
-      22: (id) =>
-        game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
-      10: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
-      34: (id) => actionCardService.playAction(Number(id), game),
+      10: (id) => actionCardService.playCard(id, game),
+      22: (id) => actionCardService.playCard(id, game),
+      34: (id) => actionCardService.playAction(id, game),
     };
 
     if (id in actionCardHandlers) {
@@ -121,37 +120,20 @@ export const playActionCard = (context) => {
   }
 };
 
-export const stealFromOpponent = async (context) => {
+export const performActionCard = async (context) => {
   try {
     const game = context.get("gameState");
-    const type = context.req.param("type");
-    const { playerId, cardId } = await context.req.json();
+    const actionCardService = context.get("actionCardService");
+    const payload = await context.req.json();
+    console.log({ actionCardService, payload });
 
-    const stealHandlers = {
-      "action-card": (id, cardId) => game.stealActionCard(id, cardId),
-      "tokens": (id, cardId) => game.stealTokens(id, cardId),
-    };
+    const { result, state } = actionCardService.performAction(payload, game);
 
-    if (type in stealHandlers) {
-      const { result, state } = stealHandlers[type](
-        Number(playerId),
-        Number(cardId),
-      );
-
-      return context.json({
-        result,
-        state,
-        success: true,
-      });
-    }
-
-    return context.json(
-      { success: false, result: { message: "Invalid action card" } },
-      400,
-    );
+    return context.json({ result, state, success: true });
   } catch (err) {
+    console.log({ err });
     return context.json(
-      { success: false, result: { message: err.message } },
+      { success: false, message: err.message },
       400,
     );
   }

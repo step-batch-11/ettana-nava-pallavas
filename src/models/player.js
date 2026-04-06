@@ -73,17 +73,17 @@ export default class Player {
   }
 
   haveActionCard(id) {
-    return this.#haveCard(this.#ac, id);
+    return this.#haveCard(this.#ac, Number(id));
   }
 
   haveDesignCard(id) {
-    return this.#haveCard(this.#dc, id);
+    return this.#haveCard(this.#dc, Number(id));
   }
 
   removeActionCard(cardId) {
-    if (!this.#ac.length || !this.haveActionCard(cardId)) return;
+    if (!this.#ac.length || !this.haveActionCard(Number(cardId))) return;
 
-    const cardIndex = this.#findCardIndex(this.#ac, cardId);
+    const cardIndex = this.#findCardIndex(this.#ac, Number(cardId));
     this.#ac.splice(cardIndex, 1);
   }
 

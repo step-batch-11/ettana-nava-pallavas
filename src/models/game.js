@@ -1,10 +1,9 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
-import { createStolenMsg, getPlayerById } from "../utils/util.js";
+import {  getPlayerById } from "../utils/util.js";
 import {
   areSamePositions,
   isValidMove,
-  updatePlayerCards,
 } from "../utils/common.js";
 
 export default class Game {
@@ -244,69 +243,10 @@ export default class Game {
     return { source, destination };
   }
 
-  #filterOpponents(filterFn) {
+  filterOpponents(filterFn) {
     const opponents = this.#getOpponents();
 
     return opponents.filter(filterFn).map((player) => player.getId());
-  }
-
-  playStealCard(id, filterFn) {
-    const currentPlayer = this.getCurrentPlayer();
-
-    const _card = currentPlayer.getActionCard(id);
-
-    const opponents = this.#filterOpponents(filterFn);
-
-    return { result: opponents, state: this.getGameState() };
-  }
-
-  stealActionCard(playerId, actionCardId) {
-    const currentPlayer = this.getCurrentPlayer();
-
-    if (currentPlayer.getId() === playerId) {
-      throw new Error("player can't take from himself");
-    }
-
-    const card = currentPlayer.getActionCard(actionCardId);
-
-    const player = getPlayerById(this.#players, playerId);
-    const newCard = player.takeRandomCard();
-
-    updatePlayerCards(currentPlayer, card, newCard);
-
-    const message = createStolenMsg(
-      currentPlayer.getPlayerData(),
-      player.getPlayerData(),
-      1,
-      "action card",
-    );
-
-    return { result: { message }, state: this.getGameState() };
-  }
-
-  stealTokens(playerId, actionCardId) {
-    const currentPlayer = this.getCurrentPlayer();
-
-    if (currentPlayer.getId() === playerId) {
-      throw new Error("player can't take from himself");
-    }
-
-    currentPlayer.getActionCard(actionCardId);
-
-    const player = getPlayerById(this.#players, playerId);
-    const stolenTokens = player.takeToken();
-
-    currentPlayer.creditTokens(stolenTokens);
-    currentPlayer.removeActionCard(actionCardId);
-
-    const message = createStolenMsg(
-      currentPlayer.getPlayerData(),
-      player.getPlayerData(),
-      stolenTokens,
-      "tokens",
-    );
-
-    return { result: { message }, state: this.getGameState() };
   }
 
   getCurrentPlayer() {
@@ -427,5 +367,9 @@ export default class Game {
         message: "Tiles replaced",
       },
     };
+  }
+
+  getPlayerById(id) {
+    return this.#players.find((player) => player.getId() === Number(id));
   }
 }

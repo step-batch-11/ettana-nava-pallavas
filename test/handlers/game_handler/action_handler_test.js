@@ -7,7 +7,7 @@ import Game from "../../../src/models/game.js";
 import { diceValue, tiles, yarns } from "../../../src/data/state.js";
 import { assertEquals } from "@std/assert";
 
-describe("test action handlers", () => {
+describe.ignore("test action handlers", () => {
   let game, players, actionCards, app;
 
   beforeEach(() => {

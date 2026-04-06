@@ -72,7 +72,7 @@ export const performSteal = async (id, object) => {
   const playerCards = renderPlayers(object, result, state.players);
 
   playerCards.map((card) =>
-    card.addEventListener("dblclick", () => steal(card, id, object))
+    card.addEventListener("dblclick", () => steal(card, id))
   );
 };
 
@@ -96,9 +96,9 @@ const renderPlayers = (object, playerIds, players) => {
   return playerCards;
 };
 
-const steal = async (card, id, object) => {
-  const body = JSON.stringify({ playerId: card.id, cardId: id });
-  const response = await fetch(`/game/steal/${object}`, {
+const steal = async (card, id) => {
+  const body = JSON.stringify({ opponentPlayerId: card.id, cardId: id });
+  const response = await fetch(`/game/perform-action-card`, {
     method: "POST",
     body,
   });
