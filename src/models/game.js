@@ -211,6 +211,25 @@ export default class Game {
     return availableDestinations;
   }
 
+  getChangeAbleTiles() {
+    const changeAbleTiles = [];
+    const occupiedPositions = this.getPlayersPositions();
+    const tiles = this.#board.getTiles();
+
+    for (let row = 1; row < tiles.length - 1; row++) {
+      for (let col = 1; col < tiles[row].length - 1; col++) {
+        const isOccupied = occupiedPositions.some(({ x, y }) =>
+          row === x && col === y
+        );
+        if (!isOccupied) {
+          changeAbleTiles.push([row, col]);
+        }
+      }
+    }
+
+    return changeAbleTiles;
+  }
+
   playMoveActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
     if (this.#playerActions.isMoved) {
@@ -343,25 +362,6 @@ export default class Game {
       state: this.getGameState(),
       result: {
         message: "Tokens added",
-      },
-    };
-  }
-
-  playReplaceActionCard(id) {
-    const currentPlayer = this.getCurrentPlayer();
-
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("Card is missing");
-    }
-    const availableDestinations = this.getPossibleDestinations();
-
-    currentPlayer.removeActionCard(id);
-
-    return {
-      state: this.getGameState(),
-      result: {
-        availableDestinations,
-        message: "Tiles replaced",
       },
     };
   }

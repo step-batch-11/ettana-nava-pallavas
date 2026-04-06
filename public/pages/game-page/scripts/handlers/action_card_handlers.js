@@ -115,18 +115,23 @@ function handleReplaceTile(x, y) {
   reservedTiles.forEach((tile, index) => {
     tile.classList.add("jump-move");
     tile.addEventListener("click", async () => {
-      const res = await fetch("/game/replace-tile", {
-        method: "PATCH",
-        body: JSON.stringify({ source: [x, y], destination: index }),
+      const res = await fetch("/game/perform-action-card", {
+        method: "POST",
+        body: JSON.stringify({
+          cardId: 34,
+          source: [x, y],
+          destination: index,
+        }),
       });
-      const { success, result } = await res.json();
+      console.log(res);
+      const { state, success, result, message } = await res.json();
 
       if (!success) {
         return showToast(message, "e");
       }
 
       showToast(result.message);
-      renderGame(result.state);
+      renderGame(state);
       removeTileHighlighting();
     });
   });

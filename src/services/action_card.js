@@ -17,6 +17,7 @@ export default class ActionCardService {
           game,
           (opponent) => opponent.getAc().length,
         ),
+      34: () => Replace.play(this.played, id, game),
     };
     
     return actions[id]();
