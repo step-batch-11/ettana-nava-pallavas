@@ -33,7 +33,7 @@ describe("test action handlers", () => {
       },
     ];
 
-    players[0].addActionCard(actionCards[0]);
+    players[0].addActionCard(actionCards[1]);
 
     const bank = new Bank([], actionCards, (x) => x);
     const board = new Board(tiles, yarns);
@@ -44,7 +44,7 @@ describe("test action handlers", () => {
 
   describe("/action-card/ -> steal cards", () => {
     it("case: when other players don't have any cards", async () => {
-      const response = await app.request("/game/action-card/10", {
+      const response = await app.request("/game/action-card/22", {
         method: "PATCH",
       });
 
@@ -57,7 +57,7 @@ describe("test action handlers", () => {
       players[1].addActionCard(actionCards[1]);
       players[2].addActionCard(actionCards[1]);
 
-      const response = await app.request("/game/action-card/10", {
+      const response = await app.request("/game/action-card/22", {
         method: "PATCH",
       });
 
@@ -69,11 +69,11 @@ describe("test action handlers", () => {
 
   describe("/action-card/ -> steal tokens", () => {
     beforeEach(() => {
-      players[0].addActionCard(actionCards[1]);
+      players[0].addActionCard(actionCards[0]);
     });
 
     it("case: when other players don't have any tokens", async () => {
-      const response = await app.request("/game/action-card/22", {
+      const response = await app.request("/game/action-card/10", {
         method: "PATCH",
       });
 
@@ -86,7 +86,7 @@ describe("test action handlers", () => {
       players[1].creditTokens(2);
       players[2].creditTokens(2);
 
-      const response = await app.request("/game/action-card/22", {
+      const response = await app.request("/game/action-card/10", {
         method: "PATCH",
       });
 
@@ -98,47 +98,47 @@ describe("test action handlers", () => {
 
   describe("/steal/ -> action-card", () => {
     it("case: when player selects himself", async () => {
-      const body = { playerId: 1 };
+      const body = { playerId: 1, cardId: 22 };
 
       const response = await app.request("/game/steal/action-card", {
         method: "POST",
         body: JSON.stringify(body),
       });
 
-      const { message } = await response.json();
-      assertEquals(message, "player cant take from himself");
+      const { result } = await response.json();
+      assertEquals(result.message, "player can't take from himself");
     });
 
     it("case: when player has no steal action card", async () => {
-      players[0].removeActionCard(actionCards[1]);
-      const body = { playerId: 2 };
+      players[0].removeActionCard(actionCards[1].id);
+      const body = { playerId: 2, cardId: 22 };
 
       const response = await app.request("/game/steal/action-card", {
         method: "POST",
         body: JSON.stringify(body),
       });
 
-      const { message } = await response.json();
-      assertEquals(message, "Action card is missing");
+      const { result } = await response.json();
+      assertEquals(result.message, "Action card is missing");
     });
 
     it("case: when the selected opponent has no cards", async () => {
       players[0].addActionCard(actionCards[1]);
-      const body = { playerId: 2 };
+      const body = { playerId: 2, cardId: 22 };
 
       const response = await app.request("/game/steal/action-card", {
         method: "POST",
         body: JSON.stringify(body),
       });
 
-      const { message } = await response.json();
-      assertEquals(message, "Player has no cards");
+      const { result } = await response.json();
+      assertEquals(result.message, "Player has no cards");
     });
 
     it("case: when the selected opponent has cards", async () => {
       players[0].addActionCard(actionCards[1]);
       players[1].addActionCard(actionCards[1]);
-      const body = { playerId: 2 };
+      const body = { playerId: 2, cardId: 22 };
 
       const response = await app.request("/game/steal/action-card", {
         method: "POST",
@@ -146,54 +146,13 @@ describe("test action handlers", () => {
       });
 
       const { result } = await response.json();
-      assertEquals(result, "stolen card");
+      assertEquals(result.message, "john stolen 1 action card from jane");
     });
   });
 
   describe("/steal/ -> tokens", () => {
     it("case: when player selects himself", async () => {
-      const body = { playerId: 1 };
-
-      const response = await app.request("/game/steal/tokens", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-
-      const { message } = await response.json();
-      assertEquals(message, "player cant take from himself");
-    });
-
-    it("case: when player has no steal token card", async () => {
-      players[0].removeActionCard(actionCards[0].id);
-      const body = { playerId: 2 };
-
-      const response = await app.request("/game/steal/tokens", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-
-      const { message } = await response.json();
-      assertEquals(message, "Action card is missing");
-    });
-
-    it("case: when the selected opponent has no tokens", async () => {
-      players[0].addActionCard(actionCards[0]);
-      const body = { playerId: 2 };
-
-      const response = await app.request("/game/steal/tokens", {
-        method: "POST",
-        body: JSON.stringify(body),
-      });
-
-      const { message } = await response.json();
-      assertEquals(message, "Player has no tokens");
-    });
-
-    it("case: when the selected opponent has tokens", async () => {
-      players[0].addActionCard(actionCards[1]);
-      players[1].creditTokens(3);
-
-      const body = { playerId: 2 };
+      const body = { playerId: 1, cardId: 10 };
 
       const response = await app.request("/game/steal/tokens", {
         method: "POST",
@@ -201,7 +160,48 @@ describe("test action handlers", () => {
       });
 
       const { result } = await response.json();
-      assertEquals(result, "stolen tokens");
+      assertEquals(result.message, "player can't take from himself");
+    });
+
+    it("case: when player has no steal token card", async () => {
+      players[0].removeActionCard(actionCards[0].id);
+      const body = { playerId: 2, cardId: 10 };
+
+      const response = await app.request("/game/steal/tokens", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+
+      const { result } = await response.json();
+      assertEquals(result.message, "Action card is missing");
+    });
+
+    it("case: when the selected opponent has no tokens", async () => {
+      players[0].addActionCard(actionCards[0]);
+      const body = { playerId: 2, cardId: 10 };
+
+      const response = await app.request("/game/steal/tokens", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+
+      const { result } = await response.json();
+      assertEquals(result.message, "Player has no tokens");
+    });
+
+    it("case: when the selected opponent has tokens", async () => {
+      players[0].addActionCard(actionCards[0]);
+      players[1].creditTokens(3);
+
+      const body = { playerId: 2, cardId: 10 };
+
+      const response = await app.request("/game/steal/tokens", {
+        method: "POST",
+        body: JSON.stringify(body),
+      });
+
+      const { result } = await response.json();
+      assertEquals(result.message, "john stolen 2 tokens from jane");
     });
   });
 });

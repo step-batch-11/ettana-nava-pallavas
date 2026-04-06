@@ -17,6 +17,7 @@ import {
   handleActionCardSwap,
   handleMoveActionCard,
   handleReplaceActionCard,
+  performSteal,
 } from "./handlers/action_card_handlers.js";
 
 import { highlightPattern } from "./board.js";
@@ -77,8 +78,8 @@ const claimDesignCardEventListener = () => {
   if (designCardContainer.dataset.listenerAdded) return;
   designCardContainer.addEventListener("dblclick", (e) => {
     const card = e.target.closest(".card-item");
-
-    if (!card) return;
+    const button = e.target.closest(".rotate-design");
+    if (!card || button) return;
     if (!designCardContainer.contains(card)) return;
 
     handleClaimDesignCard(card);
@@ -117,6 +118,14 @@ const playActionCardEventListener = () => {
       return handleMoveActionCard();
     }
 
+    if (id === "10") {
+      return performSteal(id, "tokens");
+    }
+
+    if (id === "22") {
+      return performSteal(id, "action-card");
+    }
+    
     if (id === "34") {
       return handleReplaceActionCard();
     }

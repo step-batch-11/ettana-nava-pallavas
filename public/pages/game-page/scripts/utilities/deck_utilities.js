@@ -45,10 +45,10 @@ const createCardTopArea = (victoryPoints) => {
   card.append(victoryPointer);
 
   const rotateButton = document.createElement("button");
-  rotateButton.textContent = "rotate";
-  rotateButton.style.border = "none";
-  rotateButton.style.cursor = "pointer";
+  rotateButton.innerHTML = "↻";
+
   rotateButton.classList.add("rotate-design");
+
   card.append(rotateButton);
 
   return card;

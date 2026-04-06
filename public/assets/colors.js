@@ -20,6 +20,8 @@ export const color = {
   Error: " #EB5757",
   Info: "#56CCF2",
   Warning: "#F2994A",
+  Orange: "#f28423",
+  Pink: "#f223e4",
 };
 
 export const colorsMap = {
@@ -29,4 +31,6 @@ export const colorsMap = {
   4: color["Purple"],
   5: color["Yellow"],
   6: color["Black"],
+  7: color["Pink"],
+  8: color["Orange"],
 };

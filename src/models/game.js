@@ -1,10 +1,9 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
-import { getPlayerById } from "../utils/util.js";
+import { createStolenMsg, getPlayerById } from "../utils/util.js";
 import {
   areSamePositions,
   isValidMove,
-  randomBw,
   updatePlayerCards,
 } from "../utils/common.js";
 
@@ -254,73 +253,60 @@ export default class Game {
   playStealCard(id, filterFn) {
     const currentPlayer = this.getCurrentPlayer();
 
-    const card = currentPlayer.getActionCard(id);
-    if (!card) throw new Error("player don't have card");
+    const _card = currentPlayer.getActionCard(id);
 
     const opponents = this.#filterOpponents(filterFn);
 
     return { result: opponents, state: this.getGameState() };
   }
 
-  #takeRandomCard(player) {
-    const cards = player.getAc();
-    if (cards.length === 0) throw new Error("Player has no cards");
-
-    const randomId = randomBw(cards.length);
-    const card = cards[randomId];
-
-    player.removeActionCard(card.id);
-    return card;
-  }
-
-  stealActionCard(playerId) {
-    const actionCardId = 22;
+  stealActionCard(playerId, actionCardId) {
     const currentPlayer = this.getCurrentPlayer();
 
     if (currentPlayer.getId() === playerId) {
-      throw new Error("player cant take from himself");
+      throw new Error("player can't take from himself");
     }
 
     const card = currentPlayer.getActionCard(actionCardId);
 
     const player = getPlayerById(this.#players, playerId);
-    const newCard = this.#takeRandomCard(player);
+    const newCard = player.takeRandomCard();
 
     updatePlayerCards(currentPlayer, card, newCard);
 
-    return { result: "stolen card", state: this.getGameState() };
+    const message = createStolenMsg(
+      currentPlayer.getPlayerData(),
+      player.getPlayerData(),
+      1,
+      "action card",
+    );
+
+    return { result: { message }, state: this.getGameState() };
   }
 
-  #takeToken(player) {
-    const tokens = player.getTokens();
-    if (tokens === 0) throw new Error("Player has no tokens");
-
-    if (tokens >= 2) {
-      player.debitTokens(2);
-      return 2;
-    }
-
-    player.debitTokens(1);
-    return 1;
-  }
-
-  stealTokens(playerId) {
-    const actionCardId = 10;
+  stealTokens(playerId, actionCardId) {
     const currentPlayer = this.getCurrentPlayer();
 
     if (currentPlayer.getId() === playerId) {
-      throw new Error("player cant take from himself");
+      throw new Error("player can't take from himself");
     }
 
     currentPlayer.getActionCard(actionCardId);
 
     const player = getPlayerById(this.#players, playerId);
-    const stolenTokens = this.#takeToken(player);
+    const stolenTokens = player.takeToken();
 
     currentPlayer.creditTokens(stolenTokens);
-    player.removeActionCard(actionCardId);
+    currentPlayer.removeActionCard(actionCardId);
 
-    return { result: "stolen tokens", state: this.getGameState() };
+    const message = createStolenMsg(
+      currentPlayer.getPlayerData(),
+      player.getPlayerData(),
+      stolenTokens,
+      "tokens",
+    );
+
+    return { result: { message }, state: this.getGameState() };
   }
 
   getCurrentPlayer() {

@@ -1,3 +1,4 @@
+import { colorsMap } from "/assets/colors.js";
 import { removeEventListeners } from "./game_utilities.js";
 const cellSize = 120;
 const gap = 10;
@@ -73,7 +74,9 @@ export const createAllTiles = (board) => {
   }
 };
 
-export const createSVGPlayerIcon = () => {
+export const createSVGPlayerIcon = (colorId) => {
+  const primaryColor = colorsMap[colorId]
+
   const ns = "http://www.w3.org/2000/svg";
 
   const svg = document.createElementNS(ns, "svg");
@@ -85,7 +88,7 @@ export const createSVGPlayerIcon = () => {
   circle.setAttribute("cx", "60");
   circle.setAttribute("cy", "45");
   circle.setAttribute("r", "35");
-  circle.setAttribute("fill", "rgb(239, 108, 0)");
+  circle.setAttribute("fill", primaryColor);
   circle.setAttribute("stroke", "rgb(193, 90, 5)");
   circle.setAttribute("stroke-width", "4");
 
@@ -94,7 +97,7 @@ export const createSVGPlayerIcon = () => {
     "d",
     "M40 75 Q30 130 25 165 Q60 190 95 165 Q90 130 80 75 Z",
   );
-  path.setAttribute("fill", "#ef6c00");
+  path.setAttribute("fill", primaryColor);
   path.setAttribute("stroke", "rgb(193, 90, 5)");
   path.setAttribute("stroke-width", "4");
 
