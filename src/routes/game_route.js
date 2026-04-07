@@ -8,14 +8,14 @@ import {
   handleMove,
   handlePaidSwap,
   handleSwap,
+  performActionCard,
   playActionCard,
+  rotateDesignCard,
   serveGameState,
-  stealFromOpponent,
   swapYarnActionCard,
 } from "../handlers/game_handlers.js";
 
 const gameRoute = new Hono();
-
 
 gameRoute.post("/roll", handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
@@ -28,16 +28,7 @@ gameRoute.post("/swap", handleSwap);
 gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
 gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
-gameRoute.post("/steal/:type", stealFromOpponent);
-gameRoute.patch("/replace-tile", async (c) => {
-  const body = await c.req.json();
-  const game = c.get("gameState");
-  console.log({ game });
-
-  const boardTileValue = game.board.getTileValue(body.source);
-  console.log(boardTileValue);
-
-  return c.json({ success: true, message: "Wait kro" });
-});
+gameRoute.post("/perform-action-card", performActionCard);
+gameRoute.patch("/rotate-design-card/:id", rotateDesignCard);
 
 export default gameRoute;

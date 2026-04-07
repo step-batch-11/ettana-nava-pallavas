@@ -1,12 +1,8 @@
 import { createLedger } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
-import {
-  areSamePositions,
-  isValidMove,
-  randomBw,
-  updatePlayerCards,
-} from "../utils/common.js";
+import { areSamePositions, isValidMove } from "../utils/common.js";
+import { rotateDesign } from "../utils/pattern_match.js";
 
 export default class Game {
   #players;
@@ -151,7 +147,7 @@ export default class Game {
   getBank() {
     return this.#bank;
   }
-  
+
   #collectTax(otherPlayers) {
     const affectedPlayers = [];
     let collectedTax = 0;
@@ -221,6 +217,25 @@ export default class Game {
     return availableDestinations;
   }
 
+  getChangeAbleTiles() {
+    const changeAbleTiles = [];
+    const occupiedPositions = this.getPlayersPositions();
+    const tiles = this.#board.getTiles();
+
+    for (let row = 1; row < tiles.length - 1; row++) {
+      for (let col = 1; col < tiles[row].length - 1; col++) {
+        const isOccupied = occupiedPositions.some(({ x, y }) =>
+          row === x && col === y
+        );
+        if (!isOccupied) {
+          changeAbleTiles.push([row, col]);
+        }
+      }
+    }
+
+    return changeAbleTiles;
+  }
+
   playMoveActionCard(id) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
     if (this.#playerActions.isMoved) {
@@ -250,82 +265,10 @@ export default class Game {
     return { source, destination };
   }
 
-  #filterOpponents(filterFn) {
+  filterOpponents(filterFn) {
     const opponents = this.#getOpponents();
 
     return opponents.filter(filterFn).map((player) => player.getId());
-  }
-
-  playStealCard(id, filterFn) {
-    const currentPlayer = this.getCurrentPlayer();
-
-    const card = currentPlayer.getActionCard(id);
-    if (!card) throw new Error("player don't have card");
-
-    const opponents = this.#filterOpponents(filterFn);
-
-    return { result: opponents, state: this.getGameState() };
-  }
-
-  #takeRandomCard(player) {
-    const cards = player.getAc();
-    if (cards.length === 0) throw new Error("Player has no cards");
-
-    const randomId = randomBw(cards.length);
-    const card = cards[randomId];
-
-    player.removeActionCard(card.id);
-    return card;
-  }
-
-  stealActionCard(playerId) {
-    const actionCardId = 22;
-    const currentPlayer = this.getCurrentPlayer();
-
-    if (currentPlayer.getId() === playerId) {
-      throw new Error("player cant take from himself");
-    }
-
-    const card = currentPlayer.getActionCard(actionCardId);
-
-    const player = getPlayerById(this.#players, playerId);
-    const newCard = this.#takeRandomCard(player);
-
-    updatePlayerCards(currentPlayer, card, newCard);
-
-    return { result: "stolen card", state: this.getGameState() };
-  }
-
-  #takeToken(player) {
-    const tokens = player.getTokens();
-    if (tokens === 0) throw new Error("Player has no tokens");
-
-    if (tokens >= 2) {
-      player.debitTokens(2);
-      return 2;
-    }
-
-    player.debitTokens(1);
-    return 1;
-  }
-
-  stealTokens(playerId) {
-    const actionCardId = 10;
-    const currentPlayer = this.getCurrentPlayer();
-
-    if (currentPlayer.getId() === playerId) {
-      throw new Error("player cant take from himself");
-    }
-
-    currentPlayer.getActionCard(actionCardId);
-
-    const player = getPlayerById(this.#players, playerId);
-    const stolenTokens = this.#takeToken(player);
-
-    currentPlayer.creditTokens(stolenTokens);
-    player.removeActionCard(actionCardId);
-
-    return { result: "stolen tokens", state: this.getGameState() };
   }
 
   getCurrentPlayer() {
@@ -429,22 +372,34 @@ export default class Game {
     };
   }
 
-  playReplaceActionCard(id) {
+  getPlayerById(id) {
+    return this.#players.find((player) => player.getId() === Number(id));
+  }
+
+  getBoardTileValue(position) {
+    return this.#board.getTileValue(position);
+  }
+
+  getBankTileValue(position) {
+    return this.#bank.getTileValue(position);
+  }
+
+  changeBoardTileValue(position, value) {
+    return this.#board.changeTileValue(position, value);
+  }
+
+  changeBankTileValue(position, value) {
+    return this.#bank.changeTileValue(position, value);
+  }
+
+  rotatePattern(designCardId) {
     const currentPlayer = this.getCurrentPlayer();
+    const designCard = currentPlayer
+      .getDc()
+      .find(({ id }) => id === Number(designCardId));
+    const rotatedDesign = rotateDesign(designCard.design);
+    designCard.design = rotatedDesign;
 
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("Card is missing");
-    }
-    const availableDestinations = this.getPossibleDestinations();
-
-    currentPlayer.removeActionCard(id);
-
-    return {
-      state: this.getGameState(),
-      result: {
-        availableDestinations,
-        message: "Tiles replaced",
-      },
-    };
+    return { state: this.getGameState() };
   }
 }

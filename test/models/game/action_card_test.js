@@ -71,63 +71,83 @@ describe("Action cards", () => {
       assertEquals(bankTokensAfter, bankTokensBefore - 3);
     });
   });
+});
 
-  describe("Play Gain Token Action Card", () => {
-    it("Player should get token if their guessed number is smaller than the rolled dice value", () => {
-      const cardId = acMap.gainToken;
-      const ac = getActionCard(cardId);
-      players[0].addActionCard(ac);
+describe("Play Gain Token Action Card", () => {
+  let game, players, bank;
+  const yarns = mockYarns();
+  const tiles = mockTiles();
 
-      const playerTokenBefore = players[0].getTokens();
-      const bankTokensBefore = bank.getBank().tokens;
+  beforeEach(() => {
+    players = [new Player(1, "Ajoy"), new Player(2, "Dinesh")];
+    bank = new Bank(
+      getAllDesignCard(),
+      getAllActionCard(),
+    );
+    game = new Game(
+      players,
+      bank,
+      new Board(tiles, yarns),
+      diceValue,
+      () => 0.5,
+      0,
+    );
+  });
 
-      Gain.token(cardId, players[0], game, { number: 2 }, () => 5);
+  it("Player should get token if their guessed number is smaller than the rolled dice value", () => {
+    const cardId = acMap.gainToken;
+    const ac = getActionCard(cardId);
+    players[0].addActionCard(ac);
 
-      const playerActionCardsAfter = players[0].getAc();
-      const playerTokenAfter = players[0].getTokens();
-      const bankTokensAfter = bank.getBank().tokens;
+    const playerTokenBefore = players[0].getTokens();
+    const bankTokensBefore = bank.getBank().tokens;
 
-      assertFalse(isPresent(playerActionCardsAfter, ac));
-      assertEquals(playerTokenBefore + 2, playerTokenAfter);
-      assertEquals(bankTokensBefore - 2, bankTokensAfter);
-    });
+    Gain.token({ cardId, number: 2 }, players[0], {}, game);
 
-    it("Player should get token if their guessed number is equal to the rolled dice value", () => {
-      const cardId = acMap.gainToken;
-      const ac = getActionCard(cardId);
-      players[0].addActionCard(ac);
+    const playerActionCardsAfter = players[0].getAc();
+    const playerTokenAfter = players[0].getTokens();
+    const bankTokensAfter = bank.getBank().tokens;
 
-      const playerTokenBefore = players[0].getTokens();
-      const bankTokensBefore = bank.getBank().tokens;
+    assertFalse(isPresent(playerActionCardsAfter, ac));
+    assertEquals(playerTokenBefore + 2, playerTokenAfter);
+    assertEquals(bankTokensBefore - 2, bankTokensAfter);
+  });
 
-      Gain.token(cardId, players[0], game, { number: 2 }, () => 2);
+  it("Player should get token if their guessed number is equal to the rolled dice value", () => {
+    const cardId = acMap.gainToken;
+    const ac = getActionCard(cardId);
+    players[0].addActionCard(ac);
 
-      const playerActionCardsAfter = players[0].getAc();
-      const playerTokenAfter = players[0].getTokens();
-      const bankTokensAfter = bank.getBank().tokens;
+    const playerTokenBefore = players[0].getTokens();
+    const bankTokensBefore = bank.getBank().tokens;
 
-      assertFalse(isPresent(playerActionCardsAfter, ac));
-      assertEquals(playerTokenBefore + 2, playerTokenAfter);
-      assertEquals(bankTokensBefore - 2, bankTokensAfter);
-    });
+    Gain.token({ cardId, number: 4 }, players[0], {}, game);
 
-    it("Player should not get token if their guessed number is greater than the rolled dice value", () => {
-      const cardId = acMap.gainToken;
-      const ac = getActionCard(cardId);
-      players[0].addActionCard(ac);
+    const playerActionCardsAfter = players[0].getAc();
+    const playerTokenAfter = players[0].getTokens();
+    const bankTokensAfter = bank.getBank().tokens;
 
-      const playerTokenBefore = players[0].getTokens();
-      const bankTokensBefore = bank.getBank().tokens;
+    assertFalse(isPresent(playerActionCardsAfter, ac));
+    assertEquals(playerTokenBefore + 4, playerTokenAfter);
+    assertEquals(bankTokensBefore - 4, bankTokensAfter);
+  });
 
-      Gain.token(cardId, players[0], game, { number: 5 }, () => 2);
+  it("Player should not get token if their guessed number is greater than the rolled dice value", () => {
+    const cardId = acMap.gainToken;
+    const ac = getActionCard(cardId);
+    players[0].addActionCard(ac);
 
-      const playerActionCardsAfter = players[0].getAc();
-      const playerTokenAfter = players[0].getTokens();
-      const bankTokensAfter = bank.getBank().tokens;
+    const playerTokenBefore = players[0].getTokens();
+    const bankTokensBefore = bank.getBank().tokens;
 
-      assertFalse(isPresent(playerActionCardsAfter, ac));
-      assertEquals(playerTokenBefore, playerTokenAfter);
-      assertEquals(bankTokensBefore, bankTokensAfter);
-    });
+    Gain.token({ cardId, number: 5 }, players[0], {}, game);
+
+    const playerActionCardsAfter = players[0].getAc();
+    const playerTokenAfter = players[0].getTokens();
+    const bankTokensAfter = bank.getBank().tokens;
+
+    assertFalse(isPresent(playerActionCardsAfter, ac));
+    assertEquals(playerTokenBefore, playerTokenAfter);
+    assertEquals(bankTokensBefore, bankTokensAfter);
   });
 });

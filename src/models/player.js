@@ -1,3 +1,5 @@
+import { randomBw } from "../utils/common.js";
+
 export default class Player {
   #vp;
   #tokens;
@@ -59,7 +61,7 @@ export default class Player {
   }
 
   getDc() {
-    return structuredClone(this.#dc);
+    return this.#dc;
   }
 
   #findCardIndex(container, target) {
@@ -71,17 +73,17 @@ export default class Player {
   }
 
   haveActionCard(id) {
-    return this.#haveCard(this.#ac, id);
+    return this.#haveCard(this.#ac, Number(id));
   }
 
   haveDesignCard(id) {
-    return this.#haveCard(this.#dc, id);
+    return this.#haveCard(this.#dc, Number(id));
   }
 
   removeActionCard(cardId) {
-    if (!this.#ac.length || !this.haveActionCard(cardId)) return;
+    if (!this.#ac.length || !this.haveActionCard(Number(cardId))) return;
 
-    const cardIndex = this.#findCardIndex(this.#ac, cardId);
+    const cardIndex = this.#findCardIndex(this.#ac, Number(cardId));
     this.#ac.splice(cardIndex, 1);
   }
 
@@ -135,5 +137,29 @@ export default class Player {
 
   move({ x, y }) {
     this.#setPosition(x, y);
+  }
+
+  takeRandomCard() {
+    const cards = this.getAc();
+    if (cards.length === 0) throw new Error("Player has no cards");
+
+    const randomId = randomBw(cards.length);
+    const card = cards[randomId];
+
+    this.removeActionCard(card.id);
+    return card;
+  }
+
+  takeToken() {
+    const tokens = this.getTokens();
+    if (tokens === 0) throw new Error("Player has no tokens");
+
+    if (tokens >= 2) {
+      this.debitTokens(2);
+      return 2;
+    }
+
+    this.debitTokens(1);
+    return 1;
   }
 }

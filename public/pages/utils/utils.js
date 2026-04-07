@@ -78,3 +78,6 @@ export const submitDice = () => {
   diceContainer.innerHTML = "";
   return selectedValue;
 };
+
+export const getPlayerById = (players, id) =>
+  players.find((player) => player.playerId === id) || { name: "not found" };

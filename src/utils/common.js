@@ -15,8 +15,8 @@ export const isValidPosition = ({ x, y }, grid) => {
 export const randomBw = (max, min = 0, randomFn = Math.random) =>
   Math.floor(min + randomFn() * (max - min));
 
-export const updatePlayerCards = (player, card, newCard) => {
-  player.removeActionCard(card.id);
+export const updatePlayerCards = (player, removedCardId, newCard) => {
+  player.removeActionCard(removedCardId);
   player.addActionCard(newCard);
 };
 

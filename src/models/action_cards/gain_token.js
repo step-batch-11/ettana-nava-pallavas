@@ -1,10 +1,10 @@
 export default class Gain {
-  static token(id, currentPlayer, game, payload, rollDice) {
+  static token(payload, currentPlayer, _played, game) {
     const { diceValue } = game.getGameState();
-    const { number } = rollDice();
-    currentPlayer.removeActionCard(id);
+    const { number } = game.rollDice();
+    currentPlayer.removeActionCard(payload.cardId);
 
-    if (payload.number > diceValue.number) {
+    if (payload.number > number) {
       return {
         state: game.getGameState(),
         diceValues: { colorId: diceValue.colorId, number },
@@ -14,6 +14,7 @@ export default class Gain {
         },
       };
     }
+
 
     const tokens = game.getBank().deductTokens(payload.number);
     currentPlayer.creditTokens(tokens);

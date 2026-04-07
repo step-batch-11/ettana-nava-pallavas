@@ -41,7 +41,7 @@ const renderPlayerOnTiles = (players, currentPlayerId) => {
     el.innerHTML = "";
     const icon = createDiv("player-icon tile-value");
     icon.dataset.id = player.id;
-    const svgIcon = createSVGPlayerIcon();
+    const svgIcon = createSVGPlayerIcon(player.pinColor);
     icon.appendChild(svgIcon);
     el.appendChild(icon);
 

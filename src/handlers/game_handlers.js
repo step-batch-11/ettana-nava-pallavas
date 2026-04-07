@@ -84,11 +84,11 @@ export const swapYarnActionCard = async (ctx) => {
   }
 };
 
-export const playActionCard = async (context) => {
+export const playActionCard = (context) => {
   try {
     const game = context.get("gameState");
     const actionCardService = context.get("actionCardService");
-    const id = await context.req.param("id");
+    const id = Number(context.req.param("id"));
 
     const actionCardHandlers = {
       6: (id) => game.playTaxActionCard(Number(id)),
@@ -98,16 +98,14 @@ export const playActionCard = async (context) => {
       7: (id) => game.getDesignCardActionCard(Number(id)),
       10: (id) =>
         game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
+
       22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
       34: (id) => actionCardService.playAction(Number(id), game),
-      31: async (id) => {
-        const payload = await context.req.json();
-        return actionCardService.playAction(Number(id), game, payload);
-      },
     };
 
     if (id in actionCardHandlers) {
-      const { result, state } = actionCardHandlers[id](id);
+      const { result, state } = actionCardHandlers[id](Number(id));
+
       return context.json({
         result,
         state,
@@ -123,33 +121,20 @@ export const playActionCard = async (context) => {
   }
 };
 
-export const stealFromOpponent = async (context) => {
+export const performActionCard = async (context) => {
   try {
     const game = context.get("gameState");
-    const type = await context.req.param("type");
-    const { playerId } = await context.req.json();
+    const actionCardService = context.get("actionCardService");
+    const payload = await context.req.json();
 
-    const stealHandlers = {
-      "action-card": (id) => game.stealActionCard(id),
-      tokens: (id) => game.stealTokens(id),
-    };
+    const { result, state } = actionCardService.performAction(payload, game);
 
-    if (type in stealHandlers) {
-      const { result, state } = stealHandlers[type](playerId);
-
-      return context.json({
-        result,
-        state,
-        success: true,
-      });
-    }
-
+    return context.json({ result, state, success: true });
+  } catch (err) {
     return context.json(
-      { success: false, message: "Invalid steal action card" },
+      { success: false, message: err.message },
       400,
     );
-  } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
   }
 };
 
@@ -242,4 +227,13 @@ export const handlePaidSwap = async (ctx) => {
   } catch (e) {
     return ctx.json({ success: false, message: e.message }, 400);
   }
+};
+
+export const rotateDesignCard = (context) => {
+  const game = context.get("gameState");
+  const id = Number(context.req.param("id"));
+
+  const { state } = game.rotatePattern(id);
+
+  return context.json({ state, message: "Rotated", success: true });
 };

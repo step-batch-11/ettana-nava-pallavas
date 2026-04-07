@@ -18,6 +18,7 @@ import {
   handleGainToken,
   handleMoveActionCard,
   handleReplaceActionCard,
+  performSteal,
 } from "./handlers/action_card_handlers.js";
 
 import { highlightPattern } from "./board.js";
@@ -118,6 +119,14 @@ const playActionCardEventListener = () => {
       return handleMoveActionCard();
     }
 
+    if (id === "10") {
+      return performSteal(id, "tokens");
+    }
+
+    if (id === "22") {
+      return performSteal(id, "action-card");
+    }
+    
     if (id === "34") {
       return handleReplaceActionCard();
     }
