@@ -68,8 +68,8 @@ export default class Player {
     return container.findIndex((card) => card.id === target);
   }
 
-  #haveCard(actionCards, cardId) {
-    return actionCards.some((card) => card.id === cardId);
+  #haveCard(cards, cardId) {
+    return cards.some((card) => card.id === cardId);
   }
 
   haveActionCard(id) {
@@ -91,7 +91,7 @@ export default class Player {
     if (!this.#dc.length || !this.haveDesignCard(cardId)) return;
 
     const cardIndex = this.#findCardIndex(this.#dc, cardId);
-    this.#dc.splice(cardIndex, 1);
+    return this.#dc.splice(cardIndex, 1);
   }
 
   getPlayerData() {

@@ -3,6 +3,7 @@ import {
   buyActionCard,
   buyDesignCard,
   claimDesign,
+  exchangeDesignCard,
   handleDiceRoll,
   handleMove,
   handlePaidSwap,
@@ -27,5 +28,6 @@ gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
 gameRoute.post("/perform-action-card", performActionCard);
 gameRoute.patch("/rotate-design-card/:id", rotateDesignCard);
+gameRoute.patch("/exchange-design-card/:id", exchangeDesignCard);
 
 export default gameRoute;

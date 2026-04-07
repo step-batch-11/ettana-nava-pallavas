@@ -147,3 +147,21 @@ export const rotateDesignCard = (context) => {
 
   return context.json({ state, message: "Rotated", success: true });
 };
+
+export const exchangeDesignCard = (context) => {
+  try {
+    const gameController = context.get("gameController");
+    const id = Number(context.req.param("id"));
+
+    gameController.exchangeDesignCard(id);
+    const state = gameController.getGameState();
+
+    return context.json({
+      state,
+      result: { message: "Design card exchanged successfully" },
+      success: true,
+    });
+  } catch (err) {
+    return context.json({ success: false, message: err.message }, 400);
+  }
+};

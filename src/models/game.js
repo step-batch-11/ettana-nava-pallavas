@@ -302,4 +302,17 @@ export default class Game {
       this.#players.length;
     return { state: this.getGameState() };
   }
+
+  exchangeDesignCard(designCardId) {
+    const currentPlayer = this.getCurrentPlayer();
+
+    if (!currentPlayer.haveDesignCard(designCardId)) {
+      throw new Error("You don't have any design card");
+    }
+
+    const [exchangedCard] = currentPlayer.removeDesignCard(designCardId);
+    const newCard = this.#bank.getDesignCard();
+    this.#bank.pushDesignCard(exchangedCard);
+    currentPlayer.addDesignCard(newCard);
+  }
 }

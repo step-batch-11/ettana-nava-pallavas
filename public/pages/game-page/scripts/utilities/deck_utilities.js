@@ -47,9 +47,13 @@ const createCardTopArea = (victoryPoints) => {
   const rotateButton = document.createElement("button");
   rotateButton.innerHTML = "↻";
 
-  rotateButton.classList.add("rotate-design");
+  const exchangeButton = document.createElement("button");
+  exchangeButton.innerHTML = "⇄";
 
-  card.append(rotateButton);
+  rotateButton.classList.add("rotate-design");
+  exchangeButton.classList.add("exchange-design");
+
+  card.append(rotateButton, exchangeButton);
 
   return card;
 };
