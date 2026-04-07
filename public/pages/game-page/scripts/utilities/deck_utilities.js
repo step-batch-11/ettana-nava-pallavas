@@ -35,29 +35,28 @@ export const autoScrollWithDrag = (e, container) => {
   }
 };
 
-const createDesignCardSkeleton = (cardInfo, id) => {
-  const card = document.createElement("div");
-  card.classList.add("card-item");
-  card.dataset.id = cardInfo.id;
-  card.id = id + 1;
-  card.setAttribute("draggable", "true");
+const createCardTopArea = (victoryPoints) => {
+  const card = document.createElement("section");
+  card.classList.add("card-item-top");
 
-  const cardTop = document.createElement("section");
-  cardTop.classList.add("card-item-top");
+  const victoryPointer = document.createElement("div");
+  victoryPointer.classList.add("card-pointer");
+  victoryPointer.textContent = victoryPoints;
+  card.append(victoryPointer);
 
-  const pointer = document.createElement("div");
-  pointer.classList.add("card-pointer");
-  pointer.textContent = cardInfo.victoryPoints;
-  cardTop.append(pointer);
+  const rotateButton = document.createElement("button");
+  rotateButton.innerHTML = "↻";
 
-  const cardMiddle = document.createElement("section");
-  cardMiddle.classList.add("design");
+  rotateButton.classList.add("rotate-design");
 
-  const cardBottom = document.createElement("section");
-  cardBottom.classList.add("card-item-bottom");
+  card.append(rotateButton);
 
-  const buttonArea = document.createElement("section");
-  buttonArea.classList.add("card-item-button-area");
+  return card;
+};
+
+const createDesignGrid = () => {
+  const design = document.createElement("section");
+  design.classList.add("design");
 
   for (let r = 0; r < 5; r++) {
     for (let c = 0; c < 5; c++) {
@@ -65,11 +64,26 @@ const createDesignCardSkeleton = (cardInfo, id) => {
       colorContainer.classList.add("color-item");
       colorContainer.id = `r-${r}-c-${c}`;
       colorContainer.style.backgroundColor = "white";
-      cardMiddle.appendChild(colorContainer);
+      design.appendChild(colorContainer);
     }
   }
+  return design;
+};
 
-  card.append(cardTop, cardMiddle, cardBottom);
+const createDesignCardSkeleton = (cardInfo, id) => {
+  const card = document.createElement("div");
+  card.classList.add("card-item");
+  card.dataset.id = cardInfo.id;
+  card.id = id + 1;
+  card.setAttribute("draggable", "true");
+
+  const cardBottom = document.createElement("section");
+  cardBottom.classList.add("card-item-bottom");
+
+  const cardTop = createCardTopArea(cardInfo.victoryPoints);
+  const designGrid = createDesignGrid();
+
+  card.append(cardTop, designGrid, cardBottom);
 
   return card;
 };

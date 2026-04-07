@@ -169,14 +169,33 @@ export default class Game {
     return availableDestinations;
   }
 
+  getChangeAbleTiles() {
+    const changeAbleTiles = [];
+    const occupiedPositions = this.getPlayersPositions();
+    const tiles = this.#board.getTiles();
+
+    for (let row = 1; row < tiles.length - 1; row++) {
+      for (let col = 1; col < tiles[row].length - 1; col++) {
+        const isOccupied = occupiedPositions.some(({ x, y }) =>
+          row === x && col === y
+        );
+        if (!isOccupied) {
+          changeAbleTiles.push([row, col]);
+        }
+      }
+    }
+
+    return changeAbleTiles;
+  }
+
   getAllYarns() {
     return this.#board.getYarns();
   }
 
-  filterOpponents(filterFn) {
+  filterOpponents(predicate) {
     const opponents = this.getOpponents();
 
-    return opponents.filter(filterFn).map((player) => player.getId());
+    return opponents.filter(predicate).map((player) => player.getId());
   }
 
   getCurrentPlayer() {
@@ -236,5 +255,24 @@ export default class Game {
     }
     this.#board.swapYarns(source, destination);
     currentPlayer.debitTokens(swapCost);
+  }
+  getPlayerById(id) {
+    return this.#players.find((player) => player.getId() === Number(id));
+  }
+
+  getBoardTileValue(position) {
+    return this.#board.getTileValue(position);
+  }
+
+  getBankTileValue(position) {
+    return this.#bank.getTileValue(position);
+  }
+
+  changeBoardTileValue(position, value) {
+    return this.#board.changeTileValue(position, value);
+  }
+
+  changeBankTileValue(position, value) {
+    return this.#bank.changeTileValue(position, value);
   }
 }

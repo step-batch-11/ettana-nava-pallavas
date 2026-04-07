@@ -10,10 +10,11 @@
 }
 
 .action-area .card-container {
-  width: 200px;
+  width: 80%;
   border: 1px solid #222;
   position: relative;
   overflow-y: scroll;
+  padding: 1em;
 }
 
 .action-area .card {
@@ -149,4 +150,56 @@
   width: 100%;
   background-color: rgba(245, 245, 245, 0.8);
   cursor: not-allowed;
+}
+
+#popup-selector {
+  display: none;
+  border-radius: .15em;
+  position: absolute;
+  bottom: 1em;
+  right: 3.5em;
+  width: 25%;
+  height: max-content;
+  padding: .5em;
+  background-color: rgb(242, 237, 226);
+  border: 1px solid black;
+  box-shadow: 0px 0px 10px 2px gray;
+}
+
+#popup-selector h2,
+#popup-selector .players-selection-area {
+  position: relative;
+  text-align: center;
+}
+
+#popup-selector .user-pin {
+  width: 70%;
+}
+
+#popup-selector h2 {
+  font-weight: 500;
+}
+
+#popup-selector .selectable-player {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: .3em;
+  border: 1px solid;
+  border-radius: .3em;
+  width: 4em;
+  background-color: gainsboro;
+  margin-top: .3em;
+  cursor: pointer;
+  gap: .3em;
+}
+
+#popup-selector .players-selection-area {
+  display: flex;
+  justify-content: space-around;
+  gap: 1em;
+  padding: .5em;
+  font-size: 1.2em;
+  font-weight: 500;
 }

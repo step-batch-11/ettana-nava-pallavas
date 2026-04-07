@@ -78,4 +78,13 @@ export default class Board {
 
     return { isMatched: false };
   }
+
+  getTileValue([x, y]) {
+    return this.#tiles[x][y];
+  }
+
+  changeTileValue([x, y], value) {
+    this.#tiles[x][y] = value;
+    return value;
+  }
 }

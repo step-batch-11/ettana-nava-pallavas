@@ -30,6 +30,7 @@ const main = () => {
     new Bank(designCards, actionCards),
     new Board(tiles, yarns),
   );
+  const actionCardService = new ActionCardService();
 
   const actionCardService = new ActionCardService();
 

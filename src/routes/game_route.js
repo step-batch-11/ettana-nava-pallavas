@@ -14,7 +14,6 @@ import {
 
 const gameRoute = new Hono();
 
-
 gameRoute.post("/roll", handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
 gameRoute.post("/move", handleMove);

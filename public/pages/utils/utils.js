@@ -12,3 +12,6 @@ export const showToast = (message, type) => {
     toast.style.display = "none";
   }, 3000);
 };
+
+export const getPlayerById = (players, id) =>
+  players.find((player) => player.playerId === id) || { name: "not found" };
