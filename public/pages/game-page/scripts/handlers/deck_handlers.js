@@ -50,11 +50,6 @@ export const handleDragEnd = (dragged, sourceContainer, placeholder) => {
   const _ids = [...sourceContainer.element.querySelectorAll(".card-item")].map((
     card,
   ) => card.dataset.id);
-  if (sourceContainer.element.id.includes("action")) {
-    console.log("action");
-  } else {
-    console.log("design");
-  }
 
   placeholder.remove();
 };

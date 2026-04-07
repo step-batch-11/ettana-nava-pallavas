@@ -15,6 +15,7 @@ const main = () => {
   player1.setup(1, { x: -1, y: -1 });
 
   // player1.addAllDesignCardDev(...designCards);
+  // player1.addActionCard(getActionCard(34)); // replace action card
   // player1.addActionCard(getActionCard(6));
   // player1.addActionCard(getActionCard(1));
   // player1.addActionCard(getActionCard(6));

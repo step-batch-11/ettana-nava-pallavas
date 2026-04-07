@@ -119,7 +119,14 @@ export const handleSwapEvent = (path = "/game/paid-swap", _swappableYarns) => {
 
 export const removeTileHighlighting = () => {
   const tiles = document.querySelectorAll(".tile");
+  const yarns = document.querySelectorAll(".dot");
+
   tiles.forEach((tile) => {
+    tile.classList.remove("jump-move");
+    tile.style.boxShadow = "none";
+  });
+
+  yarns.forEach((tile) => {
     tile.classList.remove("jump-move");
     tile.style.boxShadow = "none";
   });
