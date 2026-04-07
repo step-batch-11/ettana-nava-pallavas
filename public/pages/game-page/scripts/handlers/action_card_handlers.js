@@ -7,10 +7,10 @@ import { selectorArea } from "../utilities/dom_elements.js";
 
 export const handleActionCardSwap = async (id) => {
   const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-  const { success, result } = await res.json();
+  const { success, result, message } = await res.json();
 
   if (!success) {
-    return showToast(result.message, "e");
+    return showToast(message, "e");
   }
   handleSwapEvent("game/perform-action-card", result.swappableYarns);
 };
@@ -26,7 +26,7 @@ export const handleMoveActionCard = async (id) => {
   result.availableDestinations.forEach(([x, y]) => {
     const tile = document.querySelector(`#tile${x}${y}`);
     if (!tile) return;
-
+    tile.classList.remove("premium-move", "normal-move");
     tile.classList.add("jump-move");
 
     tile.addEventListener(
@@ -76,7 +76,7 @@ export const performSteal = async (id, object) => {
   const playerCards = renderPlayers(object, result, state.players);
 
   playerCards.map((card) =>
-    card.addEventListener("dblclick", () => steal(card, id)),
+    card.addEventListener("dblclick", () => steal(card, id))
   );
 };
 

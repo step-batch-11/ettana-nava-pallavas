@@ -6,7 +6,7 @@ import Bank from "../../../src/models/bank.js";
 import Game from "../../../src/models/game.js";
 import { diceValue, tiles, yarns } from "../../../src/data/state.js";
 import { assertEquals } from "@std/assert";
-import ActionCardService from "../../../src/services/action_card.js";
+import ActionCardService from "../../../src/service/action_card.js";
 
 describe("test action handlers", () => {
   let game, players, actionCards, app, actionCardService;

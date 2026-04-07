@@ -13,7 +13,7 @@ const handleRollDice = async () => {
   removeMoveClass();
   removeTileEventListeners();
   renderMoveOptions(destinations);
-  renderGame(); // sunte pacchis na ??
+  renderGame();
 };
 
 export const rollDiceEventListener = () => {

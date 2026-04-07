@@ -32,8 +32,6 @@ const main = () => {
   );
   const actionCardService = new ActionCardService();
 
-  const actionCardService = new ActionCardService();
-
   const gameController = new GameController(gameState, actionCardService);
 
   // gameState.distributeInitialAssets();
