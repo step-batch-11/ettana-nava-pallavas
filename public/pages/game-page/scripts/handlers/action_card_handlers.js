@@ -193,6 +193,7 @@ const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
     section.append(...elements);
     replacePopup.innerHTML = "";
     replacePopup.append(h2, section);
+    console.log(".....", replacePopup);
   });
 };
 
