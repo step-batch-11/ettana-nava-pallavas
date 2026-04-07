@@ -276,14 +276,14 @@ export default class Game {
     const tileValueOnBoard = this.#board.getTileValue(position);
     const tileValueOnReserve = this.#bank.getTileValue(index);
     this.#board.changeTileValue(position, tileValueOnReserve);
-    this.#bank.changeTileValue(position, tileValueOnBoard);
+    this.#bank.changeTileValue(index, tileValueOnBoard);
   }
 
   replaceYarn(position, index) {
     const colourIdOnBoard = this.#board.getYarnColourId(position);
     const colourIdOnReserve = this.#bank.getYarnColourId(index);
     this.#board.changeYarnColourId(position, colourIdOnReserve);
-    this.#bank.changeYarnColourId(position, colourIdOnBoard);
+    this.#bank.changeYarnColourId(index, colourIdOnBoard);
   }
 
   rotatePattern(designCardId) {
