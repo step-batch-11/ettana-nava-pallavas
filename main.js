@@ -12,7 +12,7 @@ import ActionCardService from "./src/service/action_card.js";
 
 const main = () => {
   const player1 = new Player(1, "A");
-  player1.setup(1, { x: -1, y: -1 });
+  player1.setup(1, { x: 5, y: 5 });
 
   // player1.addAllDesignCardDev(...designCards);
   // player1.addActionCard(getActionCard(6));
@@ -21,16 +21,18 @@ const main = () => {
   // player1.addActionCard(getActionCard(16));
   // player1.addActionCard(getActionCard(4));
   player1.addActionCard(getActionCard(25));
+  player1.addActionCard(getActionCard(22));
+  player1.addActionCard(getActionCard(10));
 
   const player2 = new Player(2, "B");
-  player2.setup(2, { x: -1, y: -1 });
+  player2.setup(2, { x: 2, y: 2 });
+  player2.creditTokens(3)
 
   const gameState = new GameSetup(
     [player1, player2],
     new Bank(designCards, actionCards),
     new Board(tiles, yarns),
   );
-  const actionCardService = new ActionCardService();
 
   const actionCardService = new ActionCardService();
 

@@ -21,11 +21,10 @@ export default class ActionCardService {
 
     const actions = {
       10: () =>
-        Steal.play(this.played, id, game, (opponent) => opponent.getTokens()),
+        Steal.play(this.played, game, (opponent) => opponent.getTokens()),
       22: () =>
         Steal.play(
           this.played,
-          id,
           game,
           (opponent) => opponent.getAc().length,
         ),
