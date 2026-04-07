@@ -25,11 +25,7 @@ export const handleMoveActionCard = async () => {
 
     tile.addEventListener(
       "click",
-      () =>
-        handlePlayerMove(
-          { destination: { x, y } },
-          "action-card-move",
-        ),
+      () => handlePlayerMove({ destination: { x, y } }, "action-card-move"),
       { once: true },
     );
   });
@@ -59,7 +55,6 @@ const createPlayerCard = (player) => {
 export const performSteal = async (id, object) => {
   const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
   const { state, success, result } = await res.json();
-  console.log(result);
 
   if (!success) {
     return showToast(result.message, "e");
@@ -72,7 +67,7 @@ export const performSteal = async (id, object) => {
   const playerCards = renderPlayers(object, result, state.players);
 
   playerCards.map((card) =>
-    card.addEventListener("dblclick", () => steal(card, id))
+    card.addEventListener("dblclick", () => steal(card, id)),
   );
 };
 
@@ -123,7 +118,7 @@ function handleReplaceTile(x, y) {
           destination: index,
         }),
       });
-      console.log(res);
+
       const { state, success, result, message } = await res.json();
 
       if (!success) {

@@ -56,15 +56,15 @@ export default class Steal {
   ) {
     Steal.isPlayed(played);
 
-    if (currentPlayer.getId() === opponentPlayerId) {
+    if (currentPlayer.getId() === Number(opponentPlayerId)) {
       throw new Error("player can't take from himself");
     }
 
     const opponentPlayer = game.getPlayerById(opponentPlayerId);
     const newCard = opponentPlayer.takeRandomCard();
 
-    player.removeActionCard(cardId);
-    player.addActionCard(newCard);
+    currentPlayer.removeActionCard(cardId);
+    currentPlayer.addActionCard(newCard);
 
     const message = createStolenMsg(
       currentPlayer.getPlayerData(),

@@ -19,7 +19,7 @@ export default class ActionCardService {
         ),
       34: () => Replace.play(this.played, id, game),
     };
-    
+
     return actions[id]();
   }
 
@@ -27,7 +27,7 @@ export default class ActionCardService {
     const currentPlayer = game.getCurrentPlayer();
 
     if (!currentPlayer.haveActionCard(payload.cardId)) {
-      throw new Error("Card is missing");
+      throw new Error("Action card is missing");
     }
 
     const actions = {

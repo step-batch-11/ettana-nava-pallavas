@@ -72,15 +72,15 @@ export const swapYarnActionCard = async (ctx) => {
     const { draggablePosition, yarnPosition } = await ctx.req.json();
 
     game.swapYarnActionCard(draggablePosition, yarnPosition);
-    return ctx.json({
-      success: true,
-      message: "Swapped successfully",
-    }, 200);
-  } catch (e) {
     return ctx.json(
-      { success: false, message: e.message },
-      400,
+      {
+        success: true,
+        message: "Swapped successfully",
+      },
+      200,
     );
+  } catch (e) {
+    return ctx.json({ success: false, message: e.message }, 400);
   }
 };
 
@@ -130,10 +130,7 @@ export const performActionCard = async (context) => {
 
     return context.json({ result, state, success: true });
   } catch (err) {
-    return context.json(
-      { success: false, message: err.message },
-      400,
-    );
+    return context.json({ success: false, message: err.message }, 400);
   }
 };
 
@@ -186,11 +183,14 @@ export const handleActionCardMove = async (ctx) => {
     return ctx.json({ success: false, message: "You can't move there" }, 400);
   }
 
-  return ctx.json({
-    success: true,
-    data: { adjYarns, moveResult },
-    message: "Moved successfully",
-  }, 200);
+  return ctx.json(
+    {
+      success: true,
+      data: { adjYarns, moveResult },
+      message: "Moved successfully",
+    },
+    200,
+  );
 };
 
 export const handleSwap = async (ctx) => {
@@ -219,10 +219,13 @@ export const handlePaidSwap = async (ctx) => {
   try {
     gameState.paidSwap(draggablePosition, yarnPosition);
 
-    return ctx.json({
-      success: true,
-      message: "Swapped successfully",
-    }, 200);
+    return ctx.json(
+      {
+        success: true,
+        message: "Swapped successfully",
+      },
+      200,
+    );
   } catch (e) {
     return ctx.json({ success: false, message: e.message }, 400);
   }
