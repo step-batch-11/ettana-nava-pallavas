@@ -1,54 +1,46 @@
 const maxPlayers = 4;
 
-const _players = [
-  { username: "Sandip" },
-  { username: "Aman" },
-];
-
 const playerList = document.getElementById("playerList");
 const playerCount = document.getElementById("playerCount");
-const timerEl = document.getElementById("timer");
 
-function renderPlayers() {
+const renderPlayers = (players) => {
   playerList.innerHTML = "";
 
-  _players.forEach((p) => {
+  players.forEach((p) => {
     const div = document.createElement("div");
+    div.dataset.id = p.id;
     div.className = "player";
-
     div.innerHTML = `
-      <span>${p.username}</span>
+      <span>${p.name}</span>
       <span>🧵</span>
     `;
-
     playerList.appendChild(div);
   });
 
-  playerCount.textContent = `${_players.length} / ${maxPlayers} Players`;
-}
+  playerCount.textContent = `${players.length} / ${maxPlayers} Players`;
+};
 
-renderPlayers();
-
-// ⏳ Timer
-let timeLeft = 30;
-
-const timer = setInterval(() => {
-  timeLeft--;
-  timerEl.textContent = timeLeft;
-
-  if (timeLeft <= 5) {
-    timerEl.style.color = "red"; // urgency feel
-  }
-
-  if (timeLeft <= 0) {
-    clearInterval(timer);
-    alert("Game Starting!");
-  }
-}, 1000);
-
-// 🚪 Exit
-document.getElementById("exitBtn").addEventListener("click", () => {
+document.getElementById("exitBtn").addEventListener("click", async () => {
   if (confirm("Leave the loom?")) {
-    alert("Exited Room");
+    const currentPlayerId = localStorage.getItem("id");
+    const res = await fetch(`/lobby/exit-lobby/${currentPlayerId}`, {
+      method: "DELETE",
+    });
+    const resBody = await res.json();
+
+    if (resBody.success) {
+      localStorage.removeItem("id");
+      globalThis.location.assign("/start");
+    }
   }
 });
+
+const main = () => {
+  setInterval(async () => {
+    const res = await fetch("/lobby/get-state");
+    const { state } = await res.json();
+    renderPlayers(state.players);
+  }, 200);
+};
+
+main();

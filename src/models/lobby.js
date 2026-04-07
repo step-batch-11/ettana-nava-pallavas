@@ -13,13 +13,23 @@ export class Lobby {
   }
 
   enterLobby(player) {
-    if (Object.entries(this.#room.players).length > 2) {
+    const players = Object.entries(this.#room.players);
+    if (players.length > 2) {
       throw new Error("Room is full");
     }
-    this.#room.players[player.id] = player;
+
+    const playerInfo = player.getPlayerData();
+    if (players.length === 0) {
+      this.#room.HostId = playerInfo.playerId;
+    }
+
+    this.#room.players[playerInfo.playerId] = player;
+    return { id: playerInfo.playerId };
   }
 
   exitLobby(playerId) {
+    console.log(playerId);
+
     delete this.#room.players[playerId];
   }
 
@@ -27,7 +37,14 @@ export class Lobby {
     return {
       id: this.#id,
       capacity: this.#capacity,
-      players: this.#room.players,
+      players: Object.values(this.#room.players)
+        .map((player) => {
+          const { playerId, name } = player.getPlayerData();
+          return {
+            id: playerId,
+            name,
+          };
+        }),
     };
   }
 }

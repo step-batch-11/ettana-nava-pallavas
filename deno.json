@@ -7,7 +7,7 @@
     "coverage": "deno test --coverage -A",
     "detailed": "deno coverage --detailed",
     "lint": "deno lint",
-    "all": "deno task lint && deno task test && deno task coverage",
+    "all": "deno task lint && deno task coverage",
     "push": "git pull && git push"
   },
   "imports": {
