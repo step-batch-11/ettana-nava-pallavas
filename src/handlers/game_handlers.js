@@ -140,10 +140,25 @@ export const performActionCard = async (context) => {
 };
 
 export const rotateDesignCard = (context) => {
-  const game = context.get("gameState");
+  const gameController = context.get("gameController");
+  const game = gameController.getGame();
   const id = Number(context.req.param("id"));
-
   const { state } = game.rotatePattern(id);
 
   return context.json({ state, message: "Rotated", success: true });
+};
+
+export const passTurn = (context) => {
+  try {
+    const gameController = context.get("gameController");
+    const { state } = gameController.endTurn();
+
+    return context.json({
+      result: { message: "turn passed" },
+      state,
+      success: true,
+    });
+  } catch (err) {
+    return context.json({ success: false, message: err.message }, 400);
+  }
 };
