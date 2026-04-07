@@ -11,15 +11,19 @@ export default class GameSetup {
   #random;
   #turnsTaken;
 
-  constructor(players, bank, board, rolledValues, randomFn = Math.random) {
-    this.#turnsTaken = 0;
+  constructor(players, bank, board, rolledValues = {}, randomFn = Math.random) {
+    this.#turnsTaken = Object.keys(rolledValues).length || 0;
     this.state = "game-setup";
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
     this.#currentPlayerIndex = 0;
-    this.#rolledValues = rolledValues || [];
+    this.#rolledValues = rolledValues;
     this.#random = randomFn;
+  }
+
+  getPlayers() {
+    return this.#players;
   }
 
   getCurrentPlayer() {
@@ -32,10 +36,6 @@ export default class GameSetup {
 
   getPlayerById(id) {
     return this.#players.find((player) => player.getId() === Number(id));
-  }
-
-  getBoard() {
-    return this.#board;
   }
 
   getGameState(id = 1) {
@@ -62,7 +62,7 @@ export default class GameSetup {
     const diceValues = this.diceValues;
 
     const currentPlayerId = this.getCurrentPlayer().getId();
-    this.#rolledValues.push({ [currentPlayerId]: diceValues.number });
+    this.#rolledValues[currentPlayerId] = diceValues.number;
 
     const tiles = this.#board.getTiles();
     const players = this.#players.map((player) => player.getPlayerData());
@@ -89,11 +89,12 @@ export default class GameSetup {
     }
 
     const player = this.getCurrentPlayer();
+    const previousPosition = player.getPosition();
     player.move(destination);
 
     return {
       adjYarns: [],
-      moveResult: { source: player.getPosition(), destination },
+      moveResult: { source: previousPosition, destination },
     };
   }
 
@@ -102,9 +103,12 @@ export default class GameSetup {
       this.#players.length;
 
     if (this.#turnsTaken >= this.#players.length - 1) {
+      const players = this.#players.toSorted((a, b) =>
+        this.#rolledValues[b.getId()] - this.#rolledValues[a.getId()]
+      );
       this.distributeInitialAssets();
 
-      return new Game(this.#players, this.#bank, this.#board, this.diceValues);
+      return new Game(players, this.#bank, this.#board, this.diceValues);
     }
 
     this.#turnsTaken++;

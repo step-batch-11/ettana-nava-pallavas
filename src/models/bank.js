@@ -27,6 +27,10 @@ export default class Bank {
     return this.#tokens;
   }
 
+  getReserveElements() {
+    return { reservedTiles: this.#tiles, reservedYarns: this.#yarns };
+  }
+
   getBank() {
     return {
       tokens: this.#tokens,
@@ -70,5 +74,13 @@ export default class Bank {
 
   changeTileValue(index, value) {
     this.#tiles.splice(index, 1, value);
+  }
+
+  getYarnColourId(index) {
+    return this.#yarns[index];
+  }
+
+  changeYarnColourId(index, value) {
+    this.#yarns.splice(index, 1, value);
   }
 }
