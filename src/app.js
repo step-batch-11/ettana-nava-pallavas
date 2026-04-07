@@ -7,6 +7,7 @@ export const createApp = (
   gameState,
   gameController,
   actionCardService,
+  lobbyController,
   loggerFn = logger,
 ) => {
   const app = new Hono();
@@ -20,7 +21,13 @@ export const createApp = (
     await next();
   });
 
+  app.use("/lobby/*", async (ctx, next) => {
+    ctx.set("lobbyController", lobbyController);
+    await next();
+  });
+
   app.route("/game", gameRoute);
+  app.get("/lobby", serveStatic({ path: "public/pages/lobby-page" }));
   app.get("/", serveStatic({ root: "public/pages/game-page" }));
   app.get("*", serveStatic({ root: "public" }));
 
