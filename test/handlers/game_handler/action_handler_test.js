@@ -7,9 +7,10 @@ import Game from "../../../src/models/game.js";
 import { diceValue, tiles, yarns } from "../../../src/data/state.js";
 import { assertEquals } from "@std/assert";
 import ActionCardService from "../../../src/service/action_card.js";
+import GameController from "../../../src/controller/game_controller.js";
 
 describe("test action handlers", () => {
-  let game, players, actionCards, app, actionCardService;
+  let game, players, actionCards, app, actionCardService, gameController;
 
   beforeEach(() => {
     players = [
@@ -42,10 +43,12 @@ describe("test action handlers", () => {
 
     actionCardService = new ActionCardService();
 
-    app = createApp(game, actionCardService);
+    gameController = new GameController(game, actionCardService);
+
+    app = createApp(game, gameController, actionCardService);
   });
 
-  describe.ignore("/action-card/ -> steal cards", () => {
+  describe("/action-card/ -> steal cards", () => {
     it("case: when player don't have steal card", async () => {
       players[0].removeActionCard(actionCards[1].id);
 
@@ -55,7 +58,7 @@ describe("test action handlers", () => {
 
       const { message } = await response.json();
 
-      assertEquals(message, "You don't have card");
+      assertEquals(message, "Card is missing");
     });
 
     it("case: when other players don't have any cards", async () => {
@@ -82,7 +85,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe.ignore("/action-card/ -> steal tokens", () => {
+  describe("/action-card/ -> steal tokens", () => {
     beforeEach(() => {
       players[0].addActionCard(actionCards[0]);
     });
@@ -111,7 +114,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe.ignore("/perform-action-card/ -> action-card", () => {
+  describe("/perform-action-card/ -> action-card", () => {
     beforeEach(() => {
       actionCardService.played["steal"] = true;
     });
@@ -151,7 +154,7 @@ describe("test action handlers", () => {
       });
 
       const { message } = await response.json();
-      assertEquals(message, "Action card is missing");
+      assertEquals(message, "Card is missing");
     });
 
     it("case: when the selected opponent has no cards", async () => {
@@ -182,7 +185,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe.ignore("/perform-action-card/ -> tokens", () => {
+  describe("/perform-action-card/ -> tokens", () => {
     beforeEach(() => {
       actionCardService.played["steal"] = true;
       players[0].addActionCard(actionCards[0]);
@@ -210,7 +213,7 @@ describe("test action handlers", () => {
       });
 
       const { message } = await response.json();
-      assertEquals(message, "Action card is missing");
+      assertEquals(message, "Card is missing");
     });
 
     it("case: when the selected opponent has no tokens", async () => {

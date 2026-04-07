@@ -131,7 +131,6 @@ export const performActionCard = async (context) => {
     const game = gameController.getGame();
     const actionCardService = context.get("actionCardService");
     const payload = await context.req.json();
-
     const { result, state } = actionCardService.performAction(payload, game);
 
     return context.json({ result, state, success: true });

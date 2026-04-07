@@ -1,8 +1,7 @@
 export default class GetDesignCard {
   static play(id, game) {
-    
     const currentPlayer = game.getCurrentPlayer();
-    
+
     const designCard = game.getDesignCardFromBank();
     console.log("in dcc");
     currentPlayer.addDesignCard(designCard);

@@ -22,11 +22,10 @@ export default class ActionCardService {
 
     const actions = {
       10: () =>
-        Steal.play(this.played, id, game, (opponent) => opponent.getTokens()),
+        Steal.play(this.played, game, (opponent) => opponent.getTokens()),
       22: () =>
         Steal.play(
           this.played,
-          id,
           game,
           (opponent) => opponent.getAc().length,
         ),
@@ -51,7 +50,7 @@ export default class ActionCardService {
 
     const actions = {
       1: Move.performMove,
-      34: Replace.play,
+      34: Replace.performAction,
       10: Steal.stealTokens,
       22: Steal.stealActionCard,
       25: Swap.performSwap,
