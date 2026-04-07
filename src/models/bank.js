@@ -83,4 +83,8 @@ export default class Bank {
   changeYarnColourId(index, value) {
     this.#yarns.splice(index, 1, value);
   }
+
+  pushDesignCard(card) {
+    this.#designCards.push(card);
+  }
 }

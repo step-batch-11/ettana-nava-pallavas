@@ -1,3 +1,4 @@
+import { showToast } from "../../../utils/utils.js";
 import {
   autoScrollWithDrag,
   getDragAfterElement,
@@ -74,7 +75,19 @@ export const rotateDesignCard = async (card) => {
     }, 500);
   });
 
-  console.log(state.deck);
+  renderGame(state);
+};
 
+export const exchangeDesignCard = async (card) => {
+  const res = await fetch(`/game/exchange-design-card/${card.dataset.id}`, {
+    method: "PATCH",
+  });
+  const { state, result, success, message } = await res.json();
+
+  if (!success) {
+    showToast(message, "e");
+  }
+
+  showToast(result.message);
   renderGame(state);
 };

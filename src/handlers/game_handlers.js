@@ -9,16 +9,16 @@ export const serveGameState = (ctx) => {
   }
 };
 
-export const handleDiceRoll = (ctx) => {
+export const handleDiceRoll = (context) => {
   try {
-    const gameController = ctx.get("gameController");
+    const gameController = context.get("gameController");
     const { diceValues, destinations } = gameController.upkeep();
 
     const gameState = gameController.getGameState();
 
-    return ctx.json({ gameState, destinations, diceValues });
+    return context.json({ gameState, destinations, diceValues });
   } catch (e) {
-    return ctx.json({ success: false, error: e.message });
+    return context.json({ success: false, error: e.message });
   }
 };
 
@@ -113,11 +113,10 @@ export const handlePaidSwap = async (context) => {
 export const playActionCard = (context) => {
   try {
     const gameController = context.get("gameController");
-    const game = gameController.getGame();
-    const actionCardService = context.get("actionCardService");
-    const id = Number(context.req.param("id"));
+    const cardId = Number(context.req.param("id"));
 
-    const { result, state } = actionCardService.playCard(id, game);
+    const { result, state } = gameController.playCard(cardId);
+    console.log({ result });
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -128,10 +127,8 @@ export const playActionCard = (context) => {
 export const performActionCard = async (context) => {
   try {
     const gameController = context.get("gameController");
-    const game = gameController.getGame();
-    const actionCardService = context.get("actionCardService");
     const payload = await context.req.json();
-    const { result, state } = actionCardService.performAction(payload, game);
+    const { result, state } = gameController.performAction(payload);
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -146,6 +143,24 @@ export const rotateDesignCard = (context) => {
   const { state } = game.rotatePattern(id);
 
   return context.json({ state, message: "Rotated", success: true });
+};
+
+export const exchangeDesignCard = (context) => {
+  try {
+    const gameController = context.get("gameController");
+    const id = Number(context.req.param("id"));
+
+    gameController.exchangeDesignCard(id);
+    const state = gameController.getGameState();
+
+    return context.json({
+      state,
+      result: { message: "Design card exchanged successfully" },
+      success: true,
+    });
+  } catch (err) {
+    return context.json({ success: false, message: err.message }, 400);
+  }
 };
 
 export const passTurn = (context) => {

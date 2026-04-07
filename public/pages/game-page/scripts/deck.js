@@ -11,6 +11,7 @@ import {
   handleDragOver,
   handleDragStart,
   rotateDesignCard,
+  exchangeDesignCard
 } from "./handlers/deck_handlers.js";
 
 import {
@@ -87,13 +88,15 @@ const claimDesignCardEventListener = () => {
   });
 
   designCardContainer.addEventListener("click", (e) => {
-    const button = e.target.closest(".rotate-design");
+    const button = e.target;
     const card = e.target.closest(".card-item");
-
+   
     if (!button || !card) return;
     if (!designCardContainer.contains(card)) return;
 
-    rotateDesignCard(card);
+    if(button.classList.contains("rotate-design")) rotateDesignCard(card);
+    if(button.classList.contains("exchange-design")) exchangeDesignCard(card);
+    
   });
 
   designCardContainer.dataset.listenerAdded = true;

@@ -170,6 +170,9 @@
 
 .rotate-design {
   transform: rotate(45deg);
+}
+
+.rotate-design, .exchange-design {
   background: rgba(255, 255, 255, 0.1);
   border: none;
   outline: none;
@@ -194,4 +197,17 @@
 .rotate-design:active {
   background: rgba(255, 255, 255, 0.25);
   transform: rotate(180deg) scale(1.1);
+}
+
+.exchange-design:hover::after {
+  content: "Exchange";
+  position: absolute;
+  top: 0.3em;
+  right: -5em;
+  font-size: 0.6em;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0.2em;
+  color: #222;
+  font-weight: 500;
+  border-radius: 0.5em;
 }
