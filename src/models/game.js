@@ -2,6 +2,7 @@ import { createLedger, findAdjacentYarns } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
 import { areSamePositions, isValidMove } from "../utils/common.js";
+import { rotateDesign } from "../utils/pattern_match.js";
 
 export default class Game {
   #players;
@@ -17,7 +18,7 @@ export default class Game {
     board,
     diceValue,
     randomFn = Math.random,
-    currentPlayerIndex,
+    currentPlayerIndex = 0,
   ) {
     this.#players = players;
     this.#bank = bank;
@@ -43,6 +44,7 @@ export default class Game {
       this.#bank.deductTokens(ledger[id]);
       player.creditTokens(ledger[id]);
     });
+
     return;
   }
 
@@ -56,7 +58,7 @@ export default class Game {
   upkeep() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
     const diceValues = this.rollDice();
-
+    this.#diceValue = diceValues;
     this.destinations = this.#board.findPossibleDestinations(
       currentPlayer,
       this.#players,
@@ -128,6 +130,10 @@ export default class Game {
 
   getBoard() {
     return this.#board;
+  }
+
+  getBank() {
+    return this.#bank;
   }
 
   creditToBank(tokens) {
@@ -274,5 +280,16 @@ export default class Game {
 
   changeBankTileValue(position, value) {
     return this.#bank.changeTileValue(position, value);
+  }
+
+  rotatePattern(designCardId) {
+    const currentPlayer = this.getCurrentPlayer();
+    const designCard = currentPlayer
+      .getDc()
+      .find(({ id }) => id === Number(designCardId));
+    const rotatedDesign = rotateDesign(designCard.design);
+    designCard.design = rotatedDesign;
+
+    return { state: this.getGameState() };
   }
 }

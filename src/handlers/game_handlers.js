@@ -135,3 +135,12 @@ export const performActionCard = async (context) => {
     return context.json({ success: false, message: err.message }, 400);
   }
 };
+
+export const rotateDesignCard = (context) => {
+  const game = context.get("gameState");
+  const id = Number(context.req.param("id"));
+
+  const { state } = game.rotatePattern(id);
+
+  return context.json({ state, message: "Rotated", success: true });
+};

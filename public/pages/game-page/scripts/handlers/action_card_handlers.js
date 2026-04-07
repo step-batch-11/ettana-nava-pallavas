@@ -1,6 +1,12 @@
+import {
+  createPopup,
+  getPlayerById,
+  openDialog,
+  showToast,
+  submitDice,
+} from "../../../utils/utils.js";
+import { handlePlayerMove, updateDice } from "../utilities/game_utilities.js";
 import { handleSwapEvent, removeTileHighlighting } from "./board_handlers.js";
-import { getPlayerById, showToast } from "../../../utils/utils.js";
-import { handlePlayerMove } from "../utilities/game_utilities.js";
 import { renderGame } from "../app.js";
 import { createSVGPlayerIcon } from "../utilities/board_utilities.js";
 import { selectorArea } from "../utilities/dom_elements.js";
@@ -159,4 +165,32 @@ export const handleReplaceActionCard = async () => {
 
   showToast(result.message);
   renderGame(state);
+};
+
+export const handleGainToken = () => {
+  createPopup();
+  openDialog();
+
+  const dice = document.querySelector("#dice");
+  const newDice = dice.cloneNode(true);
+  dice.parentNode.replaceChild(newDice, dice);
+
+  const submitButton = document.getElementById("submit-popup");
+
+  submitButton.addEventListener("click", () => {
+    const number = submitDice();
+
+    newDice.addEventListener("click", async () => {
+      const res = await fetch(`/game/perform-action-card`, {
+        method: "POST",
+        body: JSON.stringify({ number, cardId: 31 }),
+      });
+
+      const responseBody = await res.json();
+      newDice.parentNode.replaceChild(dice, newDice);
+      updateDice(responseBody.result.diceValues);
+      renderGame(responseBody.state);
+      showToast(responseBody.result.message);
+    });
+  });
 };

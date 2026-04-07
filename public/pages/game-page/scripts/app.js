@@ -26,7 +26,7 @@ const main = () => {
 
   setInterval(() => {
     renderGame();
-  }, 1000);
+  }, 2000);
 };
 
-globalThis.onload = main;
+globalThis.window.onload = main;

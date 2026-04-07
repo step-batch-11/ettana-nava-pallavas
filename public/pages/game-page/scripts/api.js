@@ -16,7 +16,7 @@ export const claimDesignCard = async (id) => {
   return res.json();
 };
 
-export const playVpActionCard = async (id) => {
+export const playActionCard = async (id) => {
   const res = await fetch(`/game/action-card/${id}`, { method: "PATCH" });
   return res.json();
 };
