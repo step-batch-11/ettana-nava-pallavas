@@ -1,58 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <title>Ettana</title>
-  <!-- <link rel="stylesheet" href="/style.css"> -->
-  <script type="module" src="/pages/start-page/scripts/start.js"></script>
-  <link rel="stylesheet" href="/pages/start-page/style.css">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Forum&family=Playfair+Display:wght@500;600&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=south" />
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <title>Ettana</title>
+    <!-- <link rel="stylesheet" href="/style.css"> -->
+    <script type="module" src="/pages/start-page/scripts/start.js"></script>
+    <link rel="stylesheet" href="/pages/start-page/style.css">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:wght@400;600&display=swap"
+      rel="stylesheet">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Forum&family=Playfair+Display:wght@500;600&display=swap"
+      rel="stylesheet">
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=south" />
+  </head>
 
-<body>
-  <div class="page">
-    <section class="landing-page">
-      <span class="about-element">About</span>
-      <button id="scroll-toggle" class="scroll-btn pointing-down" aria-label="Toggle scroll">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
-          stroke-linejoin="round">
-          <line x1="12" y1="19" x2="12" y2="5"></line>
-          <polyline points="5 12 12 5 19 12"></polyline>
-        </svg>
-      </button>
-      <header class="heading">
-        <h1>ETTANA</h1>
-        <p>The Looms Of Kanchi</p>
-      </header>
-      <section class="container">
-        <section>
-          <form class="input-form" action="/start/create-player" method="post">
-            <input type="text" name="username" placeholder="Username" id="username" required autofocus>
-            <button type="submit">Play</button>
-          </form>
+  <body>
+    <div class="page">
+      <section class="landing-page">
+        <span class="about-element">About</span>
+        <button id="scroll-toggle" class="scroll-btn pointing-down"
+          aria-label="Toggle scroll">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"></line>
+            <polyline points="5 12 12 5 19 12"></polyline>
+          </svg>
+        </button>
+        <header class="heading">
+          <h1>ETTANA</h1>
+          <p>The Looms Of Kanchi</p>
+        </header>
+        <section class="container">
+          <section>
+            <form class="input-form">
+              <input type="text" name="username" placeholder="Username"
+                id="username" required autofocus>
+              <button type="submit">Play</button>
+            </form>
+          </section>
         </section>
       </section>
-    </section>
-    <section class="about-page" id="about">
-      <p>
-        Step into the world of traditional Indian handloom weaving, where strategy meets culture.
-        In Ettana, players take on the role of skilled weavers, crafting intricate patterns using
-        vibrant yarns while competing to earn victory points.
-      </p>
+      <section class="about-page" id="about">
+        <p>
+          Step into the world of traditional Indian handloom weaving, where
+          strategy meets culture.
+          In Ettana, players take on the role of skilled weavers, crafting
+          intricate patterns using
+          vibrant yarns while competing to earn victory points.
+        </p>
 
-      <p>
-        Plan your moves carefully, manipulate patterns, and outplay your opponents to become
-        the master weaver. The first to reach 8 Annas wins.
-      </p>
-    </section>
-  </div>
-</body>
+        <p>
+          Plan your moves carefully, manipulate patterns, and outplay your
+          opponents to become
+          the master weaver. The first to reach 8 Annas wins.
+        </p>
+      </section>
+    </div>
+  </body>
 
 </html>

@@ -3,11 +3,13 @@ import { serveStatic } from "hono/deno";
 import gameRoute from "./routes/game_route.js";
 import { logger } from "hono/logger";
 import startRoute from "./routes/start_route.js";
+import lobbyRoute from "./routes/lobby_rotue.js";
 
 export const createApp = (
   gameState,
   gameController,
   actionCardService,
+  lobbyController,
   loggerFn = logger,
 ) => {
   const app = new Hono();
@@ -21,7 +23,13 @@ export const createApp = (
     await next();
   });
 
+  app.use("/lobby/*", async (ctx, next) => {
+    ctx.set("lobbyController", lobbyController);
+    await next();
+  });
+
   app.route("/game", gameRoute);
+  app.route("/lobby", lobbyRoute);
 
   app.route("/start", startRoute);
   app.get("/", serveStatic({ root: "public/pages/game-page" }));

@@ -30,6 +30,11 @@
   cursor: pointer;
 }
 
+.yarn-replace {
+  box-shadow: 0em 0em 1em 0.4em rgb(136, 182, 234) !important;
+  cursor: pointer;
+}
+
 .tooltip {
   position: absolute;
   bottom: 110%;
