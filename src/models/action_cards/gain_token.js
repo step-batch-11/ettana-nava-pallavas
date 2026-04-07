@@ -15,7 +15,6 @@ export default class Gain {
       };
     }
 
-
     const tokens = game.getBank().deductTokens(payload.number);
     currentPlayer.creditTokens(tokens);
 

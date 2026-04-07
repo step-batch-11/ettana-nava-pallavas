@@ -1,37 +1,32 @@
-import { updatePlayerCards } from "../../utils/common.js";
 import { createStolenMsg } from "../../utils/util.js";
 
 export default class Steal {
-  static play(played, id, game, filterFn) {
+  static play(played, id, game, predicate) {
     played["steal"] = true;
-    const currentPlayer = game.getCurrentPlayer();
 
+    const currentPlayer = game.getCurrentPlayer();
     if (!currentPlayer.haveActionCard(id)) {
       throw new Error("You don't have card");
     }
 
-    const opponents = game.filterOpponents(filterFn);
+    const opponents = game.filterOpponents(predicate);
 
     return { result: opponents, state: game.getGameState() };
   }
 
-  static stealTokens(
-    { cardId, opponentPlayerId },
-    currentPlayer,
-    played,
-    game,
-  ) {
+  static stealTokens(payload, currentPlayer, played, game) {
     Steal.isPlayed(played);
 
-    if (currentPlayer.getId() === Number(opponentPlayerId)) {
+    if (currentPlayer.getId() === Number(payload.opponentPlayerId)) {
       throw new Error("player can't take from himself");
     }
 
-    const opponentPlayer = game.getPlayerById(opponentPlayerId);
+    const opponentPlayer = game.getPlayerById(payload.opponentPlayerId);
     const stolenTokens = opponentPlayer.takeToken();
 
     currentPlayer.creditTokens(stolenTokens);
-    currentPlayer.removeActionCard(cardId);
+    currentPlayer.removeActionCard(payload.cardId);
+    delete played.steal;
 
     const message = createStolenMsg(
       currentPlayer.getPlayerData(),
@@ -49,22 +44,19 @@ export default class Steal {
     }
   }
 
-  static stealActionCard(
-    { cardId, opponentPlayerId },
-    currentPlayer,
-    played,
-    game,
-  ) {
+  static stealActionCard(payload, currentPlayer, played, game) {
     Steal.isPlayed(played);
 
-    if (currentPlayer.getId() === opponentPlayerId) {
+    if (currentPlayer.getId() === payload.opponentPlayerId) {
       throw new Error("player can't take from himself");
     }
 
-    const opponentPlayer = game.getPlayerById(opponentPlayerId);
+    const opponentPlayer = game.getPlayerById(payload.opponentPlayerId);
     const newCard = opponentPlayer.takeRandomCard();
 
-    updatePlayerCards(currentPlayer, cardId, newCard);
+    player.removeActionCard(payload.cardId);
+    player.addActionCard(newCard);
+    delete played.steal;
 
     const message = createStolenMsg(
       currentPlayer.getPlayerData(),

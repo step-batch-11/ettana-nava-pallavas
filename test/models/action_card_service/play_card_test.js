@@ -15,6 +15,8 @@ import {
   mockYarns,
 } from "../../../src/utils/mock_data.js";
 import Gain from "../../../src/models/action_cards/gain_token.js";
+import VictoryPoint from "../../../src/models/action_cards/victoryPoint.js";
+import CollectToken from "../../../src/models/action_cards/collect_token.js";
 
 describe("Action cards", () => {
   let game, players, bank;
@@ -43,7 +45,7 @@ describe("Action cards", () => {
       const ac = getActionCard(cardId);
       players[0].addActionCard(ac);
 
-      game.playVictoryPoint(cardId);
+      VictoryPoint.play(cardId, game);
 
       const playerActionCardsAfter = players[0].getAc();
       const playerVPCardsAfter = players[0].getVp();
@@ -60,7 +62,7 @@ describe("Action cards", () => {
       players[0].addActionCard(ac);
       const playerTokenBefore = players[0].getTokens();
       const bankTokensBefore = bank.getBank().tokens;
-      game.playCollectToken(cardId);
+      CollectToken.play(cardId, game);
 
       const playerActionCardsAfter = players[0].getAc();
       const playerTokenAfter = players[0].getTokens();

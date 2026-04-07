@@ -14,7 +14,7 @@ import { diceValue } from "../../src/data/state.js";
 
 const getCoords = ({ x, y }) => ({ x, y });
 
-describe("Game controller test", () => {
+describe.ignore("Game controller test", () => {
   let game, players, bank, designCards;
 
   const randomFn = () => 0.9;

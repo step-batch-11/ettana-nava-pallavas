@@ -5,6 +5,7 @@ import { logger } from "hono/logger";
 
 export const createApp = (
   gameState,
+  gameController,
   actionCardService,
   loggerFn = logger,
 ) => {
@@ -14,6 +15,7 @@ export const createApp = (
 
   app.use("/game/*", async (ctx, next) => {
     ctx.set("gameState", gameState);
+    ctx.set("gameController", gameController);
     ctx.set("actionCardService", actionCardService);
     await next();
   });

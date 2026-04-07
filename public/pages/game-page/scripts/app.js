@@ -24,9 +24,9 @@ const main = () => {
   defaultDice();
   addEventListener();
 
-  // setInterval(() => {
-  //   renderGame();
-  // }, 2000);
+  setInterval(() => {
+    renderGame();
+  }, 2000);
 };
 
 globalThis.window.onload = main;

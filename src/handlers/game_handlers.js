@@ -1,7 +1,7 @@
 export const serveGameState = (ctx) => {
   try {
-    const game = ctx.get("gameState");
-    const gameState = game.getGameState();
+    const gameController = ctx.get("gameController");
+    const gameState = gameController.getGameState();
 
     return ctx.json({ success: true, state: gameState });
   } catch (e) {
@@ -11,111 +11,115 @@ export const serveGameState = (ctx) => {
 
 export const handleDiceRoll = (ctx) => {
   try {
-    const game = ctx.get("gameState");
-    const { diceValues, destinations } = game.upkeep();
+    const gameController = ctx.get("gameController");
+    const { diceValues, destinations } = gameController.upkeep();
 
-    const gameState = game.getGameState();
+    const gameState = gameController.getGameState();
 
     return ctx.json({ gameState, destinations, diceValues });
   } catch (e) {
+    console.log(e);
     return ctx.json({ success: false, error: e.message });
   }
 };
 
-export const buyDesignCard = (ctx) => {
+export const buyDesignCard = (context) => {
   try {
-    const game = ctx.get("gameState");
-    const card = game.buyDesignCard();
+    const gameController = context.get("gameController");
+    const card = gameController.buyDesignCard();
 
-    if (card === "NOT_ENOUGH_TOKEN") {
-      return ctx.json({
-        message: "You do not have enough tokens",
-        success: false,
-      });
-    }
-
-    return ctx.json({
+    return context.json({
       success: true,
+      card,
       message: "Design card bought successfully",
     });
-  } catch (err) {
-    return ctx.json({ success: false, message: err.message });
+  } catch (error) {
+    return context.json({ success: false, message: error.message });
   }
 };
 
-export const buyActionCard = (ctx) => {
+export const buyActionCard = (context) => {
   try {
-    const game = ctx.get("gameState");
-    const card = game.buyActionCard();
+    const gameController = context.get("gameController");
+    const card = gameController.buyActionCard();
 
-    if (card === "NOT_ENOUGH_TOKEN") {
-      return ctx.json({
-        message: "You do not have enough tokens",
-        success: false,
-      });
-    }
-
-    return ctx.json({
+    return context.json({
       success: true,
       card,
       message: "Action card bought successfully",
     });
-  } catch (err) {
-    return ctx.json({ success: false, message: err.message });
+  } catch (error) {
+    return context.json({ success: false, message: error.message });
   }
 };
 
-export const swapYarnActionCard = async (ctx) => {
-  const game = ctx.get("gameState");
-
+export const claimDesign = (context) => {
   try {
-    const { draggablePosition, yarnPosition } = await ctx.req.json();
+    const gameController = context.get("gameController");
+    const designCardId = context.req.param("id");
+    const result = gameController.claimDesign(designCardId);
+    const gameState = gameController.getGameState();
 
-    game.swapYarnActionCard(draggablePosition, yarnPosition);
-    return ctx.json({
-      success: true,
-      message: "Swapped successfully",
-    }, 200);
-  } catch (e) {
+    return context.json({ success: true, result, state: gameState });
+  } catch (error) {
+    return context.json({ success: false, message: error.message });
+  }
+};
+
+export const handleMove = async (ctx) => {
+  try {
+    const destination = await ctx.req.json();
+    const gameController = ctx.get("gameController");
+    const result = gameController.move(destination);
+
     return ctx.json(
-      { success: false, message: e.message },
-      400,
+      { success: true, result: { ...result, message: "Moved successfully" } },
+      200,
     );
+  } catch (error) {
+    console.log({ error });
+    return ctx.json({ success: false, message: error.message }, 400);
+  }
+};
+
+export const handleSwap = async (context) => {
+  try {
+    const gameController = context.get("gameController");
+    const { draggablePosition, yarnPosition } = await context.req.json();
+    gameController.freeSwap(draggablePosition, yarnPosition);
+
+    return context.json(
+      { success: true, message: "Swapped successfully" },
+      200,
+    );
+  } catch (e) {
+    return context.json({ success: false, message: e.message }, 400);
+  }
+};
+
+export const handlePaidSwap = async (ctx) => {
+  try {
+    const gameController = ctx.get("gameController");
+    const { draggablePosition, yarnPosition } = await ctx.req.json();
+    gameController.paidSwap(draggablePosition, yarnPosition);
+
+    return ctx.json({ success: true, message: "Swapped successfully" }, 200);
+  } catch (e) {
+    console.log({ inPaidSwap: e });
+    return ctx.json({ success: false, message: e.message }, 400);
   }
 };
 
 export const playActionCard = (context) => {
   try {
-    const game = context.get("gameState");
+    const gameController = context.get("gameController");
+    const game = gameController.getGame();
     const actionCardService = context.get("actionCardService");
     const id = Number(context.req.param("id"));
 
-    const actionCardHandlers = {
-      6: (id) => game.playTaxActionCard(Number(id)),
-      16: (id) => game.playVictoryPoint(Number(id)),
-      4: (id) => game.playCollectToken(Number(id)),
-      1: (id) => game.playMoveActionCard(Number(id)),
-      7: (id) => game.getDesignCardActionCard(Number(id)),
-      10: (id) =>
-        game.playStealCard(id, (opponent) => opponent.getAc().length > 0),
+    const { result, state } = actionCardService.playCard(id, game);
 
-      22: (id) => game.playStealCard(id, (opponent) => opponent.getTokens()),
-      34: (id) => actionCardService.playAction(Number(id), game),
-    };
-
-    if (id in actionCardHandlers) {
-      const { result, state } = actionCardHandlers[id](Number(id));
-
-      return context.json({
-        result,
-        state,
-        success: true,
-      });
-    }
-    return context.json(
-      { success: false, message: "Invalid action card" },
-      400,
-    );
+    return context.json({ result, state, success: true });
   } catch (err) {
     return context.json({ success: false, message: err.message }, 400);
   }
@@ -123,7 +127,8 @@ export const playActionCard = (context) => {
 
 export const performActionCard = async (context) => {
   try {
-    const game = context.get("gameState");
+    const gameController = context.get("gameController");
+    const game = gameController.getGame();
     const actionCardService = context.get("actionCardService");
     const payload = await context.req.json();
 
@@ -131,101 +136,7 @@ export const performActionCard = async (context) => {
 
     return context.json({ result, state, success: true });
   } catch (err) {
-    return context.json(
-      { success: false, message: err.message },
-      400,
-    );
-  }
-};
-
-export const claimDesign = (ctx) => {
-  const game = ctx.get("gameState");
-  const designCardId = ctx.req.param("id");
-  const result = game.claimDesign(designCardId);
-  const gameState = game.getGameState();
-
-  return ctx.json({
-    success: true,
-    result,
-    state: gameState,
-  });
-};
-
-export const handleMove = async (ctx) => {
-  const gameState = ctx.get("gameState");
-  const board = gameState.getBoard();
-
-  const destination = await ctx.req.json();
-  const moveResult = gameState.move(destination);
-  const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
-
-  const swappableYarns = adjYarns.length > 1 ? adjYarns : [];
-
-  if (moveResult.source === moveResult.destination) {
-    return ctx.json({ success: false, message: "You can't move there" }, 400);
-  }
-
-  return ctx.json(
-    {
-      success: true,
-      data: { adjYarns: swappableYarns, moveResult },
-      message: "Moved successfully",
-    },
-    200,
-  );
-};
-
-export const handleActionCardMove = async (ctx) => {
-  const gameState = ctx.get("gameState");
-  const board = gameState.getBoard();
-
-  const { destination } = await ctx.req.json();
-  const moveResult = gameState.movePlayer(destination);
-  const adjYarns = board.getAdjYarnsPositions(moveResult.destination);
-
-  if (moveResult.source === moveResult.destination) {
-    return ctx.json({ success: false, message: "You can't move there" }, 400);
-  }
-
-  return ctx.json({
-    success: true,
-    data: { adjYarns, moveResult },
-    message: "Moved successfully",
-  }, 200);
-};
-
-export const handleSwap = async (ctx) => {
-  const gameState = ctx.get("gameState");
-
-  try {
-    const { draggablePosition, yarnPosition } = await ctx.req.json();
-    gameState.freeSwap(draggablePosition, yarnPosition);
-
-    return ctx.json(
-      {
-        success: true,
-        message: "Swapped successfully",
-      },
-      200,
-    );
-  } catch (e) {
-    return ctx.json({ success: false, message: e.message }, 400);
-  }
-};
-
-export const handlePaidSwap = async (ctx) => {
-  const gameState = ctx.get("gameState");
-  const { draggablePosition, yarnPosition } = await ctx.req.json();
-
-  try {
-    gameState.paidSwap(draggablePosition, yarnPosition);
-
-    return ctx.json({
-      success: true,
-      message: "Swapped successfully",
-    }, 200);
-  } catch (e) {
-    return ctx.json({ success: false, message: e.message }, 400);
+    return context.json({ success: false, message: err.message }, 400);
   }
 };
 

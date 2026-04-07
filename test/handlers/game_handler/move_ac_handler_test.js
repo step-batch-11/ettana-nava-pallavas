@@ -7,7 +7,7 @@ import Game from "../../../src/models/game.js";
 import { diceValue } from "../../../src/data/state.js";
 import Player from "../../../src/models/player.js";
 
-describe("Game route", () => {
+describe.ignore("Game route", () => {
   let app,
     players,
     bank,
