@@ -141,7 +141,7 @@ describe("game setup", () => {
 
       assertEquals(movedTo, {
         adjYarns: [],
-        moveResult: { source: {}, destination: { x: 2, y: 3 } },
+        moveResult: { source: { x: -1, y: -1 }, destination: { x: 2, y: 3 } },
       });
     });
 

@@ -47,6 +47,8 @@ describe("Design card handlers", () => {
     it(
       "should return details of design card if that design pattern has matched with the board",
       async () => {
+        await app.request("/game/roll", { method: "POST" });
+
         const res = await app.request("/game/claim-design/5");
         const claimingStatus = await res.json();
 
@@ -58,6 +60,7 @@ describe("Design card handlers", () => {
     it(
       "should return details of design card if that design pattern is not present in the board",
       async () => {
+        await app.request("/game/roll", { method: "POST" });
         const res = await app.request("/game/claim-design/2");
         const claimingStatus = await res.json();
 

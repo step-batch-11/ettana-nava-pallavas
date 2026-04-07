@@ -95,15 +95,18 @@ export const handleSwap = async (context) => {
   }
 };
 
-export const handlePaidSwap = async (ctx) => {
+export const handlePaidSwap = async (context) => {
   try {
-    const gameController = ctx.get("gameController");
-    const { draggablePosition, yarnPosition } = await ctx.req.json();
+    const gameController = context.get("gameController");
+    const { draggablePosition, yarnPosition } = await context.req.json();
     gameController.paidSwap(draggablePosition, yarnPosition);
 
-    return ctx.json({ success: true, message: "Swapped successfully" }, 200);
+    return context.json(
+      { success: true, message: "Swapped successfully" },
+      200,
+    );
   } catch (e) {
-    return ctx.json({ success: false, message: e.message }, 400);
+    return context.json({ success: false, message: e.message }, 400);
   }
 };
 

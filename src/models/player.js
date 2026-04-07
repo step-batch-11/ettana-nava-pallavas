@@ -19,7 +19,7 @@ export default class Player {
     this.#dc = [];
     this.#ac = [];
 
-    this.#position = {};
+    this.#position = { x: -1, y: -1 };
   }
 
   updateVp(n) {
