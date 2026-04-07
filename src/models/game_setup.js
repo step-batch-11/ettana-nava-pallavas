@@ -22,10 +22,6 @@ export default class GameSetup {
     this.#random = randomFn;
   }
 
-  get playerCount() {
-    return this.#players.length;
-  }
-
   getCurrentPlayer() {
     return this.#players[this.#currentPlayerIndex];
   }

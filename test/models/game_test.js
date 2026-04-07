@@ -521,25 +521,6 @@ describe.ignore("Game controller test", () => {
     });
   });
 
-  describe("Distribute initial assets", () => {
-    it(
-      "when game starts, then should update bank state after initial token and card distribution",
-      () => {
-        const result = {
-          tokens: 51,
-          availableDesignCards: 0,
-          availableActionCards: 3,
-          yarns: [1, 2, 3, 4, 5],
-          tiles: [1, 6],
-        };
-
-        game.distributeInitialAssets();
-
-        assertEquals(bank.getBank(), result);
-      },
-    );
-  });
-
   describe("upkeep: Roll dice and find possible path :", () => {
     describe("roll dice :", () => {
       it("when rollDice invoked, should return two random values :", () => {

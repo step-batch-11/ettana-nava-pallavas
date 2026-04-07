@@ -7,7 +7,6 @@ import Bank from "../../src/models/bank.js";
 
 describe("game setup", () => {
   let gameSetup, players, bank, board, rolledValues;
-
   const randomFn = () => 0;
 
   const tiles = [
@@ -128,5 +127,24 @@ describe("game setup", () => {
       assertEquals(destinations, expectedDestinations);
       assertEquals(gameSetup.getRolledValues(), [{ "1": 5 }]);
     });
+  });
+
+  describe("Distribute initial assets", () => {
+    it(
+      "when game starts, then should update bank state after initial token and card distribution",
+      () => {
+        const result = {
+          tokens: 51,
+          availableDesignCards: 0,
+          availableActionCards: 3,
+          yarns: [1, 2, 3, 4, 5],
+          tiles: [1, 6],
+        };
+
+        gameSetup.distributeInitialAssets();
+
+        assertEquals(bank.getBank(), result);
+      },
+    );
   });
 });

@@ -18,7 +18,6 @@ export const handleDiceRoll = (ctx) => {
 
     return ctx.json({ gameState, destinations, diceValues });
   } catch (e) {
-    console.log(e);
     return ctx.json({ success: false, error: e.message });
   }
 };
@@ -77,7 +76,6 @@ export const handleMove = async (ctx) => {
       200,
     );
   } catch (error) {
-    console.log({ error });
     return ctx.json({ success: false, message: error.message }, 400);
   }
 };
@@ -105,7 +103,6 @@ export const handlePaidSwap = async (ctx) => {
 
     return ctx.json({ success: true, message: "Swapped successfully" }, 200);
   } catch (e) {
-    console.log({ inPaidSwap: e });
     return ctx.json({ success: false, message: e.message }, 400);
   }
 };

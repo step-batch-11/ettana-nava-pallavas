@@ -25,16 +25,14 @@ const main = () => {
   // player1.addActionCard(getActionCard(10));
 
   const player2 = new Player(2, "B");
-  player2.setup(2, { x: 2, y: 2 });
+  player2.setup(2, { x: -1, y: -1 });
 
   const gameState = new GameSetup(
     [player1, player2],
     new Bank(designCards, actionCards),
     new Board(tiles, yarns),
   );
-
   const actionCardService = new ActionCardService();
-
   const gameController = new GameController(gameState, actionCardService);
 
   // gameState.distributeInitialAssets();

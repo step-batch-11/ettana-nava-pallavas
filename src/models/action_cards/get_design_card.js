@@ -3,7 +3,6 @@ export default class GetDesignCard {
     const currentPlayer = game.getCurrentPlayer();
 
     const designCard = game.getDesignCardFromBank();
-    console.log("in dcc");
     currentPlayer.addDesignCard(designCard);
     currentPlayer.removeActionCard(id);
 
