@@ -1,12 +1,7 @@
-import { createLedger } from "../utils/color_dice_action.js";
+import { createLedger, findAdjacentYarns } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
 import { getPlayerById } from "../utils/util.js";
-import {
-  areSamePositions,
-  isValidMove,
-  randomBw,
-  updatePlayerCards,
-} from "../utils/common.js";
+import { areSamePositions, isValidMove } from "../utils/common.js";
 
 export default class Game {
   #players;
@@ -22,13 +17,13 @@ export default class Game {
     board,
     diceValue,
     randomFn = Math.random,
-    currentPlayerIndex = 0,
+    currentPlayerIndex,
   ) {
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
     this.#diceValue = diceValue;
-    this.#currentPlayerIndex = currentPlayerIndex;
+    this.#currentPlayerIndex = currentPlayerIndex || 0;
     this.randomFn = randomFn;
     this.#playerActions = { isMoved: false };
   }
@@ -72,31 +67,19 @@ export default class Game {
     return { diceValues, destinations: this.destinations };
   }
 
-  distributeInitialAssets() {
-    this.#players.forEach((player) => {
-      const token = this.#bank.deductTokens(2);
-      const designCard = this.#bank.getDesignCard();
-      const actionCard = this.#bank.getActionCard();
-      player.addDesignCard(designCard);
-      player.addActionCard(actionCard);
-      player.creditTokens(token);
-    });
-  }
-
   buyDesignCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 3) return "NOT_ENOUGH_TOKEN";
+    if (currentPlayer.getTokens() < 3) throw new Error("NOT_ENOUGH_TOKEN");
 
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
     this.#bank.incrementTokens(3);
     currentPlayer.addDesignCard(card);
-    return card;
   }
 
   buyActionCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 2) return "NOT_ENOUGH_TOKEN";
+    if (currentPlayer.getTokens() < 2) throw new Error("NOT_ENOUGH_TOKEN");
 
     const card = this.#bank.getActionCard();
     currentPlayer.debitTokens(2);
@@ -106,7 +89,7 @@ export default class Game {
   }
 
   claimDesign(designCardId) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
     const designCard = currentPlayer
       .getDc()
       .find(({ id }) => id === Number(designCardId));
@@ -139,7 +122,7 @@ export default class Game {
     return this.#players[this.#currentPlayerIndex].getId();
   }
 
-  #getOpponents() {
+  getOpponents() {
     return this.#players.toSpliced(this.#currentPlayerIndex, 1);
   }
 
@@ -147,50 +130,20 @@ export default class Game {
     return this.#board;
   }
 
-  #collectTax(otherPlayers) {
-    const affectedPlayers = [];
-    let collectedTax = 0;
-    otherPlayers.forEach((player) => {
-      if (player.getTokens() > 0) {
-        affectedPlayers.push(player.getId());
-        player.debitTokens(1);
-        collectedTax++;
-      }
-    });
-    return { collectedTax, affectedPlayers };
+  creditToBank(tokens) {
+    return this.#bank.incrementTokens(tokens);
   }
 
-  playTaxActionCard(id) {
-    const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("Card is missing");
-    }
-    const otherPlayers = this.#getOpponents();
-    const { collectedTax, affectedPlayers } = this.#collectTax(otherPlayers);
-
-    this.#bank.incrementTokens(collectedTax);
-    currentPlayer.removeActionCard(id);
-
-    return {
-      result: { affectedPlayers, message: "Tax payed successfully" },
-      state: this.getGameState(),
-      message: "Tax action card played",
-    };
+  debitFromBank(tokens) {
+    return this.#bank.deductTokens(tokens);
   }
 
-  swapYarnActionCard(source, destination) {
-    const cardId = 25;
-    const currentPlayer = this.#getCurrentPlayer();
+  getDesignCardFromBank() {
+    return this.#bank.getDesignCard();
+  }
 
-    if (
-      !currentPlayer.haveActionCard(cardId) ||
-      areSamePositions(source, destination)
-    ) {
-      throw new Error("Player don't have this action card");
-    }
-
-    this.#board.swapYarns(source, destination);
-    currentPlayer.removeActionCard(cardId);
+  swapYarns(source, destination) {
+    return this.#board.swapYarns(source, destination);
   }
 
   getPlayersPositions() {
@@ -216,114 +169,17 @@ export default class Game {
     return availableDestinations;
   }
 
-  playMoveActionCard(id) {
-    const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (this.#playerActions.isMoved) {
-      throw new Error("Already move action performed!");
-    }
-
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("Don't have this action card");
-    }
-
-    const availableDestinations = this.getPossibleDestinations();
-
-    currentPlayer.removeActionCard(id);
-    this.#playerActions.isMoved = true;
-
-    return {
-      result: { availableDestinations },
-      state: this.getGameState(),
-      message: "Move action card played",
-    };
+  getAllYarns() {
+    return this.#board.getYarns();
   }
 
-  movePlayer(destination) {
-    const currentPlayer = this.#players[this.#currentPlayerIndex];
-    const source = currentPlayer.getPosition();
-    currentPlayer.move(destination);
-    return { source, destination };
-  }
-
-  #filterOpponents(filterFn) {
-    const opponents = this.#getOpponents();
+  filterOpponents(filterFn) {
+    const opponents = this.getOpponents();
 
     return opponents.filter(filterFn).map((player) => player.getId());
   }
 
-  playStealCard(id, filterFn) {
-    const currentPlayer = this.#getCurrentPlayer();
-
-    const card = currentPlayer.getActionCard(id);
-    if (!card) throw new Error("player don't have card");
-
-    const opponents = this.#filterOpponents(filterFn);
-
-    return { result: opponents, state: this.getGameState() };
-  }
-
-  #takeRandomCard(player) {
-    const cards = player.getAc();
-    if (cards.length === 0) throw new Error("Player has no cards");
-
-    const randomId = randomBw(cards.length);
-    const card = cards[randomId];
-
-    player.removeActionCard(card.id);
-    return card;
-  }
-
-  stealActionCard(playerId) {
-    const actionCardId = 22;
-    const currentPlayer = this.#getCurrentPlayer();
-
-    if (currentPlayer.getId() === playerId) {
-      throw new Error("player cant take from himself");
-    }
-
-    const card = currentPlayer.getActionCard(actionCardId);
-
-    const player = getPlayerById(this.#players, playerId);
-    const newCard = this.#takeRandomCard(player);
-
-    updatePlayerCards(currentPlayer, card, newCard);
-
-    return { result: "stolen card", state: this.getGameState() };
-  }
-
-  #takeToken(player) {
-    const tokens = player.getTokens();
-    if (tokens === 0) throw new Error("Player has no tokens");
-
-    if (tokens >= 2) {
-      player.debitTokens(2);
-      return 2;
-    }
-
-    player.debitTokens(1);
-    return 1;
-  }
-
-  stealTokens(playerId) {
-    const actionCardId = 10;
-    const currentPlayer = this.#getCurrentPlayer();
-
-    if (currentPlayer.getId() === playerId) {
-      throw new Error("player cant take from himself");
-    }
-
-    currentPlayer.getActionCard(actionCardId);
-
-    const player = getPlayerById(this.#players, playerId);
-    const stolenTokens = this.#takeToken(player);
-
-    currentPlayer.creditTokens(stolenTokens);
-    player.removeActionCard(actionCardId);
-
-    return { result: "stolen tokens", state: this.getGameState() };
-  }
-
-  #getCurrentPlayer() {
+  getCurrentPlayer() {
     return this.#players[this.#currentPlayerIndex];
   }
 
@@ -337,28 +193,30 @@ export default class Game {
   }
 
   move(route) {
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
     const currentPosition = currentPlayer.getPosition();
     const destination = route.destination;
 
-    let payees;
-    if (isValidMove(destination, this.#board.destinations || [])) {
-      if (route.type === "premium") {
-        payees = this.#processPathPenalty(currentPlayer, route.recipients);
-      }
-
-      currentPlayer.move(destination);
-      return { source: currentPosition, destination, payees };
+    if (!isValidMove(destination, this.destinations || [])) {
+      throw new Error("not a valid move");
     }
 
-    return { source: currentPosition, destination: currentPosition };
+    let payees;
+    if (route.type === "premium") {
+      payees = this.#processPathPenalty(currentPlayer, route.recipients);
+    }
+
+    currentPlayer.move(destination);
+    const moveResult = { source: currentPosition, destination, payees };
+    const adjYarns = this.#board.getAdjYarnsPositions(moveResult.destination);
+    const swappableYarns = adjYarns.length > 1 ? adjYarns : [];
+
+    return { adjYarns: swappableYarns, moveResult };
   }
 
   freeSwap(source, destination) {
-    const currentPosition = this.#getCurrentPlayer().getPosition();
-    const currPlayerAdjYarns = this.#board.getAdjYarnsPositions(
-      currentPosition,
-    );
+    const currentPosition = this.getCurrentPlayer().getPosition();
+    const currPlayerAdjYarns = findAdjacentYarns(currentPosition);
 
     if (!areYarnsSwappable(source, destination, currPlayerAdjYarns)) {
       throw new Error("You can't swap these yarns");
@@ -369,7 +227,7 @@ export default class Game {
 
   paidSwap(source, destination) {
     const swapCost = 3;
-    const currentPlayer = this.#getCurrentPlayer();
+    const currentPlayer = this.getCurrentPlayer();
     if (
       currentPlayer.getTokens() < swapCost ||
       areSamePositions(source, destination)
@@ -378,49 +236,5 @@ export default class Game {
     }
     this.#board.swapYarns(source, destination);
     currentPlayer.debitTokens(swapCost);
-  }
-
-  getDesignCardActionCard(id) {
-    const currentPlayer = this.#players[this.#currentPlayerIndex];
-
-    currentPlayer.getActionCard(id);
-
-    const designCard = this.#bank.getDesignCard();
-    currentPlayer.addDesignCard(designCard);
-    currentPlayer.removeActionCard(id);
-
-    return {
-      result: { message: "design card added" },
-      state: this.getGameState(),
-    };
-  }
-
-  playVictoryPoint(id) {
-    const currentPlayer = this.#getCurrentPlayer();
-
-    currentPlayer.removeActionCard(id);
-    currentPlayer.updateVp(1);
-
-    return {
-      state: this.getGameState(),
-      result: {
-        message: "Victory point added to the deck",
-      },
-    };
-  }
-
-  playCollectToken(id) {
-    const currentPlayer = this.#getCurrentPlayer();
-
-    const tokens = this.#bank.deductTokens(3);
-    currentPlayer.removeActionCard(id);
-    currentPlayer.creditTokens(tokens);
-
-    return {
-      state: this.getGameState(),
-      result: {
-        message: "Tokens added",
-      },
-    };
   }
 }

@@ -1,3 +1,4 @@
+import { showToast } from "../../../utils/utils.js";
 import { highlightAdjacentYarns } from "../handlers/board_handlers.js";
 import { removeTileEventListeners } from "./board_utilities.js";
 import { colorsMap } from "/assets/colors.js";
@@ -15,7 +16,7 @@ export const updateDice = ({ number, colorId }) => {
 
 export const removeEventListeners = (elements) => { // Can use .removeEventListener
   elements.forEach((tile) => {
-    tile.replaceWith(tile.cloneNode(true)); 
+    tile.replaceWith(tile.cloneNode(true));
   });
 };
 
@@ -64,26 +65,27 @@ const displacePin = ({ source, destination }) => {
   removeMoveClass();
 };
 
-const fetchMoveResult = async (destination, path = "move") => {
+const fetchMoveResult = async (payload, path = "move") => {
   const response = await fetch(`/game/${path}`, {
     method: "POST",
-    body: JSON.stringify(destination),
+    body: JSON.stringify(payload),
     headers: { "content-type": "application/json" },
   });
 
   return await response.json();
 };
 
-export const handlePlayerMove = async (destination, path = "move") => {
-  const response = await fetchMoveResult(destination, path);
+export const handlePlayerMove = async (payload, path = "move") => {
+  const response = await fetchMoveResult(payload, path);
 
   if (!response.success) {
     alert(response.message);
     return;
   }
 
-  const { adjYarns, moveResult } = response.data;
+  const { message, adjYarns, moveResult } = response.result;
 
+  showToast(message);
   highlightAdjacentYarns(adjYarns);
   displacePin(moveResult);
   removeTileEventListeners();

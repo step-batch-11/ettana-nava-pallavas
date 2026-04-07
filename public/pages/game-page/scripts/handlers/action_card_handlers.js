@@ -3,16 +3,22 @@ import { showToast } from "../../../utils/utils.js";
 import { handlePlayerMove } from "../utilities/game_utilities.js";
 import { renderGame } from "../app.js";
 
-export const handleActionCardSwap = (path) => {
-  handleSwapEvent(path);
-};
-
-export const handleMoveActionCard = async () => {
-  const res = await fetch(`game/action-card/1`, { method: "PATCH" });
-  const { state, success, result } = await res.json();
+export const handleActionCardSwap = async (id) => {
+  const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+  const { success, result } = await res.json();
 
   if (!success) {
     return showToast(result.message, "e");
+  }
+  handleSwapEvent("game/perform-action-card", result.swappableYarns);
+};
+
+export const handleMoveActionCard = async (id) => {
+  const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+  const { state, success, result, message } = await res.json();
+
+  if (!success) {
+    return showToast(message, "e");
   }
 
   result.availableDestinations.forEach(([x, y]) => {
@@ -25,13 +31,12 @@ export const handleMoveActionCard = async () => {
       "click",
       () =>
         handlePlayerMove(
-          { destination: { x, y } },
-          "action-card-move",
+          { destination: { x, y }, cardId: id },
+          "perform-action-card",
         ),
       { once: true },
     );
   });
 
-  showToast(result.message);
   renderGame(state);
 };

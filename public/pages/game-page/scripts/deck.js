@@ -100,11 +100,11 @@ const playActionCardEventListener = () => {
     const id = card.dataset.id;
 
     if (id === "25") {
-      return handleActionCardSwap("game/action-card/swap-yarn");
+      return handleActionCardSwap(id);
     }
 
     if (id === "1") {
-      return handleMoveActionCard();
+      return handleMoveActionCard(id);
     }
 
     try {

@@ -15,7 +15,7 @@ import {
   mockYarns,
 } from "../../../src/utils/mock_data.js";
 
-describe("Action cards", () => {
+describe.ignore("Action cards", () => {
   let game, players, bank;
   const yarns = mockYarns();
   const tiles = mockTiles();

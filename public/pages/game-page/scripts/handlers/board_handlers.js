@@ -45,7 +45,7 @@ export const handleDragLeaveForYarns = (_, cell) => {
 const fetchSwapResult = async (draggablePosition, yarnPosition, path) => {
   const response = await fetch(path, {
     method: "POST",
-    body: JSON.stringify({ draggablePosition, yarnPosition }),
+    body: JSON.stringify({ draggablePosition, yarnPosition, cardId: 25 }),
     headers: { "content-type": "application/json" },
   });
   return await response.json();
@@ -105,7 +105,7 @@ export const addDragAndDropOnYarns = (yarn, yarnPosition, resource) => {
   );
 };
 
-export const handleSwapEvent = (path = "/game/paid-swap") => {
+export const handleSwapEvent = (path = "/game/paid-swap", _swappableYarns) => {
   const yarnsPosition = getAllYarnsPosition();
   highlightYarns(yarnsPosition);
 

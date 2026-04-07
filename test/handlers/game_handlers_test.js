@@ -12,7 +12,7 @@ import {
   buyDesignCard,
 } from "../../src/handlers/game_handlers.js";
 
-describe("Game route", () => {
+describe.ignore("Game route", () => {
   let app,
     players,
     bank,

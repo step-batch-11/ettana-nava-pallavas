@@ -1,5 +1,6 @@
 import { isValidMove } from "../utils/common.js";
 import { findJumpableRoutes } from "../utils/find_routes.js";
+import Game from "./game.js";
 
 export default class GameSetup {
   #players;
@@ -8,14 +9,21 @@ export default class GameSetup {
   #currentPlayerIndex;
   #rolledValues;
   #random;
+  #turnsTaken;
 
   constructor(players, bank, board, rolledValues, randomFn = Math.random) {
+    this.#turnsTaken = 0;
+    this.state = "game-setup";
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
     this.#currentPlayerIndex = 0;
     this.#rolledValues = rolledValues || [];
     this.#random = randomFn;
+  }
+
+  get playerCount() {
+    return this.#players.length;
   }
 
   getCurrentPlayer() {
@@ -68,14 +76,43 @@ export default class GameSetup {
     return { diceValues, destinations, state: this.getGameState() };
   }
 
+  distributeInitialAssets() {
+    this.#players.forEach((player) => {
+      const token = this.#bank.deductTokens(2);
+      const designCard = this.#bank.getDesignCard();
+      const actionCard = this.#bank.getActionCard();
+      player.addDesignCard(designCard);
+      player.addActionCard(actionCard);
+      player.creditTokens(token);
+    });
+  }
+
   move({ destination }) {
     if (!isValidMove(destination, this.destinations)) {
-      throw "not a valid move";
+      throw new Error("not a valid move");
     }
+
     const player = this.getCurrentPlayer();
     player.move(destination);
-    // this.nextPlayer()
 
-    return { source: player.getPosition(), destination };
+    return {
+      adjYarns: [],
+      moveResult: { source: player.getPosition(), destination },
+    };
+  }
+
+  next() {
+    this.#currentPlayerIndex = (this.#currentPlayerIndex + 1) %
+      this.#players.length;
+
+    if (this.#turnsTaken >= this.#players.length - 1) {
+      this.distributeInitialAssets();
+
+      return new Game(this.#players, this.#bank, this.#board, this.diceValues);
+    }
+
+    this.#turnsTaken++;
+
+    return this;
   }
 }

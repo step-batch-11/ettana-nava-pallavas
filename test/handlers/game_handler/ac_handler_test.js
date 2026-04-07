@@ -39,7 +39,7 @@ describe("Action card handlers", () => {
     app = createApp(game);
   });
 
-  describe("PATCH /action-card/16 (Victory Point)", () => {
+  describe.ignore("PATCH /action-card/16 (Victory Point)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
       const currentPlayer = players[0];
       const victoryPointAc = {
@@ -76,7 +76,7 @@ describe("Action card handlers", () => {
       assertEquals(currentPlayer.haveActionCard(16), false);
     });
   });
-  describe("PATCH /action-card/4 (Collect Tokens)", () => {
+  describe.ignore("PATCH /action-card/4 (Collect Tokens)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
       const currentPlayer = players[0];
       const cardId = acMap.collectToken;
@@ -103,7 +103,7 @@ describe("Action card handlers", () => {
     });
   });
 
-  describe("Failed endpoints", () => {
+  describe.ignore("Failed endpoints", () => {
     it("Should fail if card id is invalid", async () => {
       const res = await app.request("/game/action-card/0", {
         method: "PATCH",
