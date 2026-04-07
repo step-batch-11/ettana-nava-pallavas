@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import gameRoute from "./routes/game_route.js";
 import { logger } from "hono/logger";
+import startRoute from "./routes/start_route.js";
 
 export const createApp = (
   gameState,
@@ -21,6 +22,8 @@ export const createApp = (
   });
 
   app.route("/game", gameRoute);
+
+  app.route("/start", startRoute);
   app.get("/", serveStatic({ root: "public/pages/game-page" }));
   app.get("*", serveStatic({ root: "public" }));
 
