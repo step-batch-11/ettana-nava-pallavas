@@ -19,8 +19,7 @@ import ActionCardService from "../../../src/service/action_card.js";
 import GameController from "../../../src/controller/game_controller.js";
 
 describe("Action card handlers", () => {
-  let app,
-    players;
+  let app, players, gameController;
 
   beforeEach(() => {
     const player1 = new Player(1, "Ajoy");
@@ -42,7 +41,7 @@ describe("Action card handlers", () => {
 
     const actionCardService = new ActionCardService();
 
-    const gameController = new GameController(gameState, actionCardService);
+    gameController = new GameController(gameState, actionCardService);
     app = createApp(gameState, gameController, actionCardService);
   });
 
@@ -52,6 +51,7 @@ describe("Action card handlers", () => {
       const cardId = acMap.victoryPoint;
       currentPlayer.addActionCard(getActionCard(cardId));
 
+      gameController.playerActions.diceRolled = true;
       const res = await app.request(`/game/action-card/${cardId}`, {
         method: "PATCH",
       });
@@ -86,6 +86,8 @@ describe("Action card handlers", () => {
       currentPlayer.addActionCard(collectTokenAc);
 
       const playerTokensBefore = currentPlayer.getPlayerData().tokens;
+
+      gameController.playerActions.diceRolled = true;
       const res = await app.request(`/game/action-card/${cardId}`, {
         method: "PATCH",
       });
@@ -104,6 +106,7 @@ describe("Action card handlers", () => {
 
   describe("Failed endpoints", () => {
     it("Should fail if card id is invalid", async () => {
+      gameController.playerActions.diceRolled = true;
       const res = await app.request("/game/action-card/0", {
         method: "PATCH",
       });
