@@ -49,7 +49,7 @@ export default class ActionCardService {
 
     const actions = {
       1: Move.performMove,
-      34: Replace.play,
+      34: Replace.performAction,
       10: Steal.stealTokens,
       22: Steal.stealActionCard,
       25: Swap.performSwap,

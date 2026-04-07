@@ -35,8 +35,8 @@ placeholder.classList.add("placeholder");
 const renderDesignCards = (cards) => {
   designCardContainer.innerHTML = "";
   cards.forEach((card, i) => {
-    const ele = createDesignCard(card, i);
-    designCardContainer.appendChild(ele);
+    const element = createDesignCard(card, i);
+    designCardContainer.appendChild(element);
   });
 };
 
