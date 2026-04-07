@@ -298,7 +298,7 @@ export default class Game {
   }
 
   next() {
-    this.currentPlayerIndex = (this.currentPlayerIndex + 1) %
+    this.#currentPlayerIndex = (this.#currentPlayerIndex + 1) %
       this.#players.length;
     return { state: this.getGameState() };
   }
