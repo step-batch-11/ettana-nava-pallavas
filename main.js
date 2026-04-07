@@ -9,6 +9,7 @@ import GameSetup from "./src/models/game_setup.js";
 import GameController from "./src/controller/game_controller.js";
 import ActionCardService from "./src/service/action_card.js";
 import { Lobby } from "./src/models/lobby.js";
+import { acMap, getActionCard } from "./src/utils/mock_data.js";
 
 const main = () => {
   const player1 = new Player(1, "A");
