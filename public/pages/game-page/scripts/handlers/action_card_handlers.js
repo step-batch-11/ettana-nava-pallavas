@@ -69,10 +69,10 @@ const createPlayerCard = (player) => {
 
 export const performSteal = async (id, object) => {
   const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-  const { state, success, result } = await res.json();
+  const { state, success, result, message } = await res.json();
 
   if (!success) {
-    return showToast(result.message, "e");
+    return showToast(message, "e");
   }
 
   if (result.length === 0) {

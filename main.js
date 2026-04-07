@@ -9,25 +9,13 @@ import GameSetup from "./src/models/game_setup.js";
 import GameController from "./src/controller/game_controller.js";
 import ActionCardService from "./src/service/action_card.js";
 import { Lobby } from "./src/models/lobby.js";
-import { acMap, getActionCard } from "./src/utils/mock_data.js";
 
 const main = () => {
   const player1 = new Player(1, "A");
   player1.setup(1, { x: -1, y: -1 });
-  player1.addActionCard(getActionCard(acMap.replace));
+  
   const player2 = new Player(2, "B");
   player2.setup(2, { x: -1, y: -1 });
-  player1.creditTokens(100);
-
-  player1.addActionCard(getActionCard(acMap.replace));
-  player1.addActionCard(getActionCard(acMap.replace));
-  player1.addActionCard(getActionCard(acMap.replace));
-  player1.addActionCard(getActionCard(acMap.replace));
-  player2.addActionCard(getActionCard(acMap.replace));
-  player2.addActionCard(getActionCard(acMap.replace));
-  player2.addActionCard(getActionCard(acMap.replace));
-  player2.addActionCard(getActionCard(acMap.replace));
-
 
   const gameState = new GameSetup(
     [player1, player2],

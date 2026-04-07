@@ -88,6 +88,29 @@ export default class GameController {
     return this.game.paidSwap(position, yarn);
   }
 
+  canActionBeDone(cardId) {
+    if (cardId === 1) {
+      return this.playerActions.moved;
+    }
+    return this.playerActions.diceRolled;
+  }
+
+  playCard(cardId) {
+    if (!this.canActionBeDone(cardId)) {
+      throw new Error("action card can't be played");
+    }
+
+    return this.actionCardService.playCard(cardId, this.game);
+  }
+
+  performAction(payload) {
+    if (!this.canActionBeDone(payload)) {
+      throw new Error("action card can't be played");
+    }
+
+    return this.actionCardService.performAction(payload, this.game);
+  }
+
   endTurn() {
     if (!this.playerActions.diceRolled || !this.playerActions.moved) {
       throw new Error("roll and move to end turn");
