@@ -27,6 +27,7 @@ const main = () => {
     new Board(tiles, yarns),
   );
   const actionCardService = new ActionCardService();
+
   const gameController = new GameController(gameState, actionCardService);
 
   const PORT = Deno.env.get("PORT") || 8000;
