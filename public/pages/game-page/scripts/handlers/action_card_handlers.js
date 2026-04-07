@@ -9,7 +9,8 @@ import { handlePlayerMove, updateDice } from "../utilities/game_utilities.js";
 import { handleSwapEvent, removeTileHighlighting } from "./board_handlers.js";
 import { renderGame } from "../app.js";
 import { createSVGPlayerIcon } from "../utilities/board_utilities.js";
-import { selectorArea } from "../utilities/dom_elements.js";
+import { replacePopup, selectorArea } from "../utilities/dom_elements.js";
+import { colorsMap } from "/assets/colors.js";
 
 export const handleActionCardSwap = async (id) => {
   const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
@@ -120,46 +121,109 @@ const steal = async (card, id) => {
   renderGame(state);
 };
 
-function handleReplaceTile(x, y) {
-  const reservedTiles = document.querySelectorAll(".tiles .tile");
-  reservedTiles.forEach((tile, index) => {
-    tile.classList.add("jump-move");
-    tile.addEventListener("click", async () => {
-      const res = await fetch("/game/perform-action-card", {
-        method: "POST",
-        body: JSON.stringify({
-          cardId: 34,
-          source: [x, y],
-          destination: index,
-        }),
-      });
+const highlight = (element) => {
+  element.classList.add("jump-move");
+};
 
-      const { state, success, result, message } = await res.json();
-
-      if (!success) {
-        return showToast(message, "e");
-      }
-
-      showToast(result.message);
-      renderGame(state);
-      removeTileHighlighting();
-    });
+const replaceElement = async (cardId, position, reservePosition, type) => {
+  const res = await fetch("/game/perform-action-card", {
+    method: "POST",
+    body: JSON.stringify({ cardId, position, reservePosition, type }),
   });
-}
 
-export const handleReplaceActionCard = async () => {
-  const res = await fetch(`game/action-card/34`, { method: "PATCH" });
   const { state, success, result, message } = await res.json();
 
+  replacePopup.style.display = "none";
+  if (!success) {
+    return showToast(message, "e");
+  }
+
+  showToast(result.message);
+  renderGame(state);
+  removeTileHighlighting();
+};
+
+const createTiles = (tiles, position, cardId) => {
+  return tiles.map((value, index) => {
+    const tilePlaceholder = document.createElement("div");
+    tilePlaceholder.classList.add("tile");
+    const tileValue = document.createElement("span");
+    tileValue.textContent = value;
+
+    tilePlaceholder.append(tileValue);
+
+    tilePlaceholder.addEventListener(
+      "click",
+      () => replaceElement(cardId, position, index, "tile"),
+    );
+
+    return tilePlaceholder;
+  });
+};
+
+const createYarns = (yarns, position, cardId) => {
+  return yarns.map((colorId, index) => {
+    const yarn = document.createElement("div");
+    yarn.classList.add("yarn");
+    yarn.setAttribute(`data-yarn-id`, colorId);
+    yarn.style.backgroundColor = colorsMap[colorId];
+    yarn.addEventListener(
+      "click",
+      () => replaceElement(cardId, position, index, "yarn"),
+    );
+    return yarn;
+  });
+};
+
+const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
+  element.addEventListener("click", (e) => {
+    replacePopup.style.display = "block";
+    replacePopup.style.top = `${e.screenY - 100}px`;
+    replacePopup.style.left = `${e.screenX - 100}px`;
+    const h2 = document.createElement("h2");
+    h2.innerText = `select ${type} to replace`;
+
+    const section = document.createElement("section");
+    section.className = "reserve-selection-area";
+
+    const elements = type === "tile"
+      ? createTiles(reserved, position, cardId)
+      : createYarns(reserved, position, cardId);
+
+    section.append(...elements);
+    replacePopup.innerHTML = "";
+    replacePopup.append(h2, section);
+  });
+};
+
+export const handleReplaceActionCard = async (cardId) => {
+  const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
+  const { state, success, result, message } = await res.json();
+  const { boardTiles, boardYarns, reservedTiles, reservedYarns } = result;
   if (!success) return showToast(message, "e");
 
-  result.availableDestinations.forEach(([x, y]) => {
+  boardTiles.forEach(([x, y]) => {
     const tile = document.querySelector(`#tile${x}${y}`);
     if (!tile) return;
-    tile.classList.add("jump-move");
 
-    tile.addEventListener("click", () => {
-      handleReplaceTile(x, y);
+    highlight(tile);
+    addReplaceListener(
+      { element: tile, position: { x, y }, type: "tile" },
+      cardId,
+      reservedTiles,
+    );
+  });
+
+  boardYarns.forEach((col, x) => {
+    col.forEach((_colourId, y) => {
+      const yarn = document.querySelector(`#r-${x}-c-${y}`);
+      if (!yarn) return;
+      highlight(yarn);
+      addReplaceListener(
+        { element: yarn, position: { x, y }, type: "yarn" },
+        cardId,
+        reservedYarns,
+      );
     });
   });
 

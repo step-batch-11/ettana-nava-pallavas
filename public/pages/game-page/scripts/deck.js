@@ -128,7 +128,7 @@ const playActionCardEventListener = () => {
     }
     
     if (id === "34") {
-      return handleReplaceActionCard();
+      return handleReplaceActionCard(id);
     }
 
     if (id === "31") {

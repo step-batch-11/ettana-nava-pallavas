@@ -199,6 +199,10 @@ export default class Game {
     return this.#board.getYarns();
   }
 
+  getReserveElementsFromBank() {
+    return this.#bank.getReserveElements();
+  }
+
   filterOpponents(predicate) {
     const opponents = this.getOpponents();
 
@@ -268,20 +272,18 @@ export default class Game {
     return this.#players.find((player) => player.getId() === Number(id));
   }
 
-  getBoardTileValue(position) {
-    return this.#board.getTileValue(position);
+  replaceTile(position, index) {
+    const tileValueOnBoard = this.#board.getTileValue(position);
+    const tileValueOnReserve = this.#bank.getTileValue(index);
+    this.#board.changeTileValue(position, tileValueOnReserve);
+    this.#bank.changeTileValue(position, tileValueOnBoard);
   }
 
-  getBankTileValue(position) {
-    return this.#bank.getTileValue(position);
-  }
-
-  changeBoardTileValue(position, value) {
-    return this.#board.changeTileValue(position, value);
-  }
-
-  changeBankTileValue(position, value) {
-    return this.#bank.changeTileValue(position, value);
+  replaceYarn(position, index) {
+    const colourIdOnBoard = this.#board.getYarnColourId(position);
+    const colourIdOnReserve = this.#bank.getYarnColourId(index);
+    this.#board.changeYarnColourId(position, colourIdOnReserve);
+    this.#bank.changeYarnColourId(position, colourIdOnBoard);
   }
 
   rotatePattern(designCardId) {

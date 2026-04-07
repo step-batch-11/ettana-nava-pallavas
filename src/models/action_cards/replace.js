@@ -7,12 +7,18 @@ export default class Replace {
       throw new Error("Card is missing");
     }
 
-    const availableDestinations = game.getChangeAbleTiles();
+    const boardTiles = game.getChangeAbleTiles();
+    const boardYarns = game.getAllYarns();
+
+    const { reservedTiles, reservedYarns } = game.getReserveElementsFromBank();
 
     return {
       state: game.getGameState(),
       result: {
-        availableDestinations,
+        boardTiles,
+        boardYarns,
+        reservedTiles,
+        reservedYarns,
         message: "Choose tiles to replace",
       },
     };
@@ -26,19 +32,19 @@ export default class Replace {
 
   static performAction = (payload, currentPlayer, played, game) => {
     Replace.isPlayed(played);
+    const { cardId, type, position, reservePosition } = payload;
 
-    const boardTileValue = game.getBoardTileValue(payload.source);
-    const bankTileValue = game.getBankTileValue(payload.destination);
-    game.changeBoardTileValue(payload.source, bankTileValue);
-    game.changeBankTileValue(payload.destination, boardTileValue);
+    type === "tile"
+      ? game.replaceTile(position, reservePosition)
+      : game.replaceYarn(position, reservePosition);
 
-    currentPlayer.removeActionCard(payload.cardId);
+    currentPlayer.removeActionCard(cardId);
     delete played.replace;
 
     return {
       state: game.getGameState(),
       result: {
-        message: "Tiles changed with reserved",
+        message: `${type} changed with reserved`,
       },
     };
   };
