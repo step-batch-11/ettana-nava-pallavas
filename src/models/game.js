@@ -1,6 +1,5 @@
 import { createLedger, findAdjacentYarns } from "../utils/color_dice_action.js";
 import { areYarnsSwappable } from "../utils/yarns.js";
-import { getPlayerById } from "../utils/util.js";
 import { areSamePositions, isValidMove } from "../utils/common.js";
 import { rotateDesign } from "../utils/pattern_match.js";
 
@@ -10,7 +9,6 @@ export default class Game {
   #board;
   #diceValue;
   #currentPlayerIndex;
-  #playerActions;
 
   constructor(
     players,
@@ -26,7 +24,6 @@ export default class Game {
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex || 0;
     this.randomFn = randomFn;
-    this.#playerActions = { isMoved: false };
   }
 
   distributeAssets({ colorId }, currentPlayer) {
@@ -114,8 +111,8 @@ export default class Game {
       diceValue: this.#diceValue,
       currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       deck: {
-        actionCards: getPlayerById(this.#players, id).getAc(),
-        designCards: getPlayerById(this.#players, id).getDc(),
+        actionCards: this.getPlayerById(id).getAc(),
+        designCards: this.getPlayerById(id).getDc(),
       },
     };
   }
@@ -150,6 +147,10 @@ export default class Game {
 
   swapYarns(source, destination) {
     return this.#board.swapYarns(source, destination);
+  }
+
+  getPlayers() {
+    return this.#players;
   }
 
   getPlayersPositions() {
@@ -210,7 +211,7 @@ export default class Game {
 
   #processPathPenalty(payer, payees) {
     return payees.map((payeeId) => {
-      const payee = getPlayerById(this.#players, payeeId);
+      const payee = this.getPlayerById(payeeId);
       payee.creditTokens(1);
       payer.debitTokens(1);
       return { payeeId, tokens: payee.tokens };
@@ -262,6 +263,7 @@ export default class Game {
     this.#board.swapYarns(source, destination);
     currentPlayer.debitTokens(swapCost);
   }
+
   getPlayerById(id) {
     return this.#players.find((player) => player.getId() === Number(id));
   }
@@ -290,6 +292,12 @@ export default class Game {
     const rotatedDesign = rotateDesign(designCard.design);
     designCard.design = rotatedDesign;
 
+    return { state: this.getGameState() };
+  }
+
+  next() {
+    this.currentPlayerIndex = (this.currentPlayerIndex + 1) %
+      this.#players.length;
     return { state: this.getGameState() };
   }
 }

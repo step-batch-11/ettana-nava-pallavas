@@ -104,11 +104,11 @@ describe("game setup", () => {
       const { destinations, state } = gameSetup.upkeep();
       assertEquals(destinations, expectedDestinations);
       assertEquals(state, expectedState);
-      assertEquals(gameSetup.getRolledValues(), [{ "1": 1 }]);
+      assertEquals(gameSetup.getRolledValues(), { "1": 1 });
     });
 
     it("should return an object with positions and gameState", () => {
-      gameSetup = new GameSetup(players, bank, board, [], () => 0.9);
+      gameSetup = new GameSetup(players, bank, board, {}, () => 0.9);
 
       const expectedDestinations = [
         { destination: { x: 2, y: 1 }, type: "jump" },
@@ -130,7 +130,7 @@ describe("game setup", () => {
       const { destinations, state } = gameSetup.upkeep();
       assertEquals(state, expectedState);
       assertEquals(destinations, expectedDestinations);
-      assertEquals(gameSetup.getRolledValues(), [{ "1": 5 }]);
+      assertEquals(gameSetup.getRolledValues(), { "1": 5 });
     });
   });
 
@@ -179,7 +179,7 @@ describe("game setup", () => {
     it(
       "once every one has rolled, players has to be sorted and initial distribution has to take place",
       () => {
-        rolledValues = [{ "1": 3 }, { "2": 2 }];
+        rolledValues = { "1": 2, "2": 4 };
         gameSetup = new GameSetup(players, bank, board, rolledValues);
         const result = {
           tokens: 51,
@@ -190,11 +190,13 @@ describe("game setup", () => {
         };
 
         const game = gameSetup.next();
+        const [p1, p2] = game.getPlayers();
 
         assertEquals(game instanceof Game, true);
         assertEquals(player1.getTokens(), 2);
         assertEquals(player2.getTokens(), 2);
-        assertEquals(gameSetup.getPlayers(), [player2, player1]);
+        assertEquals(p1.getId(), 2);
+        assertEquals(p2.getId(), 1);
         assertEquals(bank.getBank(), result);
       },
     );
