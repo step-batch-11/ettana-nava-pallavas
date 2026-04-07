@@ -61,7 +61,7 @@ export default class Player {
   }
 
   getDc() {
-    return structuredClone(this.#dc);
+    return this.#dc;
   }
 
   #findCardIndex(container, target) {

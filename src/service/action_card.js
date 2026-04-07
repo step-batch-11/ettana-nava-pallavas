@@ -1,4 +1,5 @@
 import CollectToken from "../models/action_cards/collect_token.js";
+import Gain from "../models/action_cards/gain_token.js";
 import GetDesignCard from "../models/action_cards/get_design_card.js";
 import Move from "../models/action_cards/move.js";
 import Replace from "../models/action_cards/replace.js";
@@ -21,11 +22,10 @@ export default class ActionCardService {
 
     const actions = {
       10: () =>
-        Steal.play(this.played, id, game, (opponent) => opponent.getTokens()),
+        Steal.play(this.played, game, (opponent) => opponent.getTokens()),
       22: () =>
         Steal.play(
           this.played,
-          id,
           game,
           (opponent) => opponent.getAc().length,
         ),
@@ -54,6 +54,7 @@ export default class ActionCardService {
       10: Steal.stealTokens,
       22: Steal.stealActionCard,
       25: Swap.performSwap,
+      31: Gain.token,
     };
 
     return actions[payload.cardId](payload, currentPlayer, this.played, game);

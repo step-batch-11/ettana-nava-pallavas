@@ -2,6 +2,7 @@ import {
   autoScrollWithDrag,
   getDragAfterElement,
 } from "../utilities/deck_utilities.js";
+import { renderGame } from "/pages/game-page/scripts/app.js";
 
 export const handleDragStart = (e, dragged, sourceContainer) => {
   if (!e.target.classList.contains("card-item")) return;
@@ -54,13 +55,26 @@ export const handleDragEnd = (dragged, sourceContainer, placeholder) => {
   placeholder.remove();
 };
 
-export const rotateDesignCard = (card) => {
-  const designGrid = card.querySelector(".design");
+export const rotateDesignCard = async (card) => {
+  const res = await fetch(`/game/rotate-design-card/${card.dataset.id}`, {
+    method: "PATCH",
+  });
+  const { state, success } = await res.json();
+  if (success) {
+    const designGrid = card.querySelector(".design");
+    let angle = Number.parseInt(card.dataset.angle || "0", 10);
+    angle += 90;
+    card.dataset.angle = angle;
+    designGrid.style.transform = `rotateZ(${angle}deg)`;
+  }
 
-  let angle = Number.parseInt(card.dataset.angle || "0", 10);
+  await new Promise((res) => {
+    setTimeout(() => {
+      res(1);
+    }, 500);
+  });
 
-  angle += 90;
+  console.log(state.deck);
 
-  card.dataset.angle = angle;
-  designGrid.style.transform = `rotateZ(${angle}deg)`;
+  renderGame(state);
 };

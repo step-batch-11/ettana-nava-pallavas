@@ -31,6 +31,7 @@ export const getActionCard = (id) => actionCards.find((card) => card.id === id);
 export const acMap = {
   "collectToken": 4,
   "victoryPoint": 16,
+  "gainToken": 31,
 };
 
 export const isPresent = (deck, card) => deck.some(({ id }) => id === card.id);

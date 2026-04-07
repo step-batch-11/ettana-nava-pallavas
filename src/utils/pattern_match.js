@@ -95,3 +95,13 @@ const transpose = (matrix) =>
 const reverse = (matrix) => matrix.map((row) => row.toReversed());
 
 export const rotate = (matrix) => reverse(transpose(matrix));
+
+export const rotateDesign = (pattern, size = 5) => {
+  return pattern.map(({ coord, color }) => ({
+    coord: {
+      x: coord.y,
+      y: size - 1 - coord.x,
+    },
+    color,
+  }));
+};

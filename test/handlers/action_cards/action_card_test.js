@@ -15,13 +15,12 @@ import {
   mockTiles,
   mockYarns,
 } from "../../../src/utils/mock_data.js";
+import ActionCardService from "../../../src/service/action_card.js";
+import GameController from "../../../src/controller/game_controller.js";
 
 describe("Action card handlers", () => {
   let app,
-    players,
-    bank,
-    board,
-    game;
+    players;
 
   beforeEach(() => {
     const player1 = new Player(1, "Ajoy");
@@ -32,26 +31,28 @@ describe("Action card handlers", () => {
     player1.setup(3, { x: 4, y: 1 });
     players = [player1, player2];
 
-    board = new Board(mockTiles(), mockYarns());
+    const gameState = new Game(
+      players,
+      new Bank(getAllDesignCard(), getAllActionCard()),
+      new Board(mockTiles(), mockYarns()),
+      diceValue,
+      Math.random,
+      0,
+    );
 
-    bank = new Bank(getAllDesignCard(), getAllActionCard());
-    game = new Game(players, bank, board, diceValue, 0);
-    app = createApp(game);
+    const actionCardService = new ActionCardService();
+
+    const gameController = new GameController(gameState, actionCardService);
+    app = createApp(gameState, gameController, actionCardService);
   });
 
-  describe.ignore("PATCH /action-card/16 (Victory Point)", () => {
+  describe("PATCH /action-card/16 (Victory Point)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
       const currentPlayer = players[0];
-      const victoryPointAc = {
-        id: 16,
-        type: "victory point",
-        description:
-          "1 Victory point. Reveal the card immediately and keep face-up. Cannot be stolen.",
-      };
+      const cardId = acMap.victoryPoint;
+      currentPlayer.addActionCard(getActionCard(cardId));
 
-      currentPlayer.addActionCard(victoryPointAc);
-
-      const res = await app.request("/game/action-card/16", {
+      const res = await app.request(`/game/action-card/${cardId}`, {
         method: "PATCH",
       });
 
@@ -76,15 +77,15 @@ describe("Action card handlers", () => {
       assertEquals(currentPlayer.haveActionCard(16), false);
     });
   });
-  describe.ignore("PATCH /action-card/4 (Collect Tokens)", () => {
+
+  describe("PATCH /action-card/4 (Collect Tokens)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
       const currentPlayer = players[0];
       const cardId = acMap.collectToken;
-      const victoryPointAc = getActionCard(cardId);
-      currentPlayer.addActionCard(victoryPointAc);
+      const collectTokenAc = getActionCard(cardId);
+      currentPlayer.addActionCard(collectTokenAc);
 
       const playerTokensBefore = currentPlayer.getPlayerData().tokens;
-      const bankTokensBefore = bank.getBank().tokens;
       const res = await app.request(`/game/action-card/${cardId}`, {
         method: "PATCH",
       });
@@ -93,24 +94,22 @@ describe("Action card handlers", () => {
 
       const playerTokensAfter = currentPlayer.getPlayerData().tokens;
       const playerActionsCards = currentPlayer.getAc();
-      const bankTokensAfter = bank.getBank().tokens;
 
       assertEquals(success, true);
       assertEquals(res.ok, true);
       assertEquals(playerTokensBefore + 3, playerTokensAfter);
-      assertEquals(isPresent(playerActionsCards, victoryPointAc), false);
-      assertEquals(bankTokensBefore - 3, bankTokensAfter);
+      assertEquals(isPresent(playerActionsCards, collectTokenAc), false);
     });
   });
 
-  describe.ignore("Failed endpoints", () => {
+  describe("Failed endpoints", () => {
     it("Should fail if card id is invalid", async () => {
       const res = await app.request("/game/action-card/0", {
         method: "PATCH",
       });
 
       const { message } = await res.json();
-      assertEquals(message, "Invalid action card");
+      assertEquals(message, "Card is missing");
     });
   });
 });

@@ -1,13 +1,8 @@
 import { createStolenMsg } from "../../utils/util.js";
 
 export default class Steal {
-  static play(played, id, game, predicate) {
+  static play(played, game, predicate) {
     played["steal"] = true;
-
-    const currentPlayer = game.getCurrentPlayer();
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("You don't have card");
-    }
 
     const opponents = game.filterOpponents(predicate);
 
@@ -54,8 +49,8 @@ export default class Steal {
     const opponentPlayer = game.getPlayerById(payload.opponentPlayerId);
     const newCard = opponentPlayer.takeRandomCard();
 
-    player.removeActionCard(payload.cardId);
-    player.addActionCard(newCard);
+    currentPlayer.removeActionCard(payload.cardId);
+    currentPlayer.addActionCard(newCard);
     delete played.steal;
 
     const message = createStolenMsg(
