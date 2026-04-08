@@ -3,6 +3,7 @@ import {
   autoScrollWithDrag,
   getDragAfterElement,
 } from "../utilities/deck_utilities.js";
+import { removeMoveClass } from "../utilities/game_utilities.js";
 import { renderGame } from "/pages/game-page/scripts/app.js";
 
 export const handleDragStart = (e, dragged, sourceContainer) => {
@@ -90,5 +91,6 @@ export const exchangeDesignCard = async (card) => {
   }
 
   showToast(result.message);
+  removeMoveClass();
   renderGame(state);
 };
