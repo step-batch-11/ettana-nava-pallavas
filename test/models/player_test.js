@@ -130,4 +130,20 @@ describe("Player Class", () => {
       assertEquals(player.getDc().length, 0);
     });
   });
+
+  describe("take token", () => {
+    it("Successfully takes only one token", () => {
+      player.creditTokens(1);
+      assertEquals(player.takeToken(), 1);
+    });
+
+    it("Successfully takes two tokens if the player has more than two tokens", () => {
+      player.creditTokens(2);
+      assertEquals(player.takeToken(), 2);
+    });
+
+    it("throws an error if player doesn't have any tokens", () => {
+      assertThrows(() => player.takeToken());
+    });
+  });
 });

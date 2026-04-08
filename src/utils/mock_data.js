@@ -33,13 +33,13 @@ export const acMap = {
   "collectToken": 4,
   "tax": 6,
   "getDesignCard": 7,
+  "stealToken": 10,
   "preset": 13,
   "victoryPoint": 16,
-  "gainToken": 31,
-  "replace": 34,
-  "stealToken": 10,
   "stealActionCard": 22,
   "swap": 25,
+  "gainToken": 31,
+  "replace": 34,
   "roll": 28,
 };
 

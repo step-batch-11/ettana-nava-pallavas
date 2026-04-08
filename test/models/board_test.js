@@ -338,6 +338,30 @@ describe("board test", () => {
     const actual = board.getTiles();
     assertEquals(actual, tiles);
   });
+
+  describe("getTileValue", () => {
+    it("successfully gets back the tile value", () => {
+      assertEquals(board.getTileValue({ x: 1, y: 2 }), 6);
+    });
+  });
+
+  describe("changeTileValue", () => {
+    it("successfully changes tile value", () => {
+      assertEquals(board.changeTileValue({ x: 1, y: 2 }, 5), 5);
+    });
+  });
+
+  describe("changeYarnColorId", () => {
+    it("successfully changes yarn color", () => {
+      assertEquals(board.changeYarnColorId({ x: 1, y: 2 }, 5), 5);
+    });
+  });
+
+  describe("getYarnColorId", () => {
+    it("successfully gets get yarn color id", () => {
+      assertEquals(board.getYarnColorId({ x: 3, y: 3 }), 4);
+    });
+  });
 });
 
 describe("matchPattern", () => {
