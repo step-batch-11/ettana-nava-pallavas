@@ -35,6 +35,7 @@ export const acMap = {
   "getDesignCard": 7,
   "preset": 13,
   "victoryPoint": 16,
+  "swap": 25,
   "gainToken": 31,
   "replace": 34,
 };

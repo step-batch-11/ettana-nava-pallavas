@@ -162,6 +162,7 @@ export default class Game {
   getPossibleDestinations() {
     const availableDestinations = [];
     const occupiedPositions = this.getPlayersPositions();
+
     const tiles = this.#board.getTiles();
 
     for (let row = 0; row < tiles.length; row++) {
