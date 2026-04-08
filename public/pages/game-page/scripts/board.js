@@ -37,7 +37,7 @@ const renderPlayerOnTiles = (players, currentPlayerId) => {
       `#tile${player.position.x}${player.position.y}`,
     );
     if (!el) return;
-    
+
     el.innerHTML = "";
     const icon = createDiv("player-icon tile-value");
     icon.dataset.id = player.id;
@@ -71,10 +71,10 @@ const renderTiles = (tiles, currentPlayerId, players) => {
 };
 
 // Players container.
-const renderPlayersCards = (players, currentPlayerId) => {
+const renderPlayersCards = (players, currentPlayerId, requesterId) => {
   playersContainer.innerHTML = "";
   players.forEach((player) => {
-    const { clone, element } = createPlayerCard(player);
+    const { clone, element } = createPlayerCard(player, requesterId);
 
     if (player.playerId === currentPlayerId) {
       element.classList.add("current-player-card");
@@ -115,6 +115,6 @@ export const renderBoard = (state) => {
   renderTiles(state.board.tiles, state.currentPlayerId, state.players);
 };
 
-export const renderPlayers = (players, currentPlayerId) => {
-  renderPlayersCards(players, currentPlayerId);
+export const renderPlayers = (players, currentPlayerId, requesterId) => {
+  renderPlayersCards(players, currentPlayerId, requesterId);
 };

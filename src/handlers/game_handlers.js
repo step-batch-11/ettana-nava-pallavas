@@ -12,7 +12,6 @@ export const serveGameState = (ctx) => {
     return ctx.json({
       success: true,
       state: gameState,
-      requesterId: session.playerId,
     });
   } catch (e) {
     console.log(e);
@@ -41,8 +40,13 @@ export const handleDiceRoll = (context) => {
 
 export const buyDesignCard = (context) => {
   try {
-    const gameController = context.get("gameController");
-    const card = gameController.buyDesignCard();
+    const sessionId = getCookie(context, "sessionId");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const session = sessions.get(sessionId);
+    const room = rooms[session.roomId];
+
+    const card = room.state.buyDesignCard();
 
     return context.json({
       success: true,
@@ -56,8 +60,12 @@ export const buyDesignCard = (context) => {
 
 export const buyActionCard = (context) => {
   try {
-    const gameController = context.get("gameController");
-    const card = gameController.buyActionCard();
+    const sessionId = getCookie(context, "sessionId");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const session = sessions.get(sessionId);
+    const room = rooms[session.roomId];
+    const card = room.state.buyActionCard();
 
     return context.json({
       success: true,

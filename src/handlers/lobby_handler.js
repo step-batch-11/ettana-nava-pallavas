@@ -13,7 +13,8 @@ export const handleCreateLobby = async (context) => {
     players[player.getId()] = player;
 
     const room = {
-      id: `${Date.now()}-room`,
+      // id: `${Date.now()}-room`,
+      id: "1000",
       state: new LobbyController(),
       hostId: player.getId(),
       name: payload.name,

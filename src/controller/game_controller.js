@@ -20,7 +20,7 @@ export default class GameController {
   }
 
   getGameState(id) {
-    return this.game.getGameState(id);
+    return { ...this.game.getGameState(id), requesterId: id };
   }
 
   move(destination) {
