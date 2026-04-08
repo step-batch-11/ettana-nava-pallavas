@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ettana Dashboard</title>
+    <link rel="stylesheet" href="/pages/dashboard/style.css" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <h1 class="title">Ettana</h1>
+      <p class="subtitle">The Looms of Kanchi</p>
+
+      <div class="actions">
+        <button id="joinBtn" class="primary-btn">Join Game</button>
+        <button id="hostBtn" class="secondary-btn">Host Game</button>
+      </div>
+
+    </div>
+
+    <!-- Popup Modal -->
+    <div class="modal hidden" id="modal">
+      <div class="modal-content">
+        <h3 id="modalTitle">Join Room</h3>
+
+        <input type="text" id="inputField" placeholder="Enter..." />
+
+        <div class="modal-actions">
+          <button id="cancelBtn" class="cancel-btn">Cancel</button>
+          <button id="submitBtn" class="submit-btn">Submit</button>
+        </div>
+      </div>
+    </div>
+    <div id="toast" class="toast"></div>
+    <script src="/pages/dashboard/script.js"></script>
+
+  </body>
+</html>

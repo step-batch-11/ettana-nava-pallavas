@@ -58,6 +58,7 @@ export const handleDragEnd = (dragged, sourceContainer, placeholder) => {
 export const rotateDesignCard = async (card) => {
   const res = await fetch(`/game/rotate-design-card/${card.dataset.id}`, {
     method: "PATCH",
+    credentials: "include",
   });
   const { state, success } = await res.json();
   if (success) {

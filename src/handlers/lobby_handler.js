@@ -1,31 +1,101 @@
 import Player from "../models/player.js";
+import LobbyController from "../models/lobby.js";
+import { getCookie, setCookie } from "hono/cookie";
+
+export const handleCreateLobby = async (context) => {
+  try {
+    const players = context.get("players");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const payload = await context.req.json();
+
+    const player = new Player(Date.now(), payload.username);
+    players[player.getId()] = player;
+
+    const room = {
+      id: `${Date.now()}-room`,
+      state: new LobbyController(),
+      hostId: player.getId(),
+      name: payload.name,
+    };
+
+    player.assignRoomId(room.id);
+    rooms[room.id] = room;
+
+    room.state.addPlayer(player);
+
+    const sessionId = sessions.add(player.getId(), room.id);
+    setCookie(context, "sessionId", sessionId);
+    return context.json({
+      success: true,
+      message: "Joined successfully",
+      state: room.state.getLobbyState(),
+      roomId: room.id,
+    });
+  } catch (err) {
+    console.log(err);
+    return context.json({ success: false, error: err.message });
+  }
+};
 
 export const handleJoinLobby = async (context) => {
   try {
-    const lobbyController = context.get("lobbyController");
-    const payload = await context.req.formData();
+    const players = context.get("players");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const payload = await context.req.json();
+    const room = rooms[payload.roomId];
 
-    const player = new Player(Date.now(), payload.get("username"));
-    const { id } = lobbyController.enterLobby(player);
+    const player = new Player(Date.now(), payload.username);
+    players[player.getId()] = player;
+    room.state.addPlayer(player);
+    player.assignRoomId(room.id);
+
+    const sessionId = sessions.add(player.getId(), room.id);
+    setCookie(context, "sessionId", sessionId);
 
     return context.json({
       success: true,
       message: "Joined successfully",
-      state: lobbyController.getLobbyState(),
-      id: id,
+      state: room.state.getLobbyState(),
+      roomId: room.id,
     });
   } catch (err) {
+    console.log(err);
     return context.json({ success: false, error: err.message });
   }
 };
 
 export const handleGetLobbyState = (context) => {
   try {
-    const lobbyController = context.get("lobbyController");
+    const sessionId = getCookie(context, "sessionId");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const session = sessions.get(sessionId);
+
+    const room = rooms[session.roomId];
+
     return context.json({
       success: true,
-      state: lobbyController.getLobbyState(),
+      state: room.state.getLobbyState(),
+      room: { id: room.id, name: room.name },
     });
+  } catch (err) {
+    return context.json({ success: false, error: err.message });
+  }
+};
+
+export const handleStartGame = async (context) => {
+  try {
+    const sessionId = getCookie(context, "sessionId");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const session = sessions.get(sessionId);
+
+    const room = rooms[session.roomId];
+    room.state = await room.state.startGame();
+
+    return context.json({ success: true, message: "Game started" });
   } catch (err) {
     return context.json({ success: false, error: err.message });
   }
@@ -33,11 +103,10 @@ export const handleGetLobbyState = (context) => {
 
 export const handleExitLobby = (context) => {
   try {
-    const lobbyController = context.get("lobbyController");
+    const roomController = context.get("roomController");
     const id = context.req.param("id");
-    console.log({ id });
 
-    lobbyController.exitLobby(id);
+    roomController.exitLobby(id);
     return context.json({ success: true, message: "You left the lobby" });
   } catch (err) {
     return context.json({ success: false, error: err.message });

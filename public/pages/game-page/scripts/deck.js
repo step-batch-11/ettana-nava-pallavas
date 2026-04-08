@@ -126,7 +126,7 @@ const playActionCardEventListener = () => {
     if (id === "22") {
       return performSteal(id, "action-card");
     }
-    
+
     if (id === "34") {
       return handleReplaceActionCard(id);
     }
@@ -136,7 +136,10 @@ const playActionCardEventListener = () => {
     }
 
     try {
-      const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+      const res = await fetch(`game/action-card/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+      });
       const { state, success, result, message } = await res.json();
 
       if (!success) {

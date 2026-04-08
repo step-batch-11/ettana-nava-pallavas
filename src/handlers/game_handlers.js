@@ -1,23 +1,40 @@
+import { getCookie } from "hono/cookie";
+
 export const serveGameState = (ctx) => {
   try {
-    const gameController = ctx.get("gameController");
-    const gameState = gameController.getGameState();
+    const sessionId = getCookie(ctx, "sessionId");
+    const rooms = ctx.get("rooms");
+    const sessions = ctx.get("sessions");
+    const session = sessions.get(sessionId);
+    const room = rooms[session.roomId];
 
-    return ctx.json({ success: true, state: gameState });
+    const gameState = room.state.getGameState(session.playerId);
+    return ctx.json({
+      success: true,
+      state: gameState,
+      requesterId: session.playerId,
+    });
   } catch (e) {
+    console.log(e);
     return ctx.json({ success: false, error: e.message });
   }
 };
 
 export const handleDiceRoll = (ctx) => {
   try {
-    const gameController = ctx.get("gameController");
-    const { diceValues, destinations } = gameController.upkeep();
+    const sessionId = getCookie(ctx, "sessionId");
+    const rooms = ctx.get("rooms");
+    const sessions = ctx.get("sessions");
+    const session = sessions.get(sessionId);
+    const room = rooms[session.roomId];
 
-    const gameState = gameController.getGameState();
+    const { diceValues, destinations } = room.state.upkeep(session.playerId);
+
+    const gameState = room.state.getGameState(session.playerId);
 
     return ctx.json({ gameState, destinations, diceValues });
   } catch (e) {
+    console.log(e);
     return ctx.json({ success: false, error: e.message });
   }
 };
@@ -68,14 +85,20 @@ export const claimDesign = (context) => {
 export const handleMove = async (ctx) => {
   try {
     const destination = await ctx.req.json();
-    const gameController = ctx.get("gameController");
-    const result = gameController.move(destination);
+    const sessionId = getCookie(ctx, "sessionId");
+    const rooms = ctx.get("rooms");
+    const sessions = ctx.get("sessions");
+    const session = sessions.get(sessionId);
+    const room = rooms[session.roomId];
+
+    const result = room.state.move(destination);
 
     return ctx.json(
       { success: true, result: { ...result, message: "Moved successfully" } },
       200,
     );
   } catch (error) {
+    console.log(error);
     return ctx.json({ success: false, message: error.message }, 400);
   }
 };

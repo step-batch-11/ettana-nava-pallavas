@@ -18,9 +18,8 @@ export default class GameController {
     return this.game;
   }
 
-  getGameState(_id) {
-    const currentPlayer = this.game.getCurrentPlayer();
-    return this.game.getGameState(currentPlayer.getId());
+  getGameState(id) {
+    return this.game.getGameState(id);
   }
 
   move(destination) {
@@ -32,13 +31,13 @@ export default class GameController {
     return result;
   }
 
-  upkeep() {
+  upkeep(id) {
     if (this.playerActions.diceRolled) {
       throw new Error("you can't roll again");
     }
     this.playerActions.diceRolled = true;
     this.playerActions.isLastMove = false;
-    return this.game.upkeep();
+    return this.game.upkeep(id);
   }
 
   freeSwap(position, yarn) {

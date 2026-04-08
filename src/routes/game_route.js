@@ -12,6 +12,7 @@ import {
   rotateDesignCard,
   serveGameState,
 } from "../handlers/game_handlers.js";
+import { serveStatic } from "hono/deno";
 
 const gameRoute = new Hono();
 
@@ -27,5 +28,7 @@ gameRoute.post("/paid-swap", handlePaidSwap);
 gameRoute.patch("/action-card/:id", playActionCard);
 gameRoute.post("/perform-action-card", performActionCard);
 gameRoute.patch("/rotate-design-card/:id", rotateDesignCard);
+
+gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
 
 export default gameRoute;
