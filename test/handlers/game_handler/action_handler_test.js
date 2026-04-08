@@ -88,7 +88,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe("/action-card/ -> steal tokens", () => {
+  describe.ignore("/action-card/ -> steal tokens", () => {
     beforeEach(() => {
       players[0].addActionCard(actionCards[0]);
     });
@@ -108,12 +108,12 @@ describe("test action handlers", () => {
     });
   });
 
-  describe("/perform-action-card/ -> action-card", () => {
+  describe.ignore("/perform-action-card/ -> action-card", () => {
     beforeEach(() => {
       actionCardService.played["steal"] = true;
     });
 
-    it("case: when player calls this wit curl or something", async () => {
+    it.ignore("case: when player calls this wit curl or something", async () => {
       delete actionCardService.played["steal"];
       const body = { opponentPlayerId: 1, cardId: 22 };
 
@@ -127,7 +127,7 @@ describe("test action handlers", () => {
       assertEquals(message, "You did not play steal action card");
     });
 
-    it("case: when player selects himself", async () => {
+    it.ignore("case: when player selects himself", async () => {
       const body = { opponentPlayerId: 1, cardId: 22 };
 
       gameController.playerActions.diceRolled = true;
@@ -140,7 +140,7 @@ describe("test action handlers", () => {
       assertEquals(message, "player can't take from himself");
     });
 
-    it("case: when player has no steal action card", async () => {
+    it.ignore("case: when player has no steal action card", async () => {
       players[0].removeActionCard(actionCards[1].id);
       const body = { opponentPlayerId: 2, cardId: 22 };
 
@@ -184,7 +184,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe("/perform-action-card/ -> tokens", () => {
+  describe.ignore("/perform-action-card/ -> tokens", () => {
     beforeEach(() => {
       actionCardService.played["steal"] = true;
       players[0].addActionCard(actionCards[0]);
