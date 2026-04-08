@@ -40,6 +40,10 @@ export default class LobbyController {
   }
 
   async startGame() {
+    if (this.#players.length < 2) {
+      throw new Error("Not enough player to start the game");
+    }
+
     const gameSetup = new GameSetup(
       this.#players,
       new Bank(getAllDesignCard(), getAllActionCard()),

@@ -54,6 +54,8 @@ export const handleJoinLobby = async (context) => {
     const rooms = context.get("rooms");
     const sessions = context.get("sessions");
     const payload = await context.req.json();
+    if (!(payload.roomId in rooms)) throw new Error("No Lobby Found");
+
     const room = rooms[payload.roomId];
 
     const player = new Player(Date.now(), payload.username);

@@ -1,3 +1,5 @@
+import { showToast } from "/pages/utils/utils.js";
+
 const modal = document.getElementById("modal");
 const modalTitle = document.getElementById("modalTitle");
 const inputField = document.getElementById("inputField");
@@ -49,9 +51,12 @@ const handleJoinGame = async (value) => {
   });
 
   const resBody = await res.json();
-  if (resBody.success) {
-    globalThis.location.assign("/lobby");
+  if (!resBody.success) {
+    showToast(resBody.error, "e");
+    return;
   }
+
+  globalThis.location.assign("/lobby");
 };
 
 submitBtn.addEventListener("click", () => {
