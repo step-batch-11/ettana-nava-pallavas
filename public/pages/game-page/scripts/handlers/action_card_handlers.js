@@ -106,7 +106,7 @@ export const performSteal = async (id, object) => {
   );
 };
 
-const renderPlayers = (object, playerIds, players) => {
+const renderPlayers = (object, {opponents}, players) => {
   selectorArea.style.display = "block";
 
   const h2 = document.createElement("h2");
@@ -115,7 +115,7 @@ const renderPlayers = (object, playerIds, players) => {
   const section = document.createElement("section");
   section.className = "players-selection-area";
 
-  const playerCards = playerIds.map((id) => {
+  const playerCards = opponents.map((id) => {
     const player = getPlayerById(players, id);
     return createPlayerCard(player);
   });

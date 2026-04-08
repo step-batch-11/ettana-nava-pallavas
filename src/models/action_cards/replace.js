@@ -13,14 +13,11 @@ export default class Replace {
     const { reservedTiles, reservedYarns } = game.getReserveElementsFromBank();
 
     return {
-      state: game.getGameState(),
-      result: {
-        boardTiles,
-        boardYarns,
-        reservedTiles,
-        reservedYarns,
-        message: "Choose tiles to replace",
-      },
+      boardTiles,
+      boardYarns,
+      reservedTiles,
+      reservedYarns,
+      message: "Choose tiles to replace",
     };
   }
 
@@ -41,11 +38,6 @@ export default class Replace {
     currentPlayer.removeActionCard(cardId);
     delete played.replace;
 
-    return {
-      state: game.getGameState(),
-      result: {
-        message: `${type} changed with reserved`,
-      },
-    };
+    return { message: `${type} changed with reserved` };
   };
 }

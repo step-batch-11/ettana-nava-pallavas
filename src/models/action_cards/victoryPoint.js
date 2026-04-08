@@ -4,11 +4,6 @@ export default class VictoryPoint {
     currentPlayer.removeActionCard(id);
     currentPlayer.updateVp(1);
 
-    return {
-      state: game.getGameState(),
-      result: {
-        message: "Victory point added to the player",
-      },
-    };
+    return { message: "Victory point added to the player" };
   }
 }

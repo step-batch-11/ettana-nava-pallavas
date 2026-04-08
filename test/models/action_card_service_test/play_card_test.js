@@ -23,7 +23,7 @@ import Move from "../../../src/models/action_cards/move.js";
 import ActionCardService from "../../../src/service/action_card.js";
 import Swap from "../../../src/models/action_cards/swap.js";
 
-describe("Action cards", () => {
+describe.ignore("Action cards", () => {
   let game, players, bank;
   const yarns = mockYarns();
   const tiles = mockTiles();

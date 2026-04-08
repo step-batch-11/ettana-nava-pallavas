@@ -55,6 +55,9 @@ export default class Player {
   addAllDesignCardDev(...card) {
     this.#dc.push(...card);
   }
+  addAllActionCardDev(...card) {
+    this.#ac.push(...card);
+  }
 
   addActionCard(card) {
     this.#ac.push(card);

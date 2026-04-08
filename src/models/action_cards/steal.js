@@ -5,8 +5,8 @@ export default class Steal {
     played["steal"] = true;
 
     const opponents = game.filterOpponents(predicate);
-
-    return { result: opponents, state: game.getGameState() };
+    
+    return { opponents, message: "Choose an opponent" };
   }
 
   static stealTokens(payload, currentPlayer, played, game) {
@@ -30,7 +30,7 @@ export default class Steal {
       "tokens",
     );
 
-    return { result: { message }, state: game.getGameState() };
+    return { message };
   }
 
   static isPlayed(played) {
@@ -60,6 +60,6 @@ export default class Steal {
       "action card",
     );
 
-    return { result: { message }, state: game.getGameState() };
+    return { message };
   }
 }

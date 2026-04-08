@@ -1,6 +1,7 @@
 import Player from "../models/player.js";
 import LobbyController from "../models/lobby.js";
 import { getCookie, setCookie } from "hono/cookie";
+import {  getAllActionCard } from "../utils/mock_data.js";
 
 export const handleCreateLobby = async (context) => {
   try {
@@ -19,6 +20,14 @@ export const handleCreateLobby = async (context) => {
       hostId: player.getId(),
       name: payload.name,
     };
+
+    // player.addActionCard(getActionCard(acMap.stealActionCard));
+    // player.addActionCard(getActionCard(acMap.stealActionCard));
+    // player.addActionCard(getActionCard(acMap.stealActionCard));
+    // player.addActionCard(getActionCard(acMap.stealActionCard));
+    // player.addActionCard(getActionCard(acMap.stealActionCard));
+    // player.addActionCard(getActionCard(acMap.stealActionCard));
+    player.addAllActionCardDev(...getAllActionCard());
 
     player.assignRoomId(room.id);
     rooms[room.id] = room;
@@ -51,7 +60,7 @@ export const handleJoinLobby = async (context) => {
     players[player.getId()] = player;
     room.state.addPlayer(player);
     player.assignRoomId(room.id);
-
+    player.addAllActionCardDev(...getAllActionCard());
     const sessionId = sessions.add(player.getId(), room.id);
     setCookie(context, "sessionId", sessionId);
 

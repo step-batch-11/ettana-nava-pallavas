@@ -1,13 +1,8 @@
 export default class Preset {
-  static play(played, _id, game) {
+  static play(played, _id, _game) {
     played["preset"] = true;
 
-    return {
-      state: game.getGameState(),
-      result: {
-        message: "Choose a color dice",
-      },
-    };
+    return { message: "Choose a color dice" };
   }
 
   static rollNumberDice(payload, currentPlayer, played, game) {
@@ -19,13 +14,11 @@ export default class Preset {
 
     currentPlayer.removeActionCard(payload.cardId);
     delete played.preset;
+    
     return {
-      result: {
-        diceValues,
-        destinations,
-        message: "preset action card played successfully",
-      },
-      state: game.getGameState(),
+      diceValues,
+      destinations,
+      message: "preset action card played successfully",
     };
   }
 }

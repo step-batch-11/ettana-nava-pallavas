@@ -105,7 +105,7 @@ export default class GameController {
     }
 
     if (cardId === 13) {
-      return !this.playerActions.diceRolled && this.game.sate === "game";
+      return !this.playerActions.diceRolled && this.game.state === "game";
     }
 
     if (cardId === 28) {

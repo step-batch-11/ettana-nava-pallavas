@@ -21,10 +21,6 @@ export default class Tax {
     game.creditToBank(collectedTax);
     currentPlayer.removeActionCard(id);
 
-    return {
-      result: { affectedPlayers, message: "Tax payed successfully" },
-      state: game.getGameState(),
-      message: "Tax action card played",
-    };
+    return { affectedPlayers, message: "Tax action card played" };
   }
 }

@@ -6,9 +6,6 @@ export default class GetDesignCard {
     currentPlayer.addDesignCard(designCard);
     currentPlayer.removeActionCard(id);
 
-    return {
-      result: { message: "design card added" },
-      state: game.getGameState(),
-    };
+    return { message: "design card added" };
   }
 }
