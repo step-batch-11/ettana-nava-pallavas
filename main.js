@@ -13,7 +13,7 @@ import { Lobby } from "./src/models/lobby.js";
 const main = () => {
   const player1 = new Player(1, "A");
   player1.setup(1, { x: -1, y: -1 });
-  
+
   const player2 = new Player(2, "B");
   player2.setup(2, { x: -1, y: -1 });
 
@@ -24,8 +24,8 @@ const main = () => {
   );
   const actionCardService = new ActionCardService();
   const gameController = new GameController(gameState, actionCardService);
-
   const lobbyController = new Lobby(1);
+
   const PORT = Deno.env.get("PORT") || 8000;
   const app = createApp(
     gameState,
@@ -33,6 +33,7 @@ const main = () => {
     actionCardService,
     lobbyController,
   );
+
   Deno.serve({ port: PORT }, app.fetch);
 };
 
