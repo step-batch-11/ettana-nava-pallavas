@@ -131,7 +131,7 @@ export default class GameController {
 
   exchangeDesignCard(designCardId) {
     if (this.playerActions.anyActionDone || !this.playerActions.diceRolled) {
-      throw new Error("exchange design card should happen before any action");
+      throw new Error("exchange design card only after dice roll and before any action.");
     }
 
     this.game.exchangeDesignCard(designCardId);
