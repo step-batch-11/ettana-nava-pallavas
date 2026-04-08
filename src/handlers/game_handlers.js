@@ -16,7 +16,7 @@ export const handleDiceRoll = (context) => {
 
     const gameState = gameController.getGameState();
 
-    return context.json({ gameState, destinations, diceValues });
+    return context.json({ success: true, gameState, destinations, diceValues });
   } catch (e) {
     return context.json({ success: false, error: e.message });
   }

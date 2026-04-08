@@ -6,13 +6,18 @@ import {
   updateDice,
 } from "./utilities/game_utilities.js";
 import { removeTileEventListeners } from "./utilities/board_utilities.js";
+import { showToast } from "../../utils/utils.js";
 
 const rollDiceForTurn = async () => {
-  const { diceValues, destinations } = await rollDice();
-  updateDice(diceValues);
+  const response = await rollDice();
+  if (!response.success) {
+    showToast("you can't roll dice again");
+  }
+  
+  updateDice(response.diceValues);
   removeMoveClass();
   removeTileEventListeners();
-  renderMoveOptions(destinations);
+  renderMoveOptions(response.destinations);
   renderGame();
 };
 
