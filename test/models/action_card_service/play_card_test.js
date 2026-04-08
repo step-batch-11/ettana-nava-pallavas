@@ -18,6 +18,7 @@ import Gain from "../../../src/models/action_cards/gain_token.js";
 import VictoryPoint from "../../../src/models/action_cards/victoryPoint.js";
 import CollectToken from "../../../src/models/action_cards/collect_token.js";
 import GetDesignCard from "../../../src/models/action_cards/get_design_card.js";
+import Tax from "../../../src/models/action_cards/tax.js";
 
 describe("Action cards", () => {
   let game, players, bank;
@@ -48,12 +49,28 @@ describe("Action cards", () => {
 
       VictoryPoint.play(cardId, game);
 
-      const playerActionCardsAfter = players[0].getAc();
       const playerVPCardsAfter = players[0].getVp();
 
-      assertEquals(playerActionCardsAfter, []);
       assertEquals(playerVPCardsAfter, 1);
-      assertEquals(isPresent(playerActionCardsAfter, ac), false);
+      assertEquals(isPresent(players[0].getAc(), ac), false);
+    });
+  });
+
+  describe("Play Tax Action Card", () => {
+    it("should collect tax from other players", () => {
+      const cardId = acMap.tax;
+      const ac = getActionCard(cardId);
+
+      players[0].addActionCard(ac);
+      players[1].creditTokens(1);
+
+      Tax.play(cardId, game);
+
+      const actionCardOnHand = players[0].getAc();
+
+      assertEquals(actionCardOnHand, []);
+      assertEquals(players[1].getTokens(), 0);
+      assertEquals(isPresent(actionCardOnHand, ac), false);
     });
   });
 
