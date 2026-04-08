@@ -55,15 +55,14 @@ export const removeMoveClass = () => {
 };
 
 const displacePin = ({ source, destination }) => {
-  const sourceTile = document.querySelector(`#tile${source.x}${source.y}`);
+  removeMoveClass();
   const destinationTile = document.querySelector(
     `#tile${destination.x}${destination.y}`,
   );
-
+  const sourceTile = document.querySelector(`#tile${source.x}${source.y}`);
   const playerIcon = sourceTile.querySelector(".player-icon");
   sourceTile.removeChild(playerIcon);
   destinationTile.appendChild(playerIcon);
-  removeMoveClass();
 };
 
 const fetchMoveResult = async (payload, path = "move") => {

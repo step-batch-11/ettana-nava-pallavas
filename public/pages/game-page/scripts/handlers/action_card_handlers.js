@@ -1,5 +1,4 @@
 import {
-  createPopup,
   getPlayerById,
   openDialog,
   showToast,
@@ -82,7 +81,7 @@ export const performSteal = async (id, object) => {
   const { state, success, result } = await res.json();
 
   if (!success) {
-    return showToast(result.message, "e");
+    return showToast(message, "e");
   }
 
   if (result.length === 0) {
@@ -131,8 +130,21 @@ const steal = async (card, id) => {
   renderGame(state);
 };
 
-const highlight = (element) => {
-  element.classList.add("jump-move");
+const createReplacePopup = (e, type) => {
+  replacePopup.style.display = "block";
+  replacePopup.style.top = `${e.screenY - 100}px`;
+  replacePopup.style.left = `${e.screenX - 100}px`;
+  const h2 = document.createElement("h2");
+  h2.innerText = `select ${type} to replace`;
+  const section = document.createElement("section");
+  section.className = "reserve-selection-area";
+  const closeBtn = document.createElement("button");
+  closeBtn.textContent = "X";
+  return { closeBtn, section, h2 };
+};
+
+const highlight = (element, cls) => {
+  element.classList.add(cls);
 };
 
 const replaceElement = async (cardId, position, reservePosition, type) => {
@@ -158,7 +170,7 @@ const createTiles = (tiles, position, cardId) => {
   return tiles.map((value, index) => {
     const tilePlaceholder = document.createElement("div");
     tilePlaceholder.classList.add("tile");
-    const tileValue = document.createElement("span");
+    const tileValue = document.createElement("h4");
     tileValue.textContent = value;
 
     tilePlaceholder.append(tileValue);
@@ -186,16 +198,17 @@ const createYarns = (yarns, position, cardId) => {
   });
 };
 
+const closeReplacePopup = (closePopup) => {
+  closePopup.addEventListener("click", () => {
+    replacePopup.innerHTML = "";
+    replacePopup.style.display = "none";
+    removeTileHighlighting();
+  });
+};
+
 const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
   element.addEventListener("click", (e) => {
-    replacePopup.style.display = "block";
-    replacePopup.style.top = `${e.screenY - 100}px`;
-    replacePopup.style.left = `${e.screenX - 100}px`;
-    const h2 = document.createElement("h2");
-    h2.innerText = `select ${type} to replace`;
-
-    const section = document.createElement("section");
-    section.className = "reserve-selection-area";
+    const { closeBtn, section, h2 } = createReplacePopup(e, type);
 
     const elements = type === "tile"
       ? createTiles(reserved, position, cardId)
@@ -203,8 +216,38 @@ const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
 
     section.append(...elements);
     replacePopup.innerHTML = "";
-    replacePopup.append(h2, section);
-    console.log(".....", replacePopup);
+    replacePopup.append(h2, section, closeBtn);
+
+    closeReplacePopup(closeBtn);
+  });
+};
+
+const highlightYarns = (boardYarns, cardId, reservedYarns) => {
+  boardYarns.forEach((col, x) => {
+    col.forEach((_colourId, y) => {
+      const yarn = document.querySelector(`#r-${x}-c-${y}`);
+      if (!yarn) return;
+      highlight(yarn, "yarn-replace");
+      addReplaceListener(
+        { element: yarn, position: { x, y }, type: "yarn" },
+        cardId,
+        reservedYarns,
+      );
+    });
+  });
+};
+
+const highlightTiles = (boardTiles, cardId, reservedTiles) => {
+  boardTiles.forEach(([x, y]) => {
+    const tile = document.querySelector(`#tile${x}${y}`);
+    if (!tile) return;
+
+    highlight(tile, "jump-move");
+    addReplaceListener(
+      { element: tile, position: { x, y }, type: "tile" },
+      cardId,
+      reservedTiles,
+    );
   });
 };
 
@@ -217,37 +260,15 @@ export const handleReplaceActionCard = async (cardId) => {
   const { boardTiles, boardYarns, reservedTiles, reservedYarns } = result;
   if (!success) return showToast(message, "e");
 
-  boardTiles.forEach(([x, y]) => {
-    const tile = document.querySelector(`#tile${x}${y}`);
-    if (!tile) return;
-
-    highlight(tile);
-    addReplaceListener(
-      { element: tile, position: { x, y }, type: "tile" },
-      cardId,
-      reservedTiles,
-    );
-  });
-
-  boardYarns.forEach((col, x) => {
-    col.forEach((_colourId, y) => {
-      const yarn = document.querySelector(`#r-${x}-c-${y}`);
-      if (!yarn) return;
-      highlight(yarn);
-      addReplaceListener(
-        { element: yarn, position: { x, y }, type: "yarn" },
-        cardId,
-        reservedYarns,
-      );
-    });
-  });
+  highlightTiles(boardTiles, cardId, reservedTiles);
+  highlightYarns(boardYarns, cardId, reservedYarns);
 
   showToast(result.message);
   renderGame(state);
 };
 
 export const handleGainToken = () => {
-  createPopup();
+  createReplacePopup();
   openDialog();
 
   const dice = document.querySelector("#dice");

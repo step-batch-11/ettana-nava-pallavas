@@ -129,7 +129,7 @@ export const removeTileHighlighting = () => {
   });
 
   yarns.forEach((tile) => {
-    tile.classList.remove("jump-move");
+    tile.classList.remove("yarn-replace");
     tile.style.boxShadow = "none";
   });
 };

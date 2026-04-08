@@ -3,10 +3,12 @@ import {
   buyActionCard,
   buyDesignCard,
   claimDesign,
+  exchangeDesignCard,
   handleDiceRoll,
   handleMove,
   handlePaidSwap,
   handleSwap,
+  passTurn,
   performActionCard,
   playActionCard,
   rotateDesignCard,
@@ -24,10 +26,12 @@ gameRoute.get("/buy-design-card", buyDesignCard);
 gameRoute.get("/buy-action-card", buyActionCard);
 gameRoute.get("/claim-design/:id", claimDesign);
 gameRoute.post("/paid-swap", handlePaidSwap);
+gameRoute.post("/passTurn", passTurn);
 // gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
 gameRoute.patch("/action-card/:id", playActionCard);
 gameRoute.post("/perform-action-card", performActionCard);
 gameRoute.patch("/rotate-design-card/:id", rotateDesignCard);
+gameRoute.patch("/exchange-design-card/:id", exchangeDesignCard);
 
 gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
 
