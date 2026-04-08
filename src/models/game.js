@@ -18,6 +18,7 @@ export default class Game {
     randomFn = Math.random,
     currentPlayerIndex = 0,
   ) {
+    this.state = "game";
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
@@ -94,12 +95,13 @@ export default class Game {
       .find(({ id }) => id === Number(designCardId));
 
     const { yarns } = this.#board.getState();
-
     const status = this.#board.matchPattern(yarns, designCard.design);
+
     if (status.isMatched) {
       currentPlayer.updateVp(designCard.victoryPoints);
       currentPlayer.removeDesignCard(Number(designCardId));
     }
+
     return status;
   }
 

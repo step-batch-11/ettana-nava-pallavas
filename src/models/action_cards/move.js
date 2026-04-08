@@ -3,13 +3,8 @@ import { findAdjacentYarns } from "../../utils/color_dice_action.js";
 export default class Move {
   static play(played, _id, game) {
     played["move"] = true;
-    // if (this.#playerActions.isMoved) {
-    //   throw new Error("Already move action performed!");
-    // }
 
     const availableDestinations = game.getPossibleDestinations();
-
-    // this.#playerActions.isMoved = true;
 
     return {
       result: { availableDestinations },

@@ -1,8 +1,7 @@
 export const rollDice = async () => {
-  const response = await fetch("/game/roll", {
-    method: "POST",
-  });
-  return response.json();
+  const response = await fetch("/game/roll", { method: "POST" });
+
+  return await response.json();
 };
 
 export const getGameState = async () => {
@@ -18,10 +17,15 @@ export const claimDesignCard = async (id) => {
 
 export const playActionCard = async (id) => {
   const res = await fetch(`/game/action-card/${id}`, { method: "PATCH" });
-  return res.json();
+  return await res.json();
 };
 
 export const sendRequest = async (path) => {
   const response = await fetch(path);
+  return await response.json();
+};
+
+export const changeTurnRequest = async (path) => {
+  const response = await fetch(path, { method: "POST" });
   return await response.json();
 };

@@ -28,8 +28,6 @@ export class Lobby {
   }
 
   exitLobby(playerId) {
-    console.log(playerId);
-
     delete this.#room.players[playerId];
   }
 

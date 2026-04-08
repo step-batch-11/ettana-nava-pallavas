@@ -106,7 +106,6 @@ export const addDragAndDropOnYarns = (yarn, yarnPosition, resource) => {
 };
 
 export const handleSwapEvent = (path = "/game/paid-swap") => {
-  // const yarnsPosition = await fetch()
   const yarnsPosition = getAllYarnsPosition();
   highlightYarns(yarnsPosition);
 

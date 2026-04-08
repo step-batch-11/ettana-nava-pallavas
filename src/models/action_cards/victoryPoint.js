@@ -1,4 +1,4 @@
-export default class VictoryPoint{
+export default class VictoryPoint {
   static play(id, game) {
     const currentPlayer = game.getCurrentPlayer();
     currentPlayer.removeActionCard(id);

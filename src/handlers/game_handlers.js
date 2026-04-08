@@ -16,7 +16,7 @@ export const handleDiceRoll = (context) => {
 
     const gameState = gameController.getGameState();
 
-    return context.json({ gameState, destinations, diceValues });
+    return context.json({ success: true, gameState, destinations, diceValues });
   } catch (e) {
     return context.json({ success: false, error: e.message });
   }
@@ -127,6 +127,7 @@ export const performActionCard = async (context) => {
   try {
     const gameController = context.get("gameController");
     const payload = await context.req.json();
+
     const { result, state } = gameController.performAction(payload);
 
     return context.json({ result, state, success: true });

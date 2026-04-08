@@ -15,7 +15,7 @@ export const updateDice = ({ number, colorId }) => {
   colorDice.replaceChildren(diceColor);
 };
 
-export const removeEventListeners = (elements) => { // Can use .removeEventListener
+export const removeEventListeners = (elements) => {
   elements.forEach((tile) => {
     tile.replaceWith(tile.cloneNode(true));
   });
