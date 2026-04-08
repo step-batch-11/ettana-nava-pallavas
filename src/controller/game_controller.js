@@ -108,8 +108,8 @@ export default class GameController {
       throw new Error("action card can't be played");
     }
 
-    this.playerActions.isLastMove = cardId === 1;
-    this.playerActions.moved = cardId === 1;
+    this.playerActions.isLastMove = payload.cardId === 1;
+    this.playerActions.moved = payload.cardId === 1;
 
     this.playerActions.anyActionDone = true;
     return this.actionCardService.performAction(payload, this.game);
@@ -130,7 +130,7 @@ export default class GameController {
 
   exchangeDesignCard(designCardId) {
     if (this.playerActions.anyActionDone || !this.playerActions.diceRolled) {
-      throw new Error("exchange design card should happen before any action");
+      throw new Error("exchange design card only after dice roll and before any action.");
     }
 
     this.game.exchangeDesignCard(designCardId);

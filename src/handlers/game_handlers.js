@@ -31,7 +31,7 @@ export const handleDiceRoll = (context) => {
 
     const gameState = room.state.getGameState(session.playerId);
 
-    return context.json({ gameState, destinations, diceValues });
+    return context.json({ success: true, gameState, destinations, diceValues });
   } catch (e) {
     console.log(e);
     return context.json({ success: false, error: e.message });
@@ -147,7 +147,6 @@ export const playActionCard = (context) => {
     const cardId = Number(context.req.param("id"));
 
     const { result, state } = gameController.playCard(cardId);
-    console.log({ result });
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -159,6 +158,7 @@ export const performActionCard = async (context) => {
   try {
     const gameController = context.get("gameController");
     const payload = await context.req.json();
+
     const { result, state } = gameController.performAction(payload);
 
     return context.json({ result, state, success: true });

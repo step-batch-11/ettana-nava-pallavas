@@ -31,3 +31,8 @@ export const sendRequest = async (path) => {
   const response = await fetch(path, { credentials: "include" });
   return await response.json();
 };
+
+export const changeTurnRequest = async (path) => {
+  const response = await fetch(path, { method: "POST" });
+  return await response.json();
+};
