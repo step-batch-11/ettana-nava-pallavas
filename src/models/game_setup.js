@@ -83,7 +83,12 @@ export default class GameSetup {
     this.#players.forEach((player) => {
       const token = this.#bank.deductTokens(2);
       const designCard = this.#bank.getDesignCard();
-      const actionCard = this.#bank.getActionCard();
+      let actionCard = this.#bank.getActionCard();
+
+      while (actionCard.id === 16) {
+        actionCard = this.#bank.getActionCard();
+      }
+
       player.addDesignCard(designCard);
       player.addActionCard(actionCard);
       player.creditTokens(token);

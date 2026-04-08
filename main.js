@@ -9,7 +9,6 @@ import GameSetup from "./src/models/game_setup.js";
 import GameController from "./src/controller/game_controller.js";
 import ActionCardService from "./src/service/action_card.js";
 import Session from "./src/models/session.js";
-import { acMap, getActionCard } from "./src/utils/mock_data.js";
 
 const main = () => {
   const player1 = new Player(1, "A");
@@ -17,25 +16,6 @@ const main = () => {
 
   const player2 = new Player(2, "B");
   player2.setup(2, { x: -1, y: -1 });
-  player1.addActionCard(getActionCard(acMap.move))
-  player1.addActionCard(getActionCard(acMap.preset))
-  player1.addActionCard(getActionCard(acMap.tax))
-  player1.addActionCard(getActionCard(acMap.swap))
-  player1.addActionCard(getActionCard(acMap.replace))
-  player1.addActionCard(getActionCard(acMap.stealActionCard))
-  player1.addActionCard(getActionCard(acMap.stealToken))
-  player1.addActionCard(getActionCard(acMap.collectToken))
-  player1.addActionCard(getActionCard(acMap.getDesignCard))
-  
-  player2.addActionCard(getActionCard(acMap.move))
-  player2.addActionCard(getActionCard(acMap.preset))
-  player2.addActionCard(getActionCard(acMap.tax))
-  player2.addActionCard(getActionCard(acMap.swap))
-  player2.addActionCard(getActionCard(acMap.replace))
-  player2.addActionCard(getActionCard(acMap.stealActionCard))
-  player2.addActionCard(getActionCard(acMap.stealToken))
-  player2.addActionCard(getActionCard(acMap.collectToken))
-  player2.addActionCard(getActionCard(acMap.getDesignCard))
 
   const gameState = new GameSetup(
     [player1, player2],

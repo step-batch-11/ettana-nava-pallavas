@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
 import gameRoute from "./routes/game_route.js";
 import { logger } from "hono/logger";
-import lobbyRoute from "./routes/lobby_rotue.js";
 import { getCookie } from "hono/cookie";
+import lobbyRoute from "./routes/lobby_route.js";
 
 export const createApp = (
   gameState,

@@ -101,11 +101,11 @@ export default class GameController {
 
   canActionBeDone(cardId) {
     if (cardId === 1) {
-      return !this.playerActions.moved;
+      return !this.playerActions.moved && this.playerActions.diceRolled;
     }
 
     if (cardId === 13) {
-      return !this.playerActions.diceRolled;
+      return !this.playerActions.diceRolled && this.game.sate === "game";
     }
 
     return this.playerActions.diceRolled;

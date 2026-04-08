@@ -24,7 +24,7 @@ export default class Swap {
     game.swapYarns(payload.draggablePosition, payload.yarnPosition);
     currentPlayer.removeActionCard(payload.cardId);
     delete played.swap;
-    
+
     return {
       result: { message: "Swap action card played" },
       state: game.getGameState(),

@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { assertEquals, assertFalse } from "@std/assert";
+import { assertEquals, assertFalse, assertThrows } from "@std/assert";
 import Game from "../../../src/models/game.js";
 import Bank from "../../../src/models/bank.js";
 import Board from "../../../src/models/board.js";
@@ -19,6 +19,9 @@ import VictoryPoint from "../../../src/models/action_cards/victoryPoint.js";
 import CollectToken from "../../../src/models/action_cards/collect_token.js";
 import GetDesignCard from "../../../src/models/action_cards/get_design_card.js";
 import Tax from "../../../src/models/action_cards/tax.js";
+import Move from "../../../src/models/action_cards/move.js";
+import ActionCardService from "../../../src/service/action_card.js";
+import Swap from "../../../src/models/action_cards/swap.js";
 
 describe("Action cards", () => {
   let game, players, bank;
@@ -90,6 +93,162 @@ describe("Action cards", () => {
       assertEquals(actionCardOnHand, []);
       assertEquals(designCardOnHand.length, 1);
       assertEquals(isPresent(actionCardOnHand, ac), false);
+    });
+  });
+
+  describe("Play Swap action card", () => {
+    let actionCardService;
+
+    beforeEach(() => {
+      actionCardService = new ActionCardService();
+    });
+
+    it("Should throw an error if player didn't play swap", () => {
+      const cardId = acMap.swap;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+
+      assertThrows(() => Swap.performSwap(_, _, played, game));
+    });
+
+    it("Should able to move anywhere on the unoccupied positions", () => {
+      const cardId = acMap.swap;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+      played.swap = true;
+
+      const payload = {
+        draggablePosition: { x: 0, y: 0 },
+        yarnPosition: { x: 0, y: 0 },
+      };
+
+      assertThrows(() => Swap.performSwap(payload, _, played, game));
+    });
+
+    it("Should able to swap", () => {
+      const cardId = acMap.swap;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+      played.swap = true;
+
+      const payload = {
+        draggablePosition: { x: 0, y: 0 },
+        yarnPosition: { x: 0, y: 1 },
+      };
+
+      const info = Swap.performSwap(payload, players[0], played, game);
+
+      assertEquals(info.result.message, "Swap action card played");
+    });
+
+    it("Should able to play swap", () => {
+      const cardId = acMap.swap;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+      const info = Swap.play(played, cardId, game);
+
+      assertEquals(info.result.swappableYarns, [
+        [2, 1, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+        [5, 4, 3, 2, 1],
+        [1, 2, 3, 4, 5],
+      ]);
+    });
+  });
+
+  describe("Play Move action card", () => {
+    let actionCardService;
+
+    beforeEach(() => {
+      actionCardService = new ActionCardService();
+    });
+
+    it("Should throw an error if player didn't move", () => {
+      const cardId = acMap.move;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+
+      assertThrows(() => Move.performMove(_, _, played, game));
+    });
+
+    it("Should able to move anywhere on the unoccupied positions", () => {
+      const cardId = acMap.move;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+      played.move = true;
+
+      const payload = { cardId: 1, destination: { x: 1, y: 1 } };
+      const info = Move.performMove(payload, players[0], played, game);
+
+      assertEquals(info.result.adjYarns, [
+        { x: 0, y: 0 },
+        { x: 0, y: 1 },
+        { x: 1, y: 0 },
+        { x: 1, y: 1 },
+      ]);
+    });
+
+    it("Should able to move anywhere on the unoccupied positions", () => {
+      const cardId = acMap.move;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      const played = actionCardService.played;
+      const info = Move.play(played, cardId, game);
+
+      assertEquals(info.result, {
+        availableDestinations: [
+          [0, 0],
+          [0, 1],
+          [0, 2],
+          [0, 3],
+          [0, 4],
+          [0, 5],
+          [1, 0],
+          [1, 1],
+          [1, 2],
+          [1, 3],
+          [1, 4],
+          [1, 5],
+          [2, 0],
+          [2, 1],
+          [2, 2],
+          [2, 3],
+          [2, 4],
+          [2, 5],
+          [3, 0],
+          [3, 1],
+          [3, 2],
+          [3, 3],
+          [3, 4],
+          [3, 5],
+          [4, 0],
+          [4, 1],
+          [4, 2],
+          [4, 3],
+          [4, 4],
+          [4, 5],
+          [5, 0],
+          [5, 1],
+          [5, 2],
+          [5, 3],
+          [5, 4],
+          [5, 5],
+        ],
+      });
     });
   });
 

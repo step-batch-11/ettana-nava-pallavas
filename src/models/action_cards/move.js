@@ -17,12 +17,17 @@ export default class Move {
     if (!played["move"]) {
       throw new Error("You didn't play move action card");
     }
+
     const source = currentPlayer.getPosition();
+
     currentPlayer.move(payload.destination);
     currentPlayer.removeActionCard(payload.cardId);
+
     const moveResult = { source, destination: payload.destination };
     const adjYarns = findAdjacentYarns(moveResult.destination);
+
     delete played.move;
+
     return {
       result: { adjYarns, moveResult, message: "moved successfully" },
       state: game.getGameState(),
