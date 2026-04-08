@@ -46,6 +46,7 @@ describe("Action cards", () => {
       const cardId = acMap.victoryPoint;
       const ac = getActionCard(cardId);
       players[0].addActionCard(ac);
+      players[1].addActionCard(ac);
 
       VictoryPoint.play(cardId, game);
 
@@ -53,6 +54,7 @@ describe("Action cards", () => {
 
       assertEquals(playerVPCardsAfter, 1);
       assertEquals(isPresent(players[0].getAc(), ac), false);
+      assertEquals(isPresent(players[1].getAc(), ac), true);
     });
   });
 

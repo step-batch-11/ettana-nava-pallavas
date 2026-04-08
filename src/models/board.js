@@ -79,20 +79,20 @@ export default class Board {
     return { isMatched: false };
   }
 
-  getTileValue({x, y}) {
+  getTileValue({ x, y }) {
     return this.#tiles[x][y];
   }
 
-  changeTileValue({x, y}, value) {
+  changeTileValue({ x, y }, value) {
     this.#tiles[x][y] = value;
     return value;
   }
 
-  getYarnColourId({x, y}) {
+  getYarnColourId({ x, y }) {
     return this.#yarns[x][y];
   }
 
-  changeYarnColourId({x, y}, value) {
+  changeYarnColourId({ x, y }, value) {
     this.#yarns[x][y] = value;
     return value;
   }

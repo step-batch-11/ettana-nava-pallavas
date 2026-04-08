@@ -95,12 +95,13 @@ export default class Game {
       .find(({ id }) => id === Number(designCardId));
 
     const { yarns } = this.#board.getState();
-
     const status = this.#board.matchPattern(yarns, designCard.design);
+
     if (status.isMatched) {
       currentPlayer.updateVp(designCard.victoryPoints);
       currentPlayer.removeDesignCard(Number(designCardId));
     }
+
     return status;
   }
 
