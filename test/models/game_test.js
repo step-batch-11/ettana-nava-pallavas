@@ -1,4 +1,4 @@
-import { beforeAll, beforeEach, describe, it } from "@std/testing/bdd";
+import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assert, assertEquals, assertThrows } from "@std/assert";
 import Game from "../../src/models/game.js";
 import Bank from "../../src/models/bank.js";
@@ -322,7 +322,7 @@ describe("Game controller test", () => {
       });
     });
 
-    describe.ignore("Get adjacent yarns: ", () => {
+    describe("Get adjacent yarns: ", () => {
       it("It is a normal tile, should give four adjacent yarns position", () => {
         const pinPosition = { x: 1, y: 2 };
         const adjYarns = board.getAdjYarnsPositions(pinPosition);
@@ -374,10 +374,13 @@ describe("Game controller test", () => {
       });
     });
 
-    describe.ignore("Free yarn swap: ", () => {
+    describe("Free yarn swap: ", () => {
       let mockGame;
 
-      beforeAll(() => {
+      beforeEach(() => {
+        const currentPlayer = gameState.getCurrentPlayer();
+        currentPlayer.setup(3, { x: 2, y: 3 });
+
         mockGame = gameState.getGameState();
       });
 
@@ -386,8 +389,8 @@ describe("Game controller test", () => {
         const destination = { x: 2, y: 3 };
         const expected = [
           [1, 2, 3, 4, 5],
-          [5, 4, 3, 2, 1],
-          [1, 2, 3, 4, 5],
+          [5, 4, 4, 2, 1],
+          [1, 2, 3, 3, 5],
           [5, 4, 3, 2, 1],
           [1, 2, 3, 4, 5],
         ];
