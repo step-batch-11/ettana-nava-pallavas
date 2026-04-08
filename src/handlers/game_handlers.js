@@ -116,7 +116,6 @@ export const playActionCard = (context) => {
     const cardId = Number(context.req.param("id"));
 
     const { result, state } = gameController.playCard(cardId);
-    console.log({ result });
 
     return context.json({ result, state, success: true });
   } catch (err) {

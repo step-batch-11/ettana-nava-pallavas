@@ -308,7 +308,7 @@ export default class Game {
     const currentPlayer = this.getCurrentPlayer();
 
     if (!currentPlayer.haveDesignCard(designCardId)) {
-      throw new Error("You don't have any design card");
+      throw new Error("You don't have the design card");
     }
 
     const [exchangedCard] = currentPlayer.removeDesignCard(designCardId);
