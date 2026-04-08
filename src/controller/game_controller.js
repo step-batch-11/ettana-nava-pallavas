@@ -6,7 +6,7 @@ export default class GameController {
     preset: false,
     diceRolled: false,
     isLastMove: false,
-    isActionPerformed: false,
+    anyActionDone: false,
   };
 
   constructor(game, actionCardService) {
@@ -28,7 +28,7 @@ export default class GameController {
     const result = this.game.move(destination);
     this.playerActions.moved = true;
     this.playerActions.isLastMove = true;
-    this.playerActions.isActionPerformed = true;
+    this.playerActions.anyActionDone = true;
     if (this.game instanceof GameSetup) this.changeGameSetupState();
 
     return result;
@@ -48,7 +48,7 @@ export default class GameController {
       throw new Error("swap has to be done immediately after move");
     }
     this.playerActions.isLastMove = false;
-    this.playerActions.isActionPerformed = true;
+    this.playerActions.anyActionDone = true;
     return this.game.freeSwap(position, yarn);
   }
 
@@ -57,7 +57,7 @@ export default class GameController {
       throw new Error("roll and move to buy design card");
     }
     this.playerActions.isLastMove = false;
-    this.playerActions.isActionPerformed = true;
+    this.playerActions.anyActionDone = true;
     return this.game.buyDesignCard();
   }
 
@@ -66,7 +66,7 @@ export default class GameController {
       throw new Error("roll and move to buy action card");
     }
     this.playerActions.isLastMove = false;
-    this.playerActions.isActionPerformed = true;
+    this.playerActions.anyActionDone = true;
     return this.game.buyActionCard();
   }
 
@@ -75,7 +75,7 @@ export default class GameController {
       throw new Error("roll and move to claim design");
     }
     this.playerActions.isLastMove = false;
-    this.playerActions.isActionPerformed = true;
+    this.playerActions.anyActionDone = true;
     return this.game.claimDesign(id);
   }
 
@@ -84,13 +84,13 @@ export default class GameController {
       throw new Error("roll and move to buy swap");
     }
     this.playerActions.isLastMove = false;
-    this.playerActions.isActionPerformed = true;
+    this.playerActions.anyActionDone = true;
     return this.game.paidSwap(position, yarn);
   }
 
   canActionBeDone(cardId) {
     if (cardId === 1) {
-      return this.playerActions.moved;
+      return !this.playerActions.moved;
     }
     return this.playerActions.diceRolled;
   }
@@ -100,14 +100,19 @@ export default class GameController {
       throw new Error("action card can't be played");
     }
 
+    this.playerActions.anyActionDone = true;
     return this.actionCardService.playCard(cardId, this.game);
   }
 
   performAction(payload) {
-    if (!this.canActionBeDone(payload)) {
+    if (!this.canActionBeDone(payload.cardId)) {
       throw new Error("action card can't be played");
     }
 
+    this.playerActions.isLastMove = cardId === 1;
+    this.playerActions.moved = cardId === 1;
+
+    this.playerActions.anyActionDone = true;
     return this.actionCardService.performAction(payload, this.game);
   }
 
@@ -125,7 +130,7 @@ export default class GameController {
   }
 
   exchangeDesignCard(designCardId) {
-    if (this.playerActions.isActionPerformed) {
+    if (this.playerActions.anyActionDone || !this.playerActions.diceRolled) {
       throw new Error("exchange design card should happen before any action");
     }
 
