@@ -39,12 +39,12 @@ export default class GameController {
     if (this.playerActions.diceRolled) {
       throw new Error("you can't roll again");
     }
-    const result = this.game.upkeep(id);
+    const result = this.game.upkeep();
 
     this.playerActions.diceRolled = true;
     this.playerActions.isLastMove = false;
 
-    return result;
+    return { ...result, state: this.getGameState(id) };
   }
 
   freeSwap(position, yarn) {
@@ -55,7 +55,7 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
-    
+
     return result;
   }
 
@@ -158,7 +158,7 @@ export default class GameController {
     this.playerActions = { ...this.#defaultActions };
   }
 
-  exchangeDesignCard(designCardId) {
+  exchangeDesignCard(designCardId, requesterId) {
     if (this.playerActions.anyActionDone || !this.playerActions.diceRolled) {
       throw new Error(
         "exchange design card only after dice roll and before any action.",
@@ -166,9 +166,14 @@ export default class GameController {
     }
 
     this.game.exchangeDesignCard(designCardId);
-    const result = this.game.next();
+    const result = this.game.next(requesterId);
 
     this.playerActions = { ...this.#defaultActions };
     return result;
+  }
+
+  rotateDesignCard(designCardId, requesterId) {
+    this.game.rotatePattern(designCardId, requesterId);
+    return { state: this.getGameState(requesterId) };
   }
 }

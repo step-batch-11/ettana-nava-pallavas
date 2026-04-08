@@ -64,7 +64,7 @@ export default class GameSetup {
     return { colorId: 6, number };
   }
 
-  upkeep(id) {
+  upkeep() {
     this.diceValues = this.rollDice();
     const diceValues = this.diceValues;
 
@@ -76,7 +76,7 @@ export default class GameSetup {
     const destinations = findJumpableRoutes(diceValues.number, tiles, players);
     this.#destinations = destinations;
 
-    return { diceValues, destinations, state: this.getGameState(id) };
+    return { diceValues, destinations };
   }
 
   distributeInitialAssets() {
