@@ -35,7 +35,6 @@ export const handleExitLobby = (context) => {
   try {
     const lobbyController = context.get("lobbyController");
     const id = context.req.param("id");
-    console.log({ id });
 
     lobbyController.exitLobby(id);
     return context.json({ success: true, message: "You left the lobby" });

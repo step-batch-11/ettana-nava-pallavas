@@ -17,6 +17,7 @@ import {
 import Gain from "../../../src/models/action_cards/gain_token.js";
 import VictoryPoint from "../../../src/models/action_cards/victoryPoint.js";
 import CollectToken from "../../../src/models/action_cards/collect_token.js";
+import GetDesignCard from "../../../src/models/action_cards/get_design_card.js";
 
 describe("Action cards", () => {
   let game, players, bank;
@@ -49,9 +50,27 @@ describe("Action cards", () => {
 
       const playerActionCardsAfter = players[0].getAc();
       const playerVPCardsAfter = players[0].getVp();
+
       assertEquals(playerActionCardsAfter, []);
       assertEquals(playerVPCardsAfter, 1);
       assertEquals(isPresent(playerActionCardsAfter, ac), false);
+    });
+  });
+
+  describe("Play Get-Design-Card Action Card", () => {
+    it("should add a design card to player deck, if action card is present in player", () => {
+      const cardId = acMap.getDesignCard;
+      const ac = getActionCard(cardId);
+      players[0].addActionCard(ac);
+
+      GetDesignCard.play(cardId, game);
+
+      const actionCardOnHand = players[0].getAc();
+      const designCardOnHand = players[0].getDc();
+
+      assertEquals(actionCardOnHand, []);
+      assertEquals(designCardOnHand.length, 1);
+      assertEquals(isPresent(actionCardOnHand, ac), false);
     });
   });
 
