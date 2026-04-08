@@ -109,12 +109,20 @@ export default class GameController {
       return !this.playerActions.diceRolled && this.game.sate === "game";
     }
 
+    if (cardId === 28) {
+      return this.playerActions.diceRolled && !this.playerActions.anyActionDone 
+    }
+
     return this.playerActions.diceRolled;
   }
 
   playCard(cardId) {
     if (!this.canActionBeDone(cardId)) {
       throw new Error("action card can't be played");
+    }
+
+    if (cardId === 28) {
+      this.playerActions.diceRolled = false;
     }
     const result = this.actionCardService.playCard(cardId, this.game);
 

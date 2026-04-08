@@ -332,3 +332,12 @@ export const handlePreset = async (cardId) => {
   showToast(result.message);
   preset(cardId);
 };
+
+export const handleRollAgain = async (cardId) => {
+  const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
+  const { success, result, message } = await res.json();
+
+  if (!success) return showToast(message, "e");
+
+  showToast(result.message);
+};
