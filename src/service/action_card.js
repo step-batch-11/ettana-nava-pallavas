@@ -8,6 +8,7 @@ import Swap from "../models/action_cards/swap.js";
 import Tax from "../models/action_cards/tax.js";
 import Preset from "../models/action_cards/preset.js";
 import VictoryPoint from "../models/action_cards/victoryPoint.js";
+import RollAgain from "../models/action_cards/roll_again.js";
 
 export default class ActionCardService {
   constructor() {
@@ -38,6 +39,7 @@ export default class ActionCardService {
       1: () => Move.play(this.played, id, game),
       25: () => Swap.play(this.played, id, game),
       13: () => Preset.play(this.played, id, game),
+      28: () => RollAgain.play(id, game),
     };
 
     return actions[id]();

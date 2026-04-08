@@ -40,6 +40,7 @@ export const acMap = {
   "swap": 25,
   "gainToken": 31,
   "replace": 34,
+  "roll": 28,
 };
 
 export const isPresent = (deck, card) => deck.some(({ id }) => id === card.id);

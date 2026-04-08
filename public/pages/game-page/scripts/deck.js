@@ -6,21 +6,22 @@ import {
   createDesignCard,
 } from "./utilities/deck_utilities.js";
 import {
+  exchangeDesignCard,
   handleDragDrop,
   handleDragEnd,
   handleDragOver,
   handleDragStart,
   rotateDesignCard,
-  exchangeDesignCard
 } from "./handlers/deck_handlers.js";
 
 import {
   handleActionCardSwap,
   handleGainToken,
   handleMoveActionCard,
+  handlePreset,
   handleReplaceActionCard,
+  handleRollAgain,
   performSteal,
-  handlePreset
 } from "./handlers/action_card_handlers.js";
 
 import { highlightPattern } from "./board.js";
@@ -91,13 +92,12 @@ const claimDesignCardEventListener = () => {
   designCardContainer.addEventListener("click", (e) => {
     const button = e.target;
     const card = e.target.closest(".card-item");
-   
+
     if (!button || !card) return;
     if (!designCardContainer.contains(card)) return;
 
-    if(button.classList.contains("rotate-design")) rotateDesignCard(card);
-    if(button.classList.contains("exchange-design")) exchangeDesignCard(card);
-    
+    if (button.classList.contains("rotate-design")) rotateDesignCard(card);
+    if (button.classList.contains("exchange-design")) exchangeDesignCard(card);
   });
 
   designCardContainer.dataset.listenerAdded = true;
@@ -141,6 +141,10 @@ const playActionCardEventListener = () => {
 
     if (id === "13") {
       return handlePreset(id);
+    }
+
+    if (id === "28") {
+      return handleRollAgain(id);
     }
 
     try {
