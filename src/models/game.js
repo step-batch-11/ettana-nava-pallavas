@@ -299,10 +299,10 @@ export default class Game {
     return { state: this.getGameState() };
   }
 
-  next() {
+  next(requesterId) {
     this.#currentPlayerIndex = (this.#currentPlayerIndex + 1) %
       this.#players.length;
-    return { state: this.getGameState() };
+    return { state: this.getGameState(requesterId) };
   }
 
   exchangeDesignCard(designCardId) {

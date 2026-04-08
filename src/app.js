@@ -3,6 +3,7 @@ import { serveStatic } from "hono/deno";
 import gameRoute from "./routes/game_route.js";
 import { logger } from "hono/logger";
 import lobbyRoute from "./routes/lobby_rotue.js";
+import { getCookie } from "hono/cookie";
 
 export const createApp = (
   gameState,
@@ -23,10 +24,18 @@ export const createApp = (
     await next();
   });
 
-  app.use("/game/*", async (ctx, next) => {
-    ctx.set("gameState", gameState);
-    ctx.set("gameController", gameController);
-    ctx.set("actionCardService", actionCardService);
+  app.use("/game/*", async (context, next) => {
+    context.set("gameState", gameState);
+    context.set("gameController", gameController);
+    context.set("actionCardService", actionCardService);
+
+    const sessionId = getCookie(context, "sessionId");
+    const rooms = context.get("rooms");
+    const sessions = context.get("sessions");
+    const session = sessions.get(sessionId);
+    const room = rooms[session.roomId];
+    context.set("room", room);
+    context.set("session", session);
     await next();
   });
 

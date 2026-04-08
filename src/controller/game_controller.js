@@ -115,12 +115,12 @@ export default class GameController {
     return this.actionCardService.performAction(payload, this.game);
   }
 
-  endTurn() {
+  endTurn(requesterId) {
     if (!this.playerActions.diceRolled || !this.playerActions.moved) {
       throw new Error("roll and move to end turn");
     }
     this.playerActions = { ...this.#defaultActions };
-    return this.game.next();
+    return this.game.next(requesterId);
   }
 
   changeGameSetupState() {
