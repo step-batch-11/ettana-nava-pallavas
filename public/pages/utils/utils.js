@@ -1,3 +1,5 @@
+import { colorsMap } from "/assets/colors.js";
+
 const SUCCESSCOLOR = "#22c55e";
 const ERRORCOLOR = "#ef4444";
 
@@ -17,6 +19,7 @@ const dialog = document.getElementById("diceDialog");
 const diceContainer = document.getElementById("diceContainer");
 
 let selectedValue = null;
+let selectedColorId = null;
 
 const diceMap = {
   1: [4],
@@ -81,3 +84,34 @@ export const submitDice = () => {
 
 export const getPlayerById = (players, id) =>
   players.find((player) => player.playerId === id) || { name: "not found" };
+
+export const createColorDice = (dialog) => {
+  const diceColors = dialog.querySelectorAll(".color");
+  diceColors.forEach((dice) => {
+    const colorId = dice.dataset.diceId;
+    dice.style.backgroundColor = colorsMap[colorId];
+  });
+
+  const dices = document.querySelectorAll(".dice-popup");
+
+  dices.forEach((dice) => {
+    dice.classList.remove("selected");
+    dice.addEventListener("click", () => {
+      dices.forEach((dice) => {
+        dice.classList.remove("selected");
+      });
+
+      dice.classList.add("selected");
+      selectedColorId = dice.querySelector(".color").dataset.diceId;
+    });
+  });
+};
+
+export const submitColorDice = (colorDicePopup) => {
+  if (selectedColorId === null) {
+    alert("Please select a dice");
+    return;
+  }
+  colorDicePopup.close();
+  return selectedColorId;
+};

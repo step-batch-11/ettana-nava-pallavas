@@ -8,9 +8,10 @@ const passTurnEventListener = () => {
   const passTurn = document.querySelector("#pass-turn");
 
   if (passTurn.dataset.listenerAdded) return;
+
   passTurn.addEventListener("dblclick", async () => {
     const response = await changeTurnRequest("/game/pass-turn");
-    console.log({ passTurn });
+
     if (!response.success) {
       showToast(response.message, "e");
       return;

@@ -76,11 +76,11 @@ export default class Bank {
     this.#tiles.splice(index, 1, value);
   }
 
-  getYarnColourId(index) {
+  getYarnColorId(index) {
     return this.#yarns[index];
   }
 
-  changeYarnColourId(index, value) {
+  changeYarnColorId(index, value) {
     this.#yarns.splice(index, 1, value);
   }
 

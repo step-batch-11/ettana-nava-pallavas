@@ -6,6 +6,7 @@ import Replace from "../models/action_cards/replace.js";
 import Steal from "../models/action_cards/steal.js";
 import Swap from "../models/action_cards/swap.js";
 import Tax from "../models/action_cards/tax.js";
+import Preset from "../models/action_cards/preset.js";
 import VictoryPoint from "../models/action_cards/victoryPoint.js";
 
 export default class ActionCardService {
@@ -36,6 +37,7 @@ export default class ActionCardService {
       7: () => GetDesignCard.play(id, game),
       1: () => Move.play(this.played, id, game),
       25: () => Swap.play(this.played, id, game),
+      13: () => Preset.play(this.played, id, game),
     };
 
     return actions[id]();
@@ -55,6 +57,7 @@ export default class ActionCardService {
       22: Steal.stealActionCard,
       25: Swap.performSwap,
       31: Gain.token,
+      13: Preset.rollNumberDice,
     };
 
     return actions[payload.cardId](payload, currentPlayer, this.played, game);

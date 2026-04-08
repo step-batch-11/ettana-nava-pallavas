@@ -88,11 +88,11 @@ export default class Board {
     return value;
   }
 
-  getYarnColourId({ x, y }) {
+  getYarnColorId({ x, y }) {
     return this.#yarns[x][y];
   }
 
-  changeYarnColourId({ x, y }, value) {
+  changeYarnColorId({ x, y }, value) {
     this.#yarns[x][y] = value;
     return value;
   }

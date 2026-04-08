@@ -46,16 +46,16 @@ export default class Game {
     return;
   }
 
-  rollDice() {
-    const colorId = Math.floor(this.randomFn() * 6) + 1;
+  rollDice(colorIdValue) {
+    const colorId = colorIdValue || Math.floor(this.randomFn() * 6) + 1;
     const number = Math.floor(this.randomFn() * 6) + 1;
 
     return { number, colorId };
   }
 
-  upkeep() {
+  upkeep(colorId) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    const diceValues = this.rollDice();
+    const diceValues = this.rollDice(colorId);
     this.#diceValue = diceValues;
     this.destinations = this.#board.findPossibleDestinations(
       currentPlayer,
@@ -282,10 +282,10 @@ export default class Game {
   }
 
   replaceYarn(position, index) {
-    const colourIdOnBoard = this.#board.getYarnColourId(position);
-    const colourIdOnReserve = this.#bank.getYarnColourId(index);
-    this.#board.changeYarnColourId(position, colourIdOnReserve);
-    this.#bank.changeYarnColourId(index, colourIdOnBoard);
+    const colorIdOnBoard = this.#board.getYarnColorId(position);
+    const colorIdOnReserve = this.#bank.getYarnColorId(index);
+    this.#board.changeYarnColorId(position, colorIdOnReserve);
+    this.#bank.changeYarnColorId(index, colorIdOnBoard);
   }
 
   rotatePattern(designCardId) {

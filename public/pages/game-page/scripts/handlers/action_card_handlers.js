@@ -1,13 +1,24 @@
 import {
+  createColorDice,
+  createPopup,
   getPlayerById,
   openDialog,
   showToast,
+  submitColorDice,
   submitDice,
 } from "../../../utils/utils.js";
-import { handlePlayerMove, updateDice } from "../utilities/game_utilities.js";
+import {
+  handlePlayerMove,
+  removeMoveClass,
+  renderMoveOptions,
+  updateDice,
+} from "../utilities/game_utilities.js";
 import { handleSwapEvent, removeTileHighlighting } from "./board_handlers.js";
 import { renderGame } from "../app.js";
-import { createSVGPlayerIcon } from "../utilities/board_utilities.js";
+import {
+  createSVGPlayerIcon,
+  removeTileEventListeners,
+} from "../utilities/board_utilities.js";
 import { replacePopup, selectorArea } from "../utilities/dom_elements.js";
 import { colorsMap } from "/assets/colors.js";
 
@@ -224,7 +235,7 @@ const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
 
 const highlightYarns = (boardYarns, cardId, reservedYarns) => {
   boardYarns.forEach((col, x) => {
-    col.forEach((_colourId, y) => {
+    col.forEach((_colorId, y) => {
       const yarn = document.querySelector(`#r-${x}-c-${y}`);
       if (!yarn) return;
       highlight(yarn, "yarn-replace");
@@ -268,7 +279,7 @@ export const handleReplaceActionCard = async (cardId) => {
 };
 
 export const handleGainToken = () => {
-  createReplacePopup();
+  createPopup();
   openDialog();
 
   const dice = document.querySelector("#dice");
@@ -294,4 +305,45 @@ export const handleGainToken = () => {
       showToast(responseBody.result.message);
     });
   });
+};
+
+const preset = (cardId) => {
+  const colorDicePopup = document.querySelector("#color-dice-dialog");
+  createColorDice(colorDicePopup);
+  colorDicePopup.showModal();
+
+  const dice = document.querySelector("#dice");
+  const newDice = dice.cloneNode(true);
+  dice.parentNode.replaceChild(newDice, dice);
+
+  const submitButton = colorDicePopup.querySelector("#submit-popup");
+
+  submitButton.addEventListener("click", () => {
+    const colorId = submitColorDice(colorDicePopup);
+    newDice.addEventListener("click", async () => {
+      const res = await fetch(`/game/perform-action-card`, {
+        method: "POST",
+        body: JSON.stringify({ colorId, cardId }),
+      });
+      const responseBody = await res.json();
+      newDice.parentNode.replaceChild(dice, newDice);
+
+      updateDice(responseBody.result.diceValues);
+      removeMoveClass();
+      removeTileEventListeners();
+      renderMoveOptions(responseBody.result.destinations);
+      renderGame();
+      showToast(responseBody.result.message);
+    });
+  });
+};
+
+export const handlePreset = async (cardId) => {
+  const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
+  const { success, result, message } = await res.json();
+
+  if (!success) return showToast(message, "e");
+
+  showToast(result.message);
+  preset(cardId);
 };
