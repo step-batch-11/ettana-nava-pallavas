@@ -18,10 +18,8 @@ const main = () => {
   const player2 = new Player(2, "B");
   player2.setup(2, { x: -1, y: -1 });
 
-  player1.addActionCard(getActionCard(acMap.move));
-  player1.addActionCard(getActionCard(acMap.move));
-  player2.addActionCard(getActionCard(acMap.move));
-  player2.addActionCard(getActionCard(acMap.move));
+  player1.addActionCard(getActionCard(acMap.preset));
+  player2.addActionCard(getActionCard(acMap.preset));
 
   const gameState = new GameSetup(
     [player1, player2],

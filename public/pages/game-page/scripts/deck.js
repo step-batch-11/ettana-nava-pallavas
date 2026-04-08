@@ -20,6 +20,7 @@ import {
   handleMoveActionCard,
   handleReplaceActionCard,
   performSteal,
+  handlePreset
 } from "./handlers/action_card_handlers.js";
 
 import { highlightPattern } from "./board.js";
@@ -136,6 +137,10 @@ const playActionCardEventListener = () => {
 
     if (id === "31") {
       return handleGainToken();
+    }
+
+    if (id === "13") {
+      return handlePreset(id);
     }
 
     try {

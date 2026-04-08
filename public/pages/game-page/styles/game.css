@@ -51,3 +51,15 @@
   pointer-events: none;
   transition: opacity 0.2s;
 }
+
+.color-dice-container .dice-popup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-popup .color {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+}
