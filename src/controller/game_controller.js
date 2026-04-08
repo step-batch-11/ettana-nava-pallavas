@@ -109,8 +109,8 @@ export default class GameController {
       throw new Error("action card can't be played");
     }
 
-    this.playerActions.isLastMove = cardId === 1;
-    this.playerActions.moved = cardId === 1;
+    this.playerActions.isLastMove = payload.cardId === 1;
+    this.playerActions.moved = payload.cardId === 1;
 
     this.playerActions.anyActionDone = true;
     return this.actionCardService.performAction(payload, this.game);

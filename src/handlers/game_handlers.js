@@ -116,7 +116,6 @@ export const playActionCard = (context) => {
     const cardId = Number(context.req.param("id"));
 
     const { result, state } = gameController.playCard(cardId);
-    console.log({ result });
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -128,6 +127,7 @@ export const performActionCard = async (context) => {
   try {
     const gameController = context.get("gameController");
     const payload = await context.req.json();
+
     const { result, state } = gameController.performAction(payload);
 
     return context.json({ result, state, success: true });

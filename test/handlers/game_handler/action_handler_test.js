@@ -39,10 +39,9 @@ describe("test action handlers", () => {
 
     const bank = new Bank([], actionCards, (x) => x);
     const board = new Board(tiles, yarns);
+
     game = new Game(players, bank, board, diceValue);
-
     actionCardService = new ActionCardService();
-
     gameController = new GameController(game, actionCardService);
 
     app = createApp(game, gameController, actionCardService);
@@ -88,7 +87,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe.ignore("/action-card/ -> steal tokens", () => {
+  describe("/action-card/ -> steal tokens", () => {
     beforeEach(() => {
       players[0].addActionCard(actionCards[0]);
     });
@@ -103,20 +102,19 @@ describe("test action handlers", () => {
       });
 
       const { result } = await response.json();
-
       assertEquals(result, [2, 3]);
     });
   });
 
-  describe.ignore("/perform-action-card/ -> action-card", () => {
+  describe("/perform-action-card/ -> action-card", () => {
     beforeEach(() => {
       actionCardService.played["steal"] = true;
     });
 
-    it.ignore("case: when player calls this wit curl or something", async () => {
+    it("case: when player calls this wit curl or something", async () => {
       delete actionCardService.played["steal"];
-      const body = { opponentPlayerId: 1, cardId: 22 };
 
+      const body = { opponentPlayerId: 1, cardId: 22 };
       gameController.playerActions.diceRolled = true;
       const response = await app.request("/game/perform-action-card", {
         method: "POST",
@@ -127,7 +125,7 @@ describe("test action handlers", () => {
       assertEquals(message, "You did not play steal action card");
     });
 
-    it.ignore("case: when player selects himself", async () => {
+    it("case: when player selects himself", async () => {
       const body = { opponentPlayerId: 1, cardId: 22 };
 
       gameController.playerActions.diceRolled = true;
@@ -140,7 +138,7 @@ describe("test action handlers", () => {
       assertEquals(message, "player can't take from himself");
     });
 
-    it.ignore("case: when player has no steal action card", async () => {
+    it("case: when player has no steal action card", async () => {
       players[0].removeActionCard(actionCards[1].id);
       const body = { opponentPlayerId: 2, cardId: 22 };
 
@@ -184,7 +182,7 @@ describe("test action handlers", () => {
     });
   });
 
-  describe.ignore("/perform-action-card/ -> tokens", () => {
+  describe("/perform-action-card/ -> tokens", () => {
     beforeEach(() => {
       actionCardService.played["steal"] = true;
       players[0].addActionCard(actionCards[0]);
