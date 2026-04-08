@@ -149,7 +149,6 @@
 .action-area .pass-turn {
   width: 100%;
   background-color: rgba(245, 245, 245, 0.8);
-  cursor: not-allowed;
 }
 
 #popup-selector {

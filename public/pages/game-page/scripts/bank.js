@@ -1,8 +1,27 @@
 import { colorsMap } from "/assets/colors.js";
 import { showToast } from "../../utils/utils.js";
 import { renderGame } from "./app.js";
-import { sendRequest } from "./api.js";
+import { changeTurnRequest, sendRequest } from "./api.js";
 import { handleSwapEvent } from "./handlers/board_handlers.js";
+
+const passTurnEventListener = () => {
+  const passTurn = document.querySelector("#pass-turn");
+
+  if (passTurn.dataset.listenerAdded) return;
+  passTurn.addEventListener("dblclick", async () => {
+    const response = await changeTurnRequest("/game/pass-turn");
+    console.log({ passTurn });
+    if (!response.success) {
+      showToast(response.message, "e");
+      return;
+    }
+
+    const { state } = await sendRequest("/game/game-state");
+    renderGame(state);
+  });
+
+  passTurn.dataset.listenerAdded = true;
+};
 
 const buyDesignCardEventListener = () => {
   const designCard = document.querySelector(".design-card");
@@ -83,4 +102,5 @@ export const attachBankEventListeners = () => {
   buyDesignCardEventListener();
   buyActionCardEventListener();
   buyPaidSwapListener();
+  passTurnEventListener();
 };

@@ -18,6 +18,7 @@ export default class Game {
     randomFn = Math.random,
     currentPlayerIndex = 0,
   ) {
+    this.state = "game";
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
