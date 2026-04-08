@@ -33,6 +33,7 @@ export const acMap = {
   "victoryPoint": 16,
   "gainToken": 31,
   "replace": 34,
+  "getDesignCard": 7,
 };
 
 export const isPresent = (deck, card) => deck.some(({ id }) => id === card.id);
