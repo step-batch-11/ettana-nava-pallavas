@@ -61,7 +61,7 @@ const swapYarns = async (draggablePosition, yarnPosition, path) => {
   removeYarnHighlighting();
   removeYarnEventListeners();
   removeCellEventListeners();
-  showToast(response.message, "d");
+  showToast(response.result.message, "d");
 };
 
 export const documentClickHandler = (e) => {

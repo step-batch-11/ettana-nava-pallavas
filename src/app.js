@@ -28,8 +28,8 @@ export const createApp = (
     context.set("gameState", gameState);
     context.set("gameController", gameController);
     context.set("actionCardService", actionCardService);
-
     const sessionId = getCookie(context, "sessionId");
+    
     const rooms = context.get("rooms");
     const sessions = context.get("sessions");
     const session = sessions.get(sessionId);

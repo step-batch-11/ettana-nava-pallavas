@@ -120,7 +120,7 @@ export default class GameController {
       throw new Error("action card can't be played");
     }
 
-    if (cardId === 28) {
+    if (cardId === 28 || cardId === 31) {
       this.playerActions.diceRolled = false;
     }
     const result = this.actionCardService.playCard(cardId, this.game);
@@ -134,7 +134,7 @@ export default class GameController {
     const cardId = Number(payload.cardId);
 
     if (!this.canActionBeDone(cardId)) {
-      throw new Error("action card can't be played");
+      throw new Error(">>action card can't be played");
     }
     const result = this.actionCardService.performAction(payload, this.game);
 

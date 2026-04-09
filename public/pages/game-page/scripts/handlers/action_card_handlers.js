@@ -55,11 +55,8 @@ export const handleMoveActionCard = async (id) => {
     tile.addEventListener(
       "click",
       () =>
-        handlePlayerMove(
-          { destination: { x, y }, cardId: id },
-          "perform-action-card",
-        ),
-      { once: true },
+        handlePlayerMove({ destination: { x, y }, cardId: id },"perform-action-card"),
+      // { once: true },
     );
   });
 
