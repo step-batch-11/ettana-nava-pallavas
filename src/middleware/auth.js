@@ -1,11 +1,11 @@
 import { getCookie } from "hono/cookie";
+import { errorResponse } from "../utils/util.js";
 
 export const isAuthenticated = async (context, next) => {
   const sessionId = getCookie(context, "sessionId");
   if (!sessionId) {
-    return context.json({
-      success: false,
-      error: "You do not have permission to play",
+    return errorResponse(context, {
+      message: "You do not have permission to play",
     }, 401);
   }
   const rooms = context.get("rooms");
@@ -20,8 +20,11 @@ export const isAuthenticated = async (context, next) => {
 export const isCurrentPlayer = async (context, next) => {
   const room = context.get("room");
   const session = context.get("session");
+
   if (room.state.getCurrentPlayerId() !== session.playerId) {
-    return context.json({ success: false, error: "Its not your turn" }, 400);
+    return errorResponse(context, {
+      message: "Its not your turn",
+    }, 401);
   }
 
   await next();

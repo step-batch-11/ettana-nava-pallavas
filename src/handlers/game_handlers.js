@@ -1,3 +1,5 @@
+import { errorResponse } from "../utils/util.js";
+
 export const serveGameState = (ctx) => {
   try {
     const room = ctx.get("room");
@@ -8,9 +10,8 @@ export const serveGameState = (ctx) => {
       success: true,
       state: gameState,
     });
-  } catch (e) {
-    console.log(e);
-    return ctx.json({ success: false, error: e.message });
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -22,9 +23,8 @@ export const handleDiceRoll = (context) => {
     const { diceValues, destinations } = room.state.upkeep(session.playerId);
     const gameState = room.state.getGameState(session.playerId);
     return context.json({ success: true, gameState, destinations, diceValues });
-  } catch (e) {
-    console.log(e);
-    return context.json({ success: false, error: e.message });
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -39,7 +39,7 @@ export const buyDesignCard = (context) => {
       message: "Design card bought successfully",
     });
   } catch (error) {
-    return context.json({ success: false, message: error.message });
+    return errorResponse(context, error);
   }
 };
 
@@ -54,7 +54,7 @@ export const buyActionCard = (context) => {
       message: "Action card bought successfully",
     });
   } catch (error) {
-    return context.json({ success: false, message: error.message });
+    return errorResponse(context, error);
   }
 };
 
@@ -68,23 +68,22 @@ export const claimDesign = (context) => {
     const gameState = room.state.getGameState(session.playerId);
     return context.json({ success: true, result, state: gameState });
   } catch (error) {
-    return context.json({ success: false, message: error.message });
+    return errorResponse(context, error);
   }
 };
 
-export const handleMove = async (ctx) => {
+export const handleMove = async (context) => {
   try {
-    const destination = await ctx.req.json();
-    const room = ctx.get("room");
+    const destination = await context.req.json();
+    const room = context.get("room");
 
     const result = room.state.move(destination);
-    return ctx.json(
+    return context.json(
       { success: true, result: { ...result, message: "Moved successfully" } },
       200,
     );
   } catch (error) {
-    console.log(error);
-    return ctx.json({ success: false, message: error.message }, 400);
+    return errorResponse(context, error);
   }
 };
 
@@ -98,8 +97,8 @@ export const handleSwap = async (context) => {
       { success: true, message: "Swapped successfully" },
       200,
     );
-  } catch (e) {
-    return context.json({ success: false, message: e.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -113,8 +112,8 @@ export const handlePaidSwap = async (context) => {
       { success: true, message: "Swapped successfully" },
       200,
     );
-  } catch (e) {
-    return context.json({ success: false, message: e.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -128,8 +127,8 @@ export const playActionCard = (context) => {
     const state = room.state.getGameState(session.playerId);
 
     return context.json({ result, state, success: true });
-  } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -143,9 +142,8 @@ export const performActionCard = async (context) => {
     const state = room.state.getGameState(session.playerId);
 
     return context.json({ result, state, success: true });
-  } catch (err) {
-    console.log(err);
-    return context.json({ success: false, message: err.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -157,9 +155,8 @@ export const rotateDesignCard = (context) => {
     const { state } = room.state.rotateDesignCard(id, session.playerId);
 
     return context.json({ state, message: "Rotated", success: true });
-  } catch (err) {
-    console.log(err);
-    return context.json({ success: false, message: err.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -177,8 +174,8 @@ export const exchangeDesignCard = (context) => {
       result: { message: "Design card exchanged successfully" },
       success: true,
     });
-  } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };
 
@@ -193,7 +190,7 @@ export const passTurn = (context) => {
       state,
       success: true,
     });
-  } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+  } catch (error) {
+    return errorResponse(context, error);
   }
 };

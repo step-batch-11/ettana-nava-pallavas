@@ -79,6 +79,7 @@ export default class Game {
 
   buyActionCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
+    console.log({currentPlayer: currentPlayer.getPlayerData()})
     if (currentPlayer.getTokens() < 2) throw new Error("NOT_ENOUGH_TOKEN");
 
     const card = this.#bank.getActionCard();
@@ -91,9 +92,9 @@ export default class Game {
   claimDesign(designCardId) {
     const currentPlayer = this.getCurrentPlayer();
     const designCard = currentPlayer
-      .getDc()
-      .find(({ id }) => id === Number(designCardId));
-
+    .getDc()
+    .find(({ id }) => id === Number(designCardId));
+    
     const { yarns } = this.#board.getState();
     const status = this.#board.matchPattern(yarns, designCard.design);
 

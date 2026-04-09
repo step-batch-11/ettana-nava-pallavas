@@ -22,11 +22,11 @@ describe("App test", () => {
   it("when player is not authenticated", async () => {
     const result = await app.request("/game/hi").then(toJSON);
 
-    assertEquals(result.error, "You do not have permission to play");
+    assertEquals(result.error.message, "You do not have permission to play");
     assertEquals(result.success, false);
   });
 
-  it("When player exists", async () => {
+  it("When players exists", async () => {
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app.request("/lobby/host-game", {
       body: req1,
