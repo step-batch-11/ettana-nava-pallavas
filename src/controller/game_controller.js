@@ -15,6 +15,10 @@ export default class GameController {
     this.actionCardService = actionCardService;
   }
 
+  getCurrentPlayerId() {
+    return this.game.getCurrentPlayer().getId();
+  }
+
   getGame() {
     return this.game;
   }
@@ -109,7 +113,7 @@ export default class GameController {
     }
 
     if (cardId === 28) {
-      return this.playerActions.diceRolled && !this.playerActions.anyActionDone 
+      return this.playerActions.diceRolled && !this.playerActions.anyActionDone;
     }
 
     return this.playerActions.diceRolled;

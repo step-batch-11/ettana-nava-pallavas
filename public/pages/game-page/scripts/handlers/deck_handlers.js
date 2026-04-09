@@ -84,10 +84,10 @@ export const exchangeDesignCard = async (card) => {
   const res = await fetch(`/game/exchange-design-card/${card.dataset.id}`, {
     method: "PATCH",
   });
-  const { state, result, success, message } = await res.json();
+  const { state, result, success, error } = await res.json();
 
   if (!success) {
-    showToast(message, "e");
+    showToast(error, "e");
   }
 
   showToast(result.message);
