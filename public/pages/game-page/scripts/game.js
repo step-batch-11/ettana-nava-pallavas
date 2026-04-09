@@ -11,9 +11,9 @@ import { showToast } from "../../utils/utils.js";
 const rollDiceForTurn = async () => {
   const response = await rollDice();
   if (!response.success) {
-    showToast("you can't roll dice again");
+    showToast(response.error);
   }
-  
+
   updateDice(response.diceValues);
   removeMoveClass();
   removeTileEventListeners();
