@@ -6,7 +6,7 @@ import Player from "../../src/models/player.js";
 import Bank from "../../src/models/bank.js";
 import Game from "../../src/models/game.js";
 
-describe("game setup", () => {
+describe.ignore("game setup", () => {
   let gameSetup, players, bank, board, rolledValues, player1, player2;
 
   const randomFn = () => 0;

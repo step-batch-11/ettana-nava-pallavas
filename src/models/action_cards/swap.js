@@ -6,10 +6,7 @@ export default class Swap {
 
     const swappableYarns = game.getAllYarns();
 
-    return {
-      result: { swappableYarns, message: "Swap action card played" },
-      state: game.getGameState(),
-    };
+    return { swappableYarns, message: "Swap action card played" };
   }
 
   static performSwap(payload, currentPlayer, played, game) {
@@ -24,10 +21,7 @@ export default class Swap {
     game.swapYarns(payload.draggablePosition, payload.yarnPosition);
     currentPlayer.removeActionCard(payload.cardId);
     delete played.swap;
-    
-    return {
-      result: { message: "Swap action card played" },
-      state: game.getGameState(),
-    };
+
+    return { message: "Swap action card played" };
   }
 }

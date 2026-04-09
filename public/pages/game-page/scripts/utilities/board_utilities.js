@@ -75,7 +75,7 @@ export const createAllTiles = (board) => {
 };
 
 export const createSVGPlayerIcon = (colorId) => {
-  const primaryColor = colorsMap[colorId]
+  const primaryColor = colorsMap[colorId];
 
   const ns = "http://www.w3.org/2000/svg";
 
@@ -115,12 +115,13 @@ export const createSVGPlayerIcon = (colorId) => {
   return svg;
 };
 
-export const createPlayerCard = (player) => {
+export const createPlayerCard = (player, requesterId) => {
   const template = document.getElementById("player-card-template");
 
   const clone = template.content.cloneNode(true);
   const element = clone.querySelector(".player-card");
-  clone.querySelector(".player-name").textContent = player.name;
+  clone.querySelector(".player-name").textContent =
+    player.playerId === requesterId ? "You" : player.name;
   clone.querySelector(".avatar").src = "/assets/user_pin.png";
   clone.querySelector(".stat1").textContent = player.vp;
   clone.querySelector(".stat2").textContent = player.tokens;

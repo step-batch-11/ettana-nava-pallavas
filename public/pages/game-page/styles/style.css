@@ -123,15 +123,16 @@ dialog::backdrop {
   animation: none;
 }
 
-#diceDialog .actions {
+#diceDialog .actions, #color-dice-dialog .actions {
   display: flex;
   justify-content: center;
   margin-top: 10px;
 }
 
-#diceDialog button {
+#diceDialog button, #color-dice-dialog button {
   padding: 10px 16px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
+  font-size: 1em;
 }

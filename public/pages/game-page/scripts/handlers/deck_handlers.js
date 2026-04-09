@@ -3,6 +3,7 @@ import {
   autoScrollWithDrag,
   getDragAfterElement,
 } from "../utilities/deck_utilities.js";
+import { removeMoveClass } from "../utilities/game_utilities.js";
 import { renderGame } from "/pages/game-page/scripts/app.js";
 
 export const handleDragStart = (e, dragged, sourceContainer) => {
@@ -59,6 +60,7 @@ export const handleDragEnd = (dragged, sourceContainer, placeholder) => {
 export const rotateDesignCard = async (card) => {
   const res = await fetch(`/game/rotate-design-card/${card.dataset.id}`, {
     method: "PATCH",
+    credentials: "include",
   });
   const { state, success } = await res.json();
   if (success) {
@@ -89,5 +91,6 @@ export const exchangeDesignCard = async (card) => {
   }
 
   showToast(result.message);
+  removeMoveClass();
   renderGame(state);
 };

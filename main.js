@@ -8,7 +8,7 @@ import Player from "./src/models/player.js";
 import GameSetup from "./src/models/game_setup.js";
 import GameController from "./src/controller/game_controller.js";
 import ActionCardService from "./src/service/action_card.js";
-import { Lobby } from "./src/models/lobby.js";
+import Session from "./src/models/session.js";
 import { acMap, getActionCard } from "./src/utils/mock_data.js";
 
 const main = () => {
@@ -18,26 +18,32 @@ const main = () => {
   const player2 = new Player(2, "B");
   player2.setup(2, { x: -1, y: -1 });
 
-  player1.addActionCard(getActionCard(acMap.move));
-  player1.addActionCard(getActionCard(acMap.move));
-  player2.addActionCard(getActionCard(acMap.move));
-  player2.addActionCard(getActionCard(acMap.move));
+  player1.addActionCard(getActionCard(acMap.roll));
+  player1.addActionCard(getActionCard(acMap.roll));
+  player2.addActionCard(getActionCard(acMap.roll));
+  player2.addActionCard(getActionCard(acMap.roll));
 
   const gameState = new GameSetup(
     [player1, player2],
     new Bank(designCards, actionCards),
     new Board(tiles, yarns),
   );
+
   const actionCardService = new ActionCardService();
   const gameController = new GameController(gameState, actionCardService);
-  const lobbyController = new Lobby(1);
+
+  const rooms = {};
+  const players = {};
+  const sessions = new Session();
 
   const PORT = Deno.env.get("PORT") || 8000;
   const app = createApp(
     gameState,
     gameController,
     actionCardService,
-    lobbyController,
+    rooms,
+    players,
+    sessions,
   );
 
   Deno.serve({ port: PORT }, app.fetch);

@@ -22,6 +22,10 @@ export default class Player {
     this.#position = { x: -1, y: -1 };
   }
 
+  assignRoomId(id) {
+    this.roomId = id;
+  }
+
   updateVp(n) {
     this.#vp += n;
   }
@@ -50,6 +54,9 @@ export default class Player {
 
   addAllDesignCardDev(...card) {
     this.#dc.push(...card);
+  }
+  addAllActionCardDev(...card) {
+    this.#ac.push(...card);
   }
 
   addActionCard(card) {

@@ -1,18 +1,32 @@
 import {
+  createColorDice,
+  createPopup,
   getPlayerById,
   openDialog,
   showToast,
+  submitColorDice,
   submitDice,
 } from "../../../utils/utils.js";
-import { handlePlayerMove, updateDice } from "../utilities/game_utilities.js";
+import {
+  handlePlayerMove,
+  removeMoveClass,
+  renderMoveOptions,
+  updateDice,
+} from "../utilities/game_utilities.js";
 import { handleSwapEvent, removeTileHighlighting } from "./board_handlers.js";
 import { renderGame } from "../app.js";
-import { createSVGPlayerIcon } from "../utilities/board_utilities.js";
+import {
+  createSVGPlayerIcon,
+  removeTileEventListeners,
+} from "../utilities/board_utilities.js";
 import { replacePopup, selectorArea } from "../utilities/dom_elements.js";
 import { colorsMap } from "/assets/colors.js";
 
 export const handleActionCardSwap = async (id) => {
-  const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+  const res = await fetch(`game/action-card/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
   const { success, result, message } = await res.json();
 
   if (!success) {
@@ -22,7 +36,10 @@ export const handleActionCardSwap = async (id) => {
 };
 
 export const handleMoveActionCard = async (id) => {
-  const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+  const res = await fetch(`game/action-card/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
   const { state, success, result, message } = await res.json();
 
   if (!success) {
@@ -68,8 +85,11 @@ const createPlayerCard = (player) => {
 };
 
 export const performSteal = async (id, object) => {
-  const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
-  const { state, success, result, message } = await res.json();
+  const res = await fetch(`game/action-card/${id}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
+  const { state, success, result } = await res.json();
 
   if (!success) {
     return showToast(message, "e");
@@ -86,7 +106,7 @@ export const performSteal = async (id, object) => {
   );
 };
 
-const renderPlayers = (object, playerIds, players) => {
+const renderPlayers = (object, {opponents}, players) => {
   selectorArea.style.display = "block";
 
   const h2 = document.createElement("h2");
@@ -95,7 +115,7 @@ const renderPlayers = (object, playerIds, players) => {
   const section = document.createElement("section");
   section.className = "players-selection-area";
 
-  const playerCards = playerIds.map((id) => {
+  const playerCards = opponents.map((id) => {
     const player = getPlayerById(players, id);
     return createPlayerCard(player);
   });
@@ -111,6 +131,7 @@ const steal = async (card, id) => {
   const response = await fetch(`/game/perform-action-card`, {
     method: "POST",
     body,
+    credentials: "include",
   });
   const { result, state } = await response.json();
 
@@ -141,6 +162,7 @@ const replaceElement = async (cardId, position, reservePosition, type) => {
   const res = await fetch("/game/perform-action-card", {
     method: "POST",
     body: JSON.stringify({ cardId, position, reservePosition, type }),
+    credentials: "include",
   });
 
   const { state, success, result, message } = await res.json();
@@ -213,7 +235,7 @@ const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
 
 const highlightYarns = (boardYarns, cardId, reservedYarns) => {
   boardYarns.forEach((col, x) => {
-    col.forEach((_colourId, y) => {
+    col.forEach((_colorId, y) => {
       const yarn = document.querySelector(`#r-${x}-c-${y}`);
       if (!yarn) return;
       highlight(yarn, "yarn-replace");
@@ -241,7 +263,10 @@ const highlightTiles = (boardTiles, cardId, reservedTiles) => {
 };
 
 export const handleReplaceActionCard = async (cardId) => {
-  const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
+  const res = await fetch(`game/action-card/${cardId}`, {
+    method: "PATCH",
+    credentials: "include",
+  });
   const { state, success, result, message } = await res.json();
   const { boardTiles, boardYarns, reservedTiles, reservedYarns } = result;
   if (!success) return showToast(message, "e");
@@ -254,7 +279,7 @@ export const handleReplaceActionCard = async (cardId) => {
 };
 
 export const handleGainToken = () => {
-  createReplacePopup();
+  createPopup();
   openDialog();
 
   const dice = document.querySelector("#dice");
@@ -270,6 +295,7 @@ export const handleGainToken = () => {
       const res = await fetch(`/game/perform-action-card`, {
         method: "POST",
         body: JSON.stringify({ number, cardId: 31 }),
+        credentials: "include",
       });
 
       const responseBody = await res.json();
@@ -279,4 +305,54 @@ export const handleGainToken = () => {
       showToast(responseBody.result.message);
     });
   });
+};
+
+const preset = (cardId) => {
+  const colorDicePopup = document.querySelector("#color-dice-dialog");
+  createColorDice(colorDicePopup);
+  colorDicePopup.showModal();
+
+  const dice = document.querySelector("#dice");
+  const newDice = dice.cloneNode(true);
+  dice.parentNode.replaceChild(newDice, dice);
+
+  const submitButton = colorDicePopup.querySelector("#submit-popup");
+
+  submitButton.addEventListener("click", () => {
+    const colorId = submitColorDice(colorDicePopup);
+    newDice.addEventListener("click", async () => {
+      const res = await fetch(`/game/perform-action-card`, {
+        method: "POST",
+        body: JSON.stringify({ colorId, cardId }),
+      });
+      const responseBody = await res.json();
+      newDice.parentNode.replaceChild(dice, newDice);
+
+      updateDice(responseBody.result.diceValues);
+      removeMoveClass();
+      removeTileEventListeners();
+      renderMoveOptions(responseBody.result.destinations);
+      renderGame();
+      showToast(responseBody.result.message);
+    });
+  });
+};
+
+export const handlePreset = async (cardId) => {
+  const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
+  const { success, result, message } = await res.json();
+
+  if (!success) return showToast(message, "e");
+
+  showToast(result.message);
+  preset(cardId);
+};
+
+export const handleRollAgain = async (cardId) => {
+  const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
+  const { success, result, message } = await res.json();
+
+  if (!success) return showToast(message, "e");
+
+  showToast(result.message);
 };

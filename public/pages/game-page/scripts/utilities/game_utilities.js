@@ -15,7 +15,7 @@ export const updateDice = ({ number, colorId }) => {
   colorDice.replaceChildren(diceColor);
 };
 
-export const removeEventListeners = (elements) => { // Can use .removeEventListener
+export const removeEventListeners = (elements) => {
   elements.forEach((tile) => {
     tile.replaceWith(tile.cloneNode(true));
   });
@@ -70,6 +70,7 @@ const fetchMoveResult = async (payload, path = "move") => {
     method: "POST",
     body: JSON.stringify(payload),
     headers: { "content-type": "application/json" },
+    credentials: "include",
   });
 
   return await response.json();

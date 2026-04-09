@@ -13,7 +13,7 @@ export const addEventListener = () => {
 export const renderGame = async () => {
   const state = await getGameState();
   renderBoard(state);
-  renderPlayers(state.players, state.currentPlayerId);
+  renderPlayers(state.players, state.currentPlayerId, state.requesterId);
   renderBankReserve(state);
   renderDeck(state.deck);
 };

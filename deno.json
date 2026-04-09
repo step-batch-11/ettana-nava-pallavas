@@ -17,9 +17,15 @@
     "@std/testing": "jsr:@std/testing@^1.0.17",
     "hono": "npm:hono@^4.12.9",
     "/pages/": "./public/pages/",
-    "/assets/": "./public/assets/"
+    "/assets/": "./public/assets/",
+    "taiko": "npm:taiko@^1.4.8"
   },
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext", "deno.ns"]
+  },
+  "nodeModulesDir": "auto",
+  "allowScripts": {
+    "allow": [],
+    "deny": ["npm:fsevents@2.3.3", "npm:taiko@1.4.8"]
   }
 }

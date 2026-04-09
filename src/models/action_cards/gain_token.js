@@ -6,12 +6,8 @@ export default class Gain {
 
     if (payload.number > number) {
       return {
-        state: game.getGameState(),
         diceValues: { colorId: diceValue.colorId, number },
-        result: {
-          diceValues: { colorId: diceValue.colorId, number },
-          message: "Tokens has not been credited",
-        },
+        message: "Tokens has not been credited",
       };
     }
 
@@ -19,11 +15,8 @@ export default class Gain {
     currentPlayer.creditTokens(tokens);
 
     return {
-      state: game.getGameState(),
-      result: {
-        diceValues: { colorId: diceValue.colorId, number },
-        message: "Tokens credited",
-      },
+      diceValues: { colorId: diceValue.colorId, number },
+      message: "Tokens credited",
     };
   }
 }

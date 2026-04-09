@@ -10,6 +10,7 @@ export default class GameSetup {
   #rolledValues;
   #random;
   #turnsTaken;
+  #destinations;
 
   constructor(players, bank, board, rolledValues = {}, randomFn = Math.random) {
     this.#turnsTaken = Object.keys(rolledValues).length || 0;
@@ -35,20 +36,26 @@ export default class GameSetup {
   }
 
   getPlayerById(id) {
-    return this.#players.find((player) => player.getId() === Number(id));
+    const current = this.#players.find((player) =>
+      player.getId() === Number(id)
+    );
+    return current;
   }
 
   getGameState(id = 1) {
+    const currentPlayerId = this.getCurrentPlayer().getId();
+    const requesterDeck = {
+      actionCards: this.getPlayerById(id).getAc(),
+      designCards: this.getPlayerById(id).getDc(),
+    };
+
     return {
       players: this.#players.map((player) => player.getPlayerData()),
-      currentPlayerId: this.getCurrentPlayer().getId(),
+      currentPlayerId,
       board: this.#board.getState(),
       bank: this.#bank.getBank(),
       diceValues: this.diceValues,
-      deck: {
-        actionCards: this.getPlayerById(id).getAc(),
-        designCards: this.getPlayerById(id).getDc(),
-      },
+      deck: requesterDeck,
     };
   }
 
@@ -67,16 +74,21 @@ export default class GameSetup {
     const tiles = this.#board.getTiles();
     const players = this.#players.map((player) => player.getPlayerData());
     const destinations = findJumpableRoutes(diceValues.number, tiles, players);
-    this.destinations = destinations;
+    this.#destinations = destinations;
 
-    return { diceValues, destinations, state: this.getGameState() };
+    return { diceValues, destinations };
   }
 
   distributeInitialAssets() {
     this.#players.forEach((player) => {
       const token = this.#bank.deductTokens(2);
       const designCard = this.#bank.getDesignCard();
-      const actionCard = this.#bank.getActionCard();
+      let actionCard = this.#bank.getActionCard();
+
+      while (actionCard.id === 16) {
+        actionCard = this.#bank.getActionCard();
+      }
+
       player.addDesignCard(designCard);
       player.addActionCard(actionCard);
       player.creditTokens(token);
@@ -84,7 +96,7 @@ export default class GameSetup {
   }
 
   move({ destination }) {
-    if (!isValidMove(destination, this.destinations)) {
+    if (!isValidMove(destination, this.#destinations)) {
       throw new Error("not a valid move");
     }
 

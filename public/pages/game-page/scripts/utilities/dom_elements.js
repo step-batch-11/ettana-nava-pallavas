@@ -1,8 +1,8 @@
 export const selectorArea = document.querySelector(
-    "#popup-selector",
-  );
+  "#popup-selector",
+);
 export const replacePopup = document.querySelector(
-    "#replace-selector",
-  );
+  "#replace-selector",
+);
 
-  
+export const colorDiceContainer = document.querySelector("#color-dice-container");

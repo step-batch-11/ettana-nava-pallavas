@@ -6,19 +6,21 @@ import {
   createDesignCard,
 } from "./utilities/deck_utilities.js";
 import {
+  exchangeDesignCard,
   handleDragDrop,
   handleDragEnd,
   handleDragOver,
   handleDragStart,
   rotateDesignCard,
-  exchangeDesignCard
 } from "./handlers/deck_handlers.js";
 
 import {
   handleActionCardSwap,
   handleGainToken,
   handleMoveActionCard,
+  handlePreset,
   handleReplaceActionCard,
+  handleRollAgain,
   performSteal,
 } from "./handlers/action_card_handlers.js";
 
@@ -90,13 +92,12 @@ const claimDesignCardEventListener = () => {
   designCardContainer.addEventListener("click", (e) => {
     const button = e.target;
     const card = e.target.closest(".card-item");
-   
+
     if (!button || !card) return;
     if (!designCardContainer.contains(card)) return;
 
-    if(button.classList.contains("rotate-design")) rotateDesignCard(card);
-    if(button.classList.contains("exchange-design")) exchangeDesignCard(card);
-    
+    if (button.classList.contains("rotate-design")) rotateDesignCard(card);
+    if (button.classList.contains("exchange-design")) exchangeDesignCard(card);
   });
 
   designCardContainer.dataset.listenerAdded = true;
@@ -129,7 +130,7 @@ const playActionCardEventListener = () => {
     if (id === "22") {
       return performSteal(id, "action-card");
     }
-    
+
     if (id === "34") {
       return handleReplaceActionCard(id);
     }
@@ -138,8 +139,19 @@ const playActionCardEventListener = () => {
       return handleGainToken();
     }
 
+    if (id === "13") {
+      return handlePreset(id);
+    }
+
+    if (id === "28") {
+      return handleRollAgain(id);
+    }
+
     try {
-      const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+      const res = await fetch(`game/action-card/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+      });
       const { state, success, result, message } = await res.json();
 
       if (!success) {
