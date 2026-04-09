@@ -161,9 +161,11 @@ export const createOctagons = (row, col) => {
   return cell;
 };
 
-export const removeTileEventListeners = () => {
-  const tiles = document.querySelectorAll(".tile");
-  removeEventListeners(tiles);
+export const removeTileEventListeners = (handler) => {
+  document.querySelectorAll(".tile").forEach((tile) => {
+    tile.removeEventListener("click", handler);
+  });
+  // removeEventListeners(tiles);
 };
 
 export const removeCellEventListeners = () => {

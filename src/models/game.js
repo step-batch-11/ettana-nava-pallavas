@@ -265,6 +265,13 @@ export default class Game {
     this.#board.swapYarns(source, destination);
   }
 
+  buySwap() {
+    if (this.getCurrentPlayer().getTokens() < 3) {
+      throw new Error("You do not have enough tokens");
+    }
+
+    return {message: "You can swap any of the yarns on the board"}
+  }
   paidSwap(source, destination) {
     const swapCost = 3;
     const currentPlayer = this.getCurrentPlayer();

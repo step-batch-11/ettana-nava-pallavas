@@ -39,7 +39,7 @@ export const buyDesignCard = (context) => {
       message: "Design card bought successfully",
     });
   } catch (error) {
-    return context.json({ success: false, message: error.message });
+    return context.json({ success: false, error: error.message });
   }
 };
 
@@ -54,7 +54,7 @@ export const buyActionCard = (context) => {
       message: "Action card bought successfully",
     });
   } catch (error) {
-    return context.json({ success: false, message: error.message });
+    return context.json({ success: false, error: error.message });
   }
 };
 
@@ -68,7 +68,7 @@ export const claimDesign = (context) => {
     const gameState = room.state.getGameState(session.playerId);
     return context.json({ success: true, result, state: gameState });
   } catch (error) {
-    return context.json({ success: false, message: error.message });
+    return context.json({ success: false, error: error.message });
   }
 };
 
@@ -84,7 +84,7 @@ export const handleMove = async (ctx) => {
     );
   } catch (error) {
     console.log(error);
-    return ctx.json({ success: false, message: error.message }, 400);
+    return ctx.json({ success: false, error: error.message }, 400);
   }
 };
 
@@ -99,7 +99,7 @@ export const handleSwap = async (context) => {
       200,
     );
   } catch (e) {
-    return context.json({ success: false, message: e.message }, 400);
+    return context.json({ success: false, error: e.message }, 400);
   }
 };
 
@@ -113,8 +113,8 @@ export const handlePaidSwap = async (context) => {
       { success: true, message: "Swapped successfully" },
       200,
     );
-  } catch (e) {
-    return context.json({ success: false, message: e.message }, 400);
+  } catch (err) {
+    return context.json({ success: false, error: err.message }, 400);
   }
 };
 
@@ -129,7 +129,7 @@ export const playActionCard = (context) => {
 
     return context.json({ result, state, success: true });
   } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+    return context.json({ success: false, error: err.message }, 400);
   }
 };
 
@@ -145,7 +145,7 @@ export const performActionCard = async (context) => {
     return context.json({ result, state, success: true });
   } catch (err) {
     console.log(err);
-    return context.json({ success: false, message: err.message }, 400);
+    return context.json({ success: false, error: err.message }, 400);
   }
 };
 
@@ -159,7 +159,7 @@ export const rotateDesignCard = (context) => {
     return context.json({ state, message: "Rotated", success: true });
   } catch (err) {
     console.log(err);
-    return context.json({ success: false, message: err.message }, 400);
+    return context.json({ success: false, error: err.message }, 400);
   }
 };
 
@@ -178,7 +178,7 @@ export const exchangeDesignCard = (context) => {
       success: true,
     });
   } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+    return context.json({ success: false, error: err.message }, 400);
   }
 };
 
@@ -194,6 +194,16 @@ export const passTurn = (context) => {
       success: true,
     });
   } catch (err) {
-    return context.json({ success: false, message: err.message }, 400);
+    return context.json({ success: false, error: err.message }, 400);
+  }
+};
+
+export const handleBuySwap = (context) => {
+  try {
+    const room = context.get("room");
+
+    return context.json({ success: true, result: room.state.buySwap() });
+  } catch (err) {
+    return context.json({ success: false, error: err.message }, 400);
   }
 };
