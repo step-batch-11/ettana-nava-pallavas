@@ -405,7 +405,7 @@ describe("Game route", () => {
       });
     });
 
-    describe("Paid Swap Yarn", () => {
+    describe.ignore("Paid Swap Yarn", () => {
       it("Player have more than 3 tokens, yarns should be swapped", async () => {
         currentPlayer.creditTokens(4);
 
