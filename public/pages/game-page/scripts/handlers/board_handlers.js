@@ -62,7 +62,7 @@ const swapYarns = async (draggablePosition, yarnPosition, path) => {
   removeYarnHighlighting();
   removeYarnEventListeners();
   removeCellEventListeners();
-  showToast(response.result.message, "d");
+  showToast(response.result.message);
 };
 
 export const documentClickHandler = (e) => {
@@ -92,12 +92,20 @@ export const handleDropYarns = async (e, cell, yarnPosition, path) => {
 };
 
 export const addDragAndDropOnYarns = (yarn, yarnPosition, path) => {
+  yarn.removeEventListener("dragstart", handleStartDragForYarns);
+
   yarn.addEventListener(
     "dragstart",
     (e) => handleStartDragForYarns(e, yarnPosition),
   );
+
   const cell = yarn.parentElement;
+  cell.classList.remove("active");
   cell.classList.add("active");
+
+  cell.removeEventListener("dragover", handleDragOverForYarns);
+  cell.removeEventListener("dragleave", handleDragLeaveForYarns);
+  cell.removeEventListener("drop", handleDropYarns);
 
   cell.addEventListener("dragover", (e) => handleDragOverForYarns(e, cell));
   cell.addEventListener("dragleave", (e) => handleDragLeaveForYarns(e, cell));
@@ -108,6 +116,7 @@ export const addDragAndDropOnYarns = (yarn, yarnPosition, path) => {
 };
 
 export const handleSwapEvent = (path = "/game/paid-swap") => {
+  
   const yarnsPosition = getAllYarnsPosition();
   highlightYarns(yarnsPosition);
 
