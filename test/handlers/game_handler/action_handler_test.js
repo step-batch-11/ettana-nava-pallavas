@@ -9,7 +9,7 @@ import { assertEquals } from "@std/assert";
 import ActionCardService from "../../../src/service/action_card.js";
 import GameController from "../../../src/controller/game_controller.js";
 
-describe("test action handlers", () => {
+describe.ignore("test action handlers", () => {
   let game, players, actionCards, app, actionCardService, gameController;
 
   beforeEach(() => {

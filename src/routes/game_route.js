@@ -14,22 +14,30 @@ import {
   rotateDesignCard,
   serveGameState,
 } from "../handlers/game_handlers.js";
+import { serveStatic } from "hono/deno";
+import { isCurrentPlayer } from "../middleware/auth.js";
 
 const gameRoute = new Hono();
 
-gameRoute.post("/roll", handleDiceRoll);
+gameRoute.post("/roll", isCurrentPlayer, handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
-gameRoute.post("/move", handleMove);
-gameRoute.post("/swap", handleSwap);
-gameRoute.get("/buy-design-card", buyDesignCard);
-gameRoute.get("/buy-action-card", buyActionCard);
-gameRoute.get("/claim-design/:id", claimDesign);
-gameRoute.post("/paid-swap", handlePaidSwap);
-gameRoute.post("/pass-turn", passTurn);
+gameRoute.post("/move", isCurrentPlayer, handleMove);
+gameRoute.post("/swap", isCurrentPlayer, handleSwap);
+gameRoute.get("/buy-design-card", isCurrentPlayer, buyDesignCard);
+gameRoute.get("/buy-action-card", isCurrentPlayer, buyActionCard);
+gameRoute.get("/claim-design/:id", isCurrentPlayer, claimDesign);
+gameRoute.post("/paid-swap", isCurrentPlayer, handlePaidSwap);
+gameRoute.post("/pass-turn", isCurrentPlayer, passTurn);
 // gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
-gameRoute.patch("/action-card/:id", playActionCard);
-gameRoute.post("/perform-action-card", performActionCard);
+gameRoute.patch("/action-card/:id", isCurrentPlayer, playActionCard);
+gameRoute.post("/perform-action-card", isCurrentPlayer, performActionCard);
 gameRoute.patch("/rotate-design-card/:id", rotateDesignCard);
-gameRoute.patch("/exchange-design-card/:id", exchangeDesignCard);
+gameRoute.patch(
+  "/exchange-design-card/:id",
+  isCurrentPlayer,
+  exchangeDesignCard,
+);
+
+gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
 
 export default gameRoute;

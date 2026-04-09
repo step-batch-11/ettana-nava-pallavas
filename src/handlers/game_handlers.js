@@ -1,31 +1,37 @@
 export const serveGameState = (ctx) => {
   try {
-    const gameController = ctx.get("gameController");
-    const gameState = gameController.getGameState();
+    const room = ctx.get("room");
+    const session = ctx.get("session");
 
-    return ctx.json({ success: true, state: gameState });
+    const gameState = room.state.getGameState(session.playerId);
+    return ctx.json({
+      success: true,
+      state: gameState,
+    });
   } catch (e) {
+    console.log(e);
     return ctx.json({ success: false, error: e.message });
   }
 };
 
 export const handleDiceRoll = (context) => {
   try {
-    const gameController = context.get("gameController");
-    const { diceValues, destinations } = gameController.upkeep();
+    const session = context.get("session");
+    const room = context.get("room");
 
-    const gameState = gameController.getGameState();
-
+    const { diceValues, destinations } = room.state.upkeep(session.playerId);
+    const gameState = room.state.getGameState(session.playerId);
     return context.json({ success: true, gameState, destinations, diceValues });
   } catch (e) {
+    console.log(e);
     return context.json({ success: false, error: e.message });
   }
 };
 
 export const buyDesignCard = (context) => {
   try {
-    const gameController = context.get("gameController");
-    const card = gameController.buyDesignCard();
+    const room = context.get("room");
+    const card = room.state.buyDesignCard();
 
     return context.json({
       success: true,
@@ -39,9 +45,9 @@ export const buyDesignCard = (context) => {
 
 export const buyActionCard = (context) => {
   try {
-    const gameController = context.get("gameController");
-    const card = gameController.buyActionCard();
+    const room = context.get("room");
 
+    const card = room.state.buyActionCard();
     return context.json({
       success: true,
       card,
@@ -54,11 +60,12 @@ export const buyActionCard = (context) => {
 
 export const claimDesign = (context) => {
   try {
-    const gameController = context.get("gameController");
     const designCardId = context.req.param("id");
-    const result = gameController.claimDesign(designCardId);
-    const gameState = gameController.getGameState();
+    const room = context.get("room");
+    const session = context.get("session");
 
+    const result = room.state.claimDesign(designCardId);
+    const gameState = room.state.getGameState(session.playerId);
     return context.json({ success: true, result, state: gameState });
   } catch (error) {
     return context.json({ success: false, message: error.message });
@@ -68,24 +75,25 @@ export const claimDesign = (context) => {
 export const handleMove = async (ctx) => {
   try {
     const destination = await ctx.req.json();
-    const gameController = ctx.get("gameController");
-    const result = gameController.move(destination);
+    const room = ctx.get("room");
 
+    const result = room.state.move(destination);
     return ctx.json(
       { success: true, result: { ...result, message: "Moved successfully" } },
       200,
     );
   } catch (error) {
+    console.log(error);
     return ctx.json({ success: false, message: error.message }, 400);
   }
 };
 
 export const handleSwap = async (context) => {
   try {
-    const gameController = context.get("gameController");
     const { draggablePosition, yarnPosition } = await context.req.json();
-    gameController.freeSwap(draggablePosition, yarnPosition);
+    const room = context.get("room");
 
+    room.state.freeSwap(draggablePosition, yarnPosition);
     return context.json(
       { success: true, message: "Swapped successfully" },
       200,
@@ -97,9 +105,9 @@ export const handleSwap = async (context) => {
 
 export const handlePaidSwap = async (context) => {
   try {
-    const gameController = context.get("gameController");
+    const room = context.get("room");
     const { draggablePosition, yarnPosition } = await context.req.json();
-    gameController.paidSwap(draggablePosition, yarnPosition);
+    room.state.paidSwap(draggablePosition, yarnPosition);
 
     return context.json(
       { success: true, message: "Swapped successfully" },
@@ -112,10 +120,12 @@ export const handlePaidSwap = async (context) => {
 
 export const playActionCard = (context) => {
   try {
-    const gameController = context.get("gameController");
+    const room = context.get("room");
+    const session = context.get("session");
     const cardId = Number(context.req.param("id"));
+    const state = room.state.getGameState(session.playerId);
 
-    const { result, state } = gameController.playCard(cardId);
+    const result = room.state.playCard(cardId);
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -125,10 +135,12 @@ export const playActionCard = (context) => {
 
 export const performActionCard = async (context) => {
   try {
-    const gameController = context.get("gameController");
+    const room = context.get("room");
+    const session = context.get("session");
     const payload = await context.req.json();
+    const state = room.state.getGameState(session.playerId);
 
-    const { result, state } = gameController.performAction(payload);
+    const result = room.state.performAction(payload);
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -137,21 +149,27 @@ export const performActionCard = async (context) => {
 };
 
 export const rotateDesignCard = (context) => {
-  const gameController = context.get("gameController");
-  const game = gameController.getGame();
-  const id = Number(context.req.param("id"));
-  const { state } = game.rotatePattern(id);
+  try {
+    const room = context.get("room");
+    const id = Number(context.req.param("id"));
+    const session = context.get("session");
+    const { state } = room.state.rotateDesignCard(id, session.playerId);
 
-  return context.json({ state, message: "Rotated", success: true });
+    return context.json({ state, message: "Rotated", success: true });
+  } catch (err) {
+    console.log(err);
+    return context.json({ success: false, message: err.message }, 400);
+  }
 };
 
 export const exchangeDesignCard = (context) => {
   try {
-    const gameController = context.get("gameController");
+    const room = context.get("room");
+    const session = context.get("session");
     const id = Number(context.req.param("id"));
 
-    gameController.exchangeDesignCard(id);
-    const state = gameController.getGameState();
+    room.state.exchangeDesignCard(id, session.playerId);
+    const state = room.state.getGameState(session.playerId);
 
     return context.json({
       state,
@@ -165,9 +183,10 @@ export const exchangeDesignCard = (context) => {
 
 export const passTurn = (context) => {
   try {
-    const gameController = context.get("gameController");
-    const { state } = gameController.endTurn();
+    const room = context.get("room");
+    const session = context.get("session");
 
+    const { state } = room.state.endTurn(session.playerId);
     return context.json({
       result: { message: "turn passed" },
       state,

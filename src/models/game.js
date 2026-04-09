@@ -289,21 +289,19 @@ export default class Game {
     this.#bank.changeYarnColorId(index, colorIdOnBoard);
   }
 
-  rotatePattern(designCardId) {
-    const currentPlayer = this.getCurrentPlayer();
+  rotatePattern(designCardId, playerId) {
+    const currentPlayer = this.#players.find((player) => player.getId() === playerId);
     const designCard = currentPlayer
       .getDc()
       .find(({ id }) => id === Number(designCardId));
     const rotatedDesign = rotateDesign(designCard.design);
     designCard.design = rotatedDesign;
-
-    return { state: this.getGameState() };
   }
 
-  next() {
+  next(requesterId) {
     this.#currentPlayerIndex = (this.#currentPlayerIndex + 1) %
       this.#players.length;
-    return { state: this.getGameState() };
+    return { state: this.getGameState(requesterId) };
   }
 
   exchangeDesignCard(designCardId) {

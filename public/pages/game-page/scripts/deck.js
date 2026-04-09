@@ -148,7 +148,10 @@ const playActionCardEventListener = () => {
     }
 
     try {
-      const res = await fetch(`game/action-card/${id}`, { method: "PATCH" });
+      const res = await fetch(`game/action-card/${id}`, {
+        method: "PATCH",
+        credentials: "include",
+      });
       const { state, success, result, message } = await res.json();
 
       if (!success) {

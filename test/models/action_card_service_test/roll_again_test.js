@@ -20,10 +20,7 @@ describe("Roll Again", () => {
     const result = RollAgain.play(cardId, game);
 
     assertEquals(result, {
-      state: mockState,
-      result: {
-        message: "Roll again card played successfully",
-      },
+      message: "Roll again card played successfully",
     });
   });
 });

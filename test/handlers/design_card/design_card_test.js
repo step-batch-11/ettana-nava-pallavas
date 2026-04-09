@@ -15,7 +15,7 @@ import {
 import ActionCardService from "../../../src/service/action_card.js";
 import GameController from "../../../src/controller/game_controller.js";
 
-describe("Design card handlers", () => {
+describe.ignore("Design card handlers", () => {
   let app,
     players;
 

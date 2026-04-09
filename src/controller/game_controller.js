@@ -15,13 +15,16 @@ export default class GameController {
     this.actionCardService = actionCardService;
   }
 
+  getCurrentPlayerId() {
+    return this.game.getCurrentPlayer().getId();
+  }
+
   getGame() {
     return this.game;
   }
 
-  getGameState(_id) {
-    const currentPlayer = this.game.getCurrentPlayer();
-    return this.game.getGameState(currentPlayer.getId());
+  getGameState(id) {
+    return { ...this.game.getGameState(id), requesterId: id };
   }
 
   move(destination) {
@@ -36,7 +39,7 @@ export default class GameController {
     return result;
   }
 
-  upkeep() {
+  upkeep(id) {
     if (this.playerActions.diceRolled) {
       throw new Error("you can't roll again");
     }
@@ -46,7 +49,7 @@ export default class GameController {
     this.playerActions.diceRolled = true;
     this.playerActions.isLastMove = false;
 
-    return result;
+    return { ...result, state: this.getGameState(id) };
   }
 
   freeSwap(position, yarn) {
@@ -124,7 +127,7 @@ export default class GameController {
     }
 
     if (cardId === 28) {
-      return this.playerActions.diceRolled && !this.playerActions.anyActionDone 
+      return this.playerActions.diceRolled && !this.playerActions.anyActionDone;
     }
 
     return this.playerActions.diceRolled;
@@ -168,13 +171,11 @@ export default class GameController {
     return result;
   }
 
-  endTurn() {
+  endTurn(requesterId) {
     if (!this.playerActions.diceRolled || !this.playerActions.moved) {
       throw new Error("roll and move to end turn");
     }
-
-    const result = this.game.next();
-    
+    const result = this.game.next(requesterId);
     this.playerActions = { ...this.#defaultActions };
     return result;
   }
@@ -184,7 +185,7 @@ export default class GameController {
     this.playerActions = { ...this.#defaultActions };
   }
 
-  exchangeDesignCard(designCardId) {
+  exchangeDesignCard(designCardId, requesterId) {
     if (this.playerActions.anyActionDone || !this.playerActions.diceRolled) {
       throw new Error(
         "exchange design card only after dice roll and before any action.",
@@ -192,9 +193,14 @@ export default class GameController {
     }
 
     this.game.exchangeDesignCard(designCardId);
-    const result = this.game.next();
+    const result = this.game.next(requesterId);
 
     this.playerActions = { ...this.#defaultActions };
     return result;
+  }
+
+  rotateDesignCard(designCardId, requesterId) {
+    this.game.rotatePattern(designCardId, requesterId);
+    return { state: this.getGameState(requesterId) };
   }
 }

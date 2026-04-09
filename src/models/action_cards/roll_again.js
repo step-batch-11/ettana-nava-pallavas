@@ -3,11 +3,6 @@ export default class RollAgain {
     const currentPlayer = game.getCurrentPlayer();
     currentPlayer.removeActionCard(id);
 
-    return {
-      state: game.getGameState(),
-      result: {
-        message: "Roll again card played successfully",
-      },
-    };
+    return { message: "Roll again card played successfully" };
   }
 }

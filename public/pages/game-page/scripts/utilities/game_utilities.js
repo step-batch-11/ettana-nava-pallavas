@@ -70,6 +70,7 @@ const fetchMoveResult = async (payload, path = "move") => {
     method: "POST",
     body: JSON.stringify(payload),
     headers: { "content-type": "application/json" },
+    credentials: "include",
   });
 
   return await response.json();

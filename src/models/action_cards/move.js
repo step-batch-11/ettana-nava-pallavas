@@ -6,13 +6,10 @@ export default class Move {
 
     const availableDestinations = game.getPossibleDestinations();
 
-    return {
-      result: { availableDestinations, message: "Move action card played" },
-      state: game.getGameState(),
-    };
+    return { availableDestinations, message: "Move action card played" };
   }
 
-  static performMove(payload, currentPlayer, played, game) {
+  static performMove(payload, currentPlayer, played, _game) {
     if (!played["move"]) {
       throw new Error("You didn't play move action card");
     }
@@ -27,9 +24,6 @@ export default class Move {
 
     delete played.move;
 
-    return {
-      result: { adjYarns, moveResult, message: "moved successfully" },
-      state: game.getGameState(),
-    };
+    return { adjYarns, moveResult, message: "moved successfully" };
   }
 }

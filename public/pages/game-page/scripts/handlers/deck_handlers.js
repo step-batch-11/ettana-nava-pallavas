@@ -60,6 +60,7 @@ export const handleDragEnd = (dragged, sourceContainer, placeholder) => {
 export const rotateDesignCard = async (card) => {
   const res = await fetch(`/game/rotate-design-card/${card.dataset.id}`, {
     method: "PATCH",
+    credentials: "include",
   });
   const { state, success } = await res.json();
   if (success) {
@@ -83,10 +84,10 @@ export const exchangeDesignCard = async (card) => {
   const res = await fetch(`/game/exchange-design-card/${card.dataset.id}`, {
     method: "PATCH",
   });
-  const { state, result, success, message } = await res.json();
+  const { state, result, success, error } = await res.json();
 
   if (!success) {
-    showToast(message, "e");
+    showToast(error, "e");
   }
 
   showToast(result.message);

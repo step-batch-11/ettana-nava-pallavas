@@ -28,11 +28,8 @@ describe("Move", () => {
 
       assertEquals(played.move, true);
       assertEquals(result, {
-        state: mockState,
-        result: {
-          availableDestinations: mockPosition,
-          message: "Move action card played",
-        },
+        availableDestinations: mockPosition,
+        message: "Move action card played",
       });
     });
   });
@@ -45,20 +42,17 @@ describe("Move", () => {
 
       assertEquals("move" in played, false);
       assertEquals(result, {
-        state: mockState,
-        result: {
-          adjYarns: [
-            { x: 0, y: 0 },
-            { x: 0, y: 1 },
-            { x: 1, y: 0 },
-            { x: 1, y: 1 },
-          ],
-          moveResult: {
-            source: mockPosition,
-            destination: payload.destination,
-          },
-          message: "moved successfully",
+        adjYarns: [
+          { x: 0, y: 0 },
+          { x: 0, y: 1 },
+          { x: 1, y: 0 },
+          { x: 1, y: 1 },
+        ],
+        moveResult: {
+          source: mockPosition,
+          destination: payload.destination,
         },
+        message: "moved successfully",
       });
     });
 

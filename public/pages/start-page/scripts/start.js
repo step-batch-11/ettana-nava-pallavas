@@ -27,14 +27,10 @@ scrollBtn.addEventListener("click", () => {
 
 pageContainer.dispatchEvent(new Event("scroll"));
 
-document.querySelector("form").addEventListener("submit", async (e) => {
+document.querySelector("form").addEventListener("submit", (e) => {
   e.preventDefault();
   const body = new FormData(e.target);
-  const res = await fetch("/lobby/join", { method: "POST", body });
-  const resBody = await res.json();
+  localStorage.setItem("username", body.get("username"));
 
-  localStorage.setItem("id", resBody.id);
-  if (resBody.success) {
-    globalThis.location.assign("/lobby");
-  }
+  globalThis.location.assign("/dashboard");
 });

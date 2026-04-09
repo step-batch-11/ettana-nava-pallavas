@@ -29,11 +29,8 @@ describe("Swap", () => {
 
       assertEquals(played.swap, true);
       assertEquals(result, {
-        state: mockState,
-        result: {
-          swappableYarns: mockPosition,
-          message: "Swap action card played",
-        },
+        swappableYarns: mockPosition,
+        message: "Swap action card played",
       });
     });
   });
@@ -50,8 +47,7 @@ describe("Swap", () => {
 
       assertEquals("swap" in played, false);
       assertEquals(result, {
-        state: mockState,
-        result: { message: "Swap action card played" },
+        message: "Swap action card played" 
       });
     });
 

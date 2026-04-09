@@ -47,6 +47,7 @@ const fetchSwapResult = async (draggablePosition, yarnPosition, path) => {
     method: "POST",
     body: JSON.stringify({ draggablePosition, yarnPosition, cardId: 25 }),
     headers: { "content-type": "application/json" },
+    credentials: "include",
   });
   return await response.json();
 };
