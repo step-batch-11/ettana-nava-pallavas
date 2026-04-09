@@ -38,7 +38,7 @@ export const closeDialog = () => {
   dialog.close();
 };
 
-const createDice = (value) => {
+export const createDice = (value) => {
   const dice = document.createElement("div");
   dice.classList.add("dice-popup");
 
@@ -59,7 +59,7 @@ const createDice = (value) => {
       d.classList.remove("selected")
     );
     selectedValue = null;
-    dice.classList.add("selected");
+    // dice.classList.add("selected");
     selectedValue = value;
   });
 
