@@ -25,6 +25,7 @@ export const createApp = (
   app.route("/game", gameRoute);
   app.route("/lobby", lobbyRoute);
   app.get("/", serveStatic({ path: "public/pages/start-page" }));
+  app.get("/end", serveStatic({ path: "public/pages/end-game" }));
   app.get("/dashboard", serveStatic({ path: "public/pages/dashboard" }));
   app.get("*", serveStatic({ root: "public" }));
 

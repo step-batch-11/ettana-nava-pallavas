@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ettana - Match Results</title>
+  <style>
+    :root {
+      --primary-red: #C1272D;
+      --primary-gold: #D4AF37;
+      --dark-bg: #2C1A1D;
+      --light-bg: #FDFBF7;
+      --text-main: #333;
+      --purple-accent: #662D91;
+      --green-accent: #39B54A;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--dark-bg);
+      background-image: radial-gradient(circle, #4a2c31 10%, transparent 10%), radial-gradient(circle, #4a2c31 10%, transparent 10%);
+      background-size: 20px 20px;
+      background-position: 0 0, 10px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .card-container {
+      background-color: var(--light-bg);
+      border: 8px solid var(--primary-gold);
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      max-width: 700px;
+      width: 100%;
+      padding: 40px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative border lines */
+    .card-container::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      right: 5px;
+      bottom: 5px;
+      border: 2px solid var(--primary-red);
+      border-radius: 6px;
+      pointer-events: none;
+    }
+
+    h1 {
+      color: var(--primary-red);
+      text-align: center;
+      border-bottom: 2px solid var(--primary-gold);
+      padding-bottom: 10px;
+      margin-top: 0;
+      font-size: 2.2em;
+    }
+
+    p.intro-text {
+      color: var(--text-main);
+      font-size: 1.1em;
+      line-height: 1.6;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
+      background: white;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    th,
+    td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #eee;
+    }
+
+    th {
+      background-color: var(--purple-accent);
+      color: white;
+      text-transform: uppercase;
+      font-size: 0.9em;
+      letter-spacing: 1px;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    /* Highlight styles */
+    .winner-row {
+      background-color: rgba(212, 175, 55, 0.2) !important;
+      font-weight: bold;
+      color: var(--primary-red);
+    }
+
+    .current-player-row {
+      background-color: rgba(57, 181, 74, 0.1) !important;
+      font-weight: bold;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-style: italic;
+      color: #666;
+      font-size: 0.9em;
+    }
+
+    /* Controls for Demo */
+    .demo-controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 10px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 100;
+    }
+
+    button {
+      background-color: var(--primary-red);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      margin: 0 5px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background-color: #a01f24;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="demo-controls">
+    <button onclick="showPage('win')">Show Win Page</button>
+    <button onclick="showPage('lose')">Show Lose Page</button>
+  </div>
+
+  <div id="win-page" class="card-container">
+    <h1>🏆 The Master Weaver's Triumph</h1>
+    <p class="intro-text">
+      Congratulations, Master Weaver! Your skillful blending of strategy, quick thinking, and artistry has paid off. By
+      carefully planning your moves, swapping the colored yarns at the right moments, and successfully completing unique
+      designs, you have secured your place in Kanchi's rich tradition. You traded your beautiful fabrics and were the
+      very first to collect 8 "Annas"!
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Weaver (Player)</th>
+          <th>"Annas" (Victory Points)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="winner-row">
+          <td>1st</td>
+          <td>[Winner's Name]</td>
+          <td>8</td>
+          <td>Winner - Master of the Loom!</td>
+        </tr>
+        <tr>
+          <td>2nd</td>
+          <td>[Player 2 Name]</td>
+          <td>6</td>
+          <td>Journeyman Weaver</td>
+        </tr>
+        <tr>
+          <td>3rd</td>
+          <td>[Player 3 Name]</td>
+          <td>4</td>
+          <td>Skilled Apprentice</td>
+        </tr>
+        <tr>
+          <td>4th</td>
+          <td>[Player 4 Name]</td>
+          <td>2</td>
+          <td>Novice Weaver</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="footer-note">
+      The game comes to an end as you have claimed the final required design and reached exactly 8 victory points. Your
+      handloom legacy will be remembered for generations!
+    </p>
+  </div>
+
+  <div id="lose-page" class="card-container hidden">
+    <h1>🧵 The Apprentice's Reflection</h1>
+    <p class="intro-text">
+      The Looms of Kanchi Keep Weaving... The competition was fierce, and while you crafted some beautiful patterns,
+      another weaver managed to complete their unique designs just a bit faster. In the bustling temple town of Kanchi,
+      every fabric tells a story, and this time, the story belongs to your opponent who was the first to make 8 "Annas"
+      (victory points).<br><br>
+      Don't let your yarns tangle! Next time, remember to optimize your sequence of actions, use your tokens wisely to
+      swap yarns, and keep a close eye on those Action and Design cards.
+    </p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Weaver (Player)</th>
+          <th>"Annas" (Victory Points)</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="winner-row">
+          <td>1st</td>
+          <td>[Opponent's Name]</td>
+          <td>8</td>
+          <td>Winner - Master of the Loom!</td>
+        </tr>
+        <tr>
+          <td>2nd</td>
+          <td>[Player 2 Name]</td>
+          <td>7</td>
+          <td>Journeyman Weaver</td>
+        </tr>
+        <tr class="current-player-row">
+          <td>3rd</td>
+          <td>[Your Name]</td>
+          <td>5</td>
+          <td>Skilled Apprentice</td>
+        </tr>
+        <tr>
+          <td>4th</td>
+          <td>[Player 4 Name]</td>
+          <td>3</td>
+          <td>Novice Weaver</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p class="footer-note">
+      An opponent has collected 8 "Annas" in total, bringing the game to an end. Gather your pins, restock your colored
+      yarns, and prepare your loom for the next vibrant masterpiece!
+    </p>
+  </div>
+
+  <script>
+    // Simple script to toggle between states for demonstration
+    function showPage(state) {
+      const winPage = document.getElementById('win-page');
+      const losePage = document.getElementById('lose-page');
+
+      if (state === 'win') {
+        winPage.classList.remove('hidden');
+        losePage.classList.add('hidden');
+      } else {
+        losePage.classList.remove('hidden');
+        winPage.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+
+</html>
