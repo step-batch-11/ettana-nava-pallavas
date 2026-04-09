@@ -1,4 +1,5 @@
 import GameSetup from "../models/game_setup.js";
+import { acMap } from "../utils/mock_data.js";
 
 export default class GameController {
   #defaultActions = {
@@ -100,6 +101,9 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
+    const currentPlayerVp = this.game.getCurrentPlayer().getVp();
+
+    if (currentPlayerVp >= 8) this.game.setGameWon();
 
     return result;
   }
@@ -146,6 +150,13 @@ export default class GameController {
 
     this.playerActions.anyActionDone = true;
     this.playerActions.isLastMove = false;
+
+    const victoryPointId = acMap.victoryPoint;
+    const currentPlayerVp = this.game.getCurrentPlayer().getVp();
+    if (cardId === victoryPointId && currentPlayerVp >= 8) {
+      this.game.setGameWon();
+    }
+
     return result;
   }
 

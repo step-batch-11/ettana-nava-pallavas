@@ -11,6 +11,8 @@ export const handleCreateLobby = async (context) => {
 
     const player = new Player(Date.now(), payload.username);
     players[player.getId()] = player;
+    player.updateVp(7);
+    player.creditTokens(1000);
 
     const room = {
       // id: `${Date.now()}-room`,

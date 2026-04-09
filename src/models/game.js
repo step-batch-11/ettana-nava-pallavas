@@ -9,6 +9,7 @@ export default class Game {
   #board;
   #diceValue;
   #currentPlayerIndex;
+  #isFinished;
 
   constructor(
     players,
@@ -18,6 +19,7 @@ export default class Game {
     randomFn = Math.random,
     currentPlayerIndex = 0,
   ) {
+    this.#isFinished = false;
     this.state = "game";
     this.#players = players;
     this.#bank = bank;
@@ -25,6 +27,10 @@ export default class Game {
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex || 0;
     this.randomFn = randomFn;
+  }
+
+  setGameWon() {
+    this.#isFinished = true;
   }
 
   distributeAssets({ colorId }, currentPlayer) {
@@ -107,6 +113,7 @@ export default class Game {
 
   getGameState(id = 1) {
     return {
+      isFinished: this.#isFinished,
       players: this.#players.map((player) => player.getPlayerData()),
       bank: this.#bank.getBank(),
       board: this.#board.getState(),
@@ -290,7 +297,9 @@ export default class Game {
   }
 
   rotatePattern(designCardId, playerId) {
-    const currentPlayer = this.#players.find((player) => player.getId() === playerId);
+    const currentPlayer = this.#players.find((player) =>
+      player.getId() === playerId
+    );
     const designCard = currentPlayer
       .getDc()
       .find(({ id }) => id === Number(designCardId));
