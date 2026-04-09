@@ -7,9 +7,8 @@ export default class Move {
     const availableDestinations = game.getPossibleDestinations();
 
     return {
-      result: { availableDestinations },
+      result: { availableDestinations, message: "Move action card played" },
       state: game.getGameState(),
-      message: "Move action card played",
     };
   }
 

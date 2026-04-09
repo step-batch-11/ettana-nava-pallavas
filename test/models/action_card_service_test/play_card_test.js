@@ -248,6 +248,7 @@ describe("Action cards", () => {
           [5, 4],
           [5, 5],
         ],
+        message: "Move action card played",
       });
     });
   });
