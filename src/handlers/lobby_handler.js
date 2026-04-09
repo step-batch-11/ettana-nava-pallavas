@@ -67,6 +67,7 @@ export const handleJoinLobby = async (context) => {
       message: "Joined successfully",
       state: room.state.getLobbyState(),
       roomId: room.id,
+      sessionId
     });
   } catch (err) {
     console.log(err);
@@ -80,7 +81,6 @@ export const handleGetLobbyState = (context) => {
     const rooms = context.get("rooms");
     const sessions = context.get("sessions");
     const session = sessions.get(sessionId);
-
     const room = rooms[session.roomId];
 
     return context.json({
@@ -99,7 +99,6 @@ export const handleStartGame = async (context) => {
     const rooms = context.get("rooms");
     const sessions = context.get("sessions");
     const session = sessions.get(sessionId);
-
     const room = rooms[session.roomId];
     room.state = await room.state.startGame();
 
