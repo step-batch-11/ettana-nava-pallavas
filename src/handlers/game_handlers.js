@@ -123,9 +123,9 @@ export const playActionCard = (context) => {
     const room = context.get("room");
     const session = context.get("session");
     const cardId = Number(context.req.param("id"));
-    const state = room.state.getGameState(session.playerId);
 
     const result = room.state.playCard(cardId);
+    const state = room.state.getGameState(session.playerId);
 
     return context.json({ result, state, success: true });
   } catch (err) {
@@ -138,12 +138,13 @@ export const performActionCard = async (context) => {
     const room = context.get("room");
     const session = context.get("session");
     const payload = await context.req.json();
-    const state = room.state.getGameState(session.playerId);
 
     const result = room.state.performAction(payload);
+    const state = room.state.getGameState(session.playerId);
 
     return context.json({ result, state, success: true });
   } catch (err) {
+    console.log(err);
     return context.json({ success: false, message: err.message }, 400);
   }
 };

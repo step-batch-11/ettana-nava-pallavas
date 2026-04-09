@@ -243,7 +243,7 @@ describe("Game controller test", () => {
         });
       });
 
-      describe.ignore("Path penalty for premium path: ", () => {
+      describe("Path penalty for premium path: ", () => {
         it("One player is in path, should pay to one player", () => {
           const path = [
             { x: 1, y: 0 },
@@ -251,7 +251,7 @@ describe("Game controller test", () => {
             { x: 1, y: 2 },
           ];
 
-          board.destinations = [{
+          gameState.destinations = [{
             destination: { x: 1, y: 3 },
             path,
             type: "premium",
@@ -265,8 +265,8 @@ describe("Game controller test", () => {
             recipients: [2],
           };
 
-          const positions = gameState.move(route);
-          assertEquals(positions.destination, getCoords(route.destination));
+          const result = gameState.move(route);
+          assertEquals(result.moveResult.destination, getCoords(route.destination));
           assertEquals(currentPlayer.getTokens(), 4);
         });
 
@@ -279,7 +279,7 @@ describe("Game controller test", () => {
             { x: 1, y: 4 },
           ];
 
-          board.destinations = [{
+          gameState.destinations = [{
             destination: { x: 1, y: 5 },
             path,
             type: "premium",
@@ -293,13 +293,13 @@ describe("Game controller test", () => {
             recipients: [2, 3],
           };
 
-          const positions = gameState.move(route);
-          assertEquals(positions.destination, getCoords(route.destination));
+          const result = gameState.move(route);
+          assertEquals(result.moveResult.destination, getCoords(route.destination));
           assertEquals(currentPlayer.getTokens(), 2);
         });
 
         it("No one in path, should not pay to any player", () => {
-          board.destinations = [{
+          gameState.destinations = [{
             destination: { x: 2, y: 3 },
             path: [],
             type: "normal",
@@ -315,8 +315,8 @@ describe("Game controller test", () => {
 
           const route = { destination: { x: 2, y: 3 }, path, type: "normal" };
 
-          const positions = gameState.move(route);
-          assertEquals(positions.destination, getCoords(route.destination));
+          const result = gameState.move(route);
+          assertEquals(result.moveResult.destination, getCoords(route.destination));
           assertEquals(currentPlayer.getTokens(), 2);
         });
       });

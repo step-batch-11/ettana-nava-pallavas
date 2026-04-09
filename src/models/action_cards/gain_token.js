@@ -1,6 +1,6 @@
 export default class Gain {
   static token(payload, currentPlayer, _played, game) {
-    const { diceValue } = game.getGameState();
+    const { diceValue } = game.getGameState(currentPlayer.getId());
     const { number } = game.rollDice();
     currentPlayer.removeActionCard(payload.cardId);
 

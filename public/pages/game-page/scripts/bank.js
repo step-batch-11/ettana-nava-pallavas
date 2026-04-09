@@ -2,7 +2,12 @@ import { colorsMap } from "/assets/colors.js";
 import { showToast } from "../../utils/utils.js";
 import { renderGame } from "./app.js";
 import { changeTurnRequest, sendRequest } from "./api.js";
-import { handleSwapEvent } from "./handlers/board_handlers.js";
+import {
+  handleSwapEvent,
+  removeTileHighlighting,
+  removeYarnHighlighting,
+} from "./handlers/board_handlers.js";
+import { handlePlayerMove } from "./utilities/game_utilities.js";
 
 const passTurnEventListener = () => {
   const passTurn = document.querySelector("#pass-turn");
@@ -10,6 +15,12 @@ const passTurnEventListener = () => {
   if (passTurn.dataset.listenerAdded) return;
 
   passTurn.addEventListener("dblclick", async () => {
+    removeYarnHighlighting();
+    removeTileHighlighting();
+    document.querySelectorAll(".tile").forEach((tile) => {
+      tile.removeEventListener("click", handlePlayerMove);
+    });
+
     const response = await changeTurnRequest("/game/pass-turn");
 
     if (!response.success) {

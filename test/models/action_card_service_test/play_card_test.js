@@ -17,7 +17,7 @@ import {
 import VictoryPoint from "../../../src/models/action_cards/victoryPoint.js";
 import Tax from "../../../src/models/action_cards/tax.js";
 
-describe.ignore("Action cards", () => {
+describe("Action cards", () => {
   let game, players, bank;
   const yarns = mockYarns();
   const tiles = mockTiles();

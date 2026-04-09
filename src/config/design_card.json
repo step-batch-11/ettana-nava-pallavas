@@ -443,7 +443,7 @@
   },
   {
     "id": 34,
-    "victoryPoints": 4,
+    "victoryPoints": 3,
     "design": [
       { "coord": { "x": 0, "y": 0 }, "color": 5 },
       { "coord": { "x": 1, "y": 0 }, "color": 5 },
