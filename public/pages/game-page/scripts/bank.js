@@ -13,7 +13,7 @@ const passTurnEventListener = () => {
     const response = await changeTurnRequest("/game/pass-turn");
 
     if (!response.success) {
-      showToast(response.message, "e");
+      showToast(response.error, "e");
       return;
     }
 
@@ -31,7 +31,7 @@ const buyDesignCardEventListener = () => {
   designCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
-      showToast(response.message, "e");
+      showToast(response.error, "e");
       return;
     }
 
@@ -50,7 +50,7 @@ const buyActionCardEventListener = () => {
     const response = await sendRequest("/game/buy-action-card");
 
     if (!response.success) {
-      showToast(response.message, "e");
+      showToast(response.error, "e");
       return;
     }
 
