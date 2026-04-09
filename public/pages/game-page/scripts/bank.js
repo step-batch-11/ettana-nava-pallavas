@@ -42,7 +42,7 @@ const buyDesignCardEventListener = () => {
   designCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
-      showToast(response.error, "e");
+      showToast(response.message, "e");
       return;
     }
 
@@ -59,9 +59,8 @@ const buyActionCardEventListener = () => {
   if (actionCard.dataset.listenerAdded) return;
   actionCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-action-card");
-
     if (!response.success) {
-      showToast(response.error, "e");
+      showToast(response.message, "e");
       return;
     }
 

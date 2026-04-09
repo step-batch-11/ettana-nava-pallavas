@@ -55,7 +55,10 @@ export const handleMoveActionCard = async (id) => {
     tile.addEventListener(
       "click",
       () =>
-        handlePlayerMove({ destination: { x, y }, cardId: id },"perform-action-card"),
+        handlePlayerMove(
+          { destination: { x, y }, cardId: id },
+          "perform-action-card",
+        ),
       // { once: true },
     );
   });
@@ -81,7 +84,7 @@ const createPlayerCard = (player) => {
   return card;
 };
 
-export const performSteal = async (id, object) => {
+export const performSteal = async (id, object, coordinates) => {
   const res = await fetch(`game/action-card/${id}`, {
     method: "PATCH",
     credentials: "include",
@@ -96,15 +99,17 @@ export const performSteal = async (id, object) => {
     return showToast(`No player has ${object}`, "e");
   }
 
-  const playerCards = renderPlayers(object, result, state.players);
+  const playerCards = renderPlayers(object, result, state.players, coordinates);
 
   playerCards.map((card) =>
     card.addEventListener("dblclick", () => steal(card, id))
   );
 };
 
-const renderPlayers = (object, {opponents}, players) => {
+const renderPlayers = (object, { opponents }, players, coordinates) => {
   selectorArea.style.display = "block";
+  selectorArea.style.top = `${coordinates.y - 250}px`;
+  selectorArea.style.left = `${coordinates.x - 120}px`;
 
   const h2 = document.createElement("h2");
   h2.innerText = `select a player to steal ${object}`;
