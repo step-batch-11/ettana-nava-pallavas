@@ -86,13 +86,13 @@ export const performSteal = async (id, object) => {
     method: "PATCH",
     credentials: "include",
   });
-  const { state, success, result } = await res.json();
+  const { state, success, result, error } = await res.json();
 
   if (!success) {
-    return showToast(message, "e");
+    return showToast(error, "e");
   }
 
-  if (result.length === 0) {
+  if (result.opponents.length === 0) {
     return showToast(`No player has ${object}`, "e");
   }
 
