@@ -6,8 +6,7 @@ import { colorsMap } from "/assets/colors.js";
 export const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
   const colorDice = document.querySelector("#color-dice");
-
-  numberDice.replaceChildren(createDice(number));
+  numberDice.replaceChildren(createDice(number, false));
   const diceColor = document.createElement("span");
   diceColor.classList.add("dice-color");
 
@@ -78,7 +77,7 @@ const fetchMoveResult = async (payload, path = "move") => {
 
 export const handlePlayerMove = async (payload, path = "move") => {
   const response = await fetchMoveResult(payload, path);
-  
+
   if (!response.success) {
     alert(response.message);
     return;

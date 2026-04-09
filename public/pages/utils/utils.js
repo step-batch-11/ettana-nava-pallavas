@@ -38,7 +38,7 @@ export const closeDialog = () => {
   dialog.close();
 };
 
-export const createDice = (value) => {
+export const createDice = (value, shouldAddEvent = true) => {
   const dice = document.createElement("div");
   dice.classList.add("dice-popup");
 
@@ -53,13 +53,14 @@ export const createDice = (value) => {
 
     dice.appendChild(cell);
   }
+  if (!shouldAddEvent) return dice;
 
   dice.addEventListener("click", () => {
     document.querySelectorAll(".dice").forEach((d) =>
       d.classList.remove("selected")
     );
     selectedValue = null;
-    // dice.classList.add("selected");
+    dice.classList.add("selected");
     selectedValue = value;
   });
 
