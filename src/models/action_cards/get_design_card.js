@@ -6,6 +6,6 @@ export default class GetDesignCard {
     currentPlayer.addDesignCard(designCard);
     currentPlayer.removeActionCard(id);
 
-    return { message: "design card added" };
+    return { message: "design card added", card: designCard };
   }
 }

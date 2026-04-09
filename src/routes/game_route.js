@@ -28,7 +28,6 @@ gameRoute.get("/buy-action-card", isCurrentPlayer, buyActionCard);
 gameRoute.get("/claim-design/:id", isCurrentPlayer, claimDesign);
 gameRoute.post("/paid-swap", isCurrentPlayer, handlePaidSwap);
 gameRoute.post("/pass-turn", isCurrentPlayer, passTurn);
-// gameRoute.post("/action-card/swap-yarn", swapYarnActionCard);
 gameRoute.patch("/action-card/:id", isCurrentPlayer, playActionCard);
 gameRoute.post("/perform-action-card", isCurrentPlayer, performActionCard);
 gameRoute.patch("/rotate-design-card/:id", rotateDesignCard);

@@ -78,7 +78,7 @@ const fetchMoveResult = async (payload, path = "move") => {
 
 export const handlePlayerMove = async (payload, path = "move") => {
   const response = await fetchMoveResult(payload, path);
-
+  
   if (!response.success) {
     alert(response.message);
     return;

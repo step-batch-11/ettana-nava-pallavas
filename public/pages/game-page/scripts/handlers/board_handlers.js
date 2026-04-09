@@ -23,6 +23,7 @@ export const removeYarnHighlighting = () => {
   yarns.forEach((yarn) => {
     yarn.draggable = false;
     yarn.style.boxShadow = "none";
+    yarn.classList.remove("yarn-replace");
   });
 };
 
@@ -61,7 +62,7 @@ const swapYarns = async (draggablePosition, yarnPosition, path) => {
   removeYarnHighlighting();
   removeYarnEventListeners();
   removeCellEventListeners();
-  showToast(response.message, "d");
+  showToast(response.result.message, "d");
 };
 
 export const documentClickHandler = (e) => {
@@ -90,7 +91,7 @@ export const handleDropYarns = async (e, cell, yarnPosition, path) => {
   }
 };
 
-export const addDragAndDropOnYarns = (yarn, yarnPosition, resource) => {
+export const addDragAndDropOnYarns = (yarn, yarnPosition, path) => {
   yarn.addEventListener(
     "dragstart",
     (e) => handleStartDragForYarns(e, yarnPosition),
@@ -102,7 +103,7 @@ export const addDragAndDropOnYarns = (yarn, yarnPosition, resource) => {
   cell.addEventListener("dragleave", (e) => handleDragLeaveForYarns(e, cell));
   cell.addEventListener(
     "drop",
-    (e) => handleDropYarns(e, cell, yarnPosition, resource),
+    (e) => handleDropYarns(e, cell, yarnPosition, path),
   );
 };
 
@@ -120,15 +121,15 @@ export const handleSwapEvent = (path = "/game/paid-swap") => {
 
 export const removeTileHighlighting = () => {
   const tiles = document.querySelectorAll(".tile");
-  const yarns = document.querySelectorAll(".dot");
+  // const yarns = document.querySelectorAll(".dot");
 
   tiles.forEach((tile) => {
     tile.classList.remove("jump-move");
     tile.style.boxShadow = "none";
   });
 
-  yarns.forEach((tile) => {
-    tile.classList.remove("yarn-replace");
-    tile.style.boxShadow = "none";
-  });
+  // yarns.forEach((tile) => {
+  //   tile.classList.remove("yarn-replace");
+  //   tile.style.boxShadow = "none";
+  // });
 };
