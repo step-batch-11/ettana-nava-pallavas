@@ -43,6 +43,7 @@ export default class GameController {
     if (this.playerActions.diceRolled) {
       throw new Error("you can't roll again");
     }
+
     const result = this.game.upkeep();
 
     this.playerActions.diceRolled = true;
@@ -55,6 +56,7 @@ export default class GameController {
     if (!this.playerActions.diceRolled || !this.playerActions.isLastMove) {
       throw new Error("swap has to be done immediately after move");
     }
+
     const result = this.game.freeSwap(position, yarn);
 
     this.playerActions.isLastMove = false;
@@ -67,9 +69,12 @@ export default class GameController {
     if (!this.playerActions.diceRolled) {
       throw new Error("roll and move to buy design card");
     }
+
     const result = this.game.buyDesignCard();
+
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
+
     return result;
   }
 
@@ -77,9 +82,12 @@ export default class GameController {
     if (!this.playerActions.diceRolled) {
       throw new Error("roll and move to buy action card");
     }
+
     const result = this.game.buyActionCard();
+
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
+
     return result;
   }
 
@@ -87,9 +95,12 @@ export default class GameController {
     if (!this.playerActions.diceRolled) {
       throw new Error("roll and move to claim design");
     }
+
     const result = this.game.claimDesign(id);
+
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
+
     return result;
   }
 
@@ -105,9 +116,12 @@ export default class GameController {
     if (!this.playerActions.diceRolled) {
       throw new Error("roll and move to buy swap");
     }
+
     const result = this.game.paidSwap(position, yarn);
+
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
+
     return result;
   }
 
@@ -135,6 +149,7 @@ export default class GameController {
     if (cardId === 28 || cardId === 31) {
       this.playerActions.diceRolled = false;
     }
+
     const result = this.actionCardService.playCard(cardId, this.game);
 
     this.playerActions.anyActionDone = true;
