@@ -8,7 +8,8 @@
     "detailed": "deno coverage --detailed",
     "lint": "deno lint",
     "all": "deno task lint && deno task coverage",
-    "push": "git pull && git push"
+    "push": "git pull && git push",
+    "start-game": "deno -A automations/host_lobby.js & sleep 8; deno -A automations/join_lobby.js"
   },
   "imports": {
     "@ashishkujoy/deno-coverage-checker": "jsr:@ashishkujoy/deno-coverage-checker@^0.0.9",
@@ -21,11 +22,19 @@
     "taiko": "npm:taiko@^1.4.8"
   },
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext", "deno.ns"]
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "deno.ns"
+    ]
   },
   "nodeModulesDir": "auto",
   "allowScripts": {
     "allow": [],
-    "deny": ["npm:fsevents@2.3.3", "npm:taiko@1.4.8"]
+    "deny": [
+      "npm:fsevents@2.3.3",
+      "npm:taiko@1.4.8"
+    ]
   }
 }

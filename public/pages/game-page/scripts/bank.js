@@ -8,6 +8,7 @@ import {
   removeYarnHighlighting,
 } from "./handlers/board_handlers.js";
 import { handlePlayerMove } from "./utilities/game_utilities.js";
+import { removeTileEventListeners } from "/pages/game-page/scripts/utilities/board_utilities.js";
 
 const passTurnEventListener = () => {
   const passTurn = document.querySelector("#pass-turn");
@@ -17,9 +18,7 @@ const passTurnEventListener = () => {
   passTurn.addEventListener("dblclick", async () => {
     removeYarnHighlighting();
     removeTileHighlighting();
-    document.querySelectorAll(".tile").forEach((tile) => {
-      tile.removeEventListener("click", handlePlayerMove);
-    });
+    removeTileEventListeners(handlePlayerMove);
 
     const response = await changeTurnRequest("/game/pass-turn");
 
@@ -42,7 +41,7 @@ const buyDesignCardEventListener = () => {
   designCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
-      showToast(response.error, "e");
+      showToast(response.message, "e");
       return;
     }
 
@@ -59,9 +58,8 @@ const buyActionCardEventListener = () => {
   if (actionCard.dataset.listenerAdded) return;
   actionCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-action-card");
-
     if (!response.success) {
-      showToast(response.error, "e");
+      showToast(response.message, "e");
       return;
     }
 
@@ -81,7 +79,15 @@ const buyPaidSwapListener = () => {
   const button = document.querySelector(".swap-btn");
 
   if (button.dataset.listenerAdded) return;
-  button.addEventListener("click", () => handleSwapEvent("/game/paid-swap"));
+  button.addEventListener("click", async () => {
+    const res = await fetch("/game/buy-swap", { credentials: "include" });
+    const resBody = await res.json();
+    if (!resBody.success) {
+      return showToast(resBody.error, "e");
+    }
+
+    handleSwapEvent("/game/paid-swap");
+  });
   button.dataset.listenerAdded = true;
 };
 

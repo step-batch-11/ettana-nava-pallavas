@@ -1,4 +1,5 @@
-import { showToast } from "../../../utils/utils.js";
+import { createDice, showToast } from "../../../utils/utils.js";
+import { renderGame } from "/pages/game-page/scripts/app.js";
 import { highlightAdjacentYarns } from "../handlers/board_handlers.js";
 import { removeTileEventListeners } from "./board_utilities.js";
 import { colorsMap } from "/assets/colors.js";
@@ -6,8 +7,7 @@ import { colorsMap } from "/assets/colors.js";
 export const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
   const colorDice = document.querySelector("#color-dice");
-
-  numberDice.textContent = number;
+  numberDice.replaceChildren(createDice(number, false));
   const diceColor = document.createElement("span");
   diceColor.classList.add("dice-color");
 
@@ -54,15 +54,9 @@ export const removeMoveClass = () => {
   removeClasses(".tile", "premium-move", "normal-move", "jump-move");
 };
 
-const displacePin = ({ source, destination }) => {
+const displacePin = () => {
   removeMoveClass();
-  const destinationTile = document.querySelector(
-    `#tile${destination.x}${destination.y}`,
-  );
-  const sourceTile = document.querySelector(`#tile${source.x}${source.y}`);
-  const playerIcon = sourceTile.querySelector(".player-icon");
-  sourceTile.removeChild(playerIcon);
-  destinationTile.appendChild(playerIcon);
+  renderGame();
 };
 
 const fetchMoveResult = async (payload, path = "move") => {
@@ -78,18 +72,18 @@ const fetchMoveResult = async (payload, path = "move") => {
 
 export const handlePlayerMove = async (payload, path = "move") => {
   const response = await fetchMoveResult(payload, path);
-  
+
   if (!response.success) {
     alert(response.message);
     return;
   }
 
-  const { message, adjYarns, moveResult } = response.result;
+  const { message, adjYarns } = response.result;
 
   showToast(message);
   highlightAdjacentYarns(adjYarns);
-  displacePin(moveResult);
-  removeTileEventListeners();
+  displacePin();
+  removeTileEventListeners(handlePlayerMove);
 };
 
 export const renderMoveOptions = (destinations) => {

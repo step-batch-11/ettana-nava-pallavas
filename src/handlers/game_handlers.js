@@ -194,3 +194,13 @@ export const passTurn = (context) => {
     return errorResponse(context, error);
   }
 };
+
+export const handleBuySwap = (context) => {
+  try {
+    const room = context.get("room");
+
+    return context.json({ success: true, result: room.state.buySwap() });
+  } catch (err) {
+    return context.json({ success: false, error: err.message }, 400);
+  }
+};

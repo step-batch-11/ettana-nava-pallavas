@@ -9,9 +9,10 @@ import { removeTileEventListeners } from "./utilities/board_utilities.js";
 import { showToast } from "../../utils/utils.js";
 
 const rollDiceForTurn = async () => {
+  
   const response = await rollDice();
   if (!response.success) {
-    showToast(response.error);
+    showToast(response.error, "e");
   }
 
   updateDice(response.diceValues);
