@@ -27,12 +27,12 @@ export const handleActionCardSwap = async (id) => {
     method: "PATCH",
     credentials: "include",
   });
-  const { success, result, message } = await res.json();
+  const { success, message } = await res.json();
 
   if (!success) {
     return showToast(message, "e");
   }
-  handleSwapEvent("game/perform-action-card", result.swappableYarns);
+  handleSwapEvent("game/perform-action-card");
 };
 
 export const handleMoveActionCard = async (id) => {
