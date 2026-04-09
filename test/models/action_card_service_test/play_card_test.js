@@ -23,7 +23,7 @@ import Move from "../../../src/models/action_cards/move.js";
 import ActionCardService from "../../../src/service/action_card.js";
 import Swap from "../../../src/models/action_cards/swap.js";
 
-describe.ignore("Action cards", () => {
+describe("Action cards", () => {
   let game, players, bank;
   const yarns = mockYarns();
   const tiles = mockTiles();
@@ -144,7 +144,7 @@ describe.ignore("Action cards", () => {
 
       const info = Swap.performSwap(payload, players[0], played, game);
 
-      assertEquals(info.result.message, "Swap action card played");
+      assertEquals(info.message, "Swap action card played");
     });
 
     it("Should able to play swap", () => {
@@ -155,7 +155,7 @@ describe.ignore("Action cards", () => {
       const played = actionCardService.played;
       const info = Swap.play(played, cardId, game);
 
-      assertEquals(info.result.swappableYarns, [
+      assertEquals(info.swappableYarns, [
         [2, 1, 3, 4, 5],
         [5, 4, 3, 2, 1],
         [1, 2, 3, 4, 5],
@@ -193,7 +193,7 @@ describe.ignore("Action cards", () => {
       const payload = { cardId: 1, destination: { x: 1, y: 1 } };
       const info = Move.performMove(payload, players[0], played, game);
 
-      assertEquals(info.result.adjYarns, [
+      assertEquals(info.adjYarns, [
         { x: 0, y: 0 },
         { x: 0, y: 1 },
         { x: 1, y: 0 },
@@ -201,7 +201,7 @@ describe.ignore("Action cards", () => {
       ]);
     });
 
-    it("Should able to move anywhere on the unoccupied positions", () => {
+    it("Should able to play move card", () => {
       const cardId = acMap.move;
       const ac = getActionCard(cardId);
       players[0].addActionCard(ac);
@@ -209,7 +209,7 @@ describe.ignore("Action cards", () => {
       const played = actionCardService.played;
       const info = Move.play(played, cardId, game);
 
-      assertEquals(info.result, {
+      assertEquals(info, {
         availableDestinations: [
           [0, 0],
           [0, 1],
@@ -248,6 +248,7 @@ describe.ignore("Action cards", () => {
           [5, 4],
           [5, 5],
         ],
+        message: "Move action card played",
       });
     });
   });
