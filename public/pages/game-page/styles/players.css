@@ -90,3 +90,79 @@ li {
 .player-card.current-player-card {
   border: 5px solid var(--success);
 }
+
+/* 
+table {
+  width: 320px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  transition: all 0.3s ease;
+  justify-content: space-between;
+}
+
+.color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+@keyframes pulse {
+  0% {
+    background: rgba(255, 165, 0, 0.1);
+  }
+
+  50% {
+    background: rgba(255, 165, 0, 0.3);
+  }
+
+  100% {
+    background: rgba(255, 165, 0, 0.1);
+  }
+}
+
+.active {
+  animation: pulse 1.5s infinite;
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: orange;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.active .turn-dot {
+  text-align: right;
+  opacity: 1;
+  animation: spin 1s infinite;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: orange;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+} */

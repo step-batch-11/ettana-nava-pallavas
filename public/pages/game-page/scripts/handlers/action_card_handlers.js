@@ -46,6 +46,8 @@ export const handleMoveActionCard = async (id) => {
     return showToast(message, "e");
   }
 
+  // removeTileEventListeners(handlePlayerMove);
+
   result.availableDestinations.forEach(([x, y]) => {
     const tile = document.querySelector(`#tile${x}${y}`);
     if (!tile) return;
@@ -156,7 +158,7 @@ const createReplacePopup = (e, type) => {
   return { closeBtn, section, h2 };
 };
 
-const highlight = (element, cls) => {
+const _addClass = (element, cls) => {
   element.classList.add(cls);
 };
 
@@ -218,48 +220,85 @@ const closeReplacePopup = (closePopup) => {
     removeTileHighlighting();
   });
 };
-
-const addReplaceListener = ({ element, position, type }, cardId, reserved) => {
-  element.addEventListener("click", (e) => {
-    const { closeBtn, section, h2 } = createReplacePopup(e, type);
-
-    const elements = type === "tile"
-      ? createTiles(reserved, position, cardId)
-      : createYarns(reserved, position, cardId);
-
-    section.append(...elements);
-    replacePopup.innerHTML = "";
-    replacePopup.append(h2, section, closeBtn);
-
-    closeReplacePopup(closeBtn);
-  });
-};
-
-const highlightYarns = (boardYarns, cardId, reservedYarns) => {
+const highlightYarnsForReplace = (boardYarns) => {
   boardYarns.forEach((col, x) => {
     col.forEach((_colorId, y) => {
       const yarn = document.querySelector(`#r-${x}-c-${y}`);
       if (!yarn) return;
-      highlight(yarn, "yarn-replace");
-      addReplaceListener(
-        { element: yarn, position: { x, y }, type: "yarn" },
-        cardId,
-        reservedYarns,
-      );
+      yarn.classList.add("yarn-replace");
     });
   });
 };
 
-const highlightTiles = (boardTiles, cardId, reservedTiles) => {
+const highlightTilesForReplace = (boardTiles) => {
   boardTiles.forEach(([x, y]) => {
     const tile = document.querySelector(`#tile${x}${y}`);
     if (!tile) return;
 
-    highlight(tile, "jump-move");
-    addReplaceListener(
-      { element: tile, position: { x, y }, type: "tile" },
-      cardId,
-      reservedTiles,
+    tile.classList.add("jump-move");
+  });
+};
+
+const replaceEventListener = (
+  e,
+  { position, type },
+  cardId,
+  reserved,
+) => {
+  const { closeBtn, section, h2 } = createReplacePopup(e, type);
+
+  const elements = type === "tile"
+    ? createTiles(reserved, position, cardId)
+    : createYarns(reserved, position, cardId);
+
+  section.append(...elements);
+  replacePopup.innerHTML = "";
+  replacePopup.append(h2, section, closeBtn);
+
+  closeReplacePopup(closeBtn);
+};
+
+const addYarnsAndTilesListeners = (
+  boardYarns,
+  boardTiles,
+  reservedYarns,
+  reservedTiles,
+  cardId,
+) => {
+  boardYarns.forEach((col, x) => {
+    col.forEach((_colorId, y) => {
+      const yarn = document.querySelector(`#r-${x}-c-${y}`);
+      yarn.addEventListener(
+        "click",
+        (e) => {
+          replaceEventListener(
+            e,
+            { position: { x, y }, type: "yarn" },
+            cardId,
+            reservedYarns,
+          );
+
+          yarn.removeEventListener("click", replaceEventListener);
+        },
+      );
+    });
+  });
+
+  boardTiles.forEach(([x, y]) => {
+    const tile = document.querySelector(`#tile${x}${y}`);
+
+    tile.addEventListener(
+      "click",
+      (e) => {
+        replaceEventListener(
+          e,
+          { position: { x, y }, type: "tile" },
+          cardId,
+          reservedTiles,
+        );
+
+        tile.removeEventListener("click", replaceElement);
+      },
     );
   });
 };
@@ -271,10 +310,19 @@ export const handleReplaceActionCard = async (cardId) => {
   });
   const { state, success, result, message } = await res.json();
   const { boardTiles, boardYarns, reservedTiles, reservedYarns } = result;
+
   if (!success) return showToast(message, "e");
 
-  highlightTiles(boardTiles, cardId, reservedTiles);
-  highlightYarns(boardYarns, cardId, reservedYarns);
+  highlightTilesForReplace(boardTiles);
+  highlightYarnsForReplace(boardYarns);
+
+  addYarnsAndTilesListeners(
+    boardYarns,
+    boardTiles,
+    reservedYarns,
+    reservedTiles,
+    cardId,
+  );
 
   showToast(result.message);
   renderGame(state);
@@ -332,7 +380,7 @@ const preset = (cardId) => {
 
       updateDice(responseBody.result.diceValues);
       removeMoveClass();
-      removeTileEventListeners();
+      removeTileEventListeners(handlePlayerMove);
       renderMoveOptions(responseBody.result.destinations);
       renderGame();
       showToast(responseBody.result.message);

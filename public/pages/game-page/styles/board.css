@@ -6,9 +6,11 @@
 }
 
 .board-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--bg-surface);
-  padding: 50px;
-  border: 2px solid var(--green);
+  aspect-ratio: 1/1;
 }
 
 #board {
@@ -16,6 +18,7 @@
   display: grid;
   grid-template-columns: repeat(5, var(--cell-size));
   gap: var(--gap);
+
 }
 
 .halfTile {
@@ -78,6 +81,10 @@
 }
 
 .tile-value {
+  font-size: 2em;
+  font-weight: 600;
+  color: var(--tile-color);
+  font-family: "Fraunces", serif;
   transform: rotate(-45deg);
 }
 
@@ -156,12 +163,10 @@
   inset: 0;
   border-radius: 50%;
 
-  background: linear-gradient(
-    120deg,
-    transparent 25%,
-    rgba(255, 255, 255, 0.8) 50%,
-    transparent 75%
-  );
+  background: linear-gradient(120deg,
+      transparent 25%,
+      rgba(255, 255, 255, 0.8) 50%,
+      transparent 75%);
 
   transform: translateX(-100%);
   animation: shimmerMove 1s linear infinite;

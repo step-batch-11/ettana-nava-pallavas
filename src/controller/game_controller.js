@@ -104,6 +104,14 @@ export default class GameController {
     return result;
   }
 
+  buySwap() {
+    if (!this.playerActions.diceRolled) {
+      throw new Error("roll and move to buy swap");
+    }
+    const result = this.game.buySwap();
+    return result;
+  }
+
   paidSwap(position, yarn) {
     if (!this.playerActions.diceRolled) {
       throw new Error("roll and move to buy swap");
