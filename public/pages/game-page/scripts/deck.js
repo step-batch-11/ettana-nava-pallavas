@@ -124,11 +124,11 @@ const playActionCardEventListener = () => {
     }
 
     if (id === "10") {
-      return performSteal(id, "tokens");
+      return performSteal(id, "tokens", { x: e.screenX, y: e.screenY });
     }
 
     if (id === "22") {
-      return performSteal(id, "action-card");
+      return performSteal(id, "action-card", { x: e.screenX, y: e.screenY });
     }
 
     if (id === "34") {

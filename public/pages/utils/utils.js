@@ -56,9 +56,9 @@ export const createDice = (value, shouldAddEvent = true) => {
   if (!shouldAddEvent) return dice;
 
   dice.addEventListener("click", () => {
-    document.querySelectorAll(".dice").forEach((d) =>
-      d.classList.remove("selected")
-    );
+    document.querySelectorAll(".dice-popup").forEach((d) => {
+      d.classList.remove("selected");
+    });
     selectedValue = null;
     dice.classList.add("selected");
     selectedValue = value;
