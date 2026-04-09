@@ -92,13 +92,14 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  padding: 10px;
+  padding: 0.8em;
   position: absolute;
   height: 100%;
   border-radius: 12px;
   background-color: var(--purple);
   border: 2px solid var(--gold-light);
   transition: transform 0.4s ease;
+  max-width: 160px;
 }
 
 .panel:not(.expanded) .card-item:nth-child(1) {
@@ -126,6 +127,7 @@
 
 .action-cards .card-item {
   background: var(--gold-light);
+  padding: 0.8em;
 }
 
 .placeholder {

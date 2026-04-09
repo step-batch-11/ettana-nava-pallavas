@@ -146,6 +146,20 @@
   cursor: pointer;
 }
 
+.dice:active {
+  animation: roll-dice 1s ease;
+}
+
+@keyframes roll-dice {
+  0% {
+    transform: rotate(-40px);
+  }
+
+  100% {
+    transform: rotate(0px);
+  }
+}
+
 .action-area .pass-turn {
   width: 100%;
   background-color: rgba(245, 245, 245, 0.8);

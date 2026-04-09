@@ -1,4 +1,4 @@
-import { showToast } from "../../../utils/utils.js";
+import { createDice, showToast } from "../../../utils/utils.js";
 import { renderGame } from "/pages/game-page/scripts/app.js";
 import { highlightAdjacentYarns } from "../handlers/board_handlers.js";
 import { removeTileEventListeners } from "./board_utilities.js";
@@ -7,8 +7,7 @@ import { colorsMap } from "/assets/colors.js";
 export const updateDice = ({ number, colorId }) => {
   const numberDice = document.querySelector("#number-dice");
   const colorDice = document.querySelector("#color-dice");
-
-  numberDice.textContent = number;
+  numberDice.replaceChildren(createDice(number, false));
   const diceColor = document.createElement("span");
   diceColor.classList.add("dice-color");
 
