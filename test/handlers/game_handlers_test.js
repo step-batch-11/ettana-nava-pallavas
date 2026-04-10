@@ -32,7 +32,7 @@ describe("Game route", () => {
     players = {};
     sessions = new Session();
 
-    app = createApp(rooms, players, sessions,() =>  (_c, next) => next());
+    app = createApp(rooms, players, sessions, () => (_c, next) => next());
 
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app.request("/lobby/host-game", {
@@ -307,8 +307,8 @@ describe("Game route", () => {
       });
     });
 
-    describe.ignore("GET /game/claim-design", () => {
-      it("should return details of design card if that design pattern has matched with the board", async () => {
+    describe("GET /game/claim-design", () => {
+      it.ignore("should return details of design card if that design pattern has matched with the board", async () => {
         const card = {
           id: 5,
           victoryPoints: 1,
@@ -320,10 +320,12 @@ describe("Game route", () => {
             { coord: { x: 2, y: 4 }, color: 5 },
           ],
         };
+
         currentPlayer.addDesignCard(card);
 
         const res = await app.request("/game/claim-design/5", { headers });
         const claimingStatus = await res.json();
+        console.log(claimingStatus);
 
         assertEquals(claimingStatus.success, true);
         assertEquals(claimingStatus.result.isMatched, true);

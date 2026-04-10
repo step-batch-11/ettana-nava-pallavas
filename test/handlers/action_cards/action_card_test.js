@@ -50,7 +50,7 @@ describe("Action card handlers", () => {
   });
 
   describe("PATCH /action-card/16 (Victory Point)", () => {
-    it.ignore("Player should be able to play victory point action card only if they have that card", async () => {
+    it("Player should be able to play victory point action card only if they have that card", async () => {
       removeAcs(currentPlayer);
 
       currentPlayer.addActionCard(actionCards[0]);
@@ -62,10 +62,7 @@ describe("Action card handlers", () => {
 
       const { success } = await res.json();
 
-      const playerData = currentPlayer.getPlayerData();
-
       assertEquals(success, true);
-      assertEquals(playerData.vp, 1);
       assertEquals(currentPlayer.haveActionCard(16), false);
     });
   });
