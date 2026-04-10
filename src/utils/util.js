@@ -55,7 +55,7 @@ export const removeAcs = (player) => {
   });
 };
 
-export const manageTurns = async (app, p1Sid, p2Sid) => {
+export const manageTurns = async (app, p1Sid, p2Sid, canMoveAtLast) => {
   const p1 = await rollAndMove(p1Sid, app);
   const p2 = await rollAndMove(p2Sid, app);
 
@@ -63,7 +63,7 @@ export const manageTurns = async (app, p1Sid, p2Sid) => {
     ? p1Sid
     : p2Sid;
 
-  await rollAndMove(currentPlayerSId, app, false);
+  if (canMoveAtLast) await rollAndMove(currentPlayerSId, app, false);
 
   return { p1, p2, currentPlayerSId };
 };
@@ -92,12 +92,17 @@ export const createPlayers = async (app, p1Name, p2Name) => {
   };
 };
 
-export const setupState = async () => {
+export const setupState = async (canMoveAtLast = true) => {
   const rooms = {};
   const players = {};
   const sessions = new Session();
 
-  const app = createApp(rooms, players, sessions);
+  const app = createApp(
+    rooms,
+    players,
+    sessions,
+    () =>  (_c, next) => next(),
+  );
 
   const { player1SessionId, player2SessionId } = await createPlayers(
     app,
@@ -113,6 +118,7 @@ export const setupState = async () => {
     app,
     player1SessionId,
     player2SessionId,
+    canMoveAtLast,
   );
 
   const { currentPlayerSId } = turnRes;

@@ -24,7 +24,7 @@ describe("bank", () => {
   });
 
   describe.ignore("Get bank", () => {
-    it("when get bank function is called, then should return the current bank state", () => {
+    it.only("when get bank function is called, then should return the current bank state", () => {
       const bank = new Bank(designCards, actionCards, shuffle);
       const result = {
         tokens: 55,
@@ -34,6 +34,7 @@ describe("bank", () => {
         tiles: [1, 6],
       };
 
+      console.log(bank.getBank())
       assertEquals(bank.getBank(), result);
     });
 

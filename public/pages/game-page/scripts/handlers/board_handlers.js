@@ -56,13 +56,18 @@ const fetchSwapResult = async (draggablePosition, yarnPosition, path) => {
 const swapYarns = async (draggablePosition, yarnPosition, path) => {
   const response = await fetchSwapResult(draggablePosition, yarnPosition, path);
   renderGame();
+
   if (!response.success) {
     showToast(response.error.message, "e");
   }
+
+  if (response.success) {
+    showToast(response.message);
+  }
+
   removeYarnHighlighting();
   removeYarnEventListeners();
   removeCellEventListeners();
-  showToast("Paid wapped successfully");
 };
 
 export const documentClickHandler = (e) => {
@@ -129,15 +134,15 @@ export const handleSwapEvent = (path = "/game/paid-swap") => {
 
 export const removeTileHighlighting = () => {
   const tiles = document.querySelectorAll(".tile");
-  // const yarns = document.querySelectorAll(".dot");
+  const yarns = document.querySelectorAll(".dot");
 
   tiles.forEach((tile) => {
     tile.classList.remove("jump-move");
     tile.style.boxShadow = "none";
   });
 
-  // yarns.forEach((tile) => {
-  //   tile.classList.remove("yarn-replace");
-  //   tile.style.boxShadow = "none";
-  // });
+  yarns.forEach((tile) => {
+    tile.classList.remove("yarn-replace");
+    tile.style.boxShadow = "none";
+  });
 };

@@ -1,12 +1,6 @@
 export default class Replace {
-  static play(played, id, game) {
+  static play(played, _id, game) {
     played["replace"] = true;
-    const currentPlayer = game.getCurrentPlayer();
-
-    if (!currentPlayer.haveActionCard(id)) {
-      throw new Error("Card is missing");
-    }
-
     const boardTiles = game.getChangeAbleTiles();
     const boardYarns = game.getAllYarns();
 

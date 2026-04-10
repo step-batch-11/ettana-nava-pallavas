@@ -16,6 +16,7 @@ describe("App test", () => {
       rooms,
       players,
       sessions,
+      () =>  (_c, next) => next()
     );
   });
 

@@ -103,6 +103,10 @@ export default class GameController {
 
     const result = this.game.claimDesign(id);
 
+    if (result.isMatched) {
+      this.game.storeLastAction("CLAIM", this.game.getCurrentPlayer());
+    }
+
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
     const currentPlayerVp = this.game.getCurrentPlayer().getVp();
