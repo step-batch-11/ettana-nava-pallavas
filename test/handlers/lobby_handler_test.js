@@ -2,7 +2,7 @@ import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert/equals";
 import Session from "../../src/models/session.js";
 import { createApp } from "../../src/app.js";
-import { toJSON } from "../../src/utils/util.js";
+import { sendRequest, toJSON } from "../../src/utils/util.js";
 
 describe("lobby handler", () => {
   let rooms, players, sessions, app;
@@ -46,6 +46,26 @@ describe("lobby handler", () => {
 
     assertEquals(result.success, false);
     assertEquals(result.error, "No Lobby Found");
+  });
+
+  it("join lobby when room is full", async () => {
+    const reqBody = JSON.stringify({ username: "kha" });
+    const player1 = await sendRequest(app, "/lobby/host-game", {
+      body: reqBody,
+    });
+
+    const roomId = player1.roomId;
+
+    const body = JSON.stringify({ username: "sim", roomId });
+    await sendRequest(app, "/lobby/join", { body });
+
+    const req = JSON.stringify({ username: "sheik", roomId });
+    const { error, success } = await sendRequest(app, "/lobby/join", {
+      body: req,
+    });
+
+    assertEquals(success, false);
+    assertEquals(error, "Room is full");
   });
 
   it("join lobby", async () => {
@@ -147,6 +167,26 @@ describe("lobby handler", () => {
       .then(toJSON);
 
     assertEquals(result.success, false);
+  });
+
+  it("game start without enough players", async () => {
+    const req1 = JSON.stringify({ username: "kha" });
+    const { sessionId } = await app.request("/lobby/host-game", {
+      body: req1,
+      method: "POST",
+    }).then(toJSON);
+
+    const headers = new Headers();
+
+    headers.append("Cookie", `sessionId=${sessionId}`);
+    const { error, success } = await app.request("/lobby/start-game", {
+      method: "GET",
+      headers,
+    })
+      .then(toJSON);
+
+    assertEquals(success, false);
+    assertEquals(error.message, "Not enough player to start the game");
   });
 
   it("game start", async () => {

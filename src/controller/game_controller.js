@@ -179,7 +179,7 @@ export default class GameController {
     const cardId = Number(payload.cardId);
 
     if (!this.canActionBeDone(cardId)) {
-      throw new Error(">>action card can't be played");
+      throw new Error("action card can't be played");
     }
     const result = this.actionCardService.performAction(payload, this.game);
 

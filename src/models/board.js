@@ -25,7 +25,11 @@ export default class Board {
     const playerData = players.map((player) => player.getPlayerData());
     const routes = findRoutes(start, totalSteps, this.#tiles, playerData);
 
-    this.destinations = routes;
+    const currentPlayerTokens = currentPlayer.getTokens();
+    this.destinations = routes.filter((route) => {
+      const recipients = route?.recipients?.length || 0;
+      return recipients <= currentPlayerTokens;
+    });
     return this.destinations;
   }
 

@@ -1,118 +1,84 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import Player from "../../../src/models/player.js";
-import Board from "../../../src/models/board.js";
-import Game from "../../../src/models/game.js";
-import Bank from "../../../src/models/bank.js";
-import { diceValue } from "../../../src/data/state.js";
-import { createApp } from "../../../src/app.js";
-import {
-  acMap,
-  getActionCard,
-  getAllActionCard,
-  getAllDesignCard,
-  isPresent,
-  mockTiles,
-  mockYarns,
-} from "../../../src/utils/mock_data.js";
-import ActionCardService from "../../../src/service/action_card.js";
-import GameController from "../../../src/controller/game_controller.js";
+import { removeAcs, setupState } from "../../../src/utils/util.js";
 
-describe.ignore("Action card handlers", () => {
-  let app, players, gameController;
+const actionCards = [
+  {
+    "id": 16,
+    "type": "victory point",
+    "description":
+      "1 Victory point. Reveal the card immediately and keep face-up. Cannot be stolen.",
+  },
+  {
+    "id": 4,
+    "type": "get tokens",
+    "description": "Get 3 tokens from the reserve.",
+  },
+];
 
-  beforeEach(() => {
-    const player1 = new Player(1, "Ajoy");
-    player1.setup(2, { x: 2, y: 1 });
-    player1.addAllDesignCardDev(...getAllDesignCard());
+describe("Action card handlers", () => {
+  let currentPlayer, app, headers;
 
-    const player2 = new Player(2, "Dinesh");
-    player1.setup(3, { x: 4, y: 1 });
-    players = [player1, player2];
+  beforeEach(async () => {
+    const result = await setupState();
 
-    const gameState = new Game(
-      players,
-      new Bank(getAllDesignCard(), getAllActionCard()),
-      new Board(mockTiles(), mockYarns()),
-      diceValue,
-      Math.random,
-      0,
-    );
-
-    const actionCardService = new ActionCardService();
-
-    gameController = new GameController(gameState, actionCardService);
-    app = createApp(gameState, gameController, actionCardService);
+    app = result.app;
+    currentPlayer = result.currentPlayer;
+    headers = result.headers;
   });
 
   describe("PATCH /action-card/16 (Victory Point)", () => {
-    it("Player should be able to play victory point action card only if they have that card", async () => {
-      const currentPlayer = players[0];
-      const cardId = acMap.victoryPoint;
-      currentPlayer.addActionCard(getActionCard(cardId));
+    it.ignore("Player should be able to play victory point action card only if they have that card", async () => {
+      removeAcs(currentPlayer);
 
-      gameController.playerActions.diceRolled = true;
-      const res = await app.request(`/game/action-card/${cardId}`, {
+      currentPlayer.addActionCard(actionCards[0]);
+
+      const res = await app.request(`/game/action-card/16`, {
         method: "PATCH",
+        headers,
       });
 
       const { success } = await res.json();
 
       const playerData = currentPlayer.getPlayerData();
 
-      const expectedPlayerData = {
-        playerId: 1,
-        name: "Ajoy",
-        tokens: 0,
-        dc: 2,
-        ac: 0,
-        pinColor: 3,
-        position: { x: 4, y: 1 },
-        vp: 1,
-      };
-
       assertEquals(success, true);
-      assertEquals(res.ok, true);
-      assertEquals(playerData.vp, expectedPlayerData.vp);
+      assertEquals(playerData.vp, 1);
       assertEquals(currentPlayer.haveActionCard(16), false);
     });
   });
 
   describe("PATCH /action-card/4 (Collect Tokens)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
-      const currentPlayer = players[0];
-      const cardId = acMap.collectToken;
-      const collectTokenAc = getActionCard(cardId);
-      currentPlayer.addActionCard(collectTokenAc);
+      removeAcs(currentPlayer);
+      currentPlayer.addActionCard(actionCards[1]);
 
-      const playerTokensBefore = currentPlayer.getPlayerData().tokens;
+      const playerTokensBefore = currentPlayer.getTokens();
 
-      gameController.playerActions.diceRolled = true;
-      const res = await app.request(`/game/action-card/${cardId}`, {
+      const res = await app.request(`/game/action-card/4`, {
         method: "PATCH",
+        headers,
       });
 
       const { success } = await res.json();
 
-      const playerTokensAfter = currentPlayer.getPlayerData().tokens;
-      const playerActionsCards = currentPlayer.getAc();
+      const playerTokensAfter = currentPlayer.getTokens();
 
       assertEquals(success, true);
-      assertEquals(res.ok, true);
       assertEquals(playerTokensBefore + 3, playerTokensAfter);
-      assertEquals(isPresent(playerActionsCards, collectTokenAc), false);
+      assertEquals(currentPlayer.haveActionCard(4), false);
     });
   });
 
   describe("Failed endpoints", () => {
     it("Should fail if card id is invalid", async () => {
-      gameController.playerActions.diceRolled = true;
       const res = await app.request("/game/action-card/0", {
         method: "PATCH",
+        headers,
       });
 
-      const { message } = await res.json();
-      assertEquals(message, "Card is missing");
+      const { error } = await res.json();
+      assertEquals(error.message, "Card is missing");
     });
   });
 });

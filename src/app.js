@@ -12,14 +12,15 @@ export const createApp = (
   loggerFn = logger,
 ) => {
   const app = new Hono();
-  app.use(loggerFn());
 
+  app.use(loggerFn());
   app.use("*", async (context, next) => {
     context.set("rooms", rooms);
     context.set("players", players);
     context.set("sessions", sessions);
     await next();
   });
+
   app.use("/game/*", isAuthenticated);
 
   app.route("/game", gameRoute);
