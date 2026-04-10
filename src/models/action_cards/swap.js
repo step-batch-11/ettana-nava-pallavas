@@ -22,6 +22,7 @@ export default class Swap {
     currentPlayer.removeActionCard(payload.cardId);
     delete played.swap;
 
+    game.storeLastAction("SWAP_ACTION", currentPlayer)
     return { message: "Swap action card played" };
   }
 }

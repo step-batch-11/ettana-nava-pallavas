@@ -10,21 +10,16 @@ export default class GameController {
     anyActionDone: false,
   };
 
-  #lastAction = {};
-
   constructor(game, actionCardService) {
     this.playerActions = { ...this.#defaultActions };
     this.game = game;
     this.actionCardService = actionCardService;
   }
 
-  storeLastAction(type, player, opponent, info) {
-    const { name, playerId } = player.getPlayerData();
-    this.#lastAction = {
-      type,
-      player: { name, playerId },
-      opponent: opponent ?? "",
-      info: info ?? "",
+  getGameState(id) {
+    return {
+      ...this.game.getGameState(id),
+      requesterId: id,
     };
   }
 
@@ -34,14 +29,6 @@ export default class GameController {
 
   getGame() {
     return this.game;
-  }
-
-  getGameState(id) {
-    return {
-      ...this.game.getGameState(id),
-      requesterId: id,
-      lastAction: this.#lastAction,
-    };
   }
 
   move(destination) {
@@ -91,7 +78,7 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
-    this.storeLastAction("BUYDC", this.game.getCurrentPlayer());
+    this.game.storeLastAction("BUYDC", this.game.getCurrentPlayer());
     return result;
   }
 
@@ -104,7 +91,7 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
-    this.storeLastAction("BUYAC", this.game.getCurrentPlayer());
+    this.game.storeLastAction("BUYAC", this.game.getCurrentPlayer());
 
     return result;
   }
@@ -121,7 +108,7 @@ export default class GameController {
     const currentPlayerVp = this.game.getCurrentPlayer().getVp();
 
     if (currentPlayerVp >= 8) this.game.setGameWon();
-    this.storeLastAction("CLAIM", this.game.getCurrentPlayer());
+    this.game.storeLastAction("CLAIM", this.game.getCurrentPlayer());
     return result;
   }
 
@@ -142,7 +129,7 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
-    this.storeLastAction("PAID_SWAP", this.game.getCurrentPlayer());
+    this.game.storeLastAction("PAID_SWAP", this.game.getCurrentPlayer());
     return result;
   }
 
@@ -213,6 +200,8 @@ export default class GameController {
     }
     const result = this.game.next(requesterId);
     this.playerActions = { ...this.#defaultActions };
+
+    this.game.storeLastAction("PASS_TURN", this.game.getCurrentPlayer());
     return result;
   }
 

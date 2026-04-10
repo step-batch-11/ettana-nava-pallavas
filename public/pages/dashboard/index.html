@@ -1,62 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ettana</title>
-  <link rel="stylesheet" href="/pages/dashboard/style.css">
-</head>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ettana</title>
+    <link rel="stylesheet" href="/pages/dashboard/style.css">
+  </head>
 
-<body>
-  <div class="home-container">
+  <body>
+    <div class="home-container">
 
-    <h1 class="title">Ettana</h1>
-    <p class="subtitle">The Looms of Kanchi</p>
+      <h1 class="title">Ettana</h1>
+      <p class="subtitle">The Looms of Kanchi</p>
 
-    <div class="actions">
-      <button class="main-btn" id="joinBtn">Join Lobby</button>
-      <button class="main-btn" id="createBtn">Host Lobby</button>
-    </div>
-
-  </div>
-
-  <div id="joinPopup" class="overlay hidden">
-    <div class="popup">
-
-      <h2>Enter Room Code</h2>
-
-      <div class="octagon-inputs" id="joinInputs">
-        <input maxlength="1" class="octa" />
-        <input maxlength="1" class="octa" />
-        <input maxlength="1" class="octa" />
-        <input maxlength="1" class="octa" />
-      </div>
-
-      <div class="popup-actions">
-        <button id="closeJoin" class="btn secondary">Close</button>
-        <button id="joinAction" class="btn primary">Join</button>
+      <div class="actions">
+        <button class="main-btn" id="joinBtn">Join Lobby</button>
+        <button class="main-btn" id="createBtn">Host Lobby</button>
       </div>
 
     </div>
-  </div>
 
-  <div id="createPopup" class="overlay hidden">
-    <div class="popup">
+    <div id="joinPopup" class="overlay hidden">
+      <div class="popup">
+        <h2>Enter Room Code</h2>
 
-      <h2>Create Your Loom</h2>
+        <div class="octagon-inputs" id="joinInputs">
+          <div class="octa"><input maxlength="1" /></div>
+          <div class="octa"><input maxlength="1" /></div>
+          <div class="octa"><input maxlength="1" /></div>
+          <div class="octa"><input maxlength="1" /></div>
+        </div>
 
-      <div class="octagon-wrapper">
-        <input id="roomName" class="octa-large" placeholder="ROOM" />
+        <div class="popup-actions">
+          <button id="closeJoin" class="btn secondary">Close</button>
+          <button id="joinAction" class="btn primary">Join</button>
+        </div>
       </div>
-
-      <div class="popup-actions">
-        <button id="closeCreate" class="btn secondary">Close</button>
-        <button id="createAction" class="btn primary">Create</button>
-      </div>
-
     </div>
-  </div>
 
-  <script type="module" src="/pages/dashboard/script.js"></script>
-</body>
+    <div id="createPopup" class="overlay hidden">
+      <div class="popup">
+
+        <h2>Create Your Loom</h2>
+
+        <div class="octagon-wrapper">
+          <input id="roomName" placeholder="ROOM" />
+        </div>
+
+        <div class="popup-actions">
+          <button id="closeCreate" class="btn secondary">Close</button>
+          <button id="createAction" class="btn primary">Create</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div id="actionBanner" class="action-banner hidden">
+      <span id="actionText"></span>
+    </div>
+
+    <script type="module" src="/pages/dashboard/script.js"></script>
+  </body>
 </html>

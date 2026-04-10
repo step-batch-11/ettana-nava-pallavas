@@ -23,18 +23,11 @@ export default class Polling {
     this.isRunning = false;
   }
 
-  pause() {
-    this.stop(); // same as stop
-  }
-
-  resume() {
-    this.start();
-  }
+ 
 
   setIntervalTime(newInterval) {
     this.interval = newInterval;
 
-    // restart if already running
     if (this.isRunning) {
       this.stop();
       this.start();

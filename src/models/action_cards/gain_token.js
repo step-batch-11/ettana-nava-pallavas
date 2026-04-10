@@ -13,7 +13,7 @@ export default class Gain {
 
     const tokens = game.getBank().deductTokens(payload.number);
     currentPlayer.creditTokens(tokens);
-
+    game.storeLastAction("GAIN_TOKEN", currentPlayer);
     return {
       diceValues: { colorId: diceValue.colorId, number },
       message: "Tokens credited",

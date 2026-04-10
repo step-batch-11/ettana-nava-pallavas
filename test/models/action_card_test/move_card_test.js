@@ -19,6 +19,7 @@ describe("Move", () => {
       getCurrentPlayer: () => player,
       getPossibleDestinations: () => mockPosition,
       getGameState: () => mockState,
+      storeLastAction: () => {},
     };
   });
 

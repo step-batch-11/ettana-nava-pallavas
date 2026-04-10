@@ -11,6 +11,8 @@ export default class Game {
   #currentPlayerIndex;
   #isFinished;
 
+  #actionId = 0;
+
   constructor(
     players,
     bank,
@@ -27,6 +29,19 @@ export default class Game {
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex || 0;
     this.randomFn = randomFn;
+    this.lastAction = null;
+  }
+
+  storeLastAction(type, actor, info, target) {
+    const { name, playerId } = actor.getPlayerData();
+    const targetInfo = target?.getPlayerData();
+    this.lastAction = {
+      id: this.#actionId++,
+      type,
+      actor: { name, playerId },
+      target: targetInfo ?? "",
+      info: info ?? "",
+    };
   }
 
   setGameWon() {
@@ -139,6 +154,7 @@ export default class Game {
       currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       players,
       requesterId: id,
+      lastAction: this.lastAction,
     };
 
     if (this.#isFinished) {
