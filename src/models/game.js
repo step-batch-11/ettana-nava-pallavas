@@ -7,7 +7,7 @@ export default class Game {
   #players;
   #bank;
   #board;
-  #diceValue;
+  #diceValues;
   #currentPlayerIndex;
   #isFinished;
 
@@ -26,7 +26,7 @@ export default class Game {
     this.#players = players;
     this.#bank = bank;
     this.#board = board;
-    this.#diceValue = diceValue;
+    this.#diceValues = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex || 0;
     this.randomFn = randomFn;
     this.lastAction = null;
@@ -77,7 +77,7 @@ export default class Game {
   upkeep(colorId) {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
     const diceValues = this.rollDice(colorId);
-    this.#diceValue = diceValues;
+    this.#diceValues = diceValues;
     this.destinations = this.#board.findPossibleDestinations(
       currentPlayer,
       this.#players,
@@ -90,7 +90,9 @@ export default class Game {
 
   buyDesignCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 3) throw new Error("You don't have enough tokens");
+    if (currentPlayer.getTokens() < 3) {
+      throw new Error("You don't have enough tokens");
+    }
 
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
@@ -100,7 +102,9 @@ export default class Game {
 
   buyActionCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 2) throw new Error("You don't have enough tokens");
+    if (currentPlayer.getTokens() < 2) {
+      throw new Error("You don't have enough tokens");
+    }
 
     const card = this.#bank.getActionCard();
     currentPlayer.debitTokens(2);
@@ -149,7 +153,7 @@ export default class Game {
       },
       bank: this.#bank.getBank(),
       board: this.#board.getState(),
-      diceValue: this.#diceValue,
+      diceValue: this.#diceValues,
       currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       players,
       requesterId: id,

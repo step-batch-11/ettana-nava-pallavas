@@ -6,6 +6,7 @@ import { attachDeckEventListener, renderDeck } from "./deck.js";
 import { getGameState } from "./api.js";
 import { showEndGamePopup } from "./leaderboard.js";
 import { showAction } from "./info_panel.js";
+import { updateDice } from "./utilities/game_utilities.js";
 
 const Game = {
   polling: null,
@@ -46,6 +47,8 @@ export const renderGame = async () => {
   renderPlayers(state.players, state.currentPlayerId, state.requesterId);
   renderBankReserve(state);
   renderDeck(state.deck);
+  console.log(state);
+  updateDice(state.diceValue);
 };
 
 const main = () => {
