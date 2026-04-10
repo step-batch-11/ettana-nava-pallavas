@@ -206,6 +206,7 @@ describe("board test", () => {
       const player5 = new Player(7, "john");
 
       player1.setup(1, { x: 0, y: 0 });
+      player1.creditTokens(20);
       player2.setup(1, { x: 0, y: 1 });
       player3.setup(1, { x: 3, y: 1 });
       player4.setup(1, { x: 3, y: 3 });
@@ -225,18 +226,19 @@ describe("board test", () => {
     });
     it("when there are multiple premium routes exist , should choose cheapest route : ", () => {
       const tiles = [
-        [0, 1, 5, 6, 4, 0],
+        [0, 0, 0, 0, 0, 0],
         [0, 5, 6, 1, 2, 0],
         [0, 3, 4, 5, 6, 0],
         [0, 1, 2, 3, 4, 0],
         [0, 5, 6, 1, 2, 0],
-        [0, 3, 4, 5, 6, 0],
+        [0, 0, 0, 0, 0, 0],
       ];
 
       const board = new Board(tiles, yarns);
       const bank = new Bank([], []);
 
       const player1 = new Player(2, "john");
+      player1.creditTokens(20);
       const player2 = new Player(1, "john");
       const player3 = new Player(3, "john");
       const player4 = new Player(4, "john");
@@ -267,52 +269,58 @@ describe("board test", () => {
         { x: 1, y: 1 },
       ]);
       assertEquals(route.recipients, [4]);
-      assertEquals(actual.length, 5);
+      assertEquals(actual.length, 4);
     });
-    it("when there are multiple premium routes exist , should choose cheapest route : ", () => {
-      const tiles = [
-        [0, 1, 5, 6, 4, 0],
-        [0, 5, 6, 1, 2, 0],
-        [0, 3, 4, 5, 6, 0],
-        [0, 1, 2, 3, 4, 0],
-        [0, 5, 6, 1, 2, 0],
-        [0, 3, 4, 5, 6, 0],
-      ];
-
+    it("when player has 0 tokens, shouldn't get any premium routes : ", () => {
       const board = new Board(tiles, yarns);
       const bank = new Bank([], []);
 
       const player1 = new Player(1, "john");
       const player2 = new Player(2, "john");
       const player3 = new Player(3, "john");
-      const player4 = new Player(4, "john");
-      const player5 = new Player(123, "john");
 
       player1.setup(1, { x: 0, y: 0 });
       player2.setup(1, { x: 0, y: 1 });
-      player3.setup(1, { x: 1, y: 1 });
-      player4.setup(1, { x: 1, y: 0 });
-      player5.setup(1, { x: 3, y: 3 });
+      player3.setup(1, { x: 1, y: 0 });
 
       const diceValue = { colorId: 1, number: 1 };
 
-      const players = [player1, player2, player3, player4, player5];
+      const players = [player1, player2, player3];
+      const mockGame = new Game(players, bank, board, diceValue);
+
+      const { currentPlayerId } = mockGame.getGameState();
+      const currentPlayer = getPlayerById(players, currentPlayerId);
+
+      const actual = board.findPossibleDestinations(currentPlayer, players, 2);
+      const premiumRoutes = actual.filter((route) => route.type === "premium");
+      assertEquals(premiumRoutes, []);
+    });
+    it("when there are multiple premium routes exist , should allow give routes he can afford : ", () => {
+      const board = new Board(tiles, yarns);
+      const bank = new Bank([], []);
+
+      const player1 = new Player(1, "john");
+      player1.creditTokens(1);
+      const player2 = new Player(2, "john");
+      const player3 = new Player(3, "john");
+      const player4 = new Player(4, "john");
+
+      player1.setup(1, { x: 0, y: 0 });
+      player2.setup(1, { x: 0, y: 1 });
+      player3.setup(1, { x: 1, y: 0 });
+      player4.setup(1, { x: 0, y: 2 });
+
+      const diceValue = { colorId: 1, number: 1 };
+
+      const players = [player1, player2, player3, player4];
       const mockGame = new Game(players, bank, board, diceValue);
 
       const { currentPlayerId } = mockGame.getGameState();
       const currentPlayer = getPlayerById(players, currentPlayerId);
 
       const actual = board.findPossibleDestinations(currentPlayer, players, 3);
-      const point = actual.find(
-        (loc) => loc.destination.x === 1 && loc.destination.y === 2,
-      );
-      assertEquals(point.path, [
-        { x: 0, y: 0 },
-        { x: 0, y: 1 },
-        { x: 0, y: 2 },
-      ]);
-      assertEquals(point.recipients, [2]);
-      assertEquals(actual.length, 5);
+      const premiumRoutes = actual.filter((route) => route.type === "premium");
+      assertEquals(premiumRoutes.length, 2);
     });
   });
 
