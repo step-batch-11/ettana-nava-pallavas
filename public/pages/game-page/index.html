@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +11,7 @@
     <link rel="stylesheet" href="/pages/game-page/styles/color.css">
     <link rel="stylesheet" href="/pages/game-page/styles/players.css">
     <link rel="stylesheet" href="/pages/game-page/styles/game.css">
+    <link rel="stylesheet" href="/pages/game-page/styles/leaderboard.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -24,9 +24,7 @@
 
   <body>
     <div class="app">
-      <section class="players">
-       
-      </section>
+      <section class="players"></section>
 
       <section class="board-deck">
         <div class="board-container">
@@ -45,9 +43,12 @@
       </section>
       <section class="action-area">
         <section class="played-card">
-          <div class="card-container">
+          <!-- <div class="card-container">
             <div class="card"></div>
             <p class="card-desc">Played card description</p>
+          </div> -->
+          <div id="actionBanner" class="action-banner hidden">
+            <span id="actionText"></span>
           </div>
         </section>
 
@@ -102,13 +103,17 @@
             <h3 class="player-name">""</h3>
             <div class="player-stats">
               <div class="stat-box">
-                <img src="/assets/victory_point.png" alt="victory point icon"
+                <img
+                  src="/assets/victory_point.png"
+                  alt="victory point icon"
                   class="stat-icon" />
                 <span class="stat-value stat1"></span>
               </div>
 
               <div class="stat-box">
-                <img src="/assets/token.png" alt="Token icon"
+                <img
+                  src="/assets/token.png"
+                  alt="Token icon"
                   class="stat-icon" />
                 <span class="stat-value stat2"></span>
               </div>
@@ -116,7 +121,6 @@
           </div>
         </div>
       </template>
-
     </div>
 
     <section id="popup-selector"></section>
@@ -131,7 +135,6 @@
       <div class="actions">
         <button class="submit" id="submit-popup">Submit</button>
       </div>
-
     </dialog>
 
     <dialog id="color-dice-dialog">
@@ -158,15 +161,36 @@
             <div class="color" data-dice-id="6"></div>
           </div>
         </div>
-
       </div>
 
       <div class="actions">
         <button class="submit" id="submit-popup">Submit</button>
       </div>
-
     </dialog>
+
+    <div id="endGameOverlay" class="overlay hidden">
+      <div class="popup">
+
+        <div class="popup-header">
+          <h1 id="resultTitle">🏆 Master Weaver!</h1>
+          <p id="resultSubtitle">
+            You have crafted the finest design and reached 8 Annas.
+          </p>
+        </div>
+
+        <div id="leaderboard" class="leaderboard"></div>
+
+        <div class="flavor">
+          "In the looms of Kanchi, only the most skillful weaver claims glory."
+        </div>
+
+        <div class="actions">
+          <button class="btn secondary">Close</button>
+          <button class="btn primary">Go Home</button>
+        </div>
+
+      </div>
+    </div>
     <div id="toast" class="toast"></div>
   </body>
-
 </html>
