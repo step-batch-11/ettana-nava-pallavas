@@ -1,6 +1,7 @@
 import Player from "../models/player.js";
 import LobbyController from "../models/lobby.js";
 import { getCookie, setCookie } from "hono/cookie";
+import { acMap, getActionCard } from "../utils/mock_data.js";
 
 export const handleCreateLobby = async (context) => {
   try {
@@ -11,7 +12,10 @@ export const handleCreateLobby = async (context) => {
 
     const player = new Player(Date.now(), payload.username);
     players[player.getId()] = player;
-    player.updateVp(8);
+    // player.updateVp(8);
+    player.addActionCard(getActionCard(acMap.roll));
+    player.addActionCard(getActionCard(acMap.roll));
+    player.addActionCard(getActionCard(acMap.roll));
     player.creditTokens(1000);
 
     const room = {

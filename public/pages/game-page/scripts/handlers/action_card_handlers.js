@@ -403,6 +403,7 @@ export const handleRollAgain = async (cardId) => {
   const { success, result, error } = await res.json();
 
   if (!success) return showToast(error.message, "e");
-
+  removeMoveClass();
+  removeTileEventListeners(handlePlayerMove);
   showToast(result.message);
 };
