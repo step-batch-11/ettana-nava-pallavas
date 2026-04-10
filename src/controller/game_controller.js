@@ -103,12 +103,15 @@ export default class GameController {
 
     const result = this.game.claimDesign(id);
 
+    if (result.isMatched) {
+      this.game.storeLastAction("CLAIM", this.game.getCurrentPlayer());
+    }
+
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
     const currentPlayerVp = this.game.getCurrentPlayer().getVp();
 
     if (currentPlayerVp >= 8) this.game.setGameWon();
-    this.game.storeLastAction("CLAIM", this.game.getCurrentPlayer());
     return result;
   }
 
@@ -198,10 +201,12 @@ export default class GameController {
     if (!this.playerActions.diceRolled || !this.playerActions.moved) {
       throw new Error("roll and move to end turn");
     }
+    const currentPlayer = this.game.getCurrentPlayer();
+
     const result = this.game.next(requesterId);
     this.playerActions = { ...this.#defaultActions };
 
-    this.game.storeLastAction("PASS_TURN", this.game.getCurrentPlayer());
+    this.game.storeLastAction("PASS_TURN", currentPlayer);
     return result;
   }
 

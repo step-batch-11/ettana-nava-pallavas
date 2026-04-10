@@ -1,108 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ettana - Match Results</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ettana Action Card</title>
     <link rel="stylesheet" href="/pages/end-game/end.css">
   </head>
 
   <body>
 
-    <!-- END GAME POPUP -->
-    <div class="octagon-inputs">
+    <div id="card-container"></div>
 
-  <div class="octa-svg">
-    <svg viewBox="0 0 100 100">
-      <polygon points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30"/>
-    </svg>
-    <input maxlength="1" />
-  </div>
-
-  <div class="octa-svg">
-    <svg viewBox="0 0 100 100">
-      <polygon points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30"/>
-    </svg>
-    <input maxlength="1" />
-  </div>
-
-  <div class="octa-svg">
-    <svg viewBox="0 0 100 100">
-      <polygon points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30"/>
-    </svg>
-    <input maxlength="1" />
-  </div>
-
-  <div class="octa-svg">
-    <svg viewBox="0 0 100 100">
-      <polygon points="30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30"/>
-    </svg>
-    <input maxlength="1" />
-  </div>
-
-</div>
-
-    <script>
-function showEndGamePopup(players, currentUserId) {
-  const overlay = document.getElementById("endGameOverlay");
-  const leaderboard = document.getElementById("leaderboard");
-
-  // sort by VP
-  players.sort((a, b) => b.vp - a.vp);
-
-  const winner = players[0];
-  const isYouWinner = winner.id === currentUserId;
-
-  // Title + Subtitle
-  document.getElementById("resultTitle").innerText =
-    isYouWinner ? "🏆 Master Weaver!" : "🧵 Weaving Complete";
-
-  document.getElementById("resultSubtitle").innerText =
-    isYouWinner
-      ? "You have crafted the finest design and reached 8 Annas."
-      : `${winner.name} has mastered the loom.`;
-
-  // Clear leaderboard
-  leaderboard.innerHTML = "";
-
-  // Populate leaderboard
-  players.forEach((player, index) => {
-    const row = document.createElement("div");
-    row.className = "player" + (index === 0 ? " winner" : "");
-
-    row.innerHTML = `
-      <div class="rank">#${index + 1}</div>
-      <div class="name">
-        ${player.id === currentUserId ? "You" : player.name}
-      </div>
-      <div class="stats">
-        <span>${player.vp} VP</span>
-        <span>${player.tokens} 🟡</span>
-      </div>
-    `;
-
-    leaderboard.appendChild(row);
-  });
-
-  overlay.classList.remove("hidden");
-}
-
-function closePopup() {
-  document.getElementById("endGameOverlay").classList.add("hidden");
-}
-
-function goHome() {
-  window.location.href = "/"; // change if needed
-}
-const players = [
-  { id: 1, name: "sandip", vp: 6, tokens: 10 },
-  { id: 2, name: "khasim", vp: 4, tokens: 7 },
-  { id: 3, name: "you", vp: 8, tokens: 12 }
-];
-
-showEndGamePopup(players, 3);
-</script>
   </body>
-
+  <script type="module" src="/pages/end-game/script.js"></script>
 </html>
