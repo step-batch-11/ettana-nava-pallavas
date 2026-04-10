@@ -90,7 +90,7 @@ export default class Game {
 
   buyDesignCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 3) throw new Error("NOT_ENOUGH_TOKEN");
+    if (currentPlayer.getTokens() < 3) throw new Error("You don't have enough tokens");
 
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
@@ -100,7 +100,7 @@ export default class Game {
 
   buyActionCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 2) throw new Error("NOT_ENOUGH_TOKEN");
+    if (currentPlayer.getTokens() < 2) throw new Error("You don't have enough tokens");
 
     const card = this.#bank.getActionCard();
     currentPlayer.debitTokens(2);

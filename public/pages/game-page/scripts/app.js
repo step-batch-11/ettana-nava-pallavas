@@ -56,22 +56,6 @@ const main = () => {
   addEventListener();
 
   Game.polling.start();
-  // showAction({
-  //     type: "STEAL_TOKENS",
-  //     actor: {
-  //       id: "p1",
-  //       name: "Sandip",
-  //     },
-  //     target: {
-  //       id: "p2",
-  //       name: "Khasim",
-  //     },
-
-  //     info: {
-  //       card: "Steal Tokens",
-  //       value: 2,
-  //     },
-  //   }, 1);
 };
 
 globalThis.window.onload = main;

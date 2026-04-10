@@ -104,7 +104,7 @@ export const handleStartGame = async (context) => {
 
     return context.json({ success: true, message: "Game started" });
   } catch (err) {
-    return context.json({ success: false, error: err.message });
+    return context.json({ success: false, error: { message: err.message } });
   }
 };
 
