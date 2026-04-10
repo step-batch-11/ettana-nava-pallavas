@@ -13,9 +13,9 @@ export const handleCreateLobby = async (context) => {
     const player = new Player(Date.now(), payload.username);
     players[player.getId()] = player;
     // player.updateVp(8);
-    player.addActionCard(getActionCard(acMap.roll));
-    player.addActionCard(getActionCard(acMap.roll));
-    player.addActionCard(getActionCard(acMap.roll));
+    player.addActionCard(getActionCard(acMap.replace));
+    player.addActionCard(getActionCard(acMap.replace));
+    player.addActionCard(getActionCard(acMap.replace));
     player.creditTokens(1000);
 
     const room = {
