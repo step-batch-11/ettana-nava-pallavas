@@ -13,16 +13,22 @@ export const errorResponse = (context, error, errorCode = 400) => {
   return context.json({ success: false, error: { message } }, errorCode);
 };
 
-export const rollAndMove = async (sessionId, app, canMove = true) => {
+export const setSession = (sessionId) => {
   const headers = new Headers();
   headers.append("Cookie", `sessionId=${sessionId}`);
+  return headers;
+};
 
-  const { destinations, diceValues } = await app
-    .request("/game/roll", {
-      method: "POST",
-      headers,
-    })
-    .then(toJSON);
+export const sendRequest = async (app, url, payload, method = "POST") => {
+  payload.method = method;
+  return await app.request(url, payload).then(toJSON);
+};
+
+export const rollAndMove = async (sessionId, app, canMove = true) => {
+  const headers = setSession(sessionId);
+  const { destinations, diceValues } = await sendRequest(app, "/game/roll", {
+    headers,
+  });
 
   if (!canMove) return { diceValues, sessionId };
 
@@ -31,13 +37,10 @@ export const rollAndMove = async (sessionId, app, canMove = true) => {
     destination = destinations[1];
   }
 
-  const response = await app
-    .request("/game/move", {
-      method: "POST",
-      body: JSON.stringify(destination),
-      headers,
-    })
-    .then(toJSON);
+  const response = await sendRequest(app, "/game/move", {
+    body: JSON.stringify(destination),
+    headers,
+  });
 
   return { response, diceValues, sessionId };
 };
