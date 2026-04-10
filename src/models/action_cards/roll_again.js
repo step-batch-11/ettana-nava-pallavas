@@ -3,6 +3,8 @@ export default class RollAgain {
     const currentPlayer = game.getCurrentPlayer();
     currentPlayer.removeActionCard(id);
 
+    game.storeLastAction("ROLL_AGAIN", currentPlayer);
+
     return { message: "Roll again card played successfully" };
   }
 }

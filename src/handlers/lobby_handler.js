@@ -1,7 +1,7 @@
 import Player from "../models/player.js";
 import LobbyController from "../models/lobby.js";
 import { getCookie, setCookie } from "hono/cookie";
-import { acMap, getActionCard } from "../utils/mock_data.js";
+import { acMap, getActionCard, getAllActionCard } from "../utils/mock_data.js";
 
 export const handleCreateLobby = async (context) => {
   try {
@@ -12,10 +12,11 @@ export const handleCreateLobby = async (context) => {
 
     const player = new Player(Date.now(), payload.username);
     players[player.getId()] = player;
-    // player.updateVp(8);
+    player.updateVp(8);
     player.addActionCard(getActionCard(acMap.roll));
     player.addActionCard(getActionCard(acMap.roll));
     player.addActionCard(getActionCard(acMap.roll));
+    player.addAllActionCardDev(...getAllActionCard());
     player.creditTokens(1000);
 
     const room = {
@@ -58,7 +59,7 @@ export const handleJoinLobby = async (context) => {
     const room = rooms[payload.roomId];
 
     const player = new Player(Date.now(), payload.username);
-    // player.addAllActionCardDev(...getAllActionCard());
+    player.addAllActionCardDev(...getAllActionCard());
 
     player.setup(room.color.shift(), { x: -1, y: -1 });
     players[player.getId()] = player;

@@ -5,6 +5,8 @@ export default class CollectToken {
     currentPlayer.removeActionCard(id);
     currentPlayer.creditTokens(tokens);
 
+    game.storeLastAction("GET_TOKENS", currentPlayer);
+
     return { message: "Tokens added" };
   }
 }
