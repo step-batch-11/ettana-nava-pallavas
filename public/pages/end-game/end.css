@@ -1,46 +1,96 @@
-/* .octagon-inputs {
+body {
+  height: 100vh;
   display: flex;
-  gap: 12px;
   justify-content: center;
-} */
+  align-items: center;
+}
 
-/* Wrapper */
-.octa-svg {
+#card-container {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.card {
+  width: 200px;
+  height: 200px;
   position: relative;
-  width: 70px;
-  height: 70px;
+  transform-style: preserve-3d;
+  transition: transform 0.6s ease;
+  cursor: pointer;
 }
 
-/* SVG Shape */
-.octa-svg svg {
-  width: 100%;
-  height: 100%;
+.card.flipped {
+  transform: rotateY(180deg);
 }
 
-.octa-svg polygon {
-  fill: #fff8e7;
-  stroke: #d4af37;
-  stroke-width: 4;
-  transition: 0.2s;
-}
-
-/* Input inside */
-.octa-svg input {
+.card-face {
   position: absolute;
-  inset: 0;
-  width: 100%;
   height: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  backface-visibility: hidden;
+  border: 3px solid #c9a44c;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* Focus effect */
-.octa-svg:focus-within polygon {
-  stroke: #6a1b9a;
-  fill: #fff3c4;
-  transform: scale(1.05);
+.card-front {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.card-front img {
+  /* height: 100%; */
+  width: 100%;
+  object-fit: contain;
+}
+
+
+.info-btn {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #6b3fa0;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  border: 2px solid gold;
+  z-index: 10;
+  cursor: pointer;
+}
+
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #6b3fa0, #9c4dcc);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.card-back h3 {
+  text-align: center;
+  border-bottom: 1px solid gold;
+  padding-bottom: 6px;
+}
+
+.card-back p {
+  flex: 1;
+  margin: 5px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.card-back .footer {
+  margin: 10px;
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.8;
 }
