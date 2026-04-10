@@ -38,6 +38,7 @@ export default class Replace {
     currentPlayer.removeActionCard(cardId);
     delete played.replace;
 
+    game.storeLastAction(`REPLACE_${type.toUpperCase()}`, currentPlayer);
     return { message: `${type} changed with reserved` };
   };
 }

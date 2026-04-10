@@ -57,12 +57,12 @@ const swapYarns = async (draggablePosition, yarnPosition, path) => {
   const response = await fetchSwapResult(draggablePosition, yarnPosition, path);
   renderGame();
   if (!response.success) {
-    showToast(response.message, "e");
+    showToast(response.error.message, "e");
   }
   removeYarnHighlighting();
   removeYarnEventListeners();
   removeCellEventListeners();
-  showToast(response.result.message);
+  showToast("Paid wapped successfully");
 };
 
 export const documentClickHandler = (e) => {
@@ -116,7 +116,6 @@ export const addDragAndDropOnYarns = (yarn, yarnPosition, path) => {
 };
 
 export const handleSwapEvent = (path = "/game/paid-swap") => {
-  
   const yarnsPosition = getAllYarnsPosition();
   highlightYarns(yarnsPosition);
 

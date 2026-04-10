@@ -27,10 +27,10 @@ export const handleActionCardSwap = async (id) => {
     method: "PATCH",
     credentials: "include",
   });
-  const { success, message } = await res.json();
+  const { success, error } = await res.json();
 
   if (!success) {
-    return showToast(message, "e");
+    return showToast(error.message, "e");
   }
   handleSwapEvent("game/perform-action-card");
 };
@@ -40,10 +40,10 @@ export const handleMoveActionCard = async (id) => {
     method: "PATCH",
     credentials: "include",
   });
-  const { state, success, result, message } = await res.json();
+  const { state, success, result, error } = await res.json();
 
   if (!success) {
-    return showToast(message, "e");
+    return showToast(error.message, "e");
   }
 
   // removeTileEventListeners(handlePlayerMove);
@@ -94,7 +94,7 @@ export const performSteal = async (id, object, coordinates) => {
   const { state, success, result, error } = await res.json();
 
   if (!success) {
-    return showToast(error, "e");
+    return showToast(error.message, "e");
   }
 
   if (result.opponents.length === 0) {
@@ -169,11 +169,11 @@ const replaceElement = async (cardId, position, reservePosition, type) => {
     credentials: "include",
   });
 
-  const { state, success, result, message } = await res.json();
+  const { state, success, result, error } = await res.json();
 
   replacePopup.style.display = "none";
   if (!success) {
-    return showToast(message, "e");
+    return showToast(error.message, "e");
   }
 
   showToast(result.message);
@@ -308,10 +308,10 @@ export const handleReplaceActionCard = async (cardId) => {
     method: "PATCH",
     credentials: "include",
   });
-  const { state, success, result, message } = await res.json();
+  const { state, success, result, error } = await res.json();
   const { boardTiles, boardYarns, reservedTiles, reservedYarns } = result;
 
-  if (!success) return showToast(message, "e");
+  if (!success) return showToast(error.message, "e");
 
   highlightTilesForReplace(boardTiles);
   highlightYarnsForReplace(boardYarns);
@@ -390,9 +390,9 @@ const preset = (cardId) => {
 
 export const handlePreset = async (cardId) => {
   const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
-  const { success, result, message } = await res.json();
+  const { success, result, error } = await res.json();
 
-  if (!success) return showToast(message, "e");
+  if (!success) return showToast(error.message, "e");
 
   showToast(result.message);
   preset(cardId);
@@ -400,9 +400,10 @@ export const handlePreset = async (cardId) => {
 
 export const handleRollAgain = async (cardId) => {
   const res = await fetch(`game/action-card/${cardId}`, { method: "PATCH" });
-  const { success, result, message } = await res.json();
+  const { success, result, error } = await res.json();
 
-  if (!success) return showToast(message, "e");
-
+  if (!success) return showToast(error.message, "e");
+  removeMoveClass();
+  removeTileEventListeners(handlePlayerMove);
   showToast(result.message);
 };

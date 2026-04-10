@@ -9,7 +9,7 @@ export default class Move {
     return { availableDestinations, message: "Move action card played" };
   }
 
-  static performMove(payload, currentPlayer, played, _game) {
+  static performMove(payload, currentPlayer, played, game) {
     if (!played["move"]) {
       throw new Error("You didn't play move action card");
     }
@@ -24,6 +24,8 @@ export default class Move {
 
     delete played.move;
 
+   
+    game.storeLastAction("MOVE_ACTION", currentPlayer)
     return { adjYarns, moveResult, message: "moved successfully" };
   }
 }

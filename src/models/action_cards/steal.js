@@ -5,7 +5,7 @@ export default class Steal {
     played["steal"] = true;
 
     const opponents = game.filterOpponents(predicate);
-    
+
     return { opponents, message: "Choose an opponent" };
   }
 
@@ -30,6 +30,12 @@ export default class Steal {
       "tokens",
     );
 
+    game.storeLastAction(
+      "STEAL_TOKENS",
+      currentPlayer,
+      { card: "Steal Token Card", value: stolenTokens },
+      opponentPlayer,
+    );
     return { message };
   }
 
@@ -60,6 +66,12 @@ export default class Steal {
       "action card",
     );
 
+    game.storeLastAction(
+      "STEAL_ACTION",
+      currentPlayer,
+      { card: "Steal Action Card", value: 1 },
+      opponentPlayer,
+    );
     return { message };
   }
 }

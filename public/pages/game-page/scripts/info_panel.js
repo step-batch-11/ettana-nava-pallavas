@@ -4,8 +4,6 @@ const text = document.getElementById("actionText");
 let bannerTimeout;
 
 export const showAction = (event, currentUserId) => {
-  console.log({event});
-  
   if (bannerTimeout) clearTimeout(bannerTimeout);
 
   text.innerText = formatEvent(event, currentUserId);
@@ -22,42 +20,40 @@ export const showAction = (event, currentUserId) => {
   }, 3000);
 };
 
+const MAP_ACTION = {
+  "PRESET": ({ actor }) => `${actor} has played Preset Action card `,
+  "BUYDC": ({ actor }) => `🛒 ${actor} has bought a design card`,
+  "BUYAC": ({ actor }) => `🎴 ${actor} has bought an action card`,
+  "PAID_SWAP": ({ actor }) => `🔁 ${actor} has swapped two yarns`,
+  "PASS_TURN": ({ actor }) => `${actor} has passed turn`,
+  "TAX": ({ actor }) => `💸 ${actor} has collected tax from all players`,
+  "VICTORY_POINT": ({ actor }) => `🏆 ${actor} has gained a victory point`,
+  "MOVE_ACTION": ({ actor }) => `${actor} has moved using Move Action card!`,
+  "STEAL_TOKENS": ({ actor, value, target }) =>
+    `💰 ${actor} has stolen ${value} tokens from ${target}`,
+  "STEAL_ACTION": ({ actor, target }) =>
+    `💰 ${actor} has stolen 1 Action card from ${target}`,
+  "CLAIM_DESIGN": ({ actor, value }) =>
+    `🧵 ${actor} has completed a design ${value} VP`,
+  "REPLACE_YARN": ({ actor }) =>
+    `${actor} has replaced yarn using Replace Action card!`,
+  "REPLACE_TILE": ({ actor }) =>
+    `${actor} has replaced tile using Replace Action card!`,
+  "GAIN_TOKEN": ({ actor }) =>
+    `${actor} has gained tokens using Gain Token Action card!`,
+  "SWAP_ACTION": ({ actor }) =>
+    `${actor} has swapped yarns using Swap Action card!`,
+};
+
 const formatEvent = (event, currentUserId) => {
-  console.log({event});
-  
   const actor = event.actor.id === currentUserId ? "You" : event.actor.name;
   const target = event.target?.id === currentUserId
     ? "You"
     : event.target?.name;
 
-  switch (event.type) {
-    case "STEAL_TOKENS":
-      return `💰 ${actor} stole ${event.value} tokens from ${target}`;
-
-    case "CLAIM_DESIGN":
-      return `🧵 ${actor} completed a design (+${event.value} VP)`;
-
-    case "BUY_DESIGN":
-      return `🛒 ${actor} bought a design card`;
-
-    case "BUY_ACTION":
-      return `🎴 ${actor} bought an action card`;
-
-    case "PAID_SWAP":
-      return `🔁 ${actor} swapped two yarns`;
-
-    case "TAX":
-      return `💸 ${actor} collected tax from all players`;
-
-    case "VICTORY_POINT":
-      return `🏆 ${actor} gained a victory point`;
-
-    case "GAME_END":
-      return `🏆 ${actor} won the game!`;
-
-    default:
-      return `🎮 ${actor} performed an action`;
+  if (!(event.type in MAP_ACTION)) {
+    return `🎮 ${actor} performed an action`;
   }
+
+  return MAP_ACTION[event.type]({ actor, target, value: event.info.value });
 };
-
-

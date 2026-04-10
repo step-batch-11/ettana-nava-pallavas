@@ -12,7 +12,7 @@ const rollDiceForTurn = async () => {
   
   const response = await rollDice();
   if (!response.success) {
-    showToast(response.error, "e");
+    showToast(response.error.message, "e");
   }
 
   updateDice(response.diceValues);

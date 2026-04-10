@@ -14,7 +14,8 @@ export default class Preset {
 
     currentPlayer.removeActionCard(payload.cardId);
     delete played.preset;
-    
+
+    game.storeLastAction("PRESET", currentPlayer);
     return {
       diceValues,
       destinations,

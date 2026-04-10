@@ -201,6 +201,9 @@ export const handleBuySwap = (context) => {
 
     return context.json({ success: true, result: room.state.buySwap() });
   } catch (err) {
-    return context.json({ success: false, error: err.message }, 400);
+    return context.json(
+      { success: false, error: { message: err.message } },
+      400,
+    );
   }
 };

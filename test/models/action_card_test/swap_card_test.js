@@ -20,6 +20,7 @@ describe("Swap", () => {
       swapYarns: () => [],
       getCurrentPlayer: () => player,
       getGameState: () => mockState,
+      storeLastAction: () => {}
     };
   });
 

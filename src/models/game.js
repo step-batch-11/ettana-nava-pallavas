@@ -11,6 +11,8 @@ export default class Game {
   #currentPlayerIndex;
   #isFinished;
 
+  #actionId = 0;
+
   constructor(
     players,
     bank,
@@ -27,6 +29,19 @@ export default class Game {
     this.#diceValue = diceValue;
     this.#currentPlayerIndex = currentPlayerIndex || 0;
     this.randomFn = randomFn;
+    this.lastAction = null;
+  }
+
+  storeLastAction(type, actor, info, target) {
+    const { name, playerId } = actor.getPlayerData();
+    const targetInfo = target?.getPlayerData();
+    this.lastAction = {
+      id: this.#actionId++,
+      type,
+      actor: { name, playerId },
+      target: targetInfo ?? "",
+      info: info ?? "",
+    };
   }
 
   setGameWon() {
@@ -75,7 +90,7 @@ export default class Game {
 
   buyDesignCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 3) throw new Error("NOT_ENOUGH_TOKEN");
+    if (currentPlayer.getTokens() < 3) throw new Error("You don't have enough tokens");
 
     const card = this.#bank.getDesignCard();
     currentPlayer.debitTokens(3);
@@ -85,7 +100,7 @@ export default class Game {
 
   buyActionCard() {
     const currentPlayer = this.#players[this.#currentPlayerIndex];
-    if (currentPlayer.getTokens() < 2) throw new Error("NOT_ENOUGH_TOKEN");
+    if (currentPlayer.getTokens() < 2) throw new Error("You don't have enough tokens");
 
     const card = this.#bank.getActionCard();
     currentPlayer.debitTokens(2);
@@ -138,6 +153,7 @@ export default class Game {
       currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       players,
       requesterId: id,
+      lastAction: this.lastAction,
     };
 
     if (this.#isFinished) {

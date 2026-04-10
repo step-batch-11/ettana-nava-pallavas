@@ -87,7 +87,7 @@ export const exchangeDesignCard = async (card) => {
   const { state, result, success, error } = await res.json();
 
   if (!success) {
-    showToast(error, "e");
+    showToast(error.message, "e");
   }
 
   showToast(result.message);
