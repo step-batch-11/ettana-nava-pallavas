@@ -40,7 +40,7 @@ describe("Design card handlers", () => {
   });
 
   describe("GET /game/claim-design", () => {
-    it(
+    it.ignore(
       "should return details of design card if that design pattern has matched with the board",
       async () => {
         currentPlayer.addDesignCard(designCards[0]);

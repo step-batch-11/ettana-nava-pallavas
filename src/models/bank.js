@@ -1,22 +1,21 @@
-import { shuffle } from "@std/random";
-
 export default class Bank {
   #designCards;
   #actionCards;
+  #tiles;
   #tokens = 55;
-  #tiles = [1, 6];
   #yarns = [1, 2, 3, 4, 5];
   #randomFn;
 
   constructor(
     designCards = [],
     actionCards = [],
-    shuffleFn = shuffle,
+    tiles = [1, 6],
     randomFn = Math.random,
   ) {
-    this.#designCards = shuffleFn(designCards);
-    this.#actionCards = shuffleFn(actionCards);
+    this.#designCards = designCards;
+    this.#actionCards = actionCards;
     this.#randomFn = randomFn;
+    this.#tiles = tiles;
   }
 
   #randomInRange(min, max) {

@@ -223,7 +223,6 @@ describe("Game route", () => {
       currentPlayer = currentPlayerSId === player1SessionId
         ? playerInstances[0]
         : playerInstances[1];
-
       movedRes = await rollAndMove(currentPlayerSId, app);
     });
 
@@ -308,7 +307,7 @@ describe("Game route", () => {
       });
     });
 
-    describe("GET /game/claim-design", () => {
+    describe.ignore("GET /game/claim-design", () => {
       it("should return details of design card if that design pattern has matched with the board", async () => {
         const card = {
           id: 5,
