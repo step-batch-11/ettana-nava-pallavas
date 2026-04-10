@@ -11,7 +11,7 @@ export const handleCreateLobby = async (context) => {
 
     const player = new Player(Date.now(), payload.username);
     players[player.getId()] = player;
-    player.updateVp(7);
+    player.updateVp(8);
     player.creditTokens(1000);
 
     const room = {
@@ -36,6 +36,7 @@ export const handleCreateLobby = async (context) => {
       message: "Joined successfully",
       state: room.state.getLobbyState(),
       roomId: room.id,
+      sessionId,
     });
   } catch (err) {
     return context.json({ success: false, error: err.message });

@@ -97,9 +97,9 @@ export default class Game {
   claimDesign(designCardId) {
     const currentPlayer = this.getCurrentPlayer();
     const designCard = currentPlayer
-    .getDc()
-    .find(({ id }) => id === Number(designCardId));
-    
+      .getDc()
+      .find(({ id }) => id === Number(designCardId));
+
     const { yarns } = this.#board.getState();
     const status = this.#board.matchPattern(yarns, designCard.design);
 
@@ -111,19 +111,40 @@ export default class Game {
     return status;
   }
 
-  getGameState(id = 1) {
+  generateLeaderBoard(players) {
     return {
+      leaderboard: players
+        .sort((player1, player2) => player2.vp - player1.vp)
+        .map(({ name, tokens, vp, playerId }) => ({
+          name,
+          tokens,
+          vp,
+          playerId,
+        })),
+    };
+  }
+
+  getGameState(id = 1) {
+    const players = this.#players.map((player) => player.getPlayerData());
+    const result = {
       isFinished: this.#isFinished,
-      players: this.#players.map((player) => player.getPlayerData()),
-      bank: this.#bank.getBank(),
-      board: this.#board.getState(),
-      diceValue: this.#diceValue,
-      currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
       deck: {
         actionCards: this.getPlayerById(id).getAc(),
         designCards: this.getPlayerById(id).getDc(),
       },
+      bank: this.#bank.getBank(),
+      board: this.#board.getState(),
+      diceValue: this.#diceValue,
+      currentPlayerId: this.#players[this.#currentPlayerIndex].getId(),
+      players,
+      requesterId: id,
     };
+
+    if (this.#isFinished) {
+      return { ...result, ...this.generateLeaderBoard(players) };
+    }
+
+    return result;
   }
 
   getCurrentPlayerId() {
@@ -270,7 +291,7 @@ export default class Game {
       throw new Error("You do not have enough tokens");
     }
 
-    return {message: "You can swap any of the yarns on the board"}
+    return { message: "You can swap any of the yarns on the board" };
   }
   paidSwap(source, destination) {
     const swapCost = 3;
