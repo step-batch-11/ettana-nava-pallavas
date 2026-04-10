@@ -1,40 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ettana Dashboard</title>
-    <link rel="stylesheet" href="/pages/dashboard/style.css" />
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ettana</title>
+  <link rel="stylesheet" href="/pages/dashboard/style.css">
+</head>
 
-    <div class="container">
+<body>
+  <div class="home-container">
 
-      <h1 class="title">Ettana</h1>
-      <p class="subtitle">The Looms of Kanchi</p>
+    <h1 class="title">Ettana</h1>
+    <p class="subtitle">The Looms of Kanchi</p>
 
-      <div class="actions">
-        <button id="joinBtn" class="primary-btn">Join Game</button>
-        <button id="hostBtn" class="secondary-btn">Host Game</button>
+    <div class="actions">
+      <button class="main-btn" id="joinBtn">Join Lobby</button>
+      <button class="main-btn" id="createBtn">Host Lobby</button>
+    </div>
+
+  </div>
+
+  <div id="joinPopup" class="overlay hidden">
+    <div class="popup">
+
+      <h2>Enter Room Code</h2>
+
+      <div class="octagon-inputs" id="joinInputs">
+        <input maxlength="1" class="octa" />
+        <input maxlength="1" class="octa" />
+        <input maxlength="1" class="octa" />
+        <input maxlength="1" class="octa" />
+      </div>
+
+      <div class="popup-actions">
+        <button id="closeJoin" class="btn secondary">Close</button>
+        <button id="joinAction" class="btn primary">Join</button>
       </div>
 
     </div>
+  </div>
 
-    <!-- Popup Modal -->
-    <div class="modal hidden" id="modal">
-      <div class="modal-content">
-        <h3 id="modalTitle">Join Room</h3>
+  <div id="createPopup" class="overlay hidden">
+    <div class="popup">
 
-        <input type="text" id="inputField" placeholder="Enter..." />
+      <h2>Create Your Loom</h2>
 
-        <div class="modal-actions">
-          <button id="cancelBtn" class="cancel-btn">Cancel</button>
-          <button id="submitBtn" class="submit-btn">Submit</button>
-        </div>
+      <div class="octagon-wrapper">
+        <input id="roomName" class="octa-large" placeholder="ROOM" />
       </div>
-    </div>
-    <div id="toast" class="toast"></div>
 
-  </body>
-  <script src="/pages/dashboard/script.js" type="module"></script>
+      <div class="popup-actions">
+        <button id="closeCreate" class="btn secondary">Close</button>
+        <button id="createAction" class="btn primary">Create</button>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="/pages/dashboard/script.js"></script>
+</body>
 </html>
