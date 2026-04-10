@@ -4,7 +4,7 @@ export default class Session {
   }
 
   add(playerId, roomId) {
-    const sessionId = Date.now();
+    const sessionId = playerId
     this.session[sessionId] = {
       playerId,
       roomId,
