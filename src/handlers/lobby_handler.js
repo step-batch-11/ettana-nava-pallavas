@@ -39,7 +39,6 @@ export const handleCreateLobby = async (context) => {
       sessionId,
     });
   } catch (err) {
-    console.log(err);
     return context.json({ success: false, error: err.message });
   }
 };
@@ -72,7 +71,6 @@ export const handleJoinLobby = async (context) => {
       sessionId,
     });
   } catch (err) {
-    console.log(err);
     return context.json({ success: false, error: err.message });
   }
 };

@@ -8,6 +8,7 @@ export const isAuthenticated = async (context, next) => {
       message: "You do not have permission to play",
     }, 401);
   }
+
   const rooms = context.get("rooms");
   const sessions = context.get("sessions");
   const session = sessions.get(sessionId);
