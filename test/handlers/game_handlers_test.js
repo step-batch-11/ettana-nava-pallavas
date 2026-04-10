@@ -264,7 +264,6 @@ describe("Game route", () => {
           headers,
         });
         const responseBody = await response.json();
-        console.log(responseBody);
         assertEquals(
           responseBody.error.message,
           "NOT_ENOUGH_TOKEN",
@@ -305,7 +304,6 @@ describe("Game route", () => {
           headers,
         });
         const responseBody = await response.json();
-        console.log(responseBody);
         assertEquals(
           responseBody.error.message,
           "NOT_ENOUGH_TOKEN",
@@ -343,7 +341,6 @@ describe("Game route", () => {
         "should return details of design card if that design pattern is not present in the board",
         async () => {
           currentPlayer.removeDesignCard(2);
-          console.log(currentPlayer.getDc());
           const res = await app.request("/game/claim-design/2", { headers });
           const claimingStatus = await res.json();
 
@@ -599,11 +596,6 @@ describe("Game route", () => {
           });
 
           const { result, success } = await response.json();
-          console.log({
-            afP: result.affectedPlayers,
-            opId: opponent.getId(),
-            cId: currentPlayer.getId(),
-          });
 
           assertEquals(success, true);
           assertEquals(result.affectedPlayers.length, 1);

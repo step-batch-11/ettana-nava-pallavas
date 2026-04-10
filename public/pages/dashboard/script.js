@@ -52,7 +52,7 @@ const handleJoinGame = async (value) => {
 
   const resBody = await res.json();
   if (!resBody.success) {
-    showToast(resBody.error, "e");
+    showToast(resBody.error.message, "e");
     return;
   }
 

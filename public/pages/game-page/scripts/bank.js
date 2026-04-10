@@ -23,7 +23,7 @@ const passTurnEventListener = () => {
     const response = await changeTurnRequest("/game/pass-turn");
 
     if (!response.success) {
-      showToast(response.error, "e");
+      showToast(response.error.message, "e");
       return;
     }
 
@@ -41,7 +41,7 @@ const buyDesignCardEventListener = () => {
   designCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-design-card");
     if (!response.success) {
-      showToast(response.message, "e");
+      showToast(response.error.message, "e");
       return;
     }
 
@@ -59,7 +59,7 @@ const buyActionCardEventListener = () => {
   actionCard.addEventListener("dblclick", async () => {
     const response = await sendRequest("/game/buy-action-card");
     if (!response.success) {
-      showToast(response.message, "e");
+      showToast(response.error.message, "e");
       return;
     }
 
@@ -83,7 +83,7 @@ const buyPaidSwapListener = () => {
     const res = await fetch("/game/buy-swap", { credentials: "include" });
     const resBody = await res.json();
     if (!resBody.success) {
-      return showToast(resBody.error, "e");
+      return showToast(resBody.error.message, "e");
     }
 
     handleSwapEvent("/game/paid-swap");

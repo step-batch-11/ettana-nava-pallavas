@@ -152,10 +152,10 @@ const playActionCardEventListener = () => {
         method: "PATCH",
         credentials: "include",
       });
-      const { state, success, result, message } = await res.json();
+      const { state, success, result, error } = await res.json();
 
       if (!success) {
-        return showToast(message, "e");
+        return showToast(error.message, "e");
       }
 
       showToast(result.message);

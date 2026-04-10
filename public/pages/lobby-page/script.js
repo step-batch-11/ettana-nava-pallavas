@@ -47,7 +47,7 @@ startButton.addEventListener("click", async () => {
   const res = await fetch("/lobby/start-game");
   const resBody = await res.json();
   if (!resBody.success) {
-    showToast(resBody.error, "e");
+    showToast(resBody.error.message, "e");
     return;
   }
 

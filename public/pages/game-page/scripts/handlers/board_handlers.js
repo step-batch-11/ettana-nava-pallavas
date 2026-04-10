@@ -57,7 +57,7 @@ const swapYarns = async (draggablePosition, yarnPosition, path) => {
   const response = await fetchSwapResult(draggablePosition, yarnPosition, path);
   renderGame();
   if (!response.success) {
-    showToast(response.message, "e");
+    showToast(response.error.message, "e");
   }
   removeYarnHighlighting();
   removeYarnEventListeners();
