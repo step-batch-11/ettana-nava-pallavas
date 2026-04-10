@@ -32,7 +32,7 @@ describe("Game route", () => {
     players = {};
     sessions = new Session();
 
-    app = createApp(rooms, players, sessions,() =>  (c, next) => next());
+    app = createApp(rooms, players, sessions,() =>  (_c, next) => next());
 
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app.request("/lobby/host-game", {

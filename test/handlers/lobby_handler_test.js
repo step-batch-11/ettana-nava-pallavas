@@ -15,7 +15,7 @@ describe("lobby handler", () => {
       rooms,
       players,
       sessions,
-      () => (c, next) => next(),
+      () => (_c, next) => next(),
     );
   });
 

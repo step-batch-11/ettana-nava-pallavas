@@ -101,7 +101,7 @@ export const setupState = async (canMoveAtLast = true) => {
     rooms,
     players,
     sessions,
-    () =>  (c, next) => next(),
+    () =>  (_c, next) => next(),
   );
 
   const { player1SessionId, player2SessionId } = await createPlayers(
