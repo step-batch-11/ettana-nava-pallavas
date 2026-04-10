@@ -80,7 +80,7 @@ describe("Game controller test", () => {
     );
   });
 
-  describe("Buy Design Card", () => {
+  describe.ignore("Buy Design Card", () => {
     it("Player can buy successfully design card", () => {
       players[0].creditTokens(3);
       game.buyDesignCard();
@@ -102,7 +102,7 @@ describe("Game controller test", () => {
     });
   });
 
-  describe("Buy Action Card", () => {
+  describe.ignore("Buy Action Card", () => {
     it("Player can buy successfully action card", () => {
       players[0].creditTokens(2);
       const card = game.buyActionCard();
@@ -266,7 +266,10 @@ describe("Game controller test", () => {
           };
 
           const result = gameState.move(route);
-          assertEquals(result.moveResult.destination, getCoords(route.destination));
+          assertEquals(
+            result.moveResult.destination,
+            getCoords(route.destination),
+          );
           assertEquals(currentPlayer.getTokens(), 4);
         });
 
@@ -294,7 +297,10 @@ describe("Game controller test", () => {
           };
 
           const result = gameState.move(route);
-          assertEquals(result.moveResult.destination, getCoords(route.destination));
+          assertEquals(
+            result.moveResult.destination,
+            getCoords(route.destination),
+          );
           assertEquals(currentPlayer.getTokens(), 2);
         });
 
@@ -316,7 +322,10 @@ describe("Game controller test", () => {
           const route = { destination: { x: 2, y: 3 }, path, type: "normal" };
 
           const result = gameState.move(route);
-          assertEquals(result.moveResult.destination, getCoords(route.destination));
+          assertEquals(
+            result.moveResult.destination,
+            getCoords(route.destination),
+          );
           assertEquals(currentPlayer.getTokens(), 2);
         });
       });

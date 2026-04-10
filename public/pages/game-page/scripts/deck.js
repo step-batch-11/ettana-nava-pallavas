@@ -68,6 +68,10 @@ const handleClaimDesignCard = async (card) => {
   if (!card) return;
 
   const status = await claimDesignCard(card.dataset.id);
+  if ("error" in status) {
+    showToast(status.error.message, "e");
+    return;
+  }
 
   if (!status.result.isMatched) {
     showToast("Pattern is not matched", "e");

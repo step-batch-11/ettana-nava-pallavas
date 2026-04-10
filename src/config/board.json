@@ -1,0 +1,17 @@
+{
+  "yarn": {
+    "rows": 5,
+    "cols": 5,
+    "values": [1, 2, 3, 4, 5],
+    "maxTime": 5,
+    "type": "yarn"
+  },
+  "tile": {
+    "rows": 6,
+    "cols": 6,
+    "values": [1, 2, 3, 4, 5, 6],
+    "maxTime": 3,
+    "minTime": 2,
+    "type": "tile"
+  }
+}

@@ -75,11 +75,19 @@ const getCurrentPlayer = (state) => {
   return state.players.find((player) => player.playerId === currentPlayerId);
 };
 
+const hasPaidSwap = () => {
+  const yarns = document.querySelectorAll(".dot[draggable=true]");
+  return yarns.length > 4;
+};
+
 const buyPaidSwapListener = () => {
   const button = document.querySelector(".swap-btn");
 
   if (button.dataset.listenerAdded) return;
   button.addEventListener("click", async () => {
+    if (hasPaidSwap()) {
+      return showToast("You already have an unused paid swap", "e");
+    }
     const res = await fetch("/game/buy-swap", { credentials: "include" });
     const resBody = await res.json();
     if (!resBody.success) {

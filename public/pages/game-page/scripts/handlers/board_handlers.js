@@ -56,13 +56,18 @@ const fetchSwapResult = async (draggablePosition, yarnPosition, path) => {
 const swapYarns = async (draggablePosition, yarnPosition, path) => {
   const response = await fetchSwapResult(draggablePosition, yarnPosition, path);
   renderGame();
+
   if (!response.success) {
     showToast(response.error.message, "e");
   }
+
+  if (response.success) {
+    showToast(response.message);
+  }
+
   removeYarnHighlighting();
   removeYarnEventListeners();
   removeCellEventListeners();
-  showToast("Paid wapped successfully");
 };
 
 export const documentClickHandler = (e) => {
