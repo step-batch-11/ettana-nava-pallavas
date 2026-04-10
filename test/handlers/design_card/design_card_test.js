@@ -1,55 +1,51 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert";
-import Player from "../../../src/models/player.js";
-import Board from "../../../src/models/board.js";
-import Game from "../../../src/models/game.js";
-import Bank from "../../../src/models/bank.js";
-import { diceValue } from "../../../src/data/state.js";
-import { createApp } from "../../../src/app.js";
-import {
-  getAllActionCard,
-  getAllDesignCard,
-  mockTiles,
-  mockYarns,
-} from "../../../src/utils/mock_data.js";
-import ActionCardService from "../../../src/service/action_card.js";
-import GameController from "../../../src/controller/game_controller.js";
+import { setupState } from "../../../src/utils/util.js";
 
-describe.ignore("Design card handlers", () => {
-  let app,
-    players;
+const designCards = [
+  {
+    "id": 5,
+    "victoryPoints": 1,
+    "design": [
+      { "coord": { "x": 2, "y": 0 }, "color": 5 },
+      { "coord": { "x": 2, "y": 1 }, "color": 5 },
+      { "coord": { "x": 2, "y": 2 }, "color": 5 },
+      { "coord": { "x": 2, "y": 3 }, "color": 5 },
+      { "coord": { "x": 2, "y": 4 }, "color": 5 },
+    ],
+  },
+  {
+    "id": 2,
+    "victoryPoints": 1,
+    "design": [
+      { "coord": { "x": 1, "y": 0 }, "color": 5 },
+      { "coord": { "x": 2, "y": 1 }, "color": 5 },
+      { "coord": { "x": 3, "y": 2 }, "color": 5 },
+      { "coord": { "x": 4, "y": 3 }, "color": 5 },
+      { "coord": { "x": 3, "y": 1 }, "color": 1 },
+      { "coord": { "x": 4, "y": 0 }, "color": 1 },
+    ],
+  },
+];
 
-  beforeEach(() => {
-    const player1 = new Player(1, "Ajoy");
-    player1.setup(2, { x: 2, y: 1 });
-    player1.addAllDesignCardDev(...getAllDesignCard());
+describe("Design card handlers", () => {
+  let currentPlayer, app, headers;
 
-    const player2 = new Player(2, "Dinesh");
-    player1.setup(3, { x: 4, y: 1 });
-    players = [player1, player2];
+  beforeEach(async () => {
+    const result = await setupState();
 
-    const gameState = new Game(
-      players,
-      new Bank(getAllDesignCard(), getAllActionCard()),
-      new Board(mockTiles(), mockYarns()),
-      diceValue,
-      Math.random,
-      0,
-    );
-
-    const actionCardService = new ActionCardService();
-
-    const gameController = new GameController(gameState, actionCardService);
-    app = createApp(gameState, gameController, actionCardService);
+    app = result.app;
+    currentPlayer = result.currentPlayer;
+    headers = result.headers;
   });
 
   describe("GET /game/claim-design", () => {
     it(
       "should return details of design card if that design pattern has matched with the board",
       async () => {
-        await app.request("/game/roll", { method: "POST" });
+        currentPlayer.addDesignCard(designCards[0]);
 
-        const res = await app.request("/game/claim-design/5");
+        const res = await app.request("/game/claim-design/5", { headers });
         const claimingStatus = await res.json();
 
         assertEquals(claimingStatus.success, true);
@@ -60,8 +56,9 @@ describe.ignore("Design card handlers", () => {
     it(
       "should return details of design card if that design pattern is not present in the board",
       async () => {
-        await app.request("/game/roll", { method: "POST" });
-        const res = await app.request("/game/claim-design/2");
+        currentPlayer.addDesignCard(designCards[1]);
+
+        const res = await app.request("/game/claim-design/2", { headers });
         const claimingStatus = await res.json();
 
         assertEquals(claimingStatus.success, true);

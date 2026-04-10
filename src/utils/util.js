@@ -1,3 +1,6 @@
+import { createApp } from "../app.js";
+import Session from "../models/session.js";
+
 export const getPlayerById = (players, id) =>
   players.find((player) => player.getId() === id);
 
@@ -43,4 +46,89 @@ export const rollAndMove = async (sessionId, app, canMove = true) => {
   });
 
   return { response, diceValues, sessionId };
+};
+
+export const removeAcs = (player) => {
+  const acs = player.getAc();
+  acs.forEach((card) => {
+    player.removeActionCard(card.id);
+  });
+};
+
+export const manageTurns = async (app, p1Sid, p2Sid) => {
+  const p1 = await rollAndMove(p1Sid, app);
+  const p2 = await rollAndMove(p2Sid, app);
+
+  const currentPlayerSId = p1.diceValues.number >= p2.diceValues.number
+    ? p1Sid
+    : p2Sid;
+
+  await rollAndMove(currentPlayerSId, app, false);
+
+  return { p1, p2, currentPlayerSId };
+};
+
+export const setPlayer = (players, currPSid) =>
+  Object.values(players).find(
+    (x) => x.getId() === currPSid,
+  );
+
+export const createPlayers = async (app, p1Name, p2Name) => {
+  let payload = JSON.stringify({ username: p1Name });
+  const player1 = await sendRequest(app, "/lobby/host-game", {
+    body: payload,
+  }); //request to host
+
+  const roomId = player1.roomId;
+
+  await new Promise((r) => setTimeout(r, 200));
+
+  payload = JSON.stringify({ username: p2Name, roomId });
+  const player2 = await sendRequest(app, "/lobby/join", { body: payload }); //request to join
+
+  return {
+    player1SessionId: player1.sessionId,
+    player2SessionId: player2.sessionId,
+  };
+};
+
+export const setupState = async () => {
+  const rooms = {};
+  const players = {};
+  const sessions = new Session();
+
+  const app = createApp(rooms, players, sessions);
+
+  const { player1SessionId, player2SessionId } = await createPlayers(
+    app,
+    "kha",
+    "sim",
+  );
+
+  const headers = setSession(player1SessionId);
+
+  await sendRequest(app, "/lobby/start-game", { headers }, "GET");
+
+  const turnRes = await manageTurns(
+    app,
+    player1SessionId,
+    player2SessionId,
+  );
+
+  const { currentPlayerSId } = turnRes;
+
+  headers.set("Cookie", `sessionId=${currentPlayerSId}`);
+  const currentPlayer = setPlayer(players, currentPlayerSId);
+
+  return {
+    app,
+    players,
+    rooms,
+    sessions,
+    headers,
+    player1SessionId,
+    player2SessionId,
+    currentPlayer,
+    currentPlayerSId,
+  };
 };
