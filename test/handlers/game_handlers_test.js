@@ -8,7 +8,7 @@ import {
 } from "@std/assert";
 import { serveGameState } from "../../src/handlers/game_handlers.js";
 import Session from "../../src/models/session.js";
-import { toJSON, rollAndMove } from "../../src/utils/util.js";
+import { rollAndMove, toJSON } from "../../src/utils/util.js";
 
 const getBankTokens = async (app, headers) => {
   const { state } = await app
@@ -168,10 +168,9 @@ describe("Game route", () => {
       const p1 = await rollAndMove(player1SessionId, app);
       const p2 = await rollAndMove(player2SessionId, app);
 
-      const [nextP, headCookie] =
-        p1.diceValues.number >= p2.diceValues.number
-          ? [player1SessionId, player2SessionId]
-          : [player2SessionId, player1SessionId];
+      const [nextP, headCookie] = p1.diceValues.number >= p2.diceValues.number
+        ? [player1SessionId, player2SessionId]
+        : [player2SessionId, player1SessionId];
 
       await rollAndMove(nextP, app);
       headers.set("Cookie", `sessionId=${headCookie}`);
@@ -190,10 +189,9 @@ describe("Game route", () => {
       const p1 = await rollAndMove(player1SessionId, app);
       const p2 = await rollAndMove(player2SessionId, app);
 
-      const nextP =
-        p1.diceValues.number >= p2.diceValues.number
-          ? player1SessionId
-          : player2SessionId;
+      const nextP = p1.diceValues.number >= p2.diceValues.number
+        ? player1SessionId
+        : player2SessionId;
 
       await rollAndMove(nextP, app);
       headers.set("Cookie", `sessionId=${nextP}`);
@@ -215,18 +213,17 @@ describe("Game route", () => {
       const p1 = await rollAndMove(player1SessionId, app);
       const p2 = await rollAndMove(player2SessionId, app);
 
-      currentPlayerSId =
-        p1.diceValues.number >= p2.diceValues.number
-          ? player1SessionId
-          : player2SessionId;
+      currentPlayerSId = p1.diceValues.number >= p2.diceValues.number
+        ? player1SessionId
+        : player2SessionId;
 
-      headers.set("Cookie",`sessionId=${currentPlayerSId}`);
+      headers.set("Cookie", `sessionId=${currentPlayerSId}`);
 
       const playerInstances = Object.values(players);
-      currentPlayer =
-        currentPlayerSId === player1SessionId
-          ? playerInstances[0]
-          : playerInstances[1];
+      currentPlayer = currentPlayerSId === player1SessionId
+        ? playerInstances[0]
+        : playerInstances[1];
+
       movedRes = await rollAndMove(currentPlayerSId, app);
     });
 
@@ -263,7 +260,10 @@ describe("Game route", () => {
         });
         const responseBody = await response.json();
 
-        assertEquals(responseBody.error.message, "You don't have enough tokens");
+        assertEquals(
+          responseBody.error.message,
+          "You don't have enough tokens",
+        );
         assert(!responseBody.success);
       });
     });
@@ -300,7 +300,10 @@ describe("Game route", () => {
           headers,
         });
         const responseBody = await response.json();
-        assertEquals(responseBody.error.message, "You don't have enough tokens");
+        assertEquals(
+          responseBody.error.message,
+          "You don't have enough tokens",
+        );
         assert(!responseBody.success);
       });
     });
@@ -376,20 +379,22 @@ describe("Game route", () => {
         assertEquals(error.message, "You can't swap these yarns");
       });
 
-      it.ignore("Requesting with same source and destination yarns positions, should not be swapped", async () => {
-        const draggablePosition = yarns[0];
-        const yarnPosition = yarns[0];
+      it("Requesting with same source and destination yarns positions, should not be swapped", async () => {
+        if (yarns.length > 1) {
+          const draggablePosition = yarns[0];
+          const yarnPosition = yarns[0];
 
-        const response = await app.request("/game/swap", {
-          method: "POST",
-          body: JSON.stringify({ draggablePosition, yarnPosition }),
-          headers,
-        });
+          const response = await app.request("/game/swap", {
+            method: "POST",
+            body: JSON.stringify({ draggablePosition, yarnPosition }),
+            headers,
+          });
 
-        const { error, success } = await response.json();
+          const { error, success } = await response.json();
 
-        assert(!success);
-        assertEquals(error.message, "You can't swap these yarns");
+          assert(!success);
+          assertEquals(error.message, "You can't swap these yarns");
+        }
       });
     });
 
