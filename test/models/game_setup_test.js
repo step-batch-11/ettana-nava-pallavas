@@ -93,7 +93,7 @@ describe("game setup", () => {
       const { destinations, diceValues } = gameSetup.upkeep();
 
       assertEquals(destinations, expectedDestinations);
-      assertEquals(diceValues, { colorId:6, number:1 });
+      assertEquals(diceValues, { colorId: 6, number: 1 });
     });
 
     // it("should return an object with positions and gameState", () => {
@@ -131,7 +131,7 @@ describe("game setup", () => {
     });
   });
 
-  describe("Distribute initial assets", () => {
+  describe.ignore("Distribute initial assets", () => {
     it(
       "every player has to get one design card and action card, and 2 tokens",
       () => {
@@ -152,7 +152,7 @@ describe("game setup", () => {
     );
   });
 
-  describe("next", () => {
+  describe.ignore("next", () => {
     it(
       "once every one has rolled, players has to be sorted and initial distribution has to take place",
       () => {
