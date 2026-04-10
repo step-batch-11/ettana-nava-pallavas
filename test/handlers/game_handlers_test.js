@@ -378,20 +378,22 @@ describe("Game route", () => {
         assertEquals(error.message, "You can't swap these yarns");
       });
 
-      it.ignore("Requesting with same source and destination yarns positions, should not be swapped", async () => {
-        const draggablePosition = yarns[0];
-        const yarnPosition = yarns[0];
+      it("Requesting with same source and destination yarns positions, should not be swapped", async () => {
+        if (yarns.length > 1) {
+          const draggablePosition = yarns[0];
+          const yarnPosition = yarns[0];
 
-        const response = await app.request("/game/swap", {
-          method: "POST",
-          body: JSON.stringify({ draggablePosition, yarnPosition }),
-          headers,
-        });
+          const response = await app.request("/game/swap", {
+            method: "POST",
+            body: JSON.stringify({ draggablePosition, yarnPosition }),
+            headers,
+          });
 
-        const { error, success } = await response.json();
+          const { error, success } = await response.json();
 
-        assert(!success);
-        assertEquals(error.message, "You can't swap these yarns");
+          assert(!success);
+          assertEquals(error.message, "You can't swap these yarns");
+        }
       });
     });
 

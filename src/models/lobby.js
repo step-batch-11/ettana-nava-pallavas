@@ -20,7 +20,7 @@ export default class LobbyController {
   }
 
   addPlayer(player) {
-    if (this.#players.length > 2) {
+    if (this.#players.length >= 2) {
       throw new Error("Room is full");
     }
 

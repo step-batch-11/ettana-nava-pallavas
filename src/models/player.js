@@ -48,6 +48,10 @@ export default class Player {
     return this.#tokens;
   }
 
+  getName() {
+    return this.#name;
+  }
+
   addDesignCard(card) {
     this.#dc.push(card);
   }
