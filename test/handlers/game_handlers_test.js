@@ -263,7 +263,7 @@ describe("Game route", () => {
         });
         const responseBody = await response.json();
 
-        assertEquals(responseBody.error.message, "NOT_ENOUGH_TOKEN");
+        assertEquals(responseBody.error.message, "You don't have enough tokens");
         assert(!responseBody.success);
       });
     });
@@ -300,7 +300,7 @@ describe("Game route", () => {
           headers,
         });
         const responseBody = await response.json();
-        assertEquals(responseBody.error.message, "NOT_ENOUGH_TOKEN");
+        assertEquals(responseBody.error.message, "You don't have enough tokens");
         assert(!responseBody.success);
       });
     });

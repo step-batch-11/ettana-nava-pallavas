@@ -55,7 +55,7 @@ const main = () => {
     createdAt: 1710000000000,
   }, 1);
   
-  // Game.polling.start();
+  Game.polling.start();
 };
 
 globalThis.window.onload = main;
