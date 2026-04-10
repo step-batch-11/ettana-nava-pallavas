@@ -36,9 +36,9 @@ export const handleCreateLobby = async (context) => {
       message: "Joined successfully",
       state: room.state.getLobbyState(),
       roomId: room.id,
+      sessionId,
     });
   } catch (err) {
-    console.log(err);
     return context.json({ success: false, error: err.message });
   }
 };
@@ -71,7 +71,6 @@ export const handleJoinLobby = async (context) => {
       sessionId,
     });
   } catch (err) {
-    console.log(err);
     return context.json({ success: false, error: err.message });
   }
 };
