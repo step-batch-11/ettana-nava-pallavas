@@ -26,7 +26,7 @@ describe("App test", () => {
     assertEquals(result.success, false);
   });
 
-  it.ignore("When player other than host tries to start the game, it shouldn't start:", async () => {
+  it("When player other than host tries to start the game, it shouldn't start:", async () => {
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app
       .request("/lobby/host-game", {
