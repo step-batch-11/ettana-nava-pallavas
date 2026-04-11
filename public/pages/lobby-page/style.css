@@ -90,7 +90,6 @@ body {
   color: #4c1d95;
 }
 
-
 .toast {
   position: fixed;
   top: 20px;
@@ -100,4 +99,8 @@ body {
   border-radius: 4px;
   display: none;
   font-size: 14px;
+}
+
+.hide {
+  display: none;
 }

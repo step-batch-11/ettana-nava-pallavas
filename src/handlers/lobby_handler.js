@@ -88,10 +88,12 @@ export const handleGetLobbyState = (context) => {
     const session = sessions.get(sessionId);
     const room = rooms[session.roomId];
 
+    const state = room.state.getLobbyState();
     return context.json({
       success: true,
-      state: room.state.getLobbyState(),
+      state,
       room: { id: room.id, name: room.name },
+      isHost: room.hostId === session.playerId,
     });
   } catch (err) {
     return context.json({ success: false, error: err.message });
