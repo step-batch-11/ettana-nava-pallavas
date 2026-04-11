@@ -8,7 +8,7 @@ import {
 } from "@std/assert";
 import { serveGameState } from "../../src/handlers/game_handlers.js";
 import Session from "../../src/models/session.js";
-import { rollAndMove, toJSON } from "../../src/utils/util.js";
+import { removeAcs, rollAndMove, toJSON } from "../../src/utils/util.js";
 
 const getBankTokens = async (app, headers) => {
   const { state } = await app
@@ -476,6 +476,8 @@ describe("Game route", () => {
 
     describe("Swap Yarns Action Card", () => {
       it("Player have swap yarn action card, yarns should be swapped", async () => {
+        removeAcs(currentPlayer);
+
         currentPlayer.addActionCard({
           id: 25,
           type: "swap yarns",
@@ -497,8 +499,8 @@ describe("Game route", () => {
         assertEquals(result.message, "Swap action card played");
       });
 
-      it.ignore("Player don't have swap yarn action card, yarns should not be swapped", async () => {
-        currentPlayer.removeActionCard(25);
+      it("Player don't have swap yarn action card, yarns should not be swapped", async () => {
+        removeAcs(currentPlayer);
 
         const response = await app.request("/game/action-card/25", {
           method: "PATCH",
@@ -650,8 +652,10 @@ describe("Game route", () => {
           assertEquals(error.message, "Card is missing");
         });
 
-        it.ignore("when player does not have action card but wants to play, then should throw error and no update in state: ", async () => {
+        it("when player does not have action card but wants to play, then should throw error and no update in state: ", async () => {
+          removeAcs(currentPlayer);
           currentPlayer.removeActionCard(6);
+
           const response = await app.request("/game/action-card/6", {
             method: "PATCH",
             headers,
@@ -751,8 +755,10 @@ describe("Game route", () => {
           assertEquals(error.message, "Card is missing");
         });
 
-        it.ignore("when player does not have move action card but wants to play, then should throw error and no update in state: ", async () => {
+        it("when player does not have move action card but wants to play, then should throw error and no update in state: ", async () => {
+          removeAcs(currentPlayer);
           currentPlayer.removeActionCard(1);
+
           const response = await app.request("/game/action-card/1", {
             method: "PATCH",
             headers,

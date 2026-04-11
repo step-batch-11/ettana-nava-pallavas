@@ -16,7 +16,7 @@ const actionCards = [
 ];
 
 describe("test action handlers", () => {
-  describe.ignore("/action-card/ -> steal cards", () => {
+  describe("/action-card/ -> steal cards", () => {
     it("case: when player don't have steal card", async () => {
       const {
         app,
@@ -24,7 +24,7 @@ describe("test action handlers", () => {
         currentPlayer,
       } = await setupState();
 
-      currentPlayer.removeActionCard(22);
+      removeAcs(currentPlayer);
 
       const response = await app.request("/game/action-card/22", {
         method: "PATCH",
@@ -49,11 +49,7 @@ describe("test action handlers", () => {
         x.getId() !== currentPlayerSId
       );
 
-      const acs = opponent.getAc();
-      acs.forEach((card) => {
-        opponent.removeActionCard(card.id);
-      });
-
+      removeAcs(opponent);
       currentPlayer.addActionCard(actionCards[1]);
 
       const response = await app.request("/game/action-card/22", {

@@ -25,7 +25,7 @@ describe("Move Action Card", () => {
     );
   });
 
-  it("when move action card played, then should return all unoccupied postions on the board and remove the action card : ", async () => {
+  it("when move action card played, then should return all unoccupied positions on the board and remove the action card : ", async () => {
     currentPlayer.setup(1, { x: 0, y: 0 });
     opponent.setup(2, { x: 1, y: 1 });
 
