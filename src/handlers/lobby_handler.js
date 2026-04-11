@@ -100,6 +100,11 @@ export const handleGetLobbyState = (context) => {
   }
 };
 
+const validateHost = (room, session) => {
+  if (room.hostId !== session.playerId)
+    throw new Error("Only host can start the game.");
+};
+
 export const handleStartGame = async (context) => {
   try {
     const sessionId = getCookie(context, "sessionId");
@@ -107,6 +112,7 @@ export const handleStartGame = async (context) => {
     const sessions = context.get("sessions");
     const session = sessions.get(sessionId);
     const room = rooms[session.roomId];
+    validateHost(room, session);
     room.state = await room.state.startGame();
 
     return context.json({ success: true, message: "Game started" });
