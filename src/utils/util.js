@@ -92,17 +92,25 @@ export const createPlayers = async (app, p1Name, p2Name) => {
   };
 };
 
-export const setupState = async (canMoveAtLast = true) => {
+export const createAppTest = () => {
   const rooms = {};
   const players = {};
   const sessions = new Session();
+  const roomIds = { value: 999 };
 
   const app = createApp(
     rooms,
     players,
     sessions,
-    () =>  (_c, next) => next(),
+    roomIds,
+    () => (_c, n) => n(),
   );
+
+  return { app, rooms, players, sessions };
+};
+
+export const setupState = async (canMoveAtLast = true) => {
+  const { app, rooms, players, sessions } = createAppTest();
 
   const { player1SessionId, player2SessionId } = await createPlayers(
     app,

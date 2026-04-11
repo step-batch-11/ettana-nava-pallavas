@@ -9,6 +9,7 @@ export default class Player {
   #pinColor;
   #id;
   #name;
+  #roomId;
 
   constructor(id, name) {
     this.#id = id;
@@ -20,10 +21,15 @@ export default class Player {
     this.#ac = [];
 
     this.#position = { x: -1, y: -1 };
+    this.#roomId = null;
   }
 
-  assignRoomId(id) {
-    this.roomId = id;
+  set roomId(id) {
+    this.#roomId = id;
+  }
+
+  get roomId() {
+    return this.#roomId;
   }
 
   updateVp(n) {

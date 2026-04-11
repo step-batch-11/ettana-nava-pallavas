@@ -93,7 +93,6 @@ export const initBoard = () => {
 };
 
 export const renderBoard = (state) => {
-  console.log(state);
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayerId, state.players);
 };

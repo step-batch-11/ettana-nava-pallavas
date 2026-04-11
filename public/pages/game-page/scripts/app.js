@@ -52,7 +52,6 @@ export const renderGame = async () => {
   renderPlayers(state.players, state.currentPlayerId, state.requesterId);
   renderBankReserve(state);
   renderDeck(state.deck);
-  // console.log(state);
   updateDice(state.diceValue);
 };
 

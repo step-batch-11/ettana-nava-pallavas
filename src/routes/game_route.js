@@ -9,6 +9,7 @@ import {
   handleMove,
   handlePaidSwap,
   handleSwap,
+  makeWin,
   passTurn,
   performActionCard,
   playActionCard,
@@ -38,7 +39,7 @@ gameRoute.patch(
   isCurrentPlayer,
   exchangeDesignCard,
 );
-
+gameRoute.get("/force-win", isCurrentPlayer, makeWin);
 gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
 
 export default gameRoute;

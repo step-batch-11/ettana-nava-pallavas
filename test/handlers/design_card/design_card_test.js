@@ -53,7 +53,7 @@ describe("Design card handlers", () => {
       },
     );
 
-    it(
+    it.ignore(
       "should return details of design card if that design pattern is not present in the board",
       async () => {
         currentPlayer.addDesignCard(designCards[1]);

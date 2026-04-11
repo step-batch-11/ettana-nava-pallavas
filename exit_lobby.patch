@@ -1,0 +1,55 @@
+diff --git a/src/handlers/lobby_handler.js b/src/handlers/lobby_handler.js
+index 0369d07..1657a85 100644
+--- a/src/handlers/lobby_handler.js
++++ b/src/handlers/lobby_handler.js
+@@ -115,10 +115,16 @@ export const handleStartGame = async (context) => {
+ 
+ export const handleExitLobby = (context) => {
+   try {
+-    const roomController = context.get("roomController");
+-    const id = context.req.param("id");
++    const sessions = context.get("sessions");
++    const rooms = context.get("rooms");
++
++    const sessionId = getCookie(context, "sessionId");
++    const session = sessions.get(sessionId);
++    const roomId = session.roomId;
++    const playerId = session.playerId;
++    const lobbyController = rooms[roomId].state;
+ 
+-    roomController.exitLobby(id);
++    lobbyController.exitLobby(playerId);
+     return context.json({ success: true, message: "You left the lobby" });
+   } catch (err) {
+     return context.json({ success: false, error: err.message });
+diff --git a/src/models/lobby.js b/src/models/lobby.js
+index 17fa9c0..1418cf8 100644
+--- a/src/models/lobby.js
++++ b/src/models/lobby.js
+@@ -28,7 +28,10 @@ export default class LobbyController {
+   }
+ 
+   exitLobby(playerId) {
+-    delete this.#players[playerId];
++    const playerIndex = this.#players.findIndex(
++      (player) => player.getId() === playerId,
++    );
++    this.#players.splice(playerIndex, 1);
+   }
+ 
+   getLobbyState() {
+diff --git a/src/models/player.js b/src/models/player.js
+index 8854dee..30e4370 100644
+--- a/src/models/player.js
++++ b/src/models/player.js
+@@ -26,6 +26,10 @@ export default class Player {
+     this.roomId = id;
+   }
+ 
++  getRoomId() {
++    return this.roomId;
++  }
++
+   updateVp(n) {
+     this.#vp += n;
+   }
