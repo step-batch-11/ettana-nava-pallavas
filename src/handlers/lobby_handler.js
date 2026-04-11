@@ -23,7 +23,7 @@ export const handleCreateLobby = async (context) => {
     };
 
     player.setup(room.color.shift(), { x: -1, y: -1 });
-    player.assignRoomId(room.id);
+    player.roomId = room.id;
     rooms[room.id] = room;
 
     room.state.addPlayer(player);
@@ -57,7 +57,7 @@ export const handleJoinLobby = async (context) => {
     player.setup(room.color.shift(), { x: -1, y: -1 });
     players[player.getId()] = player;
     room.state.addPlayer(player);
-    player.assignRoomId(room.id);
+    player.roomId = room.id;
     const sessionId = sessions.add(player.getId(), room.id);
     setCookie(context, "sessionId", sessionId);
 
