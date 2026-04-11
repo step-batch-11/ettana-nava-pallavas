@@ -95,20 +95,6 @@ describe("game setup", () => {
       assertEquals(destinations, expectedDestinations);
       assertEquals(diceValues, { colorId: 6, number: 1 });
     });
-
-    // it("should return an object with positions and gameState", () => {
-    //   gameSetup = new GameSetup(players, bank, board, {}, () => 0.9);
-
-    //   const expectedDestinations = [
-    //     { destination: { x: 2, y: 1 }, type: "jump" },
-    //     { destination: { x: 3, y: 3 }, type: "jump" },
-    //     { destination: { x: 4, y: 4 }, type: "jump" },
-    //   ];
-
-    //   const { destinations, diceValues } = gameSetup.upkeep();
-    //   assertEquals(destinations, expectedDestinations);
-    //   assertEquals(diceValues, { colorId:6, number:5 });
-    // });
   });
 
   describe("move", () => {

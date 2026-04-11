@@ -325,7 +325,6 @@ describe("Game route", () => {
 
         const res = await app.request("/game/claim-design/5", { headers });
         const claimingStatus = await res.json();
-        console.log(claimingStatus);
 
         assertEquals(claimingStatus.success, true);
         assertEquals(claimingStatus.result.isMatched, true);
