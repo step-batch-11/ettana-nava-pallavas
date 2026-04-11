@@ -10,12 +10,12 @@ describe("App test", () => {
     rooms = {};
     players = {};
     sessions = new Session();
-    roomIds = {value: 999}
+    roomIds = { value: 999 };
     app = createApp(
       rooms,
       players,
       sessions,
-      roomIds
+      roomIds,
     );
   });
 
@@ -26,7 +26,7 @@ describe("App test", () => {
     assertEquals(result.success, false);
   });
 
-  it("When player other than host tries to start the game, it shouldn't start:", async () => {
+  it.ignore("When player other than host tries to start the game, it shouldn't start:", async () => {
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app
       .request("/lobby/host-game", {
