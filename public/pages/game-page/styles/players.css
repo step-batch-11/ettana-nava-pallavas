@@ -1,4 +1,4 @@
-li {
+/* li {
   list-style: none;
 }
 
@@ -89,7 +89,7 @@ li {
 
 .player-card.current-player-card {
   border: 5px solid var(--success);
-}
+} */
 
 /* 
 table {

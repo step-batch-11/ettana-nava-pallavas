@@ -22,7 +22,7 @@ const gameRoute = new Hono();
 
 gameRoute.post("/roll", isCurrentPlayer, handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
-gameRoute.get("/buy-swap", handleBuySwap);
+gameRoute.get("/buy-swap",isCurrentPlayer, handleBuySwap);
 gameRoute.post("/move", isCurrentPlayer, handleMove);
 gameRoute.post("/swap", isCurrentPlayer, handleSwap);
 gameRoute.get("/buy-design-card", isCurrentPlayer, buyDesignCard);

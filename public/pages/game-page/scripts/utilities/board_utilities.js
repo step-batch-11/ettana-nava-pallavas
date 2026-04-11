@@ -1,7 +1,7 @@
 import { colorsMap } from "/assets/colors.js";
-import { removeEventListeners } from "./game_utilities.js";
-const cellSize = 120;
-const gap = 10;
+import { removeEventListeners } from "/pages/game-page/scripts/utilities/game_utilities.js";
+const cellSize = 128;
+const gap = 20;
 const size = 5;
 
 export const createDiv = (className, id) => {
@@ -12,14 +12,39 @@ export const createDiv = (className, id) => {
 };
 
 const setPosition = (element, left, top) => {
-  element.style.left = `${left}px`;
-  element.style.top = `${top}px`;
+  element.style.left = `${left + 14}px`;
+  element.style.top = `${top + 14}px`;
 };
 
 const getOffset = (i) => i * (cellSize + gap);
 
 const centerOffset = (i, adjust = 26) =>
   getOffset(i) + cellSize + gap / 2 - adjust;
+
+const getTilePosition = (row, col) => {
+  const last = size;
+
+  if (row > 0 && row < last && col > 0 && col < last) {
+    return {
+      x: centerOffset(col - 1),
+      y: centerOffset(row - 1),
+    };
+  }
+
+  const edgeOffset = 4.8 * (cellSize + gap);
+
+  const x = col === 0
+    ? -32
+    : col === last
+    ? edgeOffset - 10
+    : centerOffset(col - 1);
+  const y = row === 0
+    ? -32
+    : row === last
+    ? edgeOffset - 10
+    : centerOffset(row - 1);
+  return { x, y };
+};
 
 const getTileRotation = (row, col) => {
   const last = size;
@@ -41,21 +66,36 @@ const getTileRotation = (row, col) => {
   return "";
 };
 
-const getTilePosition = (row, col) => {
-  const last = size;
+export const createOctagons = (row, col) => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 100 100");
+  svg.classList.add("octagon");
 
-  if (row > 0 && row < last && col > 0 && col < last) {
-    return {
-      x: centerOffset(col - 1),
-      y: centerOffset(row - 1),
-    };
-  }
+  const polygon = document.createElementNS(
+    "http://www.w3.org/2000/svg",
+    "polygon",
+  );
+  polygon.setAttribute(
+    "points",
+    "30 0, 70 0, 100 30, 100 70, 70 100, 30 100, 0 70, 0 30",
+  );
+  polygon.setAttribute("fill", "#f0f1e5");
+  polygon.setAttribute("stroke", "#C8A951");
+  polygon.setAttribute("stroke-width", "2");
 
-  const edgeOffset = 4.8 * (cellSize + gap);
+  svg.appendChild(polygon);
 
-  const x = col === 0 ? -35 : col === last ? edgeOffset : centerOffset(col - 1);
-  const y = row === 0 ? -35 : row === last ? edgeOffset : centerOffset(row - 1);
-  return { x, y };
+  const dot = document.createElement("div");
+  dot.className = `dot`;
+  dot.id = `r-${row}-c-${col}`;
+  dot.style.backgroundColor = "black";
+
+  const cell = document.createElement("div");
+  cell.className = "cell";
+  cell.appendChild(svg);
+  cell.appendChild(dot);
+
+  return cell;
 };
 
 export const createAllTiles = (board) => {
@@ -66,12 +106,46 @@ export const createAllTiles = (board) => {
         `tile${row}${col}`,
       );
 
+      const isBorder = row === 0 || col === 0 || row === size || col === size;
+
+      isBorder
+        ? tile.classList.add("border-tile")
+        : tile.classList.add("inner-tile");
+
       const { x, y } = getTilePosition(row, col);
       setPosition(tile, x, y);
 
       board.appendChild(tile);
     }
   }
+};
+
+export const removeTileEventListeners = () => {
+  const tiles = document.querySelectorAll(".tile");
+  removeEventListeners(tiles);
+};
+
+export const removeCellEventListeners = () => {
+  const cells = document.querySelectorAll(".cell");
+  removeEventListeners(cells);
+};
+
+export const removeYarnEventListeners = () => {
+  const yarns = document.querySelectorAll(".dot");
+  removeEventListeners(yarns);
+};
+
+export const getAllYarnsPosition = () =>
+  Array.from({ length: 5 }).flatMap((_, i) =>
+    Array.from({ length: 5 }).map((_, j) => ({ x: i, y: j }))
+  );
+
+export const highlightYarns = (yarns) => {
+  yarns.forEach((yarnPosition) => {
+    const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
+    const yarn = document.querySelector(id);
+    yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
+  });
 };
 
 export const createSVGPlayerIcon = (colorId) => {
@@ -113,78 +187,4 @@ export const createSVGPlayerIcon = (colorId) => {
   svg.append(circle, path);
 
   return svg;
-};
-
-export const createPlayerCard = (player, requesterId) => {
-  const template = document.getElementById("player-card-template");
-
-  const clone = template.content.cloneNode(true);
-  const element = clone.querySelector(".player-card");
-  clone.querySelector(".player-name").textContent =
-    player.playerId === requesterId ? "You" : player.name;
-  clone.querySelector(".avatar").src = "/assets/user_pin.png";
-  clone.querySelector(".stat1").textContent = player.vp;
-  clone.querySelector(".stat2").textContent = player.tokens;
-
-  return { clone, element };
-};
-
-export const createOctagons = (row, col) => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 100 100");
-  svg.classList.add("octagon");
-
-  const polygon = document.createElementNS(
-    "http://www.w3.org/2000/svg",
-    "polygon",
-  );
-  polygon.setAttribute(
-    "points",
-    "30,0 70,0 100,30 100,70 70,100 30,100 0,70 0,30",
-  );
-  polygon.setAttribute("fill", "white");
-  polygon.setAttribute("stroke", "#C8A951");
-  polygon.setAttribute("stroke-width", "2");
-
-  svg.appendChild(polygon);
-
-  const dot = document.createElement("div");
-  dot.className = `dot`;
-  dot.id = `r-${row}-c-${col}`;
-  dot.style.backgroundColor = "black";
-
-  const cell = document.createElement("div");
-  cell.className = "cell";
-  cell.appendChild(svg);
-  cell.appendChild(dot);
-
-  return cell;
-};
-
-export const removeTileEventListeners = () => {
-  const tiles = document.querySelectorAll(".tile");
-  removeEventListeners(tiles);
-};
-
-export const removeCellEventListeners = () => {
-  const cells = document.querySelectorAll(".cell");
-  removeEventListeners(cells);
-};
-
-export const removeYarnEventListeners = () => {
-  const yarns = document.querySelectorAll(".dot");
-  removeEventListeners(yarns);
-};
-
-export const getAllYarnsPosition = () =>
-  Array.from({ length: 5 }).flatMap((_, i) =>
-    Array.from({ length: 5 }).map((_, j) => ({ x: i, y: j }))
-  );
-
-export const highlightYarns = (yarns) => {
-  yarns.forEach((yarnPosition) => {
-    const id = `#r-${yarnPosition.x}-c-${yarnPosition.y}`;
-    const yarn = document.querySelector(id);
-    yarn.style.boxShadow = "0 0 10px 3px rgba(0, 200, 255, 0.9)";
-  });
 };
