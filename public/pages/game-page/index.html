@@ -4,31 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ettana board</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&icon_names=currency_exchange" />
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap" rel="stylesheet">
+  
     <link rel="stylesheet" href="/pages/game-page/styles/style.css">
     <link rel="stylesheet" href="/pages/game-page/styles/bank.css">
     <link rel="stylesheet" href="/pages/game-page/styles/board.css">
     <link rel="stylesheet" href="/pages/game-page/styles/deck.css">
     <link rel="stylesheet" href="/pages/game-page/styles/color.css">
     <link rel="stylesheet" href="/pages/game-page/styles/players.css">
+    <link rel="stylesheet" href="/pages/game-page/styles/left.css">
     <link rel="stylesheet" href="/pages/game-page/styles/game.css">
     <link rel="stylesheet" href="/pages/game-page/styles/leaderboard.css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&display=swap"
-      rel="stylesheet">
 
     <script type="module" src="/pages/game-page/scripts/app.js"></script>
+    <style>
+      .players{
+        display: flex;
+        flex-direction: column;
+        width: 90%;
+        height:80%;
+        padding-block: 1em;
+        gap:1em;
+        justify-content: flex-start;
+        background-color: white;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="app">
-      <section class="players"></section>
+    <div id="game" class="row">
+      <div id="left">
+        <div class="player-details">
+          <div class="players-detail-heading">
+            <div class="player-pin-icon"></div>
+            <div class="player-stats-heading">
+              <div class="victory-point">
+                <img src="/assets/token.svg" alt="" srcset="">
+              </div>
+              <div class="token-count">
+                <img src="/assets/token.svg" alt="" srcset="">
+              </div>
+              <div class="ac-number">
+                <img src="/assets/action-card.png" alt="" srcset="">
+              </div>
+              <div class="dc-number">
+                <img src="/assets/design-card.png" alt="" srcset="">
+              </div>
+            </div>
+          </div>
+          <players-element class="players"></players-element>
+        </div>
+        <div class="information-panel">
+          <div id="actionBanner" class="action-banner hidden">
+            <span id="actionText"></span>
+          </div>
+        </div>
+      </div>
 
-      <section class="board-deck">
-        <div class="board-container">
-          <div id="board"></div>
+      <div id="center" class="column">
+        <div id="board-container" class="row">
+          <div id="board-border-1">
+            <div id="board-border-2">
+              <div id="board"></div>
+            </div>
+          </div>
         </div>
 
         <div class="deck">
@@ -40,87 +83,51 @@
             <div class="cards" id="action-card-panel"></div>
           </div>
         </div>
-      </section>
-      <section class="action-area">
-        <section class="played-card">
-          <!-- <div class="card-container">
-            <div class="card"></div>
-            <p class="card-desc">Played card description</p>
-          </div> -->
-          <div id="actionBanner" class="action-banner hidden">
-            <span id="actionText"></span>
+      </div>
+
+      <div id="right">
+        <div class="reserved">
+          <div class="tiles">
+            <div class="tile"><span></span></div>
+            <div class="tile"><span></span></div>
           </div>
-        </section>
+          <div class="yarns">
+            <div class="yarn" data-yarn-id="1"></div>
+            <div class="yarn" data-yarn-id="2"></div>
+            <div class="yarn" data-yarn-id="3"></div>
+            <div class="yarn" data-yarn-id="4"></div>
+            <div class="yarn" data-yarn-id="5"></div> 
+          </div>
+        </div>
+        
+        <div class="bank">
+          <div class="token-placeholder">
+            <div class="buy-swap">
+              <button class="swap-btn btn material-symbols-outlined">currency_exchange</button>
+            </div>
+            <div id="token-count"><h6>55</h6></div>
+          </div>
 
-        <div>
-          <section class="reserved">
-            <div class="tiles">
-              <div class="tile"><span></span></div>
-              <div class="tile"><span></span></div>
+          <div class="cards">
+            <div class="design-card">
+              <img src="/assets/design-card.png" alt draggable="false">
             </div>
-            <div class="yarns">
-              <div class="yarn" data-yarn-id="1"></div>
-              <div class="yarn" data-yarn-id="2"></div>
-              <div class="yarn" data-yarn-id="3"></div>
-              <div class="yarn" data-yarn-id="4"></div>
-              <div class="yarn" data-yarn-id="5"></div>
+            <div class="action-card">
+              <img src="/assets/action-card.png" alt draggable="false">
             </div>
-          </section>
-
-          <section class="bank">
-            <div class="token-placeholder">
-              <div id="token-count"></div>
-              <div class="buy-swap">
-                <button class="swap-btn btn">Swap</button>
-              </div>
-            </div>
-
-            <div class="cards">
-              <div class="design-card">
-                <img src="/assets/design-card.png" alt draggable="false">
-              </div>
-              <div class="action-card">
-                <img src="/assets/action-card.png" alt draggable="false">
-              </div>
-            </div>
-          </section>
+          </div>
         </div>
 
-        <section class="play-turn">
+        <div class="play-turn">
           <div class="dices" id="dice">
             <div class="dice" id="number-dice"></div>
             <div class="dice" id="color-dice"></div>
           </div>
-          <button class="pass-turn btn" id="pass-turn">Pass Turn</button>
-        </section>
-      </section>
-      <template id="player-card-template">
-        <div class="player-card">
-          <div class="player-avatar-section">
-            <img src alt="Player Avatar" class="stat-icon avatar" />
-          </div>
-          <div class="player-info">
-            <h3 class="player-name">""</h3>
-            <div class="player-stats">
-              <div class="stat-box">
-                <img
-                  src="/assets/victory_point.png"
-                  alt="victory point icon"
-                  class="stat-icon" />
-                <span class="stat-value stat1"></span>
-              </div>
-
-              <div class="stat-box">
-                <img
-                  src="/assets/token.png"
-                  alt="Token icon"
-                  class="stat-icon" />
-                <span class="stat-value stat2"></span>
-              </div>
-            </div>
+          <div class="pass">
+            <button class="pass-turn" id="pass-turn">➡</button>
           </div>
         </div>
-      </template>
+      </div>
     </div>
 
     <section id="popup-selector"></section>

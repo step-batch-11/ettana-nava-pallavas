@@ -22,8 +22,8 @@ export const showAction = (event, currentUserId) => {
 
 const MAP_ACTION = {
   "PRESET": ({ actor }) => `${actor} has played Preset Action card `,
-  "BUYDC": ({ actor }) => `🛒 ${actor} has bought a design card`,
-  "BUYAC": ({ actor }) => `🎴 ${actor} has bought an action card`,
+  "BUY_DC": ({ actor }) => `🛒 ${actor} has bought a design card`,
+  "BUY_AC": ({ actor }) => `🎴 ${actor} has bought an action card`,
   "PAID_SWAP": ({ actor }) => `🔁 ${actor} has swapped two yarns`,
   "PASS_TURN": ({ actor }) => `${actor} has passed their turn`,
   "TAX": ({ actor }) => `💸 ${actor} has collected tax from all players`,
