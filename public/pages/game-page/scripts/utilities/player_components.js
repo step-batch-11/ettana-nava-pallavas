@@ -31,16 +31,6 @@ export class PlayerDetailElement extends HTMLElement {
       : "player";
     this.shadowRoot.innerHTML = `
     <style>
-    .player {
-      display: flex;
-      width:94%;
-      height: 25%;
-      justify-content: space-evenly;
-      padding-block:1em;
-      border-bottom: 1px solid black;
-      margin:0.5em;
-    }
-
     .name-icon {
       width:40%;
       display:flex;
@@ -50,7 +40,7 @@ export class PlayerDetailElement extends HTMLElement {
 
     .pin-color {
       display:flex;
-      height:70%;
+      width:20px;
       aspect-ratio:1/1;
       border-radius:50%;
       justify-content:center;
@@ -58,26 +48,51 @@ export class PlayerDetailElement extends HTMLElement {
     }
 
     .player-stats {
-      display: flex;
       width:60%;
+      display: flex;
       justify-content: space-evenly;
       align-items: center;
+      justify-self: end;
     }
 
-    .name, .player-stats > p{
+    .player-stats > p{
       margin:0;
       padding:0;  
+      font-family: "Fraunces", serif;
+      text-align: left;
+      font-size: 1.2em;
+      font-weight: 600;
+      color: rgb(222, 130, 32);
+    }
+
+    .name {
+      width: 60%;
+      margin:0;
+      padding:0;  
+      font-family: "Fraunces", serif;
       text-align: left;
       font-size: 1.2em;
       font-weight:400;
       color: black;
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .player {
+      display: flex;
+      width:90%;
+      height: 25%;
+      justify-content: space-between;
+      padding-block:1em;
+      padding-inline: 1em;
     }
 
     .current-player {
-      border: 5px solid var(--success);
+      border-radius :5px;
+      box-shadow: inset rgba(222, 130, 32, 0.77) 0px 0px 30px, rgba(222, 130, 32, 0.12) 0px 0px 30px, rgba(222, 130, 32, 0.12) 0px 0px 30px, rgba(222, 130, 32, 0.17) 0px 0px 30px, rgba(222, 130, 32, 0.09) 0px 0px 30px;
     }
     </style>
-    <div class=${classList}>
+    <div class="${classList}">
       <div class="name-icon">
         <div class="pin-color"></div>
         <h5 class="name">${this.detail.name}</h5>
@@ -113,6 +128,7 @@ export class PlayersElement extends HTMLElement {
   set players({ players, currentPlayerId, requesterId }) {
     this.#_players = players;
     this.#_requesterId = requesterId;
+    this.#_currentPlayerId = currentPlayerId;
     this.render();
   }
 

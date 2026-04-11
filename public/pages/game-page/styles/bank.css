@@ -5,31 +5,6 @@
   gap: 1em;
   padding:1em;
 }
-
-/* .played-card {
-  padding: 10px;
-}
-
-.card-container {
-  width: 80%;
-  border: 1px solid #222;
-  position: relative;
-  overflow-y: scroll;
-  padding: 1em;
-}
-
-.card {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  height: 200px;
-  border-bottom: 1px solid #222;
-}
-
-.card-desc {
-  padding: 10px;
-  text-align: center;
-  } */
   
 .reserved {
   width: 100%;
@@ -323,11 +298,16 @@
   gap: 0.5em;
 }
 
+.information-panel {
+  position: relative;
+}
+
 
 .action-banner {
   position: absolute;
-  top: 20px;
+  top: 30%;
   left: 50%;
+  width: 80%;
   transform: translateX(-50%);
 
   background: #f7f1e1;
@@ -343,6 +323,7 @@
 
   opacity: 0;
   transition: all 0.3s ease;
+  z-index: 100;
 }
 
 .action-banner.show {

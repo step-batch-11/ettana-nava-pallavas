@@ -96,11 +96,15 @@
   gap: 5px;
   padding: 10px;
   position: absolute;
-  height: 100%;
+  width: 90%;
   border-radius: 12px;
   background-color: var(--purple);
   border: 2px solid var(--gold-light);
   transition: transform 0.4s ease;
+}
+
+.action-details {
+  padding: 1em;
 }
 
 .panel:not(.expanded) .card-item:nth-child(1) {
@@ -158,8 +162,9 @@
 
 .color-item {
   background-color: red;
-  height: 18px;
   width: 18px;
+  justify-self: center;
+  aspect-ratio: 1/1;
   border-radius: 50%;
 }
 
