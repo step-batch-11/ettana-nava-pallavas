@@ -53,7 +53,7 @@ document.getElementById("exitBtn").addEventListener("click", async () => {
       method: "DELETE",
     });
     const resBody = await res.json();
-
+    console.log(resBody);
     if (resBody.success) {
       localStorage.removeItem("id");
       globalThis.location.assign("/");
@@ -72,13 +72,19 @@ startButton.addEventListener("click", async () => {
   globalThis.location.assign("/game");
 });
 
+const hideStartButton = (isHost) => {
+  if (isHost) return;
+  startButton.classList.add("hide");
+};
+
 const main = () => {
   setInterval(async () => {
     const res = await fetch("/lobby/get-state");
-    const { state, room } = await res.json();
+    const { state, room, isHost } = await res.json();
     if (state.start) {
       globalThis.location.assign("/game");
     }
+    hideStartButton(isHost);
     renderPlayers(state.players);
     renderCardInfo(room);
   }, 50);

@@ -26,6 +26,10 @@ export default class Player {
     this.roomId = id;
   }
 
+  getRoomId() {
+    return this.roomId;
+  }
+
   updateVp(n) {
     this.#vp += n;
   }

@@ -81,14 +81,21 @@ export const handleGetLobbyState = (context) => {
     const session = sessions.get(sessionId);
     const room = rooms[session.roomId];
 
+    const state = room.state.getLobbyState();
     return context.json({
       success: true,
-      state: room.state.getLobbyState(),
+      state,
       room: { id: room.id, name: room.name },
+      isHost: room.hostId === session.playerId,
     });
   } catch (err) {
     return context.json({ success: false, error: err.message });
   }
+};
+
+const validateHost = (room, session) => {
+  if (room.hostId !== session.playerId)
+    throw new Error("Only host can start the game.");
 };
 
 export const handleStartGame = async (context) => {
@@ -98,6 +105,7 @@ export const handleStartGame = async (context) => {
     const sessions = context.get("sessions");
     const session = sessions.get(sessionId);
     const room = rooms[session.roomId];
+    validateHost(room, session);
     room.state = await room.state.startGame();
 
     return context.json({ success: true, message: "Game started" });
@@ -108,10 +116,16 @@ export const handleStartGame = async (context) => {
 
 export const handleExitLobby = (context) => {
   try {
-    const roomController = context.get("roomController");
-    const id = context.req.param("id");
+    const sessions = context.get("sessions");
+    const rooms = context.get("rooms");
 
-    roomController.exitLobby(id);
+    const sessionId = getCookie(context, "sessionId");
+    const session = sessions.get(sessionId);
+    const roomId = session.roomId;
+    const playerId = session.playerId;
+    const lobbyController = rooms[roomId].state;
+
+    lobbyController.exitLobby(playerId);
     return context.json({ success: true, message: "You left the lobby" });
   } catch (err) {
     return context.json({ success: false, error: err.message });
