@@ -1,15 +1,16 @@
-.action-area section {
-  width: 100%;
-  border: 1px solid #666;
+#right {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  justify-content: start;
+  gap: 1em;
+  padding:1em;
 }
 
-.action-area .played-card {
+/* .played-card {
   padding: 10px;
 }
 
-.action-area .card-container {
+.card-container {
   width: 80%;
   border: 1px solid #222;
   position: relative;
@@ -17,7 +18,7 @@
   padding: 1em;
 }
 
-.action-area .card {
+.card {
   position: sticky;
   top: 0px;
   left: 0px;
@@ -25,128 +26,193 @@
   border-bottom: 1px solid #222;
 }
 
-.action-area .card-desc {
+.card-desc {
   padding: 10px;
   text-align: center;
-}
-
-.action-area .reserved {
+  } */
+  
+.reserved {
   width: 100%;
-}
-
-.action-area .tiles {
+  height: 25%;
   display: flex;
-  gap: 30px;
-  justify-content: center;
-  align-items: center;
-  width: 40%;
-  border-right: 1px solid #222;
-  padding: 10px 20px;
+  padding-block: 2em;
+  border-radius: 1em;
+  background-color: var(--ettana-board);
+  box-shadow: inset 1px 1px 10px 2px var(--ettana-bank-shadow);
 }
 
-.action-area .tile,
-.reserve-selection-area .tile {
-  width: 40px;
-  height: 40px;
-  border: 1px solid #222;
+#right .reserved .tiles {
+  display: flex;
+  flex-direction: column;
+  width: 40%;
+  position: relative;
+}
+
+#right .reserved .tiles .tile:first-child {
+  position: absolute;
+  left: 3em;
+  top: 1em;
+}
+
+#right .reserved .tiles .tile:nth-child(2) {
+  position: absolute;
+  left: 5em;
+  top: 6em;
+}
+
+#right .tile, .reserve-selection-area .tile {
+  width: 4em;
+  aspect-ratio: 1/1;
   transform: rotate(45deg);
   display: flex;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  box-shadow: 1px 1px 5px 2px grey;
+  background: var(--ettana-tile);
 }
 
-.action-area .tile span,
-.reserve-selection-area .tile h4 {
-  transform: rotate(-45deg);
-}
-
-.action-area .yarns {
+#right .yarns {
   width: 60%;
   display: flex;
-  gap: 20px;
+  gap: 1em;
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
-  padding: 10px 40px;
+  padding-top: 2em;
+  padding-bottom: 2em;
 }
 
-.action-area .yarns .yarn,
-.reserve-selection-area .yarn {
+#right .tile span, .reserve-selection-area .tile h4 {
+  font-family: "Fraunces", serif;
+  font-size: 3em;
+  font-weight: 600;
+  color: var(--ettana-tile-value);
+  transform: rotate(-45deg);
+}
+
+#right .yarn, .reserve-selection-area .yarn {
+  width: 3.5em;
+  height: 3.5em;
+  box-shadow: 1px 1px 5px 2px grey;
+  border-radius: 50%;
+}
+
+.bank {
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-block: 2em;
+  border-radius: 1em;
+  box-shadow: inset 1px 1px 10px 2px var(--ettana-bank-shadow);
+  background-color: var(--ettana-board);
+}
+
+.token-placeholder {
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-block: 0.5em;
+}
+
+#token-count {
+  font-size: 3em;
+  font-family: "Fraunces", serif;
+  font-weight: 400;
+  width: 2.4em;
+  aspect-ratio: 1/1;
+  padding: 2px;
+  background-image: url("../../../assets/token.svg");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #eee;
+}
+
+.cards {
+  width:100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.8em;
+  padding-block: 0.3em;
+}
+
+.cards div {
+  width: 40%;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 0.5px solid gray;
+  cursor: pointer;
+}
+
+.design-card {
+  box-shadow: rgba(240, 46, 170, 0.4) 5px 5px, rgba(240, 46, 170, 0.3) 10px 10px;
+}
+.action-card {
+  box-shadow: rgba(46, 190, 164, 0.4) 5px 5px, rgba(46, 190, 164, 0.3) 10px 10px;
+}
+
+.cards div img {
+  width: 100%;
+}
+
+.play-turn {
+  width: 100%;
+  height: 20%;
+  display: flex;
+  border-radius: 1em;
+  background-color: var(--ettana-bank);
+}
+
+.btn {
+  padding: 10px;
+  border-radius: 10px;
+  background-color: var(--ettana-bank);
+  border: 3px solid #b38b00;
+  font-size: 5em;
+  color: var(--ettana-tile-value);
+  cursor: pointer;
+  box-shadow: rgba(30, 42, 67, 0.7) 0px 1px 6px, rgba(30, 42, 67, 0.7) 0px 2px 6px;
+}
+
+.dices {
+  width:70%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  border-radius: 1em;
+  box-shadow: inset 1px 1px 10px 2px var(--ettana-bank-shadow);
+  background-color: var(--ettana-board);
+  transition: all 0.5s;
+}
+
+.dice {
   width: 3em;
   height: 3em;
   border: 1px solid #222;
-  border-radius: 50%;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-.action-area .bank {
-  padding: 10px;
-  flex-direction: column;
-}
-
-.action-area .token-placeholder {
-  width: 100%;
+.pass {
+  width: 30%;
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
 }
 
-.action-area #token-count {
-  border: 1px solid #222;
-  padding: 10px;
+.pass-turn {
+  font-size: 4em;
+  color: var(--ettana-1-board-border);
+  width: 1.4em;
+  height: 1.4em;
   border-radius: 10px;
-  font-size: 20px;
-}
-
-.action-area .btn {
-  padding: 10px;
-  border-radius: 10px;
-  border: 1px solid #222;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.action-area .cards {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-  padding: 10px 20px 0px;
-  cursor: pointer;
-}
-
-.action-area .cards div {
-  width: 50%;
-  height: 200px;
-  border: 1px solid #222;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.action-area .cards div img {
-  width: 100%;
-}
-
-.action-area .play-turn {
-  padding: 10px 30px;
-  justify-content: center !important;
-  gap: 20px;
-}
-
-.action-area .dices {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 20px;
-}
-
-.action-area .dice {
-  width: 60px;
-  height: 60px;
-  border: 1px solid #222;
-  border-radius: 10px;
-  cursor: pointer;
+  background-color: var(--ettana-board);
+  box-shadow: rgba(30, 42, 67, 0.7) 0px 1px 10px, rgba(30, 42, 67, 0.7) 0px 2px 10px;
 }
 
 .dice:active {
@@ -161,11 +227,6 @@
   100% {
     transform: rotate(0px);
   }
-}
-
-.action-area .pass-turn {
-  width: 100%;
-  background-color: rgba(245, 245, 245, 0.8);
 }
 
 #popup-selector {
@@ -260,47 +321,4 @@
   justify-content: space-around;
   align-items: center;
   gap: 0.5em;
-}
-
-
-.action-banner {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-
-  background: #f7f1e1;
-  border: 2px solid #c8a951;
-  border-radius: 12px;
-  padding: 10px 20px;
-
-  font-size: 14px;
-  color: #333;
-  font-weight: 500;
-
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-
-  opacity: 0;
-  transition: all 0.3s ease;
-}
-
-.action-banner.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(0);
-}
-
-.action-banner.animate {
-  animation: popIn 0.3s ease;
-}
-
-@keyframes popIn {
-  from {
-    transform: translateX(-50%) translateY(-10px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateX(-50%) translateY(0);
-    opacity: 1;
-  }
 }

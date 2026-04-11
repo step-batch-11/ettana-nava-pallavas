@@ -20,12 +20,12 @@ export default class Move {
     currentPlayer.removeActionCard(payload.cardId);
 
     const moveResult = { source, destination: payload.destination };
-    const adjYarns = findAdjacentYarns(moveResult.destination);
+    const adjPositions = findAdjacentYarns(moveResult.destination);
+    const adjYarns = adjPositions.length > 1 ? adjPositions : [];
 
     delete played.move;
 
-   
-    game.storeLastAction("MOVE_ACTION", currentPlayer)
+    game.storeLastAction("MOVE_ACTION", currentPlayer);
     return { adjYarns, moveResult, message: "moved successfully" };
   }
 }

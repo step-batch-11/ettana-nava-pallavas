@@ -25,14 +25,15 @@ describe("Game route", () => {
     sessions,
     headers,
     player1SessionId,
-    player2SessionId;
+    player2SessionId,
+    roomIds;
 
   beforeEach(async () => {
     rooms = {};
     players = {};
     sessions = new Session();
-
-    app = createApp(rooms, players, sessions, () => (_c, next) => next());
+    roomIds = {value: 999}
+    app = createApp(rooms, players, sessions, roomIds);
 
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app.request("/lobby/host-game", {
@@ -325,7 +326,6 @@ describe("Game route", () => {
 
         const res = await app.request("/game/claim-design/5", { headers });
         const claimingStatus = await res.json();
-        console.log(claimingStatus);
 
         assertEquals(claimingStatus.success, true);
         assertEquals(claimingStatus.result.isMatched, true);

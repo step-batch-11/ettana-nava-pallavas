@@ -9,6 +9,7 @@ export const createApp = (
   rooms,
   players,
   sessions,
+  roomIds,
   loggerFn = logger,
 ) => {
   const app = new Hono();
@@ -18,6 +19,7 @@ export const createApp = (
     context.set("rooms", rooms);
     context.set("players", players);
     context.set("sessions", sessions);
+    context.set("roomIds", roomIds);
     await next();
   });
 

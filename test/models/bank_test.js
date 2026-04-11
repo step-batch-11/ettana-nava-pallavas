@@ -34,7 +34,6 @@ describe("bank", () => {
         tiles: [1, 6],
       };
 
-      console.log(bank.getBank())
       assertEquals(bank.getBank(), result);
     });
 

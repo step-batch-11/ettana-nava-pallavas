@@ -5,17 +5,18 @@ import { createApp } from "../../src/app.js";
 import { sendRequest, toJSON } from "../../src/utils/util.js";
 
 describe("lobby handler", () => {
-  let rooms, players, sessions, app;
+  let rooms, players, sessions, app, roomIds;
   beforeEach(() => {
     rooms = {};
     players = {};
     sessions = new Session();
+    roomIds = { value: 999 };
 
     app = createApp(
       rooms,
       players,
       sessions,
-      () => (_c, next) => next(),
+      roomIds,
     );
   });
 
@@ -200,12 +201,12 @@ describe("lobby handler", () => {
     const roomId = res.roomId;
     const req2 = JSON.stringify({ username: "sim", roomId });
 
-    const res2 = await app.request("/lobby/join", {
+    await app.request("/lobby/join", {
       body: req2,
       method: "POST",
     }).then(toJSON);
 
-    const sessionId = res2.sessionId;
+    const sessionId = res.sessionId;
     const headers = new Headers();
 
     headers.append("Cookie", `sessionId=${sessionId}`);
