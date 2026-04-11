@@ -6,6 +6,8 @@ export default class GetDesignCard {
     currentPlayer.addDesignCard(designCard);
     currentPlayer.removeActionCard(id);
 
+    game.storeLastAction("GET_DESIGN_CARD", currentPlayer);
+
     return { message: "design card added", card: designCard };
   }
 }

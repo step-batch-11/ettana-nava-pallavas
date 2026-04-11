@@ -88,7 +88,7 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
-    this.game.storeLastAction("BUYDC", this.game.getCurrentPlayer());
+    this.game.storeLastAction("BUY_DC", this.game.getCurrentPlayer());
     return result;
   }
 
@@ -101,7 +101,7 @@ export default class GameController {
 
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
-    this.game.storeLastAction("BUYAC", this.game.getCurrentPlayer());
+    this.game.storeLastAction("BUY_AC", this.game.getCurrentPlayer());
 
     return result;
   }
@@ -114,7 +114,7 @@ export default class GameController {
     const result = this.game.claimDesign(id);
 
     if (result.isMatched) {
-      this.game.storeLastAction("CLAIM", this.game.getCurrentPlayer());
+      this.game.storeLastAction("CLAIM_DESIGN", this.game.getCurrentPlayer());
     }
 
     this.playerActions.isLastMove = false;
@@ -122,6 +122,7 @@ export default class GameController {
     const currentPlayerVp = this.game.getCurrentPlayer().getVp();
 
     if (currentPlayerVp >= 8) this.game.setGameWon();
+
     return result;
   }
 
@@ -129,7 +130,9 @@ export default class GameController {
     if (!this.playerActions.diceRolled) {
       throw new Error("roll and move to buy swap");
     }
+
     const result = this.game.buySwap();
+
     return result;
   }
 
@@ -143,6 +146,7 @@ export default class GameController {
     this.playerActions.isLastMove = false;
     this.playerActions.anyActionDone = true;
     this.game.storeLastAction("PAID_SWAP", this.game.getCurrentPlayer());
+
     return result;
   }
 
@@ -178,6 +182,7 @@ export default class GameController {
 
     const victoryPointId = acMap.victoryPoint;
     const currentPlayerVp = this.game.getCurrentPlayer().getVp();
+
     if (cardId === victoryPointId && currentPlayerVp >= 8) {
       this.game.setGameWon();
     }
@@ -191,6 +196,7 @@ export default class GameController {
     if (!this.canActionBeDone(cardId)) {
       throw new Error("action card can't be played");
     }
+
     const result = this.actionCardService.performAction(payload, this.game);
 
     if (cardId === 1) {
@@ -211,12 +217,13 @@ export default class GameController {
     if (!this.playerActions.diceRolled || !this.playerActions.moved) {
       throw new Error("roll and move to end turn");
     }
+
     const currentPlayer = this.game.getCurrentPlayer();
-
     const result = this.game.next(requesterId);
-    this.playerActions = { ...this.#defaultActions };
 
+    this.playerActions = { ...this.#defaultActions };
     this.game.storeLastAction("PASS_TURN", currentPlayer);
+
     return result;
   }
 
@@ -236,6 +243,7 @@ export default class GameController {
     const result = this.game.next(requesterId);
 
     this.playerActions = { ...this.#defaultActions };
+
     return result;
   }
 

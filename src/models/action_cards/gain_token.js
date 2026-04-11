@@ -5,6 +5,8 @@ export default class Gain {
     currentPlayer.removeActionCard(payload.cardId);
 
     if (payload.number > number) {
+      game.storeLastAction("GAIN_TOKEN", currentPlayer);
+
       return {
         diceValues: { colorId: diceValue.colorId, number },
         message: "Tokens has not been credited",

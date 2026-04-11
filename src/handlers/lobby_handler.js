@@ -53,8 +53,6 @@ export const handleJoinLobby = async (context) => {
     const room = rooms[payload.roomId];
 
     const player = new Player(Date.now(), payload.username);
-    player.updateVp(4);
-    player.creditTokens(1000);
 
     player.setup(room.color.shift(), { x: -1, y: -1 });
     players[player.getId()] = player;

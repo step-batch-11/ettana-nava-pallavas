@@ -9,6 +9,7 @@ import {
 } from "../../../utils/utils.js";
 import {
   handlePlayerMove,
+  removeEventListeners,
   removeMoveClass,
   renderMoveOptions,
   updateDice,
@@ -179,6 +180,7 @@ const replaceElement = async (cardId, position, reservePosition, type) => {
   showToast(result.message);
   renderGame(state);
   removeTileHighlighting();
+  removeTilesAndYarnsListeners()
 };
 
 const createTiles = (tiles, position, cardId) => {
@@ -213,11 +215,20 @@ const createYarns = (yarns, position, cardId) => {
   });
 };
 
+const removeTilesAndYarnsListeners = () => {
+  const tiles = document.querySelectorAll(".tile");
+  const yarns = document.querySelectorAll(".dot");
+
+  removeEventListeners(tiles)
+  removeEventListeners(yarns)
+};
+
 const closeReplacePopup = (closePopup) => {
   closePopup.addEventListener("click", () => {
     replacePopup.innerHTML = "";
     replacePopup.style.display = "none";
     removeTileHighlighting();
+    removeTilesAndYarnsListeners();
   });
 };
 const highlightYarnsForReplace = (boardYarns) => {

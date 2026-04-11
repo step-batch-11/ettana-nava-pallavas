@@ -22,25 +22,27 @@ export const showAction = (event, currentUserId) => {
 
 const MAP_ACTION = {
   "PRESET": ({ actor }) => `${actor} has played Preset Action card `,
-  "BUYDC": ({ actor }) => `🛒 ${actor} has bought a design card`,
-  "BUYAC": ({ actor }) => `🎴 ${actor} has bought an action card`,
+  "BUY_DC": ({ actor }) => `🛒 ${actor} has bought a design card`,
+  "BUY_AC": ({ actor }) => `🎴 ${actor} has bought an action card`,
   "PAID_SWAP": ({ actor }) => `🔁 ${actor} has swapped two yarns`,
   "PASS_TURN": ({ actor }) => `${actor} has passed their turn`,
   "TAX": ({ actor }) => `💸 ${actor} has collected tax from all players`,
+  "GET_TOKENS": ({ actor }) => `${actor} has played Get Token Action Card`,
   "VICTORY_POINT": ({ actor }) => `🏆 ${actor} has gained a victory point`,
   "MOVE_ACTION": ({ actor }) => `${actor} has moved using Move Action card!`,
+  "ROLL_AGAIN": ({ actor }) => `${actor} has played Roll Again Action Card`,
+  "GET_DESIGN_CARD": ({ actor }) =>
+    `${actor} has played Get Design Card Action Card`,
   "STEAL_TOKENS": ({ actor, value, target }) =>
     `💰 ${actor} has stolen ${value} tokens from ${target}`,
   "STEAL_ACTION": ({ actor, target }) =>
     `💰 ${actor} has stolen 1 Action card from ${target}`,
-  "CLAIM_DESIGN": ({ actor, value }) =>
-    `🧵 ${actor} has completed a design ${value} VP`,
+  "CLAIM_DESIGN": ({ actor }) => `🧵 ${actor} has completed a design`,
   "REPLACE_YARN": ({ actor }) =>
     `${actor} has replaced yarn using Replace Action card!`,
   "REPLACE_TILE": ({ actor }) =>
     `${actor} has replaced tile using Replace Action card!`,
-  "GAIN_TOKEN": ({ actor }) =>
-    `${actor} has gained tokens using Gain Token Action card!`,
+  "GAIN_TOKEN": ({ actor }) => `${actor} has played Gain Token Action card!`,
   "SWAP_ACTION": ({ actor }) =>
     `${actor} has swapped yarns using Swap Action card!`,
 };
