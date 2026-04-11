@@ -28,7 +28,10 @@ export default class LobbyController {
   }
 
   exitLobby(playerId) {
-    delete this.#players[playerId];
+    const playerIndex = this.#players.findIndex(
+      (player) => player.getId() === playerId,
+    );
+    this.#players.splice(playerIndex, 1);
   }
 
   getLobbyState() {

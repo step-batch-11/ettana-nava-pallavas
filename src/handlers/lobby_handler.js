@@ -115,10 +115,16 @@ export const handleStartGame = async (context) => {
 
 export const handleExitLobby = (context) => {
   try {
-    const roomController = context.get("roomController");
-    const id = context.req.param("id");
+    const sessions = context.get("sessions");
+    const rooms = context.get("rooms");
 
-    roomController.exitLobby(id);
+    const sessionId = getCookie(context, "sessionId");
+    const session = sessions.get(sessionId);
+    const roomId = session.roomId;
+    const playerId = session.playerId;
+    const lobbyController = rooms[roomId].state;
+
+    lobbyController.exitLobby(playerId);
     return context.json({ success: true, message: "You left the lobby" });
   } catch (err) {
     return context.json({ success: false, error: err.message });

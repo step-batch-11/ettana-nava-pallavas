@@ -35,7 +35,7 @@ document.getElementById("exitBtn").addEventListener("click", async () => {
       method: "DELETE",
     });
     const resBody = await res.json();
-
+    console.log(resBody);
     if (resBody.success) {
       localStorage.removeItem("id");
       globalThis.location.assign("/");
