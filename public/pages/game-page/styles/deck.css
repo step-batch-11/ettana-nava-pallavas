@@ -160,6 +160,8 @@
   transform-style: preserve-3d;
   transition: transform 0.6s ease;
   padding: 10px;
+  height: 60%;
+  width: 70%;
 }
 
 .color-item {
