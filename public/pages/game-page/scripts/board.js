@@ -3,16 +3,13 @@ import {
   createAllTiles,
   createDiv,
   createOctagons,
-  createPlayerCard,
   createSVGPlayerIcon,
 } from "./utilities/board_utilities.js";
 
 const board = document.getElementById("board");
-const playersContainer = document.querySelector(".players");
 
 const size = 5;
 
-// Board elements.
 const createCells = () => {
   for (let row = 0; row < size; row++) {
     for (let col = 0; col < size; col++) {
@@ -70,20 +67,6 @@ const renderTiles = (tiles, currentPlayerId, players) => {
   renderPlayerOnTiles(players, currentPlayerId);
 };
 
-// Players container.
-const renderPlayersCards = (players, currentPlayerId, requesterId) => {
-  playersContainer.innerHTML = "";
-  players.forEach((player) => {
-    const { clone, element } = createPlayerCard(player, requesterId);
-
-    if (player.playerId === currentPlayerId) {
-      element.classList.add("current-player-card");
-    }
-
-    playersContainer.appendChild(clone);
-  });
-};
-
 export const highlightPattern = async (pattern) => {
   pattern.forEach(({ x, y }) => {
     board.querySelector(`#r-${x}-c-${y}`).classList.add(
@@ -98,9 +81,8 @@ export const highlightPattern = async (pattern) => {
   });
 
   pattern.forEach(({ x, y }) => {
-    board.querySelector(`#r-${x}-c-${y}`).classList.remove(
-      "highlight",
-    );
+    board.querySelector(`#r-${x}-c-${y}`)
+      .classList.remove("highlight");
   });
 };
 
@@ -111,10 +93,7 @@ export const initBoard = () => {
 };
 
 export const renderBoard = (state) => {
+  console.log(state);
   renderYarns(state.board.yarns);
   renderTiles(state.board.tiles, state.currentPlayerId, state.players);
-};
-
-export const renderPlayers = (players, currentPlayerId, requesterId) => {
-  renderPlayersCards(players, currentPlayerId, requesterId);
 };

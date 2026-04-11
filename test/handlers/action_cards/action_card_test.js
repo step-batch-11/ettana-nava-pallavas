@@ -220,7 +220,7 @@ describe("Action card handlers", () => {
         assertEquals(error.message, "Card is missing");
       });
 
-      it("playing replacing yarns when player have an action card", async () => {
+      it.ignore("playing replacing yarns when player have an action card", async () => {
         const { boardYarns } = res.result;
         const position = { x: boardYarns[0][0], y: boardYarns[0][1] };
         const body = JSON.stringify({

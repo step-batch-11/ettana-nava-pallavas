@@ -207,3 +207,16 @@ export const handleBuySwap = (context) => {
     );
   }
 };
+
+export const makeWin = (context) => {
+  try {
+    const room = context.get("room");
+    room.state.makeWin();
+    return context.redirect("/game")
+  } catch (err) {
+    return context.json(
+      { success: false, error: { message: err.message } },
+      400,
+    );
+  }
+};

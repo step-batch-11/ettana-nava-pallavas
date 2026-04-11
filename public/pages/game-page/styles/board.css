@@ -1,32 +1,73 @@
 @import "./theme.css";
 
 :root {
-  --cell-size: 120px;
-  --gap: 10px;
+  --cell-size: 128px;
+  --gap: 20px;
 }
 
-.board-container {
+* {
+  border: 0px;
+  margin: 0px;
+  padding: 0px;
+}
+
+.row {
   display: flex;
+  flex-direction: row;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+#game {
+  width: 100vw;
+  height: 100vh;
+  box-sizing: border-box;
+  background-color: var(--ettana-bg);
+}
+
+#left {
+  width: 19%;
+  height: 73%;
+  background-color: var(--ettana-bank);
+  margin: 0.6em;
+}
+
+#center {
+  width: 57%;
+  height: 100%;
+  background-color: var(--ettana-bg)
+}
+
+#right {
+  width: 23%;
+  height: 73%;
+  background-color: var(--ettana-bank);
+  margin: 0.6em;
+}
+
+#board-container {
+  width: 100%;
+  height: 75%;
   justify-content: center;
   align-items: center;
-  background-color: var(--bg-surface);
+  padding-block: 1em;
+  background-color: var(--ettana-bg);
+}
+
+#board-border-1 {
+  width: 82%;
   aspect-ratio: 1/1;
+  border: 20px solid var(--ettana-deep-indigo);
 }
 
-#board {
-  position: relative;
-  display: grid;
-  grid-template-columns: repeat(5, var(--cell-size));
-  gap: var(--gap);
-
-}
-
-.halfTile {
-  width: 40px;
-  height: 40px;
-  background: var(--gold-light);
-  position: absolute;
-  clip-path: polygon(20px 20px, 40px 40px, 0 40px);
+#board-border-2 {
+  width: 95.3%;
+  aspect-ratio: 1/1;
+  border: 20px solid var(--ettana-2-board-border);
+  background-color: var(--ettana-board);
 }
 
 .rotate180 {
@@ -57,35 +98,44 @@
   transform: rotate(135deg);
 }
 
-.octagon:hover {
-  transform: scale(1.05);
-}
-
-.board-deck .tile {
-  width: 52px;
-  height: 52px;
-  background: var(--gold-light);
+#board .tile {
+  width: 8.5%;
+  height: 8.5%;
   transform: rotate(45deg);
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: var(--ettana-board);
 }
 
-.player-icon {
-  position: absolute;
-  top: 0px;
-  right: 8px;
-  font-size: 38px;
-  z-index: 999;
+#board {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  position: relative;
 }
 
 .tile-value {
-  font-size: 2em;
-  font-weight: 600;
-  color: var(--tile-color);
   font-family: "Fraunces", serif;
+  font-size: 3em;
+  font-weight: 600;
+  color: var(--ettana-tile-value);
   transform: rotate(-45deg);
+}
+
+.inner-tile {
+  background-color: var(--ettana-tile) !important;
+}
+
+.border-tile {
+  background-image : url('../../../assets/flower.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 5em; /* or cover */
 }
 
 .cell {
@@ -102,12 +152,20 @@
 
 .dot {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 43%;
+  height: 43%;
   border-radius: 50%;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.player-icon {
+  position: absolute;
+  top: 0px;
+  right: 8px;
+  font-size: 38px;
+  z-index: 999;
 }
 
 @keyframes current-player-animation {

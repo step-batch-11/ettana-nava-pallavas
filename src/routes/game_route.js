@@ -9,6 +9,7 @@ import {
   handleMove,
   handlePaidSwap,
   handleSwap,
+  makeWin,
   passTurn,
   performActionCard,
   playActionCard,
@@ -22,7 +23,7 @@ const gameRoute = new Hono();
 
 gameRoute.post("/roll", isCurrentPlayer, handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
-gameRoute.get("/buy-swap", handleBuySwap);
+gameRoute.get("/buy-swap",isCurrentPlayer, handleBuySwap);
 gameRoute.post("/move", isCurrentPlayer, handleMove);
 gameRoute.post("/swap", isCurrentPlayer, handleSwap);
 gameRoute.get("/buy-design-card", isCurrentPlayer, buyDesignCard);
@@ -38,7 +39,7 @@ gameRoute.patch(
   isCurrentPlayer,
   exchangeDesignCard,
 );
-
+gameRoute.get("/force-win", isCurrentPlayer, makeWin);
 gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
 
 export default gameRoute;

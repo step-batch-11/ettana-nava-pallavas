@@ -25,14 +25,15 @@ describe("Game route", () => {
     sessions,
     headers,
     player1SessionId,
-    player2SessionId;
+    player2SessionId,
+    roomIds;
 
   beforeEach(async () => {
     rooms = {};
     players = {};
     sessions = new Session();
-
-    app = createApp(rooms, players, sessions, () => (_c, next) => next());
+    roomIds = {value: 999}
+    app = createApp(rooms, players, sessions, roomIds);
 
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app.request("/lobby/host-game", {

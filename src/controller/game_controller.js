@@ -16,6 +16,16 @@ export default class GameController {
     this.actionCardService = actionCardService;
   }
 
+  makeWin() {
+    const currentPlayer = this.game.getCurrentPlayer();
+    currentPlayer.updateVp(8);
+    const currentPlayerVp = currentPlayer.getVp();
+
+    if (currentPlayerVp >= 8) {
+      this.game.setGameWon();
+    }
+  }
+
   getGameState(id) {
     return {
       ...this.game.getGameState(id),

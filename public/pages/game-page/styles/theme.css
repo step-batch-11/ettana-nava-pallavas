@@ -1,4 +1,43 @@
 :root {
+  --ettana-bg: #f7f4e8;
+  --ettana-board: #ede7ce;
+  --ettana-1-board-border: #1e2a43;
+  --ettana-2-board-border: #2f9c40;
+  --ettana-octagon: #f0f1e5;
+
+  --ettana-bank: #e9be93;
+  --ettana-bank-shadow: #785b3ef5;
+  --ettana-token: rgb(95, 186, 164);
+
+  --ettana-deep-indigo: #1E2A44;
+  --ettana-royal-blue: #2F4B7C;
+  --ettana-silk-blue: #3A6EA5;
+  --ettana-teal-blue: #2A7F8F;
+
+  --ettana-tile: #ceb393;
+  --ettana-tile-value: #96744d;
+
+  --ettana-deck: #e9be93a4;
+
+  --ettana-hover: #4C7ED9;
+
+  --red: #d64545;
+  --yellow: #f2c94c;
+  --green: #27ae60;
+  --blue: #2d9cdb;
+  --purple: #9b51e0;
+
+  --success: #27ae60;
+  --warning: #f2994a;
+  --error: #eb5757;
+  --font-primary: "Inter", sans-serif;
+  --font-heading: "Cinzel", serif;
+
+  --player-1: #2F4B7C;
+  --player-2: #2A7F8F;
+  --player-3: #4C7ED9;
+  --player-2: #D94F70;
+
   --bg-main: #faf7f2;
   --bg-surface: #ffffff;
   --bg-soft: #f4efe6;
@@ -7,21 +46,10 @@
   --gold-light: #e9d7a5;
   --gold-dark: #9e7c2f;
 
-  --red: #d64545;
-  --yellow: #f2c94c;
-  --green: #27ae60;
-  --blue: #2d9cdb;
-  --purple: #9b51e0;
-
   --text-primary: #2f2f2f;
   --text-secondary: #6b6b6b;
   --border: #e0d8c8;
 
-  --success: #27ae60;
-  --warning: #f2994a;
-  --error: #eb5757;
-  --font-primary: "Inter", sans-serif;
-  --font-heading: "Cinzel", serif;
   --tile-color: #94744E;
 
   --border-primary: #666;
