@@ -1,4 +1,4 @@
-const container = document.getElementById("card-container");
+const container = document.getElementById("actionContainer");
 
 const createFront = (image) => {
   const front = document.createElement("div");
@@ -38,7 +38,7 @@ const createBackSide = (title, description) => {
   return back;
 };
 
-const createActionCard = ({ title, description, image }) => {
+export const createActionCardNew = ({ title, description, image }) => {
   const card = document.createElement("div");
   card.className = "card";
 
@@ -59,22 +59,55 @@ const createActionCard = ({ title, description, image }) => {
       card.classList.remove("flipped");
     }
   });
-
   container.appendChild(card);
 };
 
-createActionCard({
+createActionCardNew({
   title: "Move",
   description: "Move your pin to any unoccupied square.",
   image: "/assets/action_cards/move_card.svg",
 });
-createActionCard({
+createActionCardNew({
   title: "Move",
   description: "Move your pin to any unoccupied square.",
   image: "/assets/action_cards/gain_tokens_card.svg",
 });
-createActionCard({
+createActionCardNew({
   title: "Move",
   description: "Move your pin to any unoccupied square.",
   image: "/assets/action_cards/roll_again_card.svg",
+});
+createActionCardNew({
+  title: "Move",
+  description: "Move your pin to any unoccupied square.",
+  image: "/assets/action_cards/roll_again_card.svg",
+});
+createActionCardNew({
+  title: "Move",
+  description: "Move your pin to any unoccupied square.",
+  image: "/assets/action_cards/roll_again_card.svg",
+});
+createActionCardNew({
+  title: "Move",
+  description: "Move your pin to any unoccupied square.",
+  image: "/assets/action_cards/roll_again_card.svg",
+});
+
+const actionSection = document.getElementById("actionSection");
+const designSection = document.getElementById("designSection");
+
+const expand = (active, inactive) => {
+  active.classList.add("expanded");
+  active.classList.remove("collapsed");
+
+  inactive.classList.add("collapsed");
+  inactive.classList.remove("expanded");
+};
+
+actionSection.addEventListener("click", () => {
+  expand(actionSection, designSection);
+});
+
+designSection.addEventListener("click", () => {
+  expand(designSection, actionSection);
 });

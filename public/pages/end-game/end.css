@@ -5,20 +5,81 @@ body {
   align-items: center;
 }
 
-#card-container {
+.deck {
   display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
+  width: 800px;
+  height: 220px;
+  gap: 10px;
 }
 
+.section {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  cursor: pointer;
+  width: 100%;
+}
+
+.section-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.cards {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 10px;
+}
+
+.expanded {
+  flex: 3;
+}
+
+.collapsed {
+  flex: 1;
+}
+
+.collapsed .cards {
+  overflow: hidden;
+}
+
+.expanded .cards {
+  flex: 1;
+  overflow-x: auto;
+}
+
+.cards::-webkit-scrollbar {
+  height: 6px;
+}
+
+.cards::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 10px;
+}
+
+
 .card {
-  width: 200px;
-  height: 200px;
+  min-width: 170px;
+  height: 170px;
+  background: #333;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   position: relative;
   transform-style: preserve-3d;
   transition: transform 0.6s ease;
   cursor: pointer;
 }
+
+
 
 .card.flipped {
   transform: rotateY(180deg);
@@ -42,7 +103,7 @@ body {
 }
 
 .card-front img {
-  /* height: 100%; */
+  height: 100%;
   width: 100%;
   object-fit: contain;
 }

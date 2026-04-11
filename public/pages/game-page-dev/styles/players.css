@@ -1,0 +1,168 @@
+/* li {
+  list-style: none;
+}
+
+.players {
+  display: flex;
+  gap: 20px;
+  flex-direction: column;
+  align-items: center;
+}
+
+.player-card {
+  position: relative;
+  width: 50%;
+  height: 25%;
+  background: linear-gradient(180deg, #f6ecd8 0%, #e7d5b5 100%);
+  border: 3px solid #8b5a2b;
+  border-radius: 16px;
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.35),
+    inset 0 0 0 2px rgba(255, 236, 196, 0.5);
+  overflow: visible;
+  font-family: "Georgia", serif;
+}
+
+.player-avatar-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 18px 12px 10px;
+}
+
+.player-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 3px solid #d4a74f;
+  box-shadow:
+    inset 0 0 0 3px rgba(255, 255, 255, 0.3),
+    0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.player-info {
+  padding: 12px 10px 14px;
+  text-align: center;
+  flex-wrap: wrap;
+}
+
+.player-name {
+  margin: 0 0 14px;
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #2b1a0f;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.player-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-top: 2px solid rgba(139, 90, 43, 0.25);
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px 8px;
+  gap: 4px;
+}
+
+.stat-box:first-child {
+  border-right: 2px solid rgba(139, 90, 43, 0.2);
+}
+
+.stat-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3b2413;
+  line-height: 1;
+}
+
+.player-card.current-player-card {
+  border: 5px solid var(--success);
+} */
+
+/* 
+table {
+  width: 320px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  position: relative;
+  transition: all 0.3s ease;
+  justify-content: space-between;
+}
+
+.color {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+@keyframes pulse {
+  0% {
+    background: rgba(255, 165, 0, 0.1);
+  }
+
+  50% {
+    background: rgba(255, 165, 0, 0.3);
+  }
+
+  100% {
+    background: rgba(255, 165, 0, 0.1);
+  }
+}
+
+.active {
+  animation: pulse 1.5s infinite;
+}
+
+.active::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: orange;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.active .turn-dot {
+  text-align: right;
+  opacity: 1;
+  animation: spin 1s infinite;
+}
+
+button {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: orange;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+} */

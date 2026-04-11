@@ -21,7 +21,7 @@ export const handleCreateLobby = async (context) => {
       name: payload.name,
       color: [1, 2, 3, 4, 5, 6],
     };
-
+    
     player.setup(room.color.shift(), { x: -1, y: -1 });
     player.assignRoomId(room.id);
     rooms[room.id] = room;

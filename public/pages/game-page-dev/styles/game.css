@@ -1,0 +1,76 @@
+#number-dice .dice-popup {
+  padding: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  justify-items: center;
+}
+
+.dice {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 32px;
+  background-color: whitesmoke;
+  cursor: pointer;
+}
+
+.dice-color {
+  width: 50%;
+  height: 50%;
+  border-radius: 50%;
+}
+
+.dice-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: black;
+}
+
+.premium-move {
+  box-shadow: 0em 0em 1em 0.4em purple !important;
+  cursor: pointer;
+}
+.jump-move {
+  box-shadow: 0em 0em 1em 0.4em green !important;
+  cursor: pointer;
+}
+.normal-move {
+  box-shadow: 0em 0em 1em 0.4em gold !important;
+  cursor: pointer;
+}
+
+.yarn-replace {
+  box-shadow: 0em 0em 1em 0.4em rgb(136, 182, 234) !important;
+  cursor: pointer;
+}
+
+.tooltip {
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: rotate(-45deg) translateX(-70%) translateY(-225%);
+  background-color: #ccc;
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+
+.color-dice-container .dice-popup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dice-popup .color {
+  width: 2em;
+  height: 2em;
+  border-radius: 50%;
+}

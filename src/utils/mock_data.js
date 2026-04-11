@@ -25,7 +25,7 @@ export const mockYarns = () => [
 export const getAllDesignCard = () => designCards;
 export const getAllActionCard = () => actionCards;
 
-// export const getDesignCard = (id) => designCards.find((card) => card.id === id);
+export const getDesignCard = (id) => designCards.find((card) => card.id === id);
 export const getActionCard = (id) => actionCards.find((card) => card.id === id);
 
 export const acMap = {

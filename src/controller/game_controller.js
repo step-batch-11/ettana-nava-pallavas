@@ -1,5 +1,5 @@
 import GameSetup from "../models/game_setup.js";
-import { acMap } from "../utils/mock_data.js";
+import { acMap, getActionCard } from "../utils/mock_data.js";
 
 export default class GameController {
   #defaultActions = {
@@ -14,6 +14,17 @@ export default class GameController {
     this.playerActions = { ...this.#defaultActions };
     this.game = game;
     this.actionCardService = actionCardService;
+  }
+
+  buySpecificActionCard(cardId) {
+    const currentPlayer = this.game.getCurrentPlayer();
+    const ac = getActionCard(Number(cardId));
+    currentPlayer.addActionCard(ac);
+  }
+
+  addTokensDev(tokenCount) {
+    const currentPlayer = this.game.getCurrentPlayer();
+    currentPlayer.creditTokens(tokenCount);
   }
 
   makeWin() {

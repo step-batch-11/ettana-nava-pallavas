@@ -2,6 +2,8 @@ import { Hono } from "hono";
 import {
   buyActionCard,
   buyDesignCard,
+  buySpecificAc,
+  buyTokensDev,
   claimDesign,
   exchangeDesignCard,
   handleBuySwap,
@@ -23,7 +25,7 @@ const gameRoute = new Hono();
 
 gameRoute.post("/roll", isCurrentPlayer, handleDiceRoll);
 gameRoute.get("/game-state", serveGameState);
-gameRoute.get("/buy-swap",isCurrentPlayer, handleBuySwap);
+gameRoute.get("/buy-swap", isCurrentPlayer, handleBuySwap);
 gameRoute.post("/move", isCurrentPlayer, handleMove);
 gameRoute.post("/swap", isCurrentPlayer, handleSwap);
 gameRoute.get("/buy-design-card", isCurrentPlayer, buyDesignCard);
@@ -40,6 +42,9 @@ gameRoute.patch(
   exchangeDesignCard,
 );
 gameRoute.get("/force-win", isCurrentPlayer, makeWin);
+gameRoute.get("/sudo-buy/:id", isCurrentPlayer, buySpecificAc);
+gameRoute.get("/sudo-buy/:id", isCurrentPlayer, buyTokensDev);
 gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
+gameRoute.get("/dev", serveStatic({ path: "public/pages/game-page-dev" }));
 
 export default gameRoute;

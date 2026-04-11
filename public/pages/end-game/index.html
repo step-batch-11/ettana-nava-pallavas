@@ -2,15 +2,29 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ettana Action Card</title>
+    <title>Horizontal Card Deck</title>
+
     <link rel="stylesheet" href="/pages/end-game/end.css">
   </head>
-
   <body>
 
-    <div id="card-container"></div>
+    <div class="deck">
+      <div class="section expanded" id="actionSection">
+        <div class="cards" id="actionContainer">
+        </div>
+      </div>
+
+      <div class="section collapsed" id="designSection">
+        <div class="cards" id="designContainer">
+          <div class="card">D1</div>
+          <div class="card">D2</div>
+          <div class="card">D3</div>
+          <div class="card">D4</div>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="/pages/end-game/script.js"></script>
 
   </body>
-  <script type="module" src="/pages/end-game/script.js"></script>
 </html>

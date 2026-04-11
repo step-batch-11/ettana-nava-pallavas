@@ -208,11 +208,39 @@ export const handleBuySwap = (context) => {
   }
 };
 
+export const buySpecificAc = (context) => {
+  try {
+    const room = context.get("room");
+    const cardId = context.req.param("id");
+    room.state.buySpecificActionCard(cardId);
+
+    return context.json({ success: true });
+  } catch (err) {
+    return context.json(
+      { success: false, error: { message: err.message } },
+      400,
+    );
+  }
+};
 export const makeWin = (context) => {
   try {
     const room = context.get("room");
     room.state.makeWin();
-    return context.redirect("/game")
+    return context.redirect("/game");
+  } catch (err) {
+    return context.json(
+      { success: false, error: { message: err.message } },
+      400,
+    );
+  }
+};
+
+export const buyTokensDev = (context) => {
+  try {
+    const room = context.get("room");
+    const tokens = context.req.param("token");
+    room.state.addTokensDev(tokens);
+    return context.json({ success: true });
   } catch (err) {
     return context.json(
       { success: false, error: { message: err.message } },

@@ -1,0 +1,199 @@
+@import "./theme.css";
+
+* {
+  margin: 0;
+  padding: 0;
+  /* box-sizing: border-box; */
+}
+
+body {
+  font-family:
+    system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  /* background-color: var(--bg-main); */
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  color: #fff;
+  border-radius: 4px;
+  display: none;
+  font-size: 14px;
+}
+
+/* Style for popup */
+.open-btn {
+  padding: 12px 18px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Dialog */
+dialog {
+  border: none;
+  border-radius: 14px;
+  padding: 28px;
+  width: 340px;
+  align-self: center;
+  justify-self: center;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.dice-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+  margin: 20px 0;
+  justify-items: center;
+}
+
+.dice-container .dice-popup {
+  width: 72px;
+  height: 72px;
+  border-radius: 14px;
+  background: #e0e3e7;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+
+  padding: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dice-container .dice-dot {
+  width: 14px;
+  height: 14px;
+  background: #222;
+  border-radius: 50%;
+  margin: auto;
+}
+
+.dice-popup.selected {
+  border: 1px solid black;
+  background: #cfe4ff;
+  animation: none;
+}
+
+#diceDialog .actions,
+#color-dice-dialog .actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+#diceDialog button,
+#color-dice-dialog button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+.action-banner {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #f7f1e1;
+  border: 2px solid #c8a951;
+  border-radius: 12px;
+  padding: 10px 20px;
+
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+.action-banner.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.action-banner.animate {
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: translateX(-50%) translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.ettana-popup-overlay-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 20, 0.6);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  z-index: 9999;
+}
+
+.ettana-popup-container {
+  background: #ffffff;
+  padding: 22px;
+  border-radius: 12px;
+  width: 320px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+}
+
+.ettana-popup-title {
+  margin: 0 0 10px;
+}
+
+.ettana-popup-select-input {
+  width: 100%;
+  padding: 10px;
+  margin: 15px 0;
+}
+
+.ettana-popup-actions-row {
+  display: flex;
+  gap: 10px;
+}
+
+.ettana-popup-btn {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.ettana-popup-btn-confirm {
+  background: #4CAF50;
+  color: white;
+}
+
+.ettana-popup-btn-cancel {
+  background: #ccc;
+}
