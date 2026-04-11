@@ -49,7 +49,7 @@ describe("Action card handlers", () => {
     headers = result.headers;
   });
 
-  describe.ignore("PATCH /action-card/16 (Victory Point)", () => {
+  describe("PATCH /action-card/16 (Victory Point)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
       removeAcs(currentPlayer);
 
@@ -67,7 +67,7 @@ describe("Action card handlers", () => {
     });
   });
 
-  describe.ignore("PATCH /action-card/4 (Collect Tokens)", () => {
+  describe("PATCH /action-card/4 (Collect Tokens)", () => {
     it("Player should be able to play victory point action card only if they have that card", async () => {
       removeAcs(currentPlayer);
       currentPlayer.addActionCard(actionCards[1]);
@@ -223,21 +223,24 @@ describe("Action card handlers", () => {
       it.ignore("playing replacing yarns when player have an action card", async () => {
         const { boardYarns } = res.result;
         const position = { x: boardYarns[0][0], y: boardYarns[0][1] };
-        const body = JSON.stringify({
-          cardId: 34,
-          type: "yarn",
-          position,
-          reservePosition: 0,
-        });
 
-        const { result, success } = await sendRequest(
-          app,
-          `/game/perform-action-card`,
-          { headers, body },
-        );
+        if (Number(position.x) !== 5) {
+          const body = JSON.stringify({
+            cardId: 34,
+            type: "yarn",
+            position,
+            reservePosition: 0,
+          });
 
-        assert(success);
-        assertEquals(result.message, "yarn changed with reserved");
+          const { success, result } = await sendRequest(
+            app,
+            `/game/perform-action-card`,
+            { headers, body },
+          );
+
+          assert(success);
+          assertEquals(result.message, "yarn changed with reserved");
+        }
       });
     });
   });

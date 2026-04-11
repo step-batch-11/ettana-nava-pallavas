@@ -52,8 +52,9 @@ document.getElementById("exitBtn").addEventListener("click", async () => {
     const res = await fetch(`/lobby/exit-lobby/${currentPlayerId}`, {
       method: "DELETE",
     });
+
     const resBody = await res.json();
-    console.log(resBody);
+
     if (resBody.success) {
       localStorage.removeItem("id");
       globalThis.location.assign("/");

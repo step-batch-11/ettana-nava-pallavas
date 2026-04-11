@@ -4,10 +4,12 @@ import Tax from "../../../src/models/action_cards/tax.js";
 
 describe("Play Tax Action Card", () => {
   const cardId = 7;
-  let game;
+  let game, actionPlayed;
+
   beforeEach(() => {
     const currentPlayer = {
       removeActionCard: (card) => card,
+      getName: () => "kha",
     };
     const opponent = {
       getId: () => 3,
@@ -18,15 +20,18 @@ describe("Play Tax Action Card", () => {
       getCurrentPlayer: () => currentPlayer,
       getOpponents: () => [opponent],
       creditToBank: () => 2,
+      storeLastAction: (action, player) =>
+        actionPlayed = `${player.getName()} has played ${action}`,
     };
   });
 
-  it.ignore("every player should give one token to bank, if they have more than or equal to 1 token", () => {
+  it("every player should give one token to bank, if they have more than or equal to 1 token", () => {
     const result = Tax.play(cardId, game);
 
     assertEquals(result, {
       affectedPlayers: [3],
       message: "Tax action card played",
     });
+    assertEquals(actionPlayed, "kha has played TAX");
   });
 });

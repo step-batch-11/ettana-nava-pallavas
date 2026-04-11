@@ -70,7 +70,7 @@ describe("Game controller test", () => {
     }];
 
     players = [new Player(1, "Ajoy"), new Player(2, "Dinesh")];
-    bank = new Bank(designCards, actionCards, (x) => x, () => 0.1);
+    bank = new Bank(designCards, actionCards,[1,6], () => 0.1);
     game = new Game(
       players,
       bank,
@@ -80,7 +80,7 @@ describe("Game controller test", () => {
     );
   });
 
-  describe.ignore("Buy Design Card", () => {
+  describe("Buy Design Card", () => {
     it("Player can buy successfully design card", () => {
       players[0].creditTokens(3);
       game.buyDesignCard();
@@ -102,7 +102,7 @@ describe("Game controller test", () => {
     });
   });
 
-  describe.ignore("Buy Action Card", () => {
+  describe("Buy Action Card", () => {
     it("Player can buy successfully action card", () => {
       players[0].creditTokens(2);
       const card = game.buyActionCard();

@@ -5,31 +5,6 @@
   gap: 1em;
   padding:1em;
 }
-
-/* .played-card {
-  padding: 10px;
-}
-
-.card-container {
-  width: 80%;
-  border: 1px solid #222;
-  position: relative;
-  overflow-y: scroll;
-  padding: 1em;
-}
-
-.card {
-  position: sticky;
-  top: 0px;
-  left: 0px;
-  height: 200px;
-  border-bottom: 1px solid #222;
-}
-
-.card-desc {
-  padding: 10px;
-  text-align: center;
-  } */
   
 .reserved {
   width: 100%;
@@ -321,4 +296,53 @@
   justify-content: space-around;
   align-items: center;
   gap: 0.5em;
+}
+
+.information-panel {
+  position: relative;
+}
+
+
+.action-banner {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  width: 80%;
+  transform: translateX(-50%);
+
+  background: #f7f1e1;
+  border: 2px solid #c8a951;
+  border-radius: 12px;
+  padding: 10px 20px;
+
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+.action-banner.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.action-banner.animate {
+  animation: popIn 0.3s ease;
+}
+
+@keyframes popIn {
+  from {
+    transform: translateX(-50%) translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
 }

@@ -74,3 +74,16 @@
   height: 2em;
   border-radius: 50%;
 }
+
+.rolling {
+  animation: roll 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes roll {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(1080deg);
+  }
+}

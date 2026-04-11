@@ -16,6 +16,7 @@
   background-color: var(--ettana-board);
   padding-block: 1em;
   border-radius: 1em;
+  box-shadow: inset 1px 1px 10px 2px var(--ettana-bank-shadow);
 }
 
 .players-detail-heading {
@@ -23,48 +24,53 @@
   width:90%;
   height:20%;
   justify-content: space-evenly;
-  background-color: white;
+  background-color: var(--ettana-board);
+  border-radius: 5px;
+  box-shadow: inset 1px 1px 7px 2px var(--ettana-bank-shadow);
 }
 
 .player-pin-icon {
   display: flex; 
+  font-size: 1.7em;
+  color: rgb(172, 104, 21);
   width:40%;
+  font-family: "Fraunces", serif;
   align-items: center;
   justify-content: center;
 }
 
 .player-stats-heading {
   display: flex;
-  width:60%;
+  width:50%;
+  gap: 2px;
   justify-content:space-evenly;
   align-items: center;
 }
 
 .ac-number {
-  width: 25%;
+  width: 21%;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-image: url("/assets/action-card.png"); */
 }
 
 .dc-number {
-  width: 25%;
+  width: 21%;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* background-image: url("/assets/action-card.png"); */
 }
 
 .token-count {
-  width: 25%;
+  width: 24%;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
 .victory-point {
-  width: 25%;
+  width: 20%;
+  color: rgb(222, 130, 32);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -73,4 +79,15 @@
 img {
   width: 100%;
   object-fit: fill;
+}
+
+.players {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height:80%;
+  padding-block: 1em;
+  gap:1em;
+  justify-content: flex-start;
+  background-color: var(--ettana-board);
 }

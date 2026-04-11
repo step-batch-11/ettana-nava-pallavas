@@ -10,12 +10,12 @@ describe("App test", () => {
     rooms = {};
     players = {};
     sessions = new Session();
-    roomIds = {value: 999}
+    roomIds = { value: 999 };
     app = createApp(
       rooms,
       players,
       sessions,
-      roomIds
+      roomIds,
     );
   });
 
