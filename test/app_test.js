@@ -6,16 +6,17 @@ import { toJSON } from "../src/utils/util.js";
 
 
 describe("App test", () => {
-  let rooms, players, sessions, app;
+  let rooms, players, sessions, app, roomIds;
   beforeEach(() => {
     rooms = {};
     players = {};
     sessions = new Session();
-
+    roomIds = {value: 999}
     app = createApp(
       rooms,
       players,
       sessions,
+      roomIds
     );
   });
 

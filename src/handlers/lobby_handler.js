@@ -1,26 +1,21 @@
 import Player from "../models/player.js";
 import LobbyController from "../models/lobby.js";
 import { getCookie, setCookie } from "hono/cookie";
-import { acMap, getActionCard,getAllActionCard } from "../utils/mock_data.js";
 
 export const handleCreateLobby = async (context) => {
   try {
     const players = context.get("players");
     const rooms = context.get("rooms");
     const sessions = context.get("sessions");
+    const roomIds = context.get("roomIds");
     const payload = await context.req.json();
 
     const player = new Player(Date.now(), payload.username);
     players[player.getId()] = player;
-    // player.updateVp(8);
-    player.addActionCard(getActionCard(acMap.roll));
-    player.addActionCard(getActionCard(acMap.roll));
-    player.addActionCard(getActionCard(acMap.roll));
-    player.creditTokens(1000);
+    const currentRoomId = ++roomIds.value;
 
     const room = {
-      // id: `${Date.now()}-room`,π
-      id: "1000",
+      id: `${currentRoomId}`,
       state: new LobbyController(),
       hostId: player.getId(),
       name: payload.name,
@@ -60,7 +55,6 @@ export const handleJoinLobby = async (context) => {
     const player = new Player(Date.now(), payload.username);
     player.updateVp(4);
     player.creditTokens(1000);
-    player.addAllActionCardDev(...getAllActionCard());
 
     player.setup(room.color.shift(), { x: -1, y: -1 });
     players[player.getId()] = player;

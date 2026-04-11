@@ -5,16 +5,18 @@ import { createApp } from "../../src/app.js";
 import { sendRequest, toJSON } from "../../src/utils/util.js";
 
 describe("lobby handler", () => {
-  let rooms, players, sessions, app;
+  let rooms, players, sessions, app, roomIds;
   beforeEach(() => {
     rooms = {};
     players = {};
     sessions = new Session();
+    roomIds = {value: 999}
 
     app = createApp(
       rooms,
       players,
       sessions,
+      roomIds
     );
   });
 

@@ -96,8 +96,9 @@ export const setupState = async () => {
   const rooms = {};
   const players = {};
   const sessions = new Session();
+  const roomIds = { value: 999 };
 
-  const app = createApp(rooms, players, sessions);
+  const app = createApp(rooms, players, sessions, roomIds);
 
   const { player1SessionId, player2SessionId } = await createPlayers(
     app,

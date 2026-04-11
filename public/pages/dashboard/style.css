@@ -83,38 +83,65 @@ body {
 }
 
 .octagon-inputs {
-  margin-top: 15%;
-  margin-bottom: 15%;
   display: flex;
-  gap: 30px;
-  justify-content: center;
 }
 
-
-.octa {
-  width: 50px;
-  height: 50px;
-  border: 2px solid #d4af37;
-  background: #fff8e7;
-  transform: rotate(45deg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.octa-svg {
+  position: relative;
+  width: 70px;
+  height: 70px;
 }
 
-.octa input {
+.octa-svg svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.octa-svg polygon {
+  fill: #fff8e7;
+  stroke: #d4af37;
+  stroke-width: 3;
+  transition: all 0.25s ease;
+}
+
+.octa-svg:hover polygon {
+  stroke: #e6c46b;
+  filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.6));
+}
+
+/* Input centered inside */
+.octa-svg input {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   border: none;
   outline: none;
-  text-align: center;
-  font-size: 22px;
-  font-weight: bold;
   background: transparent;
-  transform: rotate(-45deg);
+
+  text-align: center;
+  font-size: 26px;
+  font-weight: bold;
+  color: #5b2a86;
+
+  font-family: serif;
 }
 
+/* Focus effect */
+.octa-svg input:focus + svg polygon,
+.octa-svg:focus-within polygon {
+  stroke: #c8a951;
+  filter: drop-shadow(0 0 10px rgba(200, 169, 81, 0.8));
+}
 
+.loom-text {
+  font-size: 14px;
+  color: #7a6a4f;
+  margin-top: 5px;
+  font-style: italic;
+  letter-spacing: 1px;
+}
 
 .popup-actions {
   display: flex;
