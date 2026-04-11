@@ -6,7 +6,7 @@ export const main = async () => {
   await write("Joiner", into(textBox("Username")));
   await click("Play");
   await click("Join Lobby");
-  await write("1000", into($(".octa:nth-child(1) input")));
+  await write("1000", into($(".octa-svg input")));
   await click("Join");
   // await click("Start game");
 };
