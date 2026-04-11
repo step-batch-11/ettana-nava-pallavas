@@ -6,6 +6,7 @@ describe("bank", () => {
   let designCards;
   let actionCards;
   const shuffle = (pattern) => pattern;
+  const  tiles = [1, 6];
 
   beforeEach(() => {
     designCards = [
@@ -23,15 +24,15 @@ describe("bank", () => {
     }];
   });
 
-  describe.ignore("Get bank", () => {
-    it.only("when get bank function is called, then should return the current bank state", () => {
-      const bank = new Bank(designCards, actionCards, shuffle);
+  describe("Get bank", () => {
+    it("when get bank function is called, then should return the current bank state", () => {
+      const bank = new Bank(designCards, actionCards, tiles, shuffle);
       const result = {
         tokens: 55,
         availableDesignCards: 2,
         availableActionCards: 2,
         yarns: [1, 2, 3, 4, 5],
-        tiles: [1, 6],
+        tiles,
       };
 
       assertEquals(bank.getBank(), result);
@@ -45,17 +46,17 @@ describe("bank", () => {
           availableDesignCards: 0,
           availableActionCards: 0,
           yarns: [1, 2, 3, 4, 5],
-          tiles: [1, 6],
+          tiles,
         };
-        const bank = new Bank(undefined, undefined, shuffle);
+        const bank = new Bank(undefined, undefined, tiles, shuffle);
         assertEquals(bank.getBank(), result);
       },
     );
   });
 
-  describe.ignore("Get Design Card", () => {
+  describe("Get Design Card", () => {
     it("when get design card is called, then should return a design card and remove the card from the top of deck", () => {
-      const bank = new Bank(designCards, actionCards, shuffle);
+      const bank = new Bank(designCards, actionCards, tiles, shuffle);
       const result = { "id": 1, "victoryPoints": 1 };
 
       assertEquals(bank.getDesignCard(), result);
@@ -63,15 +64,15 @@ describe("bank", () => {
     });
 
     it("when no design cards remaining in the bank, then should throw error", () => {
-      const bank = new Bank([], actionCards, shuffle);
+      const bank = new Bank([], actionCards, tiles, shuffle);
 
       assertThrows(() => bank.getDesignCard());
     });
   });
 
-  describe.ignore("Get Action Card", () => {
+  describe("Get Action Card", () => {
     it("when get action card is called, then should return a random action card from the deck and should not remove the card from the deck", () => {
-      const bank = new Bank(designCards, actionCards, shuffle, () => 0);
+      const bank = new Bank(designCards, actionCards, tiles, () => 0);
 
       assertEquals(bank.getActionCard(), actionCards[0]);
       assertEquals(actionCards.length, 2);

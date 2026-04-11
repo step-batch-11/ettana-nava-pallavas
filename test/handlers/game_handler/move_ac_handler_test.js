@@ -90,7 +90,7 @@ describe("Move Action Card", () => {
     assertEquals(error.message, "Card is missing");
   });
 
-  it.ignore("when player does not have move action card but wants to play, then should throw error and no update in state: ", async () => {
+  it("when player does not have move action card but wants to play, then should throw error and no update in state: ", async () => {
     removeAcs(currentPlayer);
 
     const response = await app.request("/game/action-card/1", {

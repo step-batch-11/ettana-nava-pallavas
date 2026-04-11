@@ -2,15 +2,19 @@ import { assertEquals } from "@std/assert";
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import RollAgain from "../../../src/models/action_cards/roll_again.js";
 
-describe.ignore("Roll Again", () => {
+describe("Roll Again", () => {
   const cardId = 28;
-  let game;
+  let game, actionPlayed;
+
   beforeEach(() => {
     const player = {
+      getName: () => "kha",
       removeActionCard: (id) => id,
     };
     game = {
       getCurrentPlayer: () => player,
+      storeLastAction: (action, player) =>
+        actionPlayed = `${player.getName()} has played ${action}`,
     };
   });
 
@@ -18,5 +22,6 @@ describe.ignore("Roll Again", () => {
     const result = RollAgain.play(cardId, game);
 
     assertEquals(result, { message: "Roll again card played successfully" });
+    assertEquals(actionPlayed, "kha has played ROLL_AGAIN");
   });
 });

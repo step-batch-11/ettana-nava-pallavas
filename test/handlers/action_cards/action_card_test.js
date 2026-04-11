@@ -220,31 +220,27 @@ describe("Action card handlers", () => {
         assertEquals(error.message, "Card is missing");
       });
 
-      it.ignore("playing replacing yarns when player have an action card", async () => {
+      it("playing replacing yarns when player have an action card", async () => {
         const { boardYarns } = res.result;
         const position = { x: boardYarns[0][0], y: boardYarns[0][1] };
-        console.log({
-          cp: currentPlayer.getAc(),
-          cpDet: currentPlayer.getPlayerData(),
-          boardYarns,
-          position,
-        });
 
-        const body = JSON.stringify({
-          cardId: 34,
-          type: "yarn",
-          position,
-          reservePosition: 0,
-        });
+        if (Number(position.x) !== 5) {
+          const body = JSON.stringify({
+            cardId: 34,
+            type: "yarn",
+            position,
+            reservePosition: 0,
+          });
 
-        const e = await sendRequest(
-          app,
-          `/game/perform-action-card`,
-          { headers, body },
-        );
-        console.log(e);
-        // assert(success);
-        // assertEquals(result.message, "yarn changed with reserved");
+          const { success, result } = await sendRequest(
+            app,
+            `/game/perform-action-card`,
+            { headers, body },
+          );
+
+          assert(success);
+          assertEquals(result.message, "yarn changed with reserved");
+        }
       });
     });
   });

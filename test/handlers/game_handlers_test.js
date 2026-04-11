@@ -1,5 +1,5 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
-import { createApp } from "../../src/app.js";
+import { createApp as _createApp } from "../../src/app.js";
 import {
   assert,
   assertAlmostEquals,
@@ -7,8 +7,12 @@ import {
   assertThrows,
 } from "@std/assert";
 import { serveGameState } from "../../src/handlers/game_handlers.js";
-import Session from "../../src/models/session.js";
-import { removeAcs, rollAndMove, toJSON } from "../../src/utils/util.js";
+import {
+  createAppTest,
+  removeAcs,
+  rollAndMove,
+  toJSON,
+} from "../../src/utils/util.js";
 
 const getBankTokens = async (app, headers) => {
   const { state } = await app
@@ -21,19 +25,14 @@ const getBankTokens = async (app, headers) => {
 describe("Game route", () => {
   let app,
     players,
-    rooms,
-    sessions,
     headers,
     player1SessionId,
-    player2SessionId,
-    roomIds;
+    player2SessionId;
 
   beforeEach(async () => {
-    rooms = {};
-    players = {};
-    sessions = new Session();
-    roomIds = {value: 999}
-    app = createApp(rooms, players, sessions, roomIds);
+    const appRes = createAppTest();
+    app = appRes.app;
+    players = appRes.players;
 
     const req1 = JSON.stringify({ username: "kha" });
     const res = await app.request("/lobby/host-game", {

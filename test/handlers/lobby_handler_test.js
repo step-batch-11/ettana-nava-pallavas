@@ -1,23 +1,12 @@
 import { beforeEach, describe, it } from "@std/testing/bdd";
 import { assertEquals } from "@std/assert/equals";
-import Session from "../../src/models/session.js";
-import { createApp } from "../../src/app.js";
-import { sendRequest, toJSON } from "../../src/utils/util.js";
+import { createAppTest, sendRequest, toJSON } from "../../src/utils/util.js";
 
 describe("lobby handler", () => {
-  let rooms, players, sessions, app, roomIds;
+  let app;
   beforeEach(() => {
-    rooms = {};
-    players = {};
-    sessions = new Session();
-    roomIds = { value: 999 };
-
-    app = createApp(
-      rooms,
-      players,
-      sessions,
-      roomIds,
-    );
+    const appRes = createAppTest();
+    app = appRes.app;
   });
 
   it("host lobby without passing any data", async () => {
