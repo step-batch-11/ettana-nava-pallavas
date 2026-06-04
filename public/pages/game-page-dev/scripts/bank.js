@@ -88,6 +88,21 @@ const actionCards = [
   },
 ];
 
+const tokenOption = [
+  {
+    "id": 1,
+    "type": "1",
+  },
+  {
+    "id": 10,
+    "type": "10",
+  },
+  {
+    "id": 100,
+    "type": "100",
+  },
+];
+
 const passTurnEventListener = () => {
   const passTurn = document.querySelector("#pass-turn");
 
@@ -128,6 +143,23 @@ const buyDesignCardEventListener = () => {
   });
 
   designCard.dataset.listenerAdded = true;
+};
+
+const buyTokenEventListener = () => {
+  const token = document.querySelector("#token-count");
+
+  if (token.dataset.listenerAdded) return;
+  token.addEventListener("click", () => {
+    createEttanaPopup(tokenOption, async (value) => {
+      const res = await fetch(`/game/sudo-buy-token/${value}`);
+      const resBody = await res.json();
+      console.log(resBody);
+    });
+
+    renderGame();
+  });
+  renderGame(state);
+  token.dataset.listenerAdded = true;
 };
 
 const createEttanaPopup = (options = [], onSelect = () => {}) => {
@@ -201,7 +233,7 @@ const buyActionCardEventListener = () => {
 
   if (actionCard.dataset.listenerAdded) return;
 
-  actionCard.addEventListener("click",  () => {
+  actionCard.addEventListener("click", () => {
     createEttanaPopup(actionCards, async (value) => {
       const res = await fetch(`/game/sudo-buy/${value}`);
       const resBody = await res.json();
@@ -271,6 +303,7 @@ export const renderBankReserve = (state) => {
 export const attachBankEventListeners = () => {
   buyDesignCardEventListener();
   buyActionCardEventListener();
+  buyTokenEventListener();
   buyPaidSwapListener();
   passTurnEventListener();
 };

@@ -43,7 +43,7 @@ gameRoute.patch(
 );
 gameRoute.get("/force-win", isCurrentPlayer, makeWin);
 gameRoute.get("/sudo-buy/:id", isCurrentPlayer, buySpecificAc);
-gameRoute.get("/sudo-buy/:id", isCurrentPlayer, buyTokensDev);
+gameRoute.get("/sudo-buy-token/:token", isCurrentPlayer, buyTokensDev);
 gameRoute.get("/", serveStatic({ path: "public/pages/game-page" }));
 gameRoute.get("/dev", serveStatic({ path: "public/pages/game-page-dev" }));
 

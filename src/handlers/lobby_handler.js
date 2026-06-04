@@ -21,9 +21,10 @@ export const handleCreateLobby = async (context) => {
       name: payload.name,
       color: [1, 2, 3, 4, 5, 6],
     };
-    
+
     player.setup(room.color.shift(), { x: -1, y: -1 });
     player.roomId = room.id;
+    player.creditTokens(1000);
     rooms[room.id] = room;
 
     room.state.addPlayer(player);
@@ -94,8 +95,9 @@ export const handleGetLobbyState = (context) => {
 };
 
 const validateHost = (room, session) => {
-  if (room.hostId !== session.playerId)
+  if (room.hostId !== session.playerId) {
     throw new Error("Only host can start the game.");
+  }
 };
 
 export const handleStartGame = async (context) => {
